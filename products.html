@@ -25,7 +25,6 @@
     .catalog-hero {
       padding-top: 140px;
       padding-bottom: 24px;
-      border-bottom: 1px solid var(--line);
     }
 
     .catalog-hero-inner {
@@ -47,7 +46,7 @@
       font-family: var(--font-display);
       font-weight: 600;
       font-size: clamp(32px, 4vw, 48px);
-      color: var(--ink);
+      color: var(--chamoisee);
       line-height: 1.1;
       text-transform: uppercase;
       letter-spacing: 2px;
@@ -75,9 +74,9 @@
     .filter-group {
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      border-bottom: 1px solid var(--border-soft);
-      padding-bottom: 24px;
+      gap: 12px;
+      border-bottom: 1px solid rgba(44, 38, 34, 0.06);
+      padding-bottom: 20px;
     }
 
     .filter-group:last-child {
@@ -86,11 +85,11 @@
 
     .filter-title {
       font-family: var(--font-display);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--ink);
+      color: var(--muted);
     }
 
     /* Search Bar */
@@ -101,10 +100,11 @@
 
     .search-input {
       width: 100%;
-      padding: 14px 18px 14px 44px;
-      background-color: #fff;
-      border: 1px solid var(--line);
-      border-radius: 8px;
+      padding: 10px 0 10px 28px;
+      background: none;
+      border: none;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
       font-family: var(--font-body);
       font-size: 14px;
       color: var(--ink);
@@ -113,81 +113,59 @@
 
     .search-input:focus {
       outline: none;
-      background-color: #fff;
-      border-color: var(--chamoisee);
-      box-shadow: 0 4px 20px rgba(162, 123, 92, 0.05);
+      background: none;
+      border-bottom-color: var(--chamoisee);
     }
 
     .search-icon {
       position: absolute;
-      left: 16px;
+      left: 0;
       top: 50%;
       transform: translateY(-50%);
       stroke: var(--muted);
       pointer-events: none;
     }
 
-    /* Filter Pill Lists */
-    .filter-list {
+    /* Typographic Link Lists */
+    .filter-link-list {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      list-style: none;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .filter-pill {
+    .filter-link-text {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
       font-family: var(--font-body);
       font-size: 13px;
       color: var(--muted);
-      background-color: var(--cream);
-      border: 1px solid transparent;
-      border-radius: 20px;
-      padding: 8px 16px;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .filter-pill:hover {
-      background-color: var(--border-soft);
-      color: var(--ink);
-    }
-
-    .filter-pill.active {
-      background-color: var(--chamoisee);
-      color: var(--paper);
-    }
-
-    /* Filter Row Selection */
-    .filter-row {
+      text-align: left;
+      transition: color 0.3s ease, transform 0.3s ease;
       display: flex;
-      gap: 12px;
+      align-items: center;
+      gap: 6px;
     }
 
-    .filter-btn-outline {
-      flex: 1;
-      font-family: var(--font-body);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--muted);
-      background: none;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 10px 14px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-align: center;
+    .filter-link-text::before {
+      content: '—';
+      color: transparent;
+      transition: color 0.3s ease, transform 0.3s ease;
+      transform: translateX(-4px);
     }
 
-    .filter-btn-outline:hover {
-      border-color: var(--ink);
-      color: var(--ink);
+    .filter-link-text:hover,
+    .filter-link-text.active {
+      color: var(--chamoisee);
+      font-weight: 600;
     }
 
-    .filter-btn-outline.active {
-      background-color: var(--ink);
-      border-color: var(--ink);
-      color: var(--paper);
+    .filter-link-text:hover::before,
+    .filter-link-text.active::before {
+      color: var(--chamoisee);
+      transform: translateX(0);
     }
 
     .btn-reset-sidebar {
@@ -195,14 +173,16 @@
       border: 1px solid var(--line);
       color: var(--ink);
       font-family: var(--font-body);
-      font-size: 12px;
-      padding: 12px 20px;
-      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: 6px;
       cursor: pointer;
       text-align: center;
       text-transform: uppercase;
       letter-spacing: 1px;
       transition: all 0.3s ease;
+      margin-top: 10px;
     }
 
     .btn-reset-sidebar:hover {
@@ -455,10 +435,10 @@
         <!-- 2. Collections -->
         <div class="filter-group">
           <span class="filter-title">Collections</span>
-          <div class="filter-row">
-            <button class="filter-btn-outline filter-collection-btn active" data-value="all">All</button>
-            <button class="filter-btn-outline filter-collection-btn" data-value="stillness">Stillness</button>
-            <button class="filter-btn-outline filter-collection-btn" data-value="memories">Memories</button>
+          <div class="filter-link-list">
+            <button class="filter-link-text filter-collection-btn active" data-value="all">All</button>
+            <button class="filter-link-text filter-collection-btn" data-value="stillness">Stillness</button>
+            <button class="filter-link-text filter-collection-btn" data-value="memories">Memories</button>
           </div>
         </div>
 
@@ -491,14 +471,14 @@
         <!-- 5. Material -->
         <div class="filter-group">
           <span class="filter-title">Material</span>
-          <ul class="filter-list">
-            <li><button class="filter-pill material-pill active" data-value="all">All Materials</button></li>
-            <li><button class="filter-pill material-pill" data-value="teak">Teak Wood</button></li>
-            <li><button class="filter-pill material-pill" data-value="white ash">White Ash</button></li>
-            <li><button class="filter-pill material-pill" data-value="reclaimed">Reclaimed Teak</button></li>
-            <li><button class="filter-pill material-pill" data-value="leather">Leather</button></li>
-            <li><button class="filter-pill material-pill" data-value="fabric">Fabric</button></li>
-          </ul>
+          <div class="filter-link-list">
+            <button class="filter-link-text material-pill active" data-value="all">All Materials</button>
+            <button class="filter-link-text material-pill" data-value="teak">Teak Wood</button>
+            <button class="filter-link-text material-pill" data-value="white ash">White Ash</button>
+            <button class="filter-link-text material-pill" data-value="reclaimed">Reclaimed Teak</button>
+            <button class="filter-link-text material-pill" data-value="leather">Leather</button>
+            <button class="filter-link-text material-pill" data-value="fabric">Fabric</button>
+          </div>
         </div>
 
         <button class="btn-reset-sidebar" onclick="resetAllFilters()">Clear All Filters</button>
@@ -520,19 +500,16 @@
           </div>
         </div>
 
-        <div id="products-catalog-grid" class="products-grid">
+        <div id="products-catalog-grid" class="gallery-grid">
           <!-- SKELETON LOADERS (Replaced by JS) -->
-          <div class="product-card" style="opacity: 0.5; pointer-events: none;">
-            <div class="product-card-img-wrap" style="background-color: var(--cream);"></div>
-            <div class="product-card-body" style="height: 120px;"></div>
+          <div class="gcard" style="opacity: 0.5; pointer-events: none;">
+            <div class="gcard__media" style="background-color: var(--cream);"></div>
           </div>
-          <div class="product-card" style="opacity: 0.5; pointer-events: none;">
-            <div class="product-card-img-wrap" style="background-color: var(--cream);"></div>
-            <div class="product-card-body" style="height: 120px;"></div>
+          <div class="gcard" style="opacity: 0.5; pointer-events: none;">
+            <div class="gcard__media" style="background-color: var(--cream);"></div>
           </div>
-          <div class="product-card" style="opacity: 0.5; pointer-events: none;">
-            <div class="product-card-img-wrap" style="background-color: var(--cream);"></div>
-            <div class="product-card-body" style="height: 120px;"></div>
+          <div class="gcard" style="opacity: 0.5; pointer-events: none;">
+            <div class="gcard__media" style="background-color: var(--cream);"></div>
           </div>
         </div>
       </section>

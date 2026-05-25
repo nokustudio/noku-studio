@@ -577,7 +577,7 @@ function renderProductsGrid() {
   // Render cards
   filtered.forEach((p, idx) => {
     const card = document.createElement('div');
-    card.className = `product-card reveal-el is-revealed`; // reveal immediately
+    card.className = `gcard reveal-el is-revealed`; // reveal immediately
     card.style.animationDelay = `${(idx % 4) * 0.1}s`;
     
     const firstVariant = p.variants?.edges?.[0]?.node;
@@ -587,34 +587,31 @@ function renderProductsGrid() {
     const defaultVariantId = firstVariant ? firstVariant.id : `gid://shopify/ProductVariant/fallback-${p.handle}`;
 
     card.innerHTML = `
-      <a href="product.html?handle=${p.handle}" class="product-card-img-wrap">
-        <img src="${defaultImage}" alt="${p.title}" loading="lazy">
+      <a href="product.html?handle=${p.handle}" class="gcard__media">
+        <div class="gcard__media-inner">
+          <img src="${defaultImage}" alt="${p.title}" loading="lazy">
+        </div>
+        <button class="gcard__add" 
+                data-id="${p.id}" 
+                data-variant-id="${defaultVariantId}"
+                data-title="${p.title}" 
+                data-price="${displayPrice}" 
+                data-image="${defaultImage}"
+                data-materials="${displayMaterial}"
+                aria-label="Add ${p.title} to Cart">
+          Add ↗
+        </button>
       </a>
-      <div class="product-card-body">
-        <div class="product-card-header">
-          <a href="product.html?handle=${p.handle}" class="product-name">${p.title}</a>
-          <span class="product-materials">${displayMaterial}</span>
-        </div>
-        <div class="product-buy-row">
-          <span class="product-price">${formatCurrency(displayPrice)}</span>
-          <button class="product-add-to-cart-btn" 
-                  data-id="${p.id}" 
-                  data-variant-id="${defaultVariantId}"
-                  data-title="${p.title}" 
-                  data-price="${displayPrice}" 
-                  data-image="${defaultImage}"
-                  data-materials="${displayMaterial}"
-                  aria-label="Add ${p.title} to Cart">
-            Add to Cart
-          </button>
-        </div>
-      </div>
+      <p class="gcard__cat">${displayMaterial}</p>
+      <h3 class="gcard__name"><a href="product.html?handle=${p.handle}">${p.title}</a></h3>
+      <p class="gcard__price">${formatCurrency(displayPrice)}</p>
     `;
     
     // Bind Add to Cart action
-    const btn = card.querySelector('.product-add-to-cart-btn');
+    const btn = card.querySelector('.gcard__add');
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
+      e.preventDefault(); // Prevent navigating to product.html when clicking Add to Cart
       const variantId = btn.dataset.variantId;
       const title = btn.dataset.title;
       const price = parseFloat(btn.dataset.price);

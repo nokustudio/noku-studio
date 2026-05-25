@@ -23,6 +23,11 @@
   /* Typography */
   --font-display: 'Josefin Sans', sans-serif;
   --font-body: 'Quattrocento', serif;
+
+  /* Spacing, Borders & Radius */
+  --radius-md: 16px;
+  --radius-pill: 9999px;
+  --border-width: 1px;
 }
 
 /* Reset & Base Styles */
@@ -725,6 +730,87 @@ nav.light-nav .nav-link:hover {
   gap: 32px;
 }
 
+/* ── Gallery-plate product card — borderless, editorial ──── */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+@media (max-width: 860px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; } }
+
+.gcard { position: relative; }
+
+.gcard__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--cream);
+  margin-bottom: 16px;
+  display: block;
+}
+
+.gcard__media-inner {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.gcard:hover .gcard__media-inner { transform: scale(1.05); }
+
+.gcard__add {
+  position: absolute;
+  bottom: 14px; right: 14px;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-display);
+  font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--ink);
+  background: rgba(244,245,241,0.9);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: var(--border-width) solid rgba(216,210,200,0.85);
+  border-radius: var(--radius-pill);
+  padding: 9px 16px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16,1,0.3,1),
+              background 0.25s, color 0.25s, border-color 0.25s;
+}
+.gcard:hover .gcard__add { opacity: 1; transform: translateY(0); }
+.gcard__add:hover { background: var(--chamoisee); color: var(--light); border-color: var(--chamoisee); }
+.gcard__add:focus-visible { opacity: 1; transform: translateY(0); outline: 2px solid var(--chamoisee); outline-offset: 2px; }
+
+.gcard__cat {
+  font-family: var(--font-display);
+  font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--chamoisee);
+  margin-bottom: 8px;
+}
+
+.gcard__name {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 21px;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--ink);
+  display: inline-block;
+  background-image: linear-gradient(var(--chamoisee), var(--chamoisee));
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  padding-bottom: 3px;
+  transition: background-size 0.45s cubic-bezier(0.16,1,0.3,1);
+}
+.gcard:hover .gcard__name { background-size: 100% 1px; }
+
+.gcard__price {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 9px;
+}
+
 .product-card {
   background-color: transparent;
   border: 1px solid rgba(44, 38, 34, 0.06);
@@ -1097,6 +1183,230 @@ nav.light-nav .nav-link:hover {
   z-index: 3;
   position: relative;
   border-top: 1px solid var(--line);
+}
+
+/* ─── Storytelling & Moodboard Collage Styles ─── */
+.materials-story-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.materials-story-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.story-divider {
+  width: 60px;
+  height: 1px;
+  background-color: var(--chamoisee);
+  margin: 24px 0;
+}
+
+.story-intro {
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 1.6;
+  font-weight: 300;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+
+.materials-story-content .body-p {
+  margin-bottom: 20px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.materials-story-content .body-p strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.story-cta-wrap {
+  margin-top: 16px;
+}
+
+.materials-cta-btn {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--chamoisee);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--chamoisee);
+  padding-bottom: 4px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.materials-cta-btn .arrow {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.materials-cta-btn:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+.materials-cta-btn:hover .arrow {
+  transform: translateX(6px);
+}
+
+/* Moodboard Collage */
+.materials-moodboard {
+  position: relative;
+  height: 620px;
+  width: 100%;
+}
+
+.moodboard-item {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(44, 38, 34, 0.08);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: var(--paper);
+}
+
+.moodboard-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hover effects */
+.moodboard-item:hover {
+  z-index: 10 !important;
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(162, 123, 92, 0.15);
+}
+
+.moodboard-item:hover img {
+  transform: scale(1.06);
+}
+
+/* Captions inside moodboard items */
+.moodboard-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px;
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%);
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  z-index: 2;
+}
+
+.moodboard-item:hover .moodboard-caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Absolute Positioning for Editorial Collage */
+.moodboard-item.item-large {
+  width: 58%;
+  height: 62%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.moodboard-item.item-medium {
+  width: 48%;
+  height: 52%;
+  bottom: 0;
+  right: 0;
+  z-index: 3;
+}
+
+.moodboard-item.item-square-1 {
+  width: 38%;
+  height: 38%;
+  top: 5%;
+  right: 0;
+  z-index: 2;
+}
+
+.moodboard-item.item-square-2 {
+  width: 34%;
+  height: 34%;
+  bottom: 5%;
+  left: 5%;
+  z-index: 4;
+}
+
+@media (max-width: 1200px) {
+  .materials-story-grid {
+    gap: 50px;
+  }
+  .materials-moodboard {
+    height: 520px;
+  }
+}
+
+@media (max-width: 991px) {
+  .materials-story-grid {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  .materials-moodboard {
+    height: 480px;
+  }
+}
+
+@media (max-width: 767px) {
+  .materials-moodboard {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    height: auto;
+    position: static;
+  }
+  
+  .moodboard-item {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    aspect-ratio: 1.15;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .moodboard-item.item-large {
+    grid-column: span 2;
+    aspect-ratio: 1.6;
+  }
+  
+  .moodboard-caption {
+    opacity: 1;
+    transform: translateY(0);
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+    font-size: 10px;
+    padding: 8px 12px;
+  }
 }
 
 .materials-grid-layout {
@@ -1774,6 +2084,7 @@ footer {
 }
 
 .carousel-card {
+  position: relative;
   flex: 0 0 320px;
   width: 320px;
   opacity: 0.4;
@@ -1792,6 +2103,31 @@ footer {
   transform: scale(1.03);
   border-color: rgba(44, 38, 34, 0.1);
   box-shadow: 0 20px 40px rgba(44, 38, 34, 0.06);
+}
+
+.carousel-card.highlighted::after {
+  content: 'View Details ↗';
+  position: absolute;
+  inset: 0;
+  background: rgba(36, 32, 29, 0.85);
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  opacity: 0;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.carousel-card.highlighted:hover::after {
+  opacity: 1;
 }
 
 .carousel-card-img-wrap {

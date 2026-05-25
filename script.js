@@ -4,23 +4,30 @@
   const loaderScreen = document.getElementById('loading-screen');
 
   function updateLoader(percentage) {
-    loaderProgress.style.width = percentage + '%';
+    if (loaderProgress) {
+      loaderProgress.style.width = percentage + '%';
+    }
     if (percentage >= 100) {
       setTimeout(() => {
-        loaderScreen.classList.add('fade-out');
-        document.body.style.backgroundColor = 'var(--dark-bg)';
+        if (loaderScreen) {
+          loaderScreen.classList.add('fade-out');
+          document.body.style.backgroundColor = 'var(--dark-bg)';
+        }
       }, 400);
     }
   }
 
   // Simulate initial asset loading progress, completed when three.js model loads
   let loadPercent = 0;
-  const loaderInterval = setInterval(() => {
-    if (loadPercent < 85) {
-      loadPercent += Math.random() * 12;
-      updateLoader(Math.min(loadPercent, 85));
-    }
-  }, 80);
+  let loaderInterval = null;
+  if (loaderScreen) {
+    loaderInterval = setInterval(() => {
+      if (loadPercent < 85) {
+        loadPercent += Math.random() * 12;
+        updateLoader(Math.min(loadPercent, 85));
+      }
+    }, 80);
+  }
 
   // ─── THREE.JS 3D CANVAS REDIRECTS ───
   const container = document.getElementById('three-container');
@@ -533,19 +540,26 @@
 
   // ─── NAV BAR BARGROUND SHIFT THEME CONTROLLER ───
   const navbar = document.getElementById('navbar');
+  const isHomepage = !!document.getElementById('hero-panel');
 
   function updateNavbarTheme() {
+    if (!navbar) return;
     const scrollY = window.scrollY;
     navbar.classList.toggle('scrolled', scrollY > 40);
 
+    if (!isHomepage) {
+      navbar.classList.add('light-nav');
+      return;
+    }
+
     const navHeight = navbar.offsetHeight || 70;
-    const checkY = scrollY + navHeight + 30;
+    const checkY = scrollY + navHeight / 2;
 
     const lightSections = [
-      { selector: '#configurator', offset: 0 },
-      { selector: '.materials-section', offset: 0 },
-      { selector: '#products', offset: 0 },
-      { selector: '#collections', offset: 0 }
+      { selector: '#configurator' },
+      { selector: '.materials-section' },
+      { selector: '.products-section' },
+      { selector: '.collections-section' }
     ];
 
     let isLight = false;
@@ -553,8 +567,9 @@
     for (const sec of lightSections) {
       const el = document.querySelector(sec.selector);
       if (el) {
-        const top = el.offsetTop + sec.offset;
-        const height = el.offsetHeight - sec.offset;
+        const rect = el.getBoundingClientRect();
+        const top = rect.top + window.scrollY;
+        const height = el.offsetHeight;
         if (checkY >= top && checkY < top + height) {
           isLight = true;
           break;
@@ -594,18 +609,20 @@
   }
 
   // Pause video when out of viewport
-  const videoObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        if (videoBtn && !videoBtn.classList.contains('manually-paused')) {
-          video.play().catch(err => console.log('Autoplay blocked', err));
+  if (video) {
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (videoBtn && !videoBtn.classList.contains('manually-paused')) {
+            video.play().catch(err => console.log('Autoplay blocked', err));
+          }
+        } else {
+          video.pause();
         }
-      } else {
-        video.pause();
-      }
-    });
-  }, { threshold: 0.1 });
-  videoObserver.observe(video);
+      });
+    }, { threshold: 0.1 });
+    videoObserver.observe(video);
+  }
 
   // ─── HORIZONTAL CAROUSEL CONFIGURATOR CODE ───
   let selectedWood = 'teak';
@@ -706,6 +723,11 @@
       `;
 
       card.addEventListener('click', () => {
+        if (card.classList.contains('highlighted')) {
+          // Double-click/second-click on active card -> go to detail page with variant selected
+          window.location.href = `product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushion}`;
+          return;
+        }
         activeCushionIndex = idx;
         centerActiveCard(true);
       });

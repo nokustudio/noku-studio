@@ -56,7 +56,7 @@
         subtitle: "Fraxinus americana",
         desc: "A strong, durable hardwood with a prominent open grain and light cream color. Offers modern aesthetics with organic grain texture.",
         class: "swatch-wood-white-ash",
-        preview: "Resources/material images/Wood/White_Ash_Crown.jpg"
+        preview: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/White_Ash_Crown.jpg"
       },
       {
         id: "pinewood",
@@ -568,18 +568,23 @@
         const priceVal = p.priceRange?.minVariantPrice?.amount ? parseFloat(p.priceRange.minVariantPrice.amount) : SHOPIFY_CONFIG.defaultPrice;
         const imgUrl = p.featuredImage?.url || 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7724c1a8d27260d62288_Noku_ofStillness_Lounge_chair_02.jpeg';
         
-        const pCard = document.createElement('a');
-        pCard.href = `product.html?handle=${p.handle}`;
-        pCard.className = 'used-product-card';
+        const pCard = document.createElement('div');
+        pCard.className = 'gcard';
         pCard.innerHTML = `
-          <div class="used-product-img-wrap">
-            <img src="${imgUrl}" alt="${p.title}" loading="lazy">
-          </div>
-          <div class="used-product-info">
-            <span class="used-product-name">${p.title}</span>
-            <span class="used-product-price">${formatCurrency(priceVal)}</span>
-          </div>
+          <a href="product.html?handle=${p.handle}" class="gcard__media">
+            <div class="gcard__media-inner">
+              <img src="${imgUrl}" alt="${p.title}" loading="lazy">
+            </div>
+            <button class="gcard__add" data-handle="${p.handle}">Details ↗</button>
+          </a>
+          <p class="gcard__cat">Piece</p>
+          <h3 class="gcard__name"><a href="product.html?handle=${p.handle}">${p.title}</a></h3>
+          <p class="gcard__price">${formatCurrency(priceVal)}</p>
         `;
+        pCard.querySelector('.gcard__add').addEventListener('click', (e) => {
+          e.preventDefault();
+          window.location.href = `product.html?handle=${p.handle}`;
+        });
         usedProductsGrid.appendChild(pCard);
       });
 
