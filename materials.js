@@ -56,7 +56,7 @@
         subtitle: "Fraxinus americana",
         desc: "A strong, durable hardwood with a prominent open grain and light cream color. Offers modern aesthetics with organic grain texture.",
         class: "swatch-wood-white-ash",
-        preview: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Lounge_chair_-_whiteash_-_linen.png?v=1774676886"
+        preview: "Resources/material images/Wood/White_Ash_Crown.jpg"
       },
       {
         id: "pinewood",

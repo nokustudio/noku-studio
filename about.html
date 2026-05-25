@@ -25,7 +25,7 @@
 
     /* ════════ HERO SECTION ════════ */
     .about-hero {
-      padding-top: 180px;
+      padding-top: 140px;
       padding-bottom: 80px;
       text-align: center;
       border-bottom: 1px solid var(--line);
@@ -475,17 +475,7 @@
 
 <body>
 
-  <!-- Loading Screen Overlay -->
-  <div id="loading-screen">
-    <div class="loader-logo">
-      <svg width="40" height="48" viewBox="0 0 181.76 218.04" xmlns="http://www.w3.org/2000/svg" style="fill: currentColor;">
-        <polygon points="181.76 5.61 181.76 218.04 145.86 218.04 145.86 144.74 35.91 71.06 35.91 218.04 0 218.04 0 0 145.86 101.35 145.86 5.61 181.76 5.61"/>
-      </svg>
-    </div>
-    <div class="loader-bar-wrap">
-      <div class="loader-bar" id="loader-progress"></div>
-    </div>
-  </div>
+
 
   <!-- Grain Layer overlay -->
   <div class="grain-overlay"></div>
@@ -848,30 +838,7 @@
   <script src="shopify-integration.js"></script>
 
   <script>
-    // Progressive page loader bar
-    const loaderProgress = document.getElementById('loader-progress');
-    const loaderScreen = document.getElementById('loading-screen');
-    
-    function updateLoader(percentage) {
-      if (loaderProgress) {
-        loaderProgress.style.width = percentage + '%';
-      }
-      if (percentage >= 100 && loaderScreen) {
-        setTimeout(() => {
-          loaderScreen.classList.add('fade-out');
-        }, 300);
-      }
-    }
 
-    let loadPercent = 0;
-    const loaderInterval = setInterval(() => {
-      if (loadPercent < 100) {
-        loadPercent += Math.random() * 25;
-        updateLoader(Math.min(loadPercent, 100));
-      } else {
-        clearInterval(loaderInterval);
-      }
-    }, 45);
 
     // Sticky nav class scroll toggler
     window.addEventListener('scroll', () => {

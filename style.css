@@ -977,7 +977,7 @@ nav.light-nav .nav-link:hover {
 
 /* ════════ COLLECTIONS SECTION ════════ */
 .collections-section {
-  background-color: var(--paper);
+  background-color: var(--light);
   z-index: 3;
   position: relative;
 }

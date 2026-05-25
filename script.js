@@ -544,7 +544,7 @@
     const lightSections = [
       { selector: '#configurator', offset: 0 },
       { selector: '.materials-section', offset: 0 },
-      { selector: '#products', offset: 600 },
+      { selector: '#products', offset: 0 },
       { selector: '#collections', offset: 0 }
     ];
 
