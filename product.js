@@ -673,7 +673,7 @@ function renderProductPage() {
     optionsHtml += `
       <div class="option-group" data-option-name="${opt.name}">
         <div class="option-label-row">
-          <span class="option-title">${opt.name}</span>
+          <span class="option-title">${opt.name}:</span>
           <span class="option-selected-val" id="selected-val-${opt.name.replace(/\s+/g, '')}">${selectedOptions[opt.name]}</span>
         </div>
         <div class="swatches-row">
@@ -719,7 +719,9 @@ function renderProductPage() {
     <!-- Gallery block -->
     <div class="product-gallery">
       <div class="main-image-viewport" id="main-viewport">
+        <button id="prev-image-btn" class="slider-arrow prev-arrow" aria-label="Previous Image">‹</button>
         <img id="main-product-image" src="${defaultImageUrl}" alt="${currentProduct.title}">
+        <button id="next-image-btn" class="slider-arrow next-arrow" aria-label="Next Image">›</button>
       </div>
       <div class="thumbnail-list" id="thumbnails-container">
         ${thumbnailsHtml}
@@ -781,8 +783,8 @@ function renderProductPage() {
         </div>
 
         <div class="action-buttons-wrap">
-          <button id="btn-add-cart" class="btn-primary-action">Add to Cart</button>
-          <button id="btn-buy-now" class="btn-secondary-action">Buy Now</button>
+          <button id="btn-add-cart" class="btn-secondary-action">Add to Cart</button>
+          <button id="btn-buy-now" class="btn-primary-action">Buy Now</button>
         </div>
       </div>
     </div>
@@ -843,6 +845,41 @@ function renderProductPage() {
       }, 150);
     });
   });
+
+  // Bind Gallery image arrows (Prev / Next buttons)
+  const prevBtn = document.getElementById('prev-image-btn');
+  const nextBtn = document.getElementById('next-image-btn');
+
+  if (prevBtn && nextBtn && mainImage) {
+    // Hide arrows if there is only 1 image
+    if (imageUrls.length <= 1) {
+      prevBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
+    } else {
+      prevBtn.style.display = 'flex';
+      nextBtn.style.display = 'flex';
+    }
+
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      activeImageIndex = (activeImageIndex - 1 + imageUrls.length) % imageUrls.length;
+      showImageAtIndex(activeImageIndex);
+    });
+
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      activeImageIndex = (activeImageIndex + 1) % imageUrls.length;
+      showImageAtIndex(activeImageIndex);
+    });
+  }
+
+  function showImageAtIndex(idx) {
+    mainImage.style.opacity = '0.3';
+    setTimeout(() => {
+      mainImage.src = imageUrls[idx];
+      mainImage.style.opacity = '1';
+    }, 150);
+  }
 
   // Bind option swatch selection events
   const swatches = document.querySelectorAll('.swatch-circle, .swatch-pill');
@@ -912,6 +949,12 @@ function updateVariantDisplays(isInitial = false) {
         mainImage.style.opacity = '1';
       }, 150);
       
+      // Update activeImageIndex to match the index of this variant image in imageUrls
+      const matchIdx = imageUrls.indexOf(matched.image.url);
+      if (matchIdx > -1) {
+        activeImageIndex = matchIdx;
+      }
+      
       // De-activate current thumbs
       document.querySelectorAll('.thumbnail-item').forEach(t => t.classList.remove('active'));
     }
@@ -945,6 +988,12 @@ function updateVariantDisplays(isInitial = false) {
     });
 
     if (foundAny) {
+      // Append a "Learn More" link pointing to materials.html
+      gridHtml += `
+        <div style="border-top: 1px solid var(--border-soft); padding-top: 16px; margin-top: 8px;">
+          <a href="materials.html" class="discover-more-link" style="margin: 0; display: inline-flex;">Learn More About Our Materials <span>→</span></a>
+        </div>
+      `;
       materialsGrid.innerHTML = gridHtml;
       materialBox.style.display = 'flex';
     } else {

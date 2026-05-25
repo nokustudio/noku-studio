@@ -360,7 +360,7 @@
     .option-label-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 20px;
     }
 
     .option-title {
@@ -386,8 +386,8 @@
     }
 
     .swatch-circle {
-      width: 42px;
-      height: 42px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       border: 1px solid var(--line);
       cursor: pointer;
@@ -440,6 +440,76 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
+    }
+
+    .discover-more-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--chamoisee);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-top: 8px;
+      transition: all 0.3s ease;
+      align-self: flex-start;
+      border-bottom: 1px dashed var(--chamoisee);
+      padding-bottom: 2px;
+      text-decoration: none;
+    }
+
+    .discover-more-link:hover {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+      padding-left: 4px;
+    }
+
+    .discover-more-link span {
+      transition: transform 0.3s ease;
+      display: inline-block;
+    }
+
+    .discover-more-link:hover span {
+      transform: translateX(4px);
+    }
+
+    /* Slider Arrows */
+    .slider-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: rgba(244, 245, 241, 0.85);
+      border: 1px solid var(--border-soft);
+      color: var(--ink);
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.3s ease;
+      user-select: none;
+      box-shadow: 0 4px 12px rgba(44, 38, 34, 0.08);
+      outline: none;
+    }
+
+    .slider-arrow:hover {
+      background-color: var(--chamoisee);
+      color: var(--paper);
+      border-color: var(--chamoisee);
+    }
+
+    .prev-arrow {
+      left: 16px;
+    }
+
+    .next-arrow {
+      right: 16px;
     }
 
     .box-title {
@@ -1046,74 +1116,7 @@
       cursor: not-allowed;
     }
 
-    /* ════════ FOOTER ════════ */
-    footer {
-      border-top: 1px solid var(--line);
-      background-color: var(--cream);
-      padding: 80px 0 40px 0;
-      color: var(--ink);
-    }
 
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 60px;
-      margin-bottom: 60px;
-    }
-
-    .footer-brand p {
-      margin-top: 24px;
-      font-size: 14px;
-      line-height: 1.6;
-      color: var(--muted);
-      max-width: 320px;
-    }
-
-    .footer-col h4 {
-      font-family: var(--font-display);
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 24px;
-      color: var(--ink);
-    }
-
-    .footer-col ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .footer-col a {
-      font-size: 14px;
-      color: var(--muted);
-      transition: color 0.3s ease;
-    }
-
-    .footer-col a:hover {
-      color: var(--chamoisee);
-    }
-
-    .footer-bottom {
-      border-top: 1px solid var(--line);
-      padding-top: 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .footer-bottom-links {
-      display: flex;
-      gap: 24px;
-    }
-
-    .footer-bottom-links a:hover {
-      color: var(--chamoisee);
-    }
 
     /* ════════ RESPONSIVE LAYOUTS ════════ */
     @media (max-width: 1024px) {
@@ -1254,49 +1257,44 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
+  <!-- ════════ FOOTER ════════ -->
   <footer id="footer">
     <div class="container">
+      <div class="footer-cta-line">
+        <p class="footer-cta-eyebrow">Ready to</p>
+        <a href="contact.html" class="btn-cta-arrow">Craft your furniture?<span class="arrow">↗</span></a>
+      </div>
       <div class="footer-grid">
-        <div class="footer-brand">
-          <svg width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg" style="fill: var(--chamoisee);">
-            <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
-            <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
-            <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
-            <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
-          </svg>
-          <p>Handcrafted modern minimalist furniture designed with intent. Rooted in our Chandigarh lineage, reimagined for contemporary living.</p>
+        <div>
+          <p class="footer-wordmark">NOKU</p>
         </div>
-        <div class="footer-col">
-          <h4>Pages</h4>
-          <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="products.html">Catalog</a></li>
-            <li><a href="index.html#collections">Collections</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Collections</h4>
-          <ul>
-            <li><a href="products.html?collection=stillness">Of Stillness</a></li>
-            <li><a href="products.html?collection=memories">Of Memories</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Studio</h4>
-          <ul>
+        <div>
+          <p class="footer-col__heading">About</p>
+          <ul class="footer-col__links">
             <li><a href="about.html">About Us</a></li>
-            <li><a href="./materials.html">Materials</a></li>
-            <li><a href="contact.html">Contact</a></li>
+            <li><a href="contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col__heading">Work</p>
+          <ul class="footer-col__links">
+            <li><a href="products.html">Furniture Shop</a></li>
+            <li><a href="https://nokustudio.webflow.io/projects" target="_blank">Our Projects</a></li>
+            <li><a href="https://nokustudio.webflow.io/products" target="_blank">Collections</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col__heading">Knowledge</p>
+          <ul class="footer-col__links">
+            <li><a href="materials.html">Materials Guide</a></li>
+            <li><a href="sustainability.html">Sustainability</a></li>
+            <li><a href="mailto:hello@nokustudio.in">hello@nokustudio.in</a></li>
           </ul>
         </div>
       </div>
-      <div class="footer-bottom">
-        <span>&copy; 2026 Noku Studio. All rights reserved.</span>
-        <div class="footer-bottom-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-        </div>
+      <div class="footer-legal">
+        <span>© 2026 Noku Studio. All rights reserved.</span>
+        <span>Privacy Policy · Terms &amp; Conditions</span>
       </div>
     </div>
   </footer>
