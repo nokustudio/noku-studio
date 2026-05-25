@@ -1,0 +1,18 @@
+# Node modules
+node_modules/
+
+# OS temporary files
+.DS_Store
+Thumbs.db
+
+# IDE and tooling directories
+.claude/
+.vscode/
+.idea/
+
+# Local workspace backups and drafts
+backup/
+scratch/
+
+# Local cache / audit outputs (optional)
+product_cache.json

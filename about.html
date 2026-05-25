@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noku Studio — About Us</title>
+  <meta name="description"
+    content="The story, philosophy, and history behind Noku Studio, born from Good Earth and dedicated to thoughtful craftsmanship and sustainable design.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Quattrocento:wght@400;700&display=swap"
+    rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ════════ DESIGN SYSTEM OVERRIDES & PAGE STYLES ════════ */
+    body {
+      background-color: var(--paper) !important;
+      color: var(--ink) !important;
+    }
+
+    /* ════════ HERO SECTION ════════ */
+    .about-hero {
+      padding-top: 180px;
+      padding-bottom: 80px;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .about-hero-container {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .about-hero-heading {
+      font-family: var(--font-body);
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 300;
+      line-height: 1.5;
+      color: var(--ink);
+      text-align: center;
+    }
+
+    .about-logo-svg {
+      width: 268px;
+      max-width: 80%;
+      height: auto;
+      color: var(--chamoisee);
+      margin-top: 20px;
+      opacity: 0.95;
+    }
+
+    /* ════════ THREE-COLUMN INFO SECTION ════════ */
+    .about-info-section {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .about-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+    }
+
+    .about-info-col {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .about-col-title {
+      font-family: var(--font-display);
+      font-size: clamp(20px, 2.2vw, 24px);
+      font-weight: 400;
+      color: var(--ink);
+      letter-spacing: 1px;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .about-col-text {
+      font-family: var(--font-body);
+      font-size: 15.5px;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
+    /* ════════ NOKU & GOOD EARTH STORY SECTION ════════ */
+    .story-section {
+      padding: 100px 0;
+      position: relative;
+    }
+
+    .story-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .story-title {
+      font-family: var(--font-display);
+      font-weight: 200;
+      font-size: clamp(38px, 6vw, 64px);
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    .story-timeline-wrap {
+      position: relative;
+      padding-left: 80px;
+    }
+
+    .timeline-line-container {
+      position: absolute;
+      left: 30px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      z-index: 5;
+    }
+
+    .timeline-bg-line {
+      position: absolute;
+      inset: 0;
+      background-color: var(--border-soft);
+      width: 100%;
+    }
+
+    .timeline-progress-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+      background-color: var(--chamoisee);
+      transition: height 0.1s ease-out;
+    }
+
+    .timeline-progress-dot {
+      position: absolute;
+      bottom: -6px; /* center vertically on the bottom of the line */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: var(--chamoisee);
+      box-shadow: 0 0 10px rgba(162, 123, 92, 0.4), 0 0 0 3px var(--paper);
+      transition: opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .story-row {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 80px;
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border-soft);
+      align-items: start;
+    }
+
+    .story-row:last-child {
+      border-bottom: none;
+    }
+
+    .story-left-col {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: sticky;
+      top: 120px;
+    }
+
+    .story-subheading {
+      font-family: var(--font-display);
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 300;
+      line-height: 1.3;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .story-text {
+      font-family: var(--font-body);
+      font-size: 15.5px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .story-right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    /* Staggered Journal Gallery Layout */
+    .journal-gallery-staggered {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px;
+      position: relative;
+      padding: 24px 0;
+      width: 100%;
+    }
+
+    .journal-frame {
+      background-color: #fff;
+      padding: 16px 16px 48px 16px;
+      box-shadow: 0 15px 35px rgba(44, 38, 34, 0.06);
+      border: 1px solid rgba(44, 38, 34, 0.03);
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .journal-frame img {
+      width: 100%;
+      aspect-ratio: 1.05;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .journal-caption {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 16px;
+      text-align: center;
+      font-style: italic;
+    }
+
+    .journal-frame.rotate-left {
+      transform: rotate(-2.5deg);
+      justify-self: start;
+      margin-top: 20px;
+    }
+
+    .journal-frame.rotate-right {
+      transform: rotate(3deg);
+      justify-self: end;
+      margin-top: -20px;
+    }
+
+    /* Staggered positioning overrides */
+    .journal-frame.frame-placeholder {
+      transform: rotate(1.5deg);
+      border: 1.5px dashed var(--light-muted);
+      background-color: rgba(237, 230, 218, 0.15);
+      box-shadow: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 1.05;
+      height: auto;
+      max-width: 320px;
+    }
+
+    .journal-placeholder-content {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 40px 20px;
+      border-radius: 4px;
+    }
+
+    .journal-frame:hover {
+      transform: rotate(0deg) scale(1.02);
+      box-shadow: 0 25px 50px rgba(44, 38, 34, 0.12);
+      z-index: 10;
+    }
+
+    /* Journal Interactive Menu for wide portfolio links */
+    .journal-interactive-menu {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      border-top: 1px solid var(--border-soft);
+      margin-top: 16px;
+    }
+
+    .journal-menu-item {
+      border-bottom: 1px solid var(--border-soft);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .journal-menu-item a {
+      display: flex;
+      align-items: center;
+      padding: 22px 0;
+      width: 100%;
+      position: relative;
+    }
+
+    .menu-num {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--chamoisee);
+      margin-right: 24px;
+      transition: color 0.4s ease;
+    }
+
+    .menu-text {
+      font-family: var(--font-display);
+      font-size: clamp(20px, 2.5vw, 32px);
+      font-weight: 300;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--ink);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
+    }
+
+    .menu-arrow {
+      font-family: var(--font-body);
+      font-size: 20px;
+      color: var(--chamoisee);
+      margin-left: auto;
+      opacity: 0;
+      transform: translateX(-16px);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    }
+
+    .journal-menu-item:hover {
+      border-bottom-color: var(--chamoisee);
+    }
+
+    .journal-menu-item:hover .menu-text {
+      transform: translateX(12px);
+      color: var(--chamoisee);
+    }
+
+    .journal-menu-item:hover .menu-num {
+      color: var(--ink);
+    }
+
+    .journal-menu-item:hover .menu-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Sibling dimming animation */
+    .journal-interactive-menu:hover .journal-menu-item:not(:hover) {
+      opacity: 0.35;
+    }
+
+    /* Horizontal Journal Pills for the wide portfolio links */
+    .journal-pills-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 16px;
+      margin-top: 24px;
+      width: 100%;
+    }
+
+    .journal-pill-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background-color: rgba(237, 230, 218, 0.45);
+      border: 1px solid var(--border-soft);
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--ink);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .journal-pill-link::after {
+      content: '↗';
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--chamoisee);
+      opacity: 0.6;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+
+    .journal-pill-link:hover {
+      background-color: var(--chamoisee);
+      border-color: var(--chamoisee);
+      color: var(--paper);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(162, 123, 92, 0.15);
+    }
+
+    .journal-pill-link:hover::after {
+      color: var(--paper);
+      opacity: 1;
+      transform: translate(2px, -2px);
+    }
+
+    /* Sibling dimming animation for pills on container hover */
+    .journal-pills-container:hover .journal-pill-link:not(:hover) {
+      opacity: 0.45;
+    }
+
+    /* Paragraph blocks for ending of story */
+    .story-ending-container {
+      max-width: 750px;
+      margin: 80px auto 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 60px;
+      border-top: 1px solid var(--line);
+      padding-top: 80px;
+    }
+
+    .story-ending-block {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+    }
+
+    .story-ending-title {
+      font-family: var(--font-display);
+      font-size: clamp(20px, 2.5vw, 26px);
+      font-weight: 300;
+      color: var(--chamoisee);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .story-ending-text {
+      font-family: var(--font-body);
+      font-size: 16.5px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1024px) {
+      .about-info-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .story-timeline-wrap {
+        padding-left: 40px;
+      }
+
+      .timeline-line-container {
+        left: 15px;
+      }
+
+      .story-row {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 50px 0;
+      }
+
+      .story-left-col {
+        position: static;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Loading Screen Overlay -->
+  <div id="loading-screen">
+    <div class="loader-logo">
+      <svg width="40" height="48" viewBox="0 0 181.76 218.04" xmlns="http://www.w3.org/2000/svg" style="fill: currentColor;">
+        <polygon points="181.76 5.61 181.76 218.04 145.86 218.04 145.86 144.74 35.91 71.06 35.91 218.04 0 218.04 0 0 145.86 101.35 145.86 5.61 181.76 5.61"/>
+      </svg>
+    </div>
+    <div class="loader-bar-wrap">
+      <div class="loader-bar" id="loader-progress"></div>
+    </div>
+  </div>
+
+  <!-- Grain Layer overlay -->
+  <div class="grain-overlay"></div>
+
+  <!-- STICKY HEADER NAVIGATION -->
+  <nav id="navbar" class="light-nav">
+    <div class="nav-logo-wrap">
+      <a href="index.html" aria-label="Noku Home">
+        <svg class="logo-svg" width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
+          <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
+          <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
+          <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
+        </svg>
+      </a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html#collections" class="nav-link">Collections</a></li>
+      <li><a href="products.html" class="nav-link">Products</a></li>
+      <li><a href="materials.html" class="nav-link">Materials</a></li>
+      <li><a href="sustainability.html" class="nav-link">Sustainability</a></li>
+      <li><a href="about.html" class="nav-link active">About</a></li>
+      <li><a href="contact.html" class="nav-link">Contact</a></li>
+    </ul>
+    <button id="cart-toggle" class="cart-btn" aria-label="Open Shopping Cart">
+      <svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span id="cart-count-badge" class="cart-count">0</span>
+    </button>
+    <button class="mobile-menu-toggle" aria-label="Toggle Mobile Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="1.5">
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main>
+
+    <!-- HERO PANEL -->
+    <header class="about-hero">
+      <div class="container about-hero-container">
+        <h4 class="about-hero-heading reveal-el">
+          A studio of designers, creatives, and craftsmen, exploring furniture styles across geographies and timelines to create a new identity.
+        </h4>
+        <svg viewBox="0 0 268 67" fill="none" xmlns="http://www.w3.org/2000/svg" class="about-logo-svg reveal-el delay-1">
+          <path d="M55.05 2.12969V66.4297H44.17V44.2397L10.87 21.9397V66.4297H0V0.429688L44.17 31.1097V2.12969H55.05Z" fill="currentColor"></path>
+          <path d="M133.76 34.1698C133.76 52.2798 119.04 66.9998 100.91 66.9998C82.7801 66.9998 68.0601 52.2798 68.0601 34.1698C68.0601 16.0598 82.8001 1.33984 100.92 1.33984C119.04 1.33984 133.77 16.0598 133.77 34.1698M122.9 34.5098C122.9 21.5998 113.73 11.2998 100.81 11.2998C87.8901 11.2998 78.9501 21.5998 78.9501 34.5098C78.9501 47.4198 87.9001 57.5998 100.81 57.5998C113.72 57.5998 122.9 47.4098 122.9 34.5098Z" fill="currentColor"></path>
+          <path d="M190.96 66.4299L170.8 33.1499L157.66 47.4099V66.4299H146.79V2.12988H157.66V31.6799L184.51 2.12988H199.34L178.28 24.9999L203.76 66.4299H190.96Z" fill="currentColor"></path>
+          <path d="M213.27 38.1299V2.12988H224.14V38.1299C224.14 51.1499 228.44 57.5999 240.22 57.5999C252 57.5999 256.3 51.1499 256.3 38.1299V2.12988H267.17V38.1299C267.17 55.8999 258.11 66.9999 240.33 66.9999C222.55 66.9999 213.26 55.9099 213.26 38.1299" fill="currentColor" />
+        </svg>
+      </div>
+    </header>
+
+    <!-- THREE-COLUMN INFO SECTION -->
+    <section class="about-info-section">
+      <div class="container about-info-grid">
+        <!-- The Name -->
+        <div class="about-info-col reveal-el">
+          <h5 class="about-col-title">The Name</h5>
+          <p class="about-col-text">
+            &quot;Noku&quot; translates to &quot;Look.&quot; The studio invites you to take a closer look at its pieces, implying that each piece is unique and worthy of examination, just like a piece of art. Further, the name carries a sense of curiosity and exploration, inviting one to discover the details and craftsmanship of each piece.
+          </p>
+        </div>
+
+        <!-- The Philosophy -->
+        <div class="about-info-col reveal-el delay-1">
+          <h5 class="about-col-title">The Philosophy</h5>
+          <p class="about-col-text">
+            By bringing beauty and joy into everyday life, we invite people to slow down, take notice, and appreciate the world around them. We believe that thoughtful craftsmanship and purposeful design are at the heart of creating these moments.
+            <br><br>
+            Rooted in a deep commitment to sustainability, we seek to enrich lives—nurturing skill, fostering innovation, and creating with care. Through this we aim to create a positive impact on the world, one piece of furniture at a time.
+          </p>
+        </div>
+
+        <!-- The History -->
+        <div class="about-info-col reveal-el delay-2">
+          <h5 class="about-col-title">The History</h5>
+          <p class="about-col-text">
+            The studio draws upon the sensibilities and ethos of Good Earth and expands it in a new direction. So to understand the studio and its work, one needs to understand how we came to be.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- NOKU & GOOD EARTH STORY SECTION -->
+    <section class="story-section">
+      <div class="container">
+        
+        <div class="story-header reveal-el">
+          <h2 class="story-title">Noku &amp; Good Earth</h2>
+        </div>
+
+        <div class="story-timeline-wrap">
+          <!-- Active scroll timeline line -->
+          <div class="timeline-line-container">
+            <div class="timeline-bg-line"></div>
+            <div class="timeline-progress-line" id="timeline-scroll-indicator">
+              <div class="timeline-progress-dot"></div>
+            </div>
+          </div>
+
+          <!-- Row 1: Good Earth origins -->
+          <div class="story-row reveal-el">
+            <div class="story-left-col">
+              <h4 class="story-subheading">At first, there was Good Earth</h4>
+              <p class="story-text">
+                In 1988, the core group of GoodEarth started its journey as part of a loosely-knit group of architects and engineers inspired by the works of Laurie Baker on sustainable architecture, ideals of Mahatma Gandhi on decentralisation and caring for the environment and the people.
+              </p>
+            </div>
+            <div class="story-right-col">
+              <div class="journal-gallery-staggered">
+                <div class="journal-frame rotate-left reveal-el">
+                  <img src="https://cdn.prod.website-files.com/667fb0113927090bb47059e6/66c03f7a87730a4738ac7a63_director-image%20101.png" alt="Good Earth Origins">
+                  <div class="journal-caption">Good Earth, 1988</div>
+                </div>
+                <div class="journal-frame frame-placeholder rotate-right reveal-el delay-1">
+                  <div class="journal-placeholder-content">
+                    <span>+ Image to be added</span>
+                  </div>
+                </div>
+                <div class="journal-frame rotate-left reveal-el delay-2">
+                  <img src="https://cdn.prod.website-files.com/667fb0113927090bb47059e6/66c044e20ce17596b99903b1_story1.png" alt="Craftsmanship History">
+                  <div class="journal-caption">Learning from Laurie Baker</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2: The Idea -->
+          <div class="story-row reveal-el">
+            <div class="story-left-col">
+              <h4 class="story-subheading">and an idea</h4>
+              <p class="story-text">
+                To evolve into a truly sustainable business that goes beyond numbers and makes conscious decisions with a deep awareness of their impact on people, ecology, culture, and humanity. With a strong sense of responsibility and care, they sought to uphold ethical values, prioritizing meaningful projects over greed. This materialized as residential developments that align with long-term sustainability, social well-being, and ethical business practices.
+              </p>
+            </div>
+            <div class="story-right-col">
+              <div class="journal-gallery-staggered">
+                <div class="journal-frame frame-placeholder rotate-left reveal-el">
+                  <div class="journal-placeholder-content">
+                    <span>+ Image to be added</span>
+                  </div>
+                </div>
+                <div class="journal-frame rotate-right reveal-el delay-1">
+                  <img src="https://cdn.prod.website-files.com/667fb0113927090bb47059e6/66c046477d7a6644f4affb81_hamlet4.jpg" alt="Good Earth Hamlet development">
+                  <div class="journal-caption">Hamlet Development, Kochi</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 3: Branches -->
+          <div class="story-row reveal-el">
+            <div class="story-left-col">
+              <h4 class="story-subheading">that grew, with branches spreading far</h4>
+              <p class="story-text">
+                The first development ‘Hamlet’ was commissioned in Kochi, 1996. In Bangalore the consultancy practice started in 1994. So did the consultancy practice start in Calicut in the same year.
+              </p>
+            </div>
+            <div class="story-right-col">
+              <div class="journal-interactive-menu">
+                <div class="journal-menu-item reveal-el">
+                  <a href="https://goodearth.org.in/cochin/" target="_blank">
+                    <span class="menu-num">I</span>
+                    <span class="menu-text">Kochi</span>
+                    <span class="menu-arrow">→</span>
+                  </a>
+                </div>
+                <div class="journal-menu-item reveal-el delay-1">
+                  <a href="https://goodearth.org.in/calicut/" target="_blank">
+                    <span class="menu-num">II</span>
+                    <span class="menu-text">Calicut</span>
+                    <span class="menu-arrow">→</span>
+                  </a>
+                </div>
+                <div class="journal-menu-item reveal-el delay-2">
+                  <a href="https://goodearth.org.in/bengaluru/" target="_blank">
+                    <span class="menu-num">III</span>
+                    <span class="menu-text">Bangalore</span>
+                    <span class="menu-arrow">→</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 4: Wide Portfolio -->
+          <div class="story-row reveal-el">
+            <div class="story-left-col">
+              <h4 class="story-subheading">and wide</h4>
+              <p class="story-text">
+                As a multidisciplinary organization rooted in holistic design, hands-on practice, and responsible business, we tackle environmental and social challenges through excellence in design, spanning residential communities, regenerative agriculture, and ecological restoration.
+              </p>
+            </div>
+            <div class="story-right-col">
+              <div class="journal-pills-container">
+                <a href="https://goodearth.org.in/portfolio/" target="_blank" class="journal-pill-link reveal-el">
+                  Portfolio
+                </a>
+                <a href="https://thestudiolore.com/" target="_blank" class="journal-pill-link reveal-el delay-1">
+                  Interiors
+                </a>
+                <a href="https://goodearth.org.in/ecoscaping/" target="_blank" class="journal-pill-link reveal-el delay-2">
+                  Ecoscaping
+                </a>
+                <a href="https://goodearth.org.in/ecological-restoration/" target="_blank" class="journal-pill-link reveal-el delay-3">
+                  Ecological Restoration
+                </a>
+                <a href="https://petrichoragri.com/" target="_blank" class="journal-pill-link reveal-el delay-4">
+                  Natural Farming
+                </a>
+                <a href="https://petrichorstore.in/" target="_blank" class="journal-pill-link reveal-el delay-5">
+                  Petrichor Store
+                </a>
+                <a href="https://goodearth.org.in/hospitality/" target="_blank" class="journal-pill-link reveal-el delay-6">
+                  Hospitality
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 5: Then 3 years ago -->
+          <div class="story-row reveal-el">
+            <div class="story-left-col">
+              <h4 class="story-subheading">Then 3 years ago, the seed for the studio was sown</h4>
+              <p class="story-text">
+                We decided to work with carpenters who had been with us for decades to create pieces of furniture that blended traditional knowledge with modern design.
+              </p>
+            </div>
+            <div class="story-right-col">
+              <div class="journal-gallery-staggered">
+                <div class="journal-frame frame-placeholder rotate-left reveal-el">
+                  <div class="journal-placeholder-content">
+                    <span>+ Image to be added</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 6: after years of learning -->
+          <div class="story-row reveal-el">
+            <div class="story-left-col">
+              <h4 class="story-subheading">after years of learning and explorations</h4>
+              <p class="story-text">
+                We’ve been steadily exploring, experimenting with design, materials, and form. Along the way, our work found its place in clients’ homes from the Goodearth projects.
+              </p>
+            </div>
+            <div class="story-right-col">
+              <div class="journal-gallery-staggered">
+                <div class="journal-frame frame-placeholder rotate-right reveal-el">
+                  <div class="journal-placeholder-content">
+                    <span>+ Image to be added</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 7: Noku came to be -->
+          <div class="story-row reveal-el">
+            <div class="story-left-col">
+              <h4 class="story-subheading">Noku came to be!</h4>
+              <p class="story-text">
+                And in the beginning of 2024, the studio was officially formed. We immediately started working on our first collection and opened up for a larger audience!
+              </p>
+            </div>
+            <div class="story-right-col">
+              <div class="journal-gallery-staggered">
+                <div class="journal-frame frame-placeholder rotate-left reveal-el">
+                  <div class="journal-placeholder-content">
+                    <span>+ Image to be added</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div> <!-- end of timeline wrap -->
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Brand Info -->
+        <div class="footer-brand">
+          <svg width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg" style="fill: var(--chamoisee);">
+            <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
+            <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
+            <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
+            <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
+          </svg>
+          <p>
+            A contemporary furniture design studio blending traditional Indian craftsmanship with modern minimalist design. Handmade in Bengaluru.
+          </p>
+        </div>
+
+        <!-- Studio Info Links -->
+        <div class="footer-col">
+          <h4>Studio</h4>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="https://nokustudio.webflow.io/projects" target="_blank">Our Projects</a></li>
+            <li><a href="contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+
+        <!-- Shop/Work Links -->
+        <div class="footer-col">
+          <h4>Work</h4>
+          <ul>
+            <li><a href="index.html#collections">Collections</a></li>
+            <li><a href="products.html">Furniture Shop</a></li>
+          </ul>
+        </div>
+
+        <!-- Knowledge base links -->
+        <div class="footer-col">
+          <h4>Knowledge</h4>
+          <ul>
+            <li><a href="./materials.html">Materials Guide</a></li>
+            <li><a href="./sustainability.html">Sustainability</a></li>
+            <li><a href="mailto:hello@nokustudio.in">hello@nokustudio.in</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Footer bottom segment -->
+      <div class="footer-bottom">
+        <span>© 2026 Noku Studio. All Rights Reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms &amp; Conditions</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ════════ SHOPPING CART SIDE-DRAWER ════════ -->
+  <div id="cart-overlay" class="cart-overlay"></div>
+  <div id="cart-drawer" class="cart-drawer">
+    <div class="cart-header">
+      <h3 class="cart-title">Your Cart</h3>
+      <button id="cart-close" class="cart-close-btn" aria-label="Close Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="cart-items-container" id="cart-items-container">
+      <div class="cart-empty-message">Your cart is currently empty.</div>
+    </div>
+    
+    <div class="cart-footer">
+      <div class="cart-subtotal-row">
+        <span class="subtotal-label">Subtotal</span>
+        <span class="subtotal-price" id="cart-subtotal">₹0.00</span>
+      </div>
+      <button id="checkout-btn" class="checkout-btn" disabled>Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <script src="shopify-integration.js"></script>
+
+  <script>
+    // Progressive page loader bar
+    const loaderProgress = document.getElementById('loader-progress');
+    const loaderScreen = document.getElementById('loading-screen');
+    
+    function updateLoader(percentage) {
+      if (loaderProgress) {
+        loaderProgress.style.width = percentage + '%';
+      }
+      if (percentage >= 100 && loaderScreen) {
+        setTimeout(() => {
+          loaderScreen.classList.add('fade-out');
+        }, 300);
+      }
+    }
+
+    let loadPercent = 0;
+    const loaderInterval = setInterval(() => {
+      if (loadPercent < 100) {
+        loadPercent += Math.random() * 25;
+        updateLoader(Math.min(loadPercent, 100));
+      } else {
+        clearInterval(loaderInterval);
+      }
+    }, 45);
+
+    // Sticky nav class scroll toggler
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      if (navbar) {
+        if (window.scrollY > 40) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      }
+    }, { passive: true });
+
+    // Timeline vertical scroll active line animation
+    const timelineWrap = document.querySelector('.story-timeline-wrap');
+    const scrollIndicator = document.getElementById('timeline-scroll-indicator');
+    const progressDot = scrollIndicator ? scrollIndicator.querySelector('.timeline-progress-dot') : null;
+    
+    function updateTimelineProgress() {
+      if (!timelineWrap || !scrollIndicator) return;
+      const rect = timelineWrap.getBoundingClientRect();
+      const containerHeight = rect.height;
+      const viewportHeight = window.innerHeight;
+      
+      // Compute relative top/bottom passed mid-viewport
+      const startPos = rect.top - viewportHeight * 0.45;
+      const totalScrollable = containerHeight - viewportHeight * 0.45;
+      
+      let progress = 0;
+      if (startPos < 0) {
+        progress = Math.min(100, Math.max(0, (-startPos / totalScrollable) * 100));
+      }
+      scrollIndicator.style.height = `${progress}%`;
+      
+      // Update opacity of target dot
+      if (progressDot) {
+        progressDot.style.opacity = progress > 0.5 ? '1' : '0';
+      }
+    }
+    
+    window.addEventListener('scroll', updateTimelineProgress, { passive: true });
+    window.addEventListener('resize', updateTimelineProgress, { passive: true });
+    updateTimelineProgress(); // Initial run
+
+    // Interaction reveal elements observer
+    document.addEventListener('DOMContentLoaded', () => {
+      const revealElements = document.querySelectorAll('.reveal-el');
+      
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.05,
+        rootMargin: '0px 0px -30px 0px'
+      });
+
+      revealElements.forEach(el => revealObserver.observe(el));
+    });
+  </script>
+</body>
+
+</html>

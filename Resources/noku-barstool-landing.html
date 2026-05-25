@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noku Studio — Barstool | Of Stillness</title>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400;600;700&family=Quattrocento:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gun:#2c3639;--cham:#a27b5c;--outer:#3f4e4f;--bone:#dcd7c9;--white:#fff;
+  --gun90:rgba(44,54,57,.92);--cham15:rgba(162,123,92,.15);--cham08:rgba(162,123,92,.08);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Quattrocento',Georgia,serif;color:var(--outer);background:var(--white);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bone)}
+::-webkit-scrollbar-thumb{background:var(--cham);border-radius:3px}
+img{display:block;max-width:100%;height:auto}
+
+/* ════════ ANIMATIONS ════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(50px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideLeft{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideRight{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:translateX(0)}}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+@keyframes expandW{from{width:0}to{width:100%}}
+@keyframes rotate{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+.r{opacity:0;transform:translateY(44px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+.r.v{opacity:1;transform:translateY(0)}
+.r.v.d1{transition-delay:.1s}.r.v.d2{transition-delay:.2s}.r.v.d3{transition-delay:.3s}.r.v.d4{transition-delay:.4s}.r.v.d5{transition-delay:.5s}
+
+/* ════════ NAV ════════ */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:80px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;transition:all .5s ease}
+nav.scrolled{background:rgba(255,255,255,.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.logo{font-family:'Josefin Sans',sans-serif;font-weight:700;font-size:22px;color:var(--cham);letter-spacing:5px;text-decoration:none;transition:opacity .3s}
+.logo:hover{opacity:.7}
+.nav-r{display:flex;align-items:center;gap:40px}
+.nav-r a{font-family:'Josefin Sans',sans-serif;font-weight:300;font-size:12px;color:var(--bone);text-decoration:none;letter-spacing:2.5px;text-transform:uppercase;position:relative;transition:color .3s}
+nav.scrolled .nav-r a{color:var(--outer)}
+.nav-r a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--cham);transition:width .3s}
+.nav-r a:hover{color:var(--cham)}
+.nav-r a:hover::after{width:100%}
+
+/* ════════ HERO ════════ */
+.hero{height:100vh;min-height:800px;background:var(--gun);display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 80%,rgba(162,123,92,.08) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(220,215,201,.04) 0%,transparent 50%);z-index:1;pointer-events:none}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:0 80px;position:relative;z-index:2;animation:fadeUp 1.2s cubic-bezier(.16,1,.3,1) .3s both}
+.hero-collection{font-family:'Josefin Sans',sans-serif;font-weight:300;font-size:11px;letter-spacing:6px;text-transform:uppercase;color:var(--cham);margin-bottom:32px;display:flex;align-items:center;gap:16px}
+.hero-collection::before{content:'';width:40px;height:1px;background:var(--cham)}
+.hero h1{font-family:'Josefin Sans',sans-serif;font-weight:700;font-size:clamp(52px,6vw,80px);color:var(--white);line-height:1.05;letter-spacing:-1px;margin-bottom:24px}
+.hero h1 em{font-style:normal;color:var(--cham)}
+.hero-desc{font-size:18px;line-height:1.85;color:var(--bone);max-width:440px;opacity:.8;margin-bottom:48px}
+.hero-specs{display:flex;gap:40px;margin-bottom:48px}
+.hero-spec{display:flex;flex-direction:column;gap:4px}
+.hero-spec-label{font-family:'Josefin Sans',sans-serif;font-weight:300;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--cham)}
+.hero-spec-val{font-family:'Josefin Sans',sans-serif;font-weight:600;font-size:16px;color:var(--white);letter-spacing:.5px}
+.hero-actions{display:flex;gap:16px;align-items:center}
+
+.btn{font-family:'Josefin Sans',sans-serif;font-weight:600;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;text-decoration:none;padding:18px 40px;border:none;cursor:pointer;transition:all .4s cubic-bezier(.16,1,.3,1);display:inline-flex;align-items:center;gap:10px}
+.btn-primary{background:var(--cham);color:var(--white);border-radius:0}
+.btn-primary:hover{background:var(--white);color:var(--gun);transform:translateY(-2px)}
+.btn-ghost{background:transparent;color:var(--bone);border:1px solid rgba(220,215,201,.25);border-radius:0}
+.btn-ghost:hover{border-color:var(--cham);color:var(--cham);transform:translateY(-2px)}
+
+.hero-right{position:relative;display:flex;align-items:center;justify-content:center;z-index:2}
+.hero-img-wrap{position:relative;width:85%;max-width:520px;animation:fadeIn 1.4s .6s both}
+.hero-img-wrap img{width:100%;height:auto;filter:drop-shadow(0 40px 80px rgba(0,0,0,.3))}
+.hero-img-wrap::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:110%;height:110%;border:1px solid rgba(162,123,92,.15);border-radius:50%;animation:rotate 30s linear infinite}
+.hero-img-wrap::after{content:'';position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);width:60%;height:30px;background:radial-gradient(ellipse,rgba(0,0,0,.25),transparent);filter:blur(10px)}
+
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:3;text-align:center;animation:fadeIn 1s 2s both}
+.hero-scroll span{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--cham)}
+.scroll-bar{width:1px;height:36px;background:linear-gradient(to bottom,var(--cham),transparent);margin:10px auto 0;animation:pulse 2s ease infinite}
+
+/* ════════ TICKER ════════ */
+.ticker-wrap{background:var(--bone);overflow:hidden;padding:22px 0;border-top:1px solid var(--cham15);border-bottom:1px solid var(--cham15)}
+.ticker{display:flex;animation:ticker 25s linear infinite;width:max-content}
+.ticker span{font-family:'Josefin Sans',sans-serif;font-weight:300;font-size:13px;letter-spacing:4px;text-transform:uppercase;color:var(--outer);white-space:nowrap;padding:0 24px}
+.ticker .dot{color:var(--cham);font-size:8px;padding:0 20px}
+
+/* ════════ STORY ════════ */
+.story{padding:140px 48px;background:var(--white)}
+.story .container{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.story-text{max-width:500px}
+.story-num{font-family:'Josefin Sans',sans-serif;font-weight:200;font-size:96px;color:var(--cham15);line-height:1;margin-bottom:16px;letter-spacing:-4px}
+.story-label{font-family:'Josefin Sans',sans-serif;font-weight:300;font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--cham);margin-bottom:20px}
+.story h2{font-family:'Josefin Sans',sans-serif;font-weight:700;font-size:clamp(28px,3.5vw,44px);color:var(--gun);line-height:1.2;margin-bottom:28px;letter-spacing:-.5px}
+.story p{font-size:17px;line-height:1.9;color:var(--outer);opacity:.8}
+.story-img{position:relative;overflow:hidden}
+.story-img img{width:100%;height:550px;object-fit:cover;transition:transform .8s cubic-bezier(.16,1,.3,1)}
+.story-img:hover img{transform:scale(1.03)}
+.story-img::after{content:'';position:absolute;inset:0;border:1px solid var(--cham15);pointer-events:none}
+
+/* ════════ QUOTE ════════ */
+.quote-section{padding:120px 48px;background:var(--gun);text-align:center;position:relative;overflow:hidden}
+.quote-section::before{content:'"';font-family:'Quattrocento',serif;font-size:200px;color:rgba(162,123,92,.08);position:absolute;top:-30px;left:50%;transform:translateX(-50%);pointer-events:none}
+.quote-text{font-family:'Quattrocento',serif;font-size:clamp(22px,2.8vw,32px);color:var(--bone);line-height:1.7;max-width:780px;margin:0 auto;font-style:italic;position:relative;z-index:1}
+.quote-attr{font-family:'Josefin Sans',sans-serif;font-weight:300;font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--cham);margin-top:36px;position:relative;z-index:1}
+
+/* ════════ DETAILS ════════ */
+.details{padding:140px 48px;background:var(--bone)}
+.details .container{max-width:1200px;margin:0 auto}
+.details-header{text-align:center;margin-bottom:80px}
+.details-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:48px}
+.detail-card{background:var(--white);padding:48px;transition:transform .5s cubic-bezier(.16,1,.3,1);position:relative;overflow:hidden}
+.detail-card::before{content:'';position:absolute;top:0;left:0;width:0;height:2px;background:var(--cham);transition:width .6s ease}
+.detail-card:hover::before{width:100%}
+.detail-card:hover{transform:translateY(-6px)}
+.detail-num{font-family:'Josefin Sans',sans-serif;font-weight:200;font-size:48px;color:var(--cham15);margin-bottom:20px}
+.detail-title{font-family:'Josefin Sans',sans-serif;font-weight:600;font-size:18px;color:var(--gun);letter-spacing:1px;margin-bottom:16px}
+.detail-text{font-size:15px;line-height:1.8;color:var(--outer);opacity:.75}
+
+/* ════════ MATERIALS ════════ */
+.materials{padding:140px 48px;background:var(--white)}
+.materials .container{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.mat-visual{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mat-swatch{height:200px;position:relative;overflow:hidden;cursor:pointer;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.mat-swatch:hover{transform:scale(1.03)}
+.mat-swatch::after{content:attr(data-label);position:absolute;bottom:16px;left:16px;font-family:'Josefin Sans',sans-serif;font-weight:300;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--white);opacity:0;transition:opacity .3s}
+.mat-swatch:hover::after{opacity:1}
+.mat-wood{background:linear-gradient(135deg,#8B6914,#A0522D,#6B4226);grid-column:span 2;height:220px}
+.mat-leather{background:linear-gradient(135deg,#654321,#8B4513)}
+.mat-cane{background:linear-gradient(135deg,#C4A265,#D2B48C)}
+.mat-fabric{background:linear-gradient(135deg,#9B8B7A,#B8A99A);grid-column:span 2;height:160px}
+.mat-info .story-label{margin-bottom:20px}
+.mat-info h2{font-family:'Josefin Sans',sans-serif;font-weight:700;font-size:clamp(28px,3vw,40px);color:var(--gun);line-height:1.2;margin-bottom:24px}
+.mat-info p{font-size:17px;line-height:1.9;color:var(--outer);opacity:.8;margin-bottom:24px}
+.mat-list{list-style:none;display:flex;flex-wrap:wrap;gap:12px}
+.mat-list li{font-family:'Josefin Sans',sans-serif;font-weight:400;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gun);padding:10px 20px;border:1px solid var(--cham);transition:all .3s}
+.mat-list li:hover{background:var(--cham);color:var(--white)}
+
+/* ════════ PRODUCT VIEWS ════════ */
+.views{padding:140px 48px;background:var(--gun);position:relative;overflow:hidden}
+.views::before{content:'';position:absolute;top:0;right:0;width:50%;height:100%;background:radial-gradient(ellipse at 70% 50%,rgba(162,123,92,.06) 0%,transparent 60%);pointer-events:none}
+.views .container{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.views-header{margin-bottom:64px}
+.views-header .section-label{color:var(--cham)}
+.views-header h2{font-family:'Josefin Sans',sans-serif;font-weight:700;font-size:clamp(28px,3vw,44px);color:var(--white);line-height:1.2}
+.view-gallery{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.view-card{position:relative;overflow:hidden;background:rgba(220,215,201,.04);display:flex;align-items:center;justify-content:center;min-height:480px;padding:48px;transition:background .5s}
+.view-card:hover{background:rgba(220,215,201,.08)}
+.view-card img{max-height:400px;width:auto;max-width:90%;transition:transform .8s cubic-bezier(.16,1,.3,1);filter:drop-shadow(0 20px 50px rgba(0,0,0,.2))}
+.view-card:hover img{transform:scale(1.04)}
+.view-card-label{position:absolute;bottom:24px;left:24px;font-family:'Josefin Sans',sans-serif;font-weight:300;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--cham)}
+
+/* ════════ COLLECTION ════════ */
+.collection{padding:140px 48px;background:var(--bone)}
+.collection .container{max-width:1200px;margin:0 auto}
+.coll-header{text-align:center;margin-bottom:80px}
+.coll-header h2{font-family:'Josefin Sans',sans-serif;font-weight:700;font-size:clamp(28px,3vw,44px);color:var(--gun);margin-bottom:20px}
+.coll-header p{font-size:17px;line-height:1.8;color:var(--outer);max-width:600px;margin:0 auto;opacity:.8}
+.coll-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.coll-card{background:var(--white);overflow:hidden;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.coll-card:hover{transform:translateY(-6px)}
+.coll-card-img{height:280px;overflow:hidden;position:relative}
+.coll-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.16,1,.3,1)}
+.coll-card:hover .coll-card-img img{transform:scale(1.05)}
+.coll-card-info{padding:24px}
+.coll-card-name{font-family:'Josefin Sans',sans-serif;font-weight:600;font-size:15px;color:var(--gun);letter-spacing:.5px;margin-bottom:6px}
+.coll-card-dim{font-family:'Josefin Sans',sans-serif;font-weight:300;font-size:12px;color:var(--cham);letter-spacing:1px}
+
+/* ════════ BESPOKE CTA ════════ */
+.cta{padding:140px 48px;background:var(--gun);text-align:center;position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(162,123,92,.1),transparent 60%);pointer-events:none}
+.cta-label{font-family:'Josefin Sans',sans-serif;font-weight:300;font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--cham);margin-bottom:24px}
+.cta h2{font-family:'Josefin Sans',sans-serif;font-weight:700;font-size:clamp(32px,4.5vw,56px);color:var(--white);line-height:1.15;margin-bottom:20px}
+.cta h2 em{font-style:normal;color:var(--cham)}
+.cta p{font-size:18px;line-height:1.8;color:var(--bone);max-width:520px;margin:0 auto 48px;opacity:.75}
+.btn-cta{background:var(--cham);color:var(--white);font-family:'Josefin Sans',sans-serif;font-weight:600;font-size:13px;letter-spacing:3px;text-transform:uppercase;padding:20px 56px;border:none;cursor:pointer;transition:all .4s;text-decoration:none;display:inline-block}
+.btn-cta:hover{background:var(--white);color:var(--gun);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.2)}
+
+/* ════════ FOOTER ════════ */
+footer{padding:80px 48px 40px;background:var(--white);border-top:1px solid var(--cham15)}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:64px}
+.footer-brand .logo{font-size:20px;display:inline-block;margin-bottom:16px}
+.footer-brand p{font-size:14px;line-height:1.7;color:var(--outer);opacity:.6;max-width:280px}
+.footer-col h4{font-family:'Josefin Sans',sans-serif;font-weight:600;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--gun);margin-bottom:20px}
+.footer-col ul{list-style:none}
+.footer-col li{margin-bottom:10px}
+.footer-col a{font-size:14px;color:var(--outer);text-decoration:none;transition:color .3s;opacity:.65}
+.footer-col a:hover{color:var(--cham);opacity:1}
+.footer-bottom{max-width:1200px;margin:0 auto;padding-top:32px;border-top:1px solid var(--cham15);display:flex;justify-content:space-between;align-items:center}
+.footer-bottom span{font-size:13px;color:var(--outer);opacity:.4}
+.footer-bottom-links{display:flex;gap:24px}
+.footer-bottom-links a{font-size:13px;color:var(--outer);opacity:.4;text-decoration:none;transition:opacity .3s}
+.footer-bottom-links a:hover{opacity:.8;color:var(--cham)}
+
+/* ════════ RESPONSIVE ════════ */
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr;height:auto;min-height:100vh}
+  .hero-left{padding:140px 48px 60px;order:2}
+  .hero-right{padding:80px 48px 0;order:1}
+  .hero-img-wrap{max-width:360px}
+  .story .container,.materials .container{grid-template-columns:1fr;gap:48px}
+  .story-img img{height:400px}
+  .view-gallery{grid-template-columns:1fr}
+  .coll-grid{grid-template-columns:1fr 1fr}
+  .details-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  nav{padding:0 24px}
+  .hero-left{padding:120px 24px 48px}
+  .hero-right{padding:80px 24px 0}
+  .hero-specs{flex-direction:column;gap:16px}
+  .section,.story,.quote-section,.details,.materials,.views,.collection,.cta{padding:80px 24px}
+  .color-grid,.spacing-grid{grid-template-columns:1fr 1fr}
+  .coll-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;gap:16px;text-align:center}
+  .mat-visual{grid-template-columns:1fr}
+  .mat-wood,.mat-fabric{grid-column:span 1}
+  .hero-actions{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════ NAV ════════ -->
+<nav id="nav">
+  <a href="#" class="logo">NOKU</a>
+  <div class="nav-r">
+    <a href="#collection">Work</a>
+    <a href="#details">Products</a>
+    <a href="#cta">Bespoke</a>
+  </div>
+</nav>
+
+<!-- ════════ HERO ════════ -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-collection">Collection 01 — Of Stillness</div>
+    <h1>The<br><em>Barstool</em></h1>
+    <p class="hero-desc">A quiet assertion of form and function. Rooted in mid-century restraint, this barstool pairs honest wood joinery with the softness of woven cane and fabric—settling effortlessly into any counter it meets.</p>
+    <div class="hero-specs">
+      <div class="hero-spec">
+        <span class="hero-spec-label">Dimensions</span>
+        <span class="hero-spec-val">51.5 × 49.5 × 93 cm</span>
+      </div>
+      <div class="hero-spec">
+        <span class="hero-spec-label">Materials</span>
+        <span class="hero-spec-val">Wood · Leather · Fabric</span>
+      </div>
+      <div class="hero-spec">
+        <span class="hero-spec-label">Year</span>
+        <span class="hero-spec-val">2024</span>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <a href="#cta" class="btn btn-primary">Enquire Now</a>
+      <a href="#story" class="btn btn-ghost">The Story</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-wrap">
+      <img src="https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/69d390164933b88e73cc765d_Barstool_1_Front.png" alt="Noku Barstool — Front View" />
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-bar"></div>
+  </div>
+</section>
+
+<!-- ════════ TICKER ════════ -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span>Designed with Intent</span><span class="dot">•</span>
+    <span>Crafted with Care</span><span class="dot">•</span>
+    <span>Pieces for Living</span><span class="dot">•</span>
+    <span>Of Stillness</span><span class="dot">•</span>
+    <span>Material Honesty</span><span class="dot">•</span>
+    <span>Quiet Elegance</span><span class="dot">•</span>
+    <span>Designed with Intent</span><span class="dot">•</span>
+    <span>Crafted with Care</span><span class="dot">•</span>
+    <span>Pieces for Living</span><span class="dot">•</span>
+    <span>Of Stillness</span><span class="dot">•</span>
+    <span>Material Honesty</span><span class="dot">•</span>
+    <span>Quiet Elegance</span><span class="dot">•</span>
+  </div>
+</div>
+
+<!-- ════════ STORY ════════ -->
+<section class="story" id="story">
+  <div class="container">
+    <div class="story-text r">
+      <div class="story-num">01</div>
+      <div class="story-label">The Design</div>
+      <h2>Simplicity that<br>speaks volumes</h2>
+      <p>Mid-Century refers to works from the 1950s and 60s, characterized by the use of materials like wood, metal, cane and fabrics. The beauty of it lies in its simplistic and organic flowing lines that come together to create a form that serves a specific purpose. The Barstool distils this language into a single, purposeful gesture—an elevated seat that belongs wherever people gather.</p>
+    </div>
+    <div class="story-img r d2">
+      <img src="https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c6f2558734a8e5f572224_Noku_ofStillness_Barstool_03.jpeg" alt="Barstool in context" />
+    </div>
+  </div>
+</section>
+
+<!-- ════════ QUOTE ════════ -->
+<section class="quote-section">
+  <div class="r">
+    <p class="quote-text">An exploration of the essence behind the art and craft spread across this diverse country and beyond.</p>
+    <p class="quote-attr">— The Studio Philosophy</p>
+  </div>
+</section>
+
+<!-- ════════ DETAILS ════════ -->
+<section class="details" id="details">
+  <div class="container">
+    <div class="details-header r">
+      <div class="story-label">Craftsmanship</div>
+      <h2 style="font-family:'Josefin Sans',sans-serif;font-weight:700;font-size:clamp(28px,3vw,44px);color:var(--gun);line-height:1.2">Every detail,<br>considered</h2>
+    </div>
+    <div class="details-grid">
+      <div class="detail-card r d1">
+        <div class="detail-num">01</div>
+        <div class="detail-title">Honest Joinery</div>
+        <p class="detail-text">Traditional mortise and tenon joints crafted in solid teak and honne. No veneer, no shortcuts—just wood meeting wood with precision that lasts generations.</p>
+      </div>
+      <div class="detail-card r d2">
+        <div class="detail-num">02</div>
+        <div class="detail-title">Woven Comfort</div>
+        <p class="detail-text">Hand-selected fabric and leather upholstery that ages gracefully. Each piece develops its own character over time, growing warmer and richer with daily use.</p>
+      </div>
+      <div class="detail-card r d3">
+        <div class="detail-num">03</div>
+        <div class="detail-title">Proportioned Form</div>
+        <p class="detail-text">At 93cm, the barstool is calibrated for standard counter heights. The 51.5cm width provides comfortable seating without crowding—geometry in service of living.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ PRODUCT VIEWS ════════ -->
+<section class="views" id="views">
+  <div class="container">
+    <div class="views-header r">
+      <div class="story-label" style="color:var(--cham)">Product Views</div>
+      <h2 style="font-family:'Josefin Sans',sans-serif;font-weight:700;font-size:clamp(28px,3vw,44px);color:var(--white);line-height:1.2">Look closer</h2>
+    </div>
+    <div class="view-gallery">
+      <div class="view-card r d1">
+        <img src="https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/69d390164933b88e73cc765d_Barstool_1_Front.png" alt="Barstool front view" />
+        <span class="view-card-label">Front View</span>
+      </div>
+      <div class="view-card r d2">
+        <img src="https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/69d390164933b88e73cc7632_Barstool_1_Side.png" alt="Barstool side view" />
+        <span class="view-card-label">Side View</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ MATERIALS ════════ -->
+<section class="materials" id="materials">
+  <div class="container">
+    <div class="mat-visual r">
+      <div class="mat-swatch mat-wood" data-label="Teak · Honne · Matti"></div>
+      <div class="mat-swatch mat-leather" data-label="Premium Leather"></div>
+      <div class="mat-swatch mat-cane" data-label="Natural Cane"></div>
+      <div class="mat-swatch mat-fabric" data-label="Quality Fabric"></div>
+    </div>
+    <div class="mat-info r d2">
+      <div class="story-label">Material Palette</div>
+      <h2>Letting materials<br>speak for themselves</h2>
+      <p>The Barstool is built from sustainably sourced hardwoods—teak, honne, and matti—chosen for their warmth, durability, and honest grain. Leather and fabric upholstery is selected for how it ages: not against time, but with it.</p>
+      <ul class="mat-list">
+        <li>Wood</li>
+        <li>Leather</li>
+        <li>Fabric</li>
+        <li>Brass</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ COLLECTION ════════ -->
+<section class="collection" id="collection">
+  <div class="container">
+    <div class="coll-header r">
+      <div class="story-label">Of Stillness</div>
+      <h2>Pieces from the collection</h2>
+      <p>Each piece in the Of Stillness collection shares a common language—rooted in simplicity, shaped by purpose, finished with care.</p>
+    </div>
+    <div class="coll-grid">
+      <div class="coll-card r d1">
+        <div class="coll-card-img">
+          <img src="https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg" alt="Grooved Sofa" />
+        </div>
+        <div class="coll-card-info">
+          <div class="coll-card-name">Grooved Sofa</div>
+          <div class="coll-card-dim">167.5 × 78.5 × 84.5 cm</div>
+        </div>
+      </div>
+      <div class="coll-card r d2">
+        <div class="coll-card-img">
+          <img src="https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7724c1a8d27260d62288_Noku_ofStillness_Lounge_chair_02.jpeg" alt="Lounge Chair" />
+        </div>
+        <div class="coll-card-info">
+          <div class="coll-card-name">Lounge Chair</div>
+          <div class="coll-card-dim">64.5 × 83 × 91.5 cm</div>
+        </div>
+      </div>
+      <div class="coll-card r d3">
+        <div class="coll-card-img">
+          <img src="https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be7113654a_Noku_ofStillness_Dining_chair_03.jpeg" alt="Dining Chair" />
+        </div>
+        <div class="coll-card-info">
+          <div class="coll-card-name">Dining Chair</div>
+          <div class="coll-card-dim">45 × 51.5 × 83.5 cm</div>
+        </div>
+      </div>
+      <div class="coll-card r d4">
+        <div class="coll-card-img">
+          <img src="https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c6f2558734a8e5f572224_Noku_ofStillness_Barstool_03.jpeg" alt="Barstool" />
+        </div>
+        <div class="coll-card-info">
+          <div class="coll-card-name">Barstool</div>
+          <div class="coll-card-dim">51.5 × 49.5 × 93 cm</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ CTA ════════ -->
+<section class="cta" id="cta">
+  <div class="r">
+    <div class="cta-label">Bespoke</div>
+    <h2>Ready to<br><em>craft your furniture?</em></h2>
+    <p>Each piece can be customised to your space, your materials, and your vision. Share your requirements and we'll bring them to life.</p>
+    <a href="https://nokustudio.webflow.io/bespoke" class="btn-cta" target="_blank">Start Your Journey</a>
+  </div>
+</section>
+
+<!-- ════════ FOOTER ════════ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="logo">NOKU</a>
+      <p>A creative studio that makes bespoke furniture rooted in your context. Designing with intent. Crafted with care.</p>
+    </div>
+    <div class="footer-col">
+      <h4>About</h4>
+      <ul>
+        <li><a href="https://nokustudio.webflow.io/about">About</a></li>
+        <li><a href="https://nokustudio.webflow.io/contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Work</h4>
+      <ul>
+        <li><a href="https://nokustudio.webflow.io/products">Shop</a></li>
+        <li><a href="https://nokustudio.webflow.io/projects">Projects</a></li>
+        <li><a href="https://nokustudio.webflow.io/collections">Collections</a></li>
+        <li><a href="https://nokustudio.webflow.io/bespoke">Bespoke</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Knowledge</h4>
+      <ul>
+        <li><a href="https://nokustudio.webflow.io/materials">Materials</a></li>
+        <li><a href="https://nokustudio.webflow.io/sustainability">Sustainability</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Noku Studio. All Rights Reserved.</span>
+    <div class="footer-bottom-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms & Conditions</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ─── Scroll Reveal ───
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('v'); obs.unobserve(e.target); } });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.r').forEach(el => obs.observe(el));
+
+// ─── Nav scroll ───
+const nav = document.getElementById('nav');
+let last = 0;
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  nav.classList.toggle('scrolled', y > 80);
+  last = y;
+}, { passive: true });
+
+// ─── Parallax on hero image ───
+const heroImg = document.querySelector('.hero-img-wrap');
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  if (y < window.innerHeight && heroImg) {
+    heroImg.style.transform = `translateY(${y * 0.08}px)`;
+  }
+}, { passive: true });
+
+// ─── Smooth anchor scroll ───
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if (id.length > 1) {
+      e.preventDefault();
+      document.querySelector(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+</body>
+</html>

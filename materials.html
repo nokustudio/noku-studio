@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noku Studio — Materials Guide</title>
+  <meta name="description"
+    content="Our curation of honest, premium materials. Sourced responsibly, crafted with intent. Explore our woods, leathers, and fabrics connected to Shopify.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Quattrocento:wght@400;700&display=swap"
+    rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ════════ DESIGN SYSTEM OVERRIDES & PAGE STYLES ════════ */
+    body {
+      background-color: var(--paper) !important;
+      color: var(--ink) !important;
+    }
+
+    /* Hero Section */
+    .materials-hero {
+      padding-top: 180px;
+      padding-bottom: 60px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-title-main {
+      font-family: var(--font-display);
+      font-weight: 200;
+      font-size: clamp(40px, 8vw, 84px);
+      color: var(--ink);
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+    }
+
+    .hero-tagline-main {
+      font-family: var(--font-body);
+      font-size: clamp(18px, 2.2vw, 22px);
+      font-weight: 300;
+      color: var(--chamoisee);
+      max-width: 650px;
+      line-height: 1.6;
+    }
+
+    /* Materials Browser */
+    .materials-browser-section {
+      padding: 80px 0;
+    }
+
+    .materials-browser-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    /* Left Side: Filter and Grid */
+    .browser-left-col {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .materials-pills-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .materials-pills-label {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .materials-browser-grid .materials-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .materials-browser-grid .materials-pill {
+      font-family: var(--font-body);
+      font-size: 13px;
+      padding: 10px 20px;
+      border-radius: 20px;
+      background-color: var(--cream);
+      border: 1px solid transparent;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .materials-browser-grid .materials-pill:hover,
+    .materials-browser-grid .materials-pill.active {
+      background-color: var(--chamoisee);
+      color: var(--paper);
+    }
+
+    .swatches-grid-container {
+      margin-top: 16px;
+    }
+
+    #materials-swatches-grid {
+      grid-template-columns: repeat(3, 1fr) !important;
+    }
+
+    /* Right Side: Details View Card */
+    .browser-right-col {
+      position: sticky;
+      top: 110px;
+    }
+
+    .material-details-card {
+      background-color: var(--paper);
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 10px 30px rgba(44, 38, 34, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      transition: all 0.4s ease;
+    }
+
+    .details-img-viewport {
+      width: 100%;
+      height: 280px;
+      background-color: var(--cream);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .details-img-viewport img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.3s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .material-details-card:hover .details-img-viewport img {
+      transform: scale(1.03);
+    }
+
+    .details-header-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 20px;
+    }
+
+    .details-category-label {
+      font-family: var(--font-body);
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--chamoisee);
+    }
+
+    .details-title {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: clamp(28px, 3.5vw, 38px);
+      line-height: 1.15;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--ink);
+    }
+
+    .details-subtitle {
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    .details-desc {
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
+    /* Used In Pieces section */
+    .used-pieces-block {
+      border-top: 1px solid var(--border-soft);
+      padding-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .used-pieces-title {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .used-pieces-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .used-product-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background-color: rgba(237, 230, 218, 0.25);
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      padding: 10px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .used-product-card:hover {
+      border-color: var(--chamoisee);
+      background-color: var(--cream);
+      transform: translateY(-2px);
+    }
+
+    .used-product-img-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 6px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background-color: var(--paper);
+    }
+
+    .used-product-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .used-product-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .used-product-name {
+      font-family: var(--font-display);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .used-product-price {
+      font-family: var(--font-body);
+      font-size: 11px;
+      color: var(--chamoisee);
+    }
+
+    .discover-more-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--chamoisee);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-top: 8px;
+      transition: all 0.3s ease;
+      align-self: flex-start;
+      border-bottom: 1px dashed var(--chamoisee);
+      padding-bottom: 2px;
+      text-decoration: none;
+    }
+
+    .discover-more-link:hover {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+      padding-left: 4px;
+    }
+
+    .discover-more-link span {
+      transition: transform 0.3s ease;
+      display: inline-block;
+    }
+
+    .discover-more-link:hover span {
+      transform: translateX(4px);
+    }
+
+    /* Philosophy / Sourcing Section */
+    .sourcing-section {
+      padding: 100px 0;
+      border-top: 1px solid var(--line);
+      background-color: var(--cream);
+    }
+
+    .sourcing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .sourcing-text-block {
+      max-width: 500px;
+    }
+
+    .sourcing-title {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: clamp(28px, 4vw, 38px);
+      line-height: 1.2;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+
+    .sourcing-text {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .sourcing-image-wrap {
+      width: 100%;
+      aspect-ratio: 1.3 / 1;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 10px 35px rgba(44, 38, 34, 0.05);
+    }
+
+    .sourcing-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .sourcing-image-wrap:hover img {
+      transform: scale(1.04);
+    }
+
+    /* Loader skeleton for detail cards */
+    .detail-skeleton {
+      background: linear-gradient(90deg, var(--border-soft) 25%, var(--cream) 50%, var(--border-soft) 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1024px) {
+      .materials-browser-grid {
+        grid-template-columns: 1fr;
+        gap: 60px;
+      }
+
+      .browser-right-col {
+        position: static;
+      }
+
+      .sourcing-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .sourcing-image-wrap {
+        order: -1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Loading Screen Overlay -->
+  <div id="loading-screen">
+    <div class="loader-logo">
+      <svg width="40" height="48" viewBox="0 0 181.76 218.04" xmlns="http://www.w3.org/2000/svg" style="fill: currentColor;">
+        <polygon points="181.76 5.61 181.76 218.04 145.86 218.04 145.86 144.74 35.91 71.06 35.91 218.04 0 218.04 0 0 145.86 101.35 145.86 5.61 181.76 5.61"/>
+      </svg>
+    </div>
+    <div class="loader-bar-wrap">
+      <div class="loader-bar" id="loader-progress"></div>
+    </div>
+  </div>
+
+  <!-- Grain Layer overlay -->
+  <div class="grain-overlay"></div>
+
+  <!-- STICKY HEADER NAVIGATION -->
+  <nav id="navbar" class="light-nav">
+    <div class="nav-logo-wrap">
+      <a href="index.html" aria-label="Noku Home">
+        <svg class="logo-svg" width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
+          <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
+          <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
+          <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
+        </svg>
+      </a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html#collections" class="nav-link">Collections</a></li>
+      <li><a href="products.html" class="nav-link">Products</a></li>
+      <li><a href="materials.html" class="nav-link active">Materials</a></li>
+      <li><a href="sustainability.html" class="nav-link">Sustainability</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+      <li><a href="contact.html" class="nav-link">Contact</a></li>
+    </ul>
+    <button id="cart-toggle" class="cart-btn" aria-label="Open Shopping Cart">
+      <svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span id="cart-count-badge" class="cart-count">0</span>
+    </button>
+    <button class="mobile-menu-toggle" aria-label="Toggle Mobile Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="1.5">
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+    </button>
+  </nav>
+
+  <main>
+    
+    <!-- Hero Section -->
+    <header class="materials-hero">
+      <div class="container">
+        <h1 class="hero-title-main">Materials Guide</h1>
+        <p class="hero-tagline-main">A dedication to material honesty, natural grains, full-grain hides, and textured fabrics. Crafted to live with you.</p>
+      </div>
+    </header>
+
+    <!-- Materials Browser Section -->
+    <section class="materials-browser-section">
+      <div class="container materials-browser-grid">
+        
+        <!-- Left Column: Swatches and Category pills -->
+        <div class="browser-left-col">
+          <div class="materials-pills-wrap reveal-el">
+            <span class="materials-pills-label">Filter Category</span>
+            <ul class="materials-pills">
+              <li class="materials-pill active" data-category="wood">Wood</li>
+              <li class="materials-pill" data-category="leather">Leather</li>
+              <li class="materials-pill" data-category="fabric">Fabric</li>
+              <li class="materials-pill" data-category="cane">Cane</li>
+              <li class="materials-pill" data-category="metals">Metals</li>
+            </ul>
+          </div>
+
+          <div class="swatches-grid-container reveal-el delay-1">
+            <div class="swatches-block" id="materials-swatches-grid">
+              <!-- Swatches dynamically loaded from Shopify options & Local Registry -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Detail View Card -->
+        <div class="browser-right-col reveal-el">
+          <div class="material-details-card" id="material-detail-card">
+            
+            <div class="details-img-viewport">
+              <img id="material-detail-img" src="" alt="Selected Material Preview">
+            </div>
+
+            <div class="details-header-block">
+              <span class="details-category-label" id="material-detail-category">Wood Finish</span>
+              <h2 class="details-title" id="material-detail-title">Loading...</h2>
+              <span class="details-subtitle" id="material-detail-subtitle">Scientific name</span>
+            </div>
+
+            <div class="details-desc" id="material-detail-desc">
+              Select a material swatch from the list to explore its detailed texture, sourcing origins, and performance characteristics.
+            </div>
+
+            <!-- Dynamic products mapping -->
+            <div class="used-pieces-block" id="material-used-pieces-block" style="display: none;">
+              <h3 class="used-pieces-title">Used In Pieces</h3>
+              <div class="used-pieces-grid" id="material-used-products">
+                <!-- Related product cards dynamically loaded here -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Sourcing Philosophy / Info sections -->
+    <section class="sourcing-section">
+      <div class="container sourcing-grid">
+        <div class="sourcing-image-wrap reveal-el">
+          <img src="https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7d6f73c94da715b34a92_Noku_ofStillness_Study_table_03.jpeg" alt="Sourcing timber joinery detail">
+        </div>
+        <div class="sourcing-text-block reveal-el delay-1">
+          <h2 class="sourcing-title">Material Honesty</h2>
+          <p class="sourcing-text">
+            At Noku Studio, we believe that materials should not be masked. Our finishes are designed to showcase, rather than hide, the organic beauty of the timber, the natural grain irregularities of the leather hides, and the detailed weave patterns of the linen fabrics.
+          </p>
+          <p class="sourcing-text">
+            Every log of teak, white ash, or honne wood is selected by hand at our workshop, seasoned patiently to survive generations of climates, and finished with natural oils that allow the wood to breathe and darken gracefully over time.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Brand Info -->
+        <div class="footer-brand">
+          <svg width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg" style="fill: var(--chamoisee);">
+            <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
+            <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
+            <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
+            <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
+          </svg>
+          <p>
+            A contemporary furniture design studio blending traditional Indian craftsmanship with modern minimalist design. Handmade in Bengaluru.
+          </p>
+        </div>
+
+        <!-- Studio Info Links -->
+        <div class="footer-col">
+          <h4>Studio</h4>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="https://nokustudio.webflow.io/projects" target="_blank">Our Projects</a></li>
+            <li><a href="contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+
+        <!-- Shop/Work Links -->
+        <div class="footer-col">
+          <h4>Work</h4>
+          <ul>
+            <li><a href="index.html#collections">Collections</a></li>
+            <li><a href="products.html">Furniture Shop</a></li>
+          </ul>
+        </div>
+
+        <!-- Knowledge base links -->
+        <div class="footer-col">
+          <h4>Knowledge</h4>
+          <ul>
+            <li><a href="./materials.html">Materials Guide</a></li>
+            <li><a href="./sustainability.html">Sustainability</a></li>
+            <li><a href="mailto:hello@nokustudio.in">hello@nokustudio.in</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Footer bottom segment -->
+      <div class="footer-bottom">
+        <span>© 2026 Noku Studio. All Rights Reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms &amp; Conditions</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ════════ SHOPPING CART SIDE-DRAWER ════════ -->
+  <div id="cart-overlay" class="cart-overlay"></div>
+  <div id="cart-drawer" class="cart-drawer">
+    <div class="cart-header">
+      <h3 class="cart-title">Your Cart</h3>
+      <button id="cart-close" class="cart-close-btn" aria-label="Close Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="cart-items-container" id="cart-items-container">
+      <div class="cart-empty-message">Your cart is currently empty.</div>
+    </div>
+    
+    <div class="cart-footer">
+      <div class="cart-subtotal-row">
+        <span class="subtotal-label">Subtotal</span>
+        <span class="subtotal-price" id="cart-subtotal">₹0.00</span>
+      </div>
+      <button id="checkout-btn" class="checkout-btn" disabled>Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <script src="shopify-integration.js"></script>
+  <script src="materials.js"></script>
+
+  <script>
+    // Progressive page loader bar
+    const loaderProgress = document.getElementById('loader-progress');
+    const loaderScreen = document.getElementById('loading-screen');
+    
+    function updateLoader(percentage) {
+      if (loaderProgress) {
+        loaderProgress.style.width = percentage + '%';
+      }
+      if (percentage >= 100 && loaderScreen) {
+        setTimeout(() => {
+          loaderScreen.classList.add('fade-out');
+        }, 300);
+      }
+    }
+
+    let loadPercent = 0;
+    const loaderInterval = setInterval(() => {
+      if (loadPercent < 100) {
+        loadPercent += Math.random() * 25;
+        updateLoader(Math.min(loadPercent, 100));
+      } else {
+        clearInterval(loaderInterval);
+      }
+    }, 45);
+
+    // Sticky nav class scroll toggler
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      if (navbar) {
+        if (window.scrollY > 40) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      }
+    }, { passive: true });
+
+    // Interaction reveal elements observer
+    document.addEventListener('DOMContentLoaded', () => {
+      const revealElements = document.querySelectorAll('.reveal-el');
+      
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.05,
+        rootMargin: '0px 0px -30px 0px'
+      });
+
+      revealElements.forEach(el => revealObserver.observe(el));
+    });
+  </script>
+</body>
+
+</html>

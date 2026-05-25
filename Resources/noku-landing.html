@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noku Studio — Of Stillness</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/cormorant-garamond@5/latin-300.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/cormorant-garamond@5/latin-400.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/cormorant-garamond@5/latin-500.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/dm-sans@5/latin-300.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/dm-sans@5/latin-400.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/dm-sans@5/latin-500.css" rel="stylesheet">
+<style>
+:root {
+  --bg-warm: #F5F0E8;
+  --bg-cream: #EDE6DA;
+  --bg-dark: #1A1411;
+  --bg-deep: #0F0D0A;
+  --text-dark: #1E1B16;
+  --text-muted: #6B6560;
+  --text-light: #EDE6DA;
+  --text-light-muted: #A89F94;
+  --accent: #9B8561;
+  --accent-light: #C4AA7A;
+  --wood: #5C3A1E;
+  --wood-light: #7A5432;
+  --sage: #A8B5A0;
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) var(--bg-dark);
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--bg-deep);
+  color: var(--text-light);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  cursor: default;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg-dark);
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 28px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+
+nav * { pointer-events: auto; }
+
+.nav-logo {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.nav-links {
+  display: flex;
+  gap: 40px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity 0.4s ease;
+}
+
+.nav-links a:hover { opacity: 1; }
+
+/* ─── 3D CANVAS ─── */
+#three-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ─── SCROLL SECTIONS ─── */
+.scroll-container {
+  position: relative;
+  z-index: 2;
+}
+
+.panel {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 120px 64px;
+}
+
+/* ─── HERO ─── */
+.hero {
+  height: 100vh;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 80px;
+  pointer-events: none;
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(48px, 8vw, 120px);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-align: center;
+  color: var(--text-light);
+  opacity: 0;
+  transform: translateY(40px);
+  animation: fadeUp 1.2s ease-out 0.6s forwards;
+}
+
+.hero-sub {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--text-light-muted);
+  margin-top: 24px;
+  opacity: 0;
+  animation: fadeUp 1s ease-out 1.2s forwards;
+}
+
+.scroll-prompt {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: fadeUp 1s ease-out 2s forwards;
+  transition: opacity 0.6s ease;
+  mix-blend-mode: difference;
+}
+
+.scroll-prompt.hidden { opacity: 0 !important; }
+
+.scroll-prompt span {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, #fff, transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+  50% { opacity: 0.8; transform: scaleY(1); }
+}
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── PRODUCT INFO PANEL ─── */
+.info-panel {
+  background: transparent;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 120px;
+  max-width: 1200px;
+  width: 100%;
+  padding: 160px 80px;
+}
+
+.info-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.info-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 24px;
+}
+
+.info-title {
+  font-family: var(--serif);
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--text-light);
+  margin-bottom: 32px;
+}
+
+.info-body {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--text-light-muted);
+  max-width: 420px;
+}
+
+.info-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+}
+
+.spec-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 20px 0;
+  border-bottom: 0.5px solid rgba(237, 230, 218, 0.08);
+}
+
+.spec-row:first-child {
+  border-top: 0.5px solid rgba(237, 230, 218, 0.08);
+}
+
+.spec-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-light-muted);
+}
+
+.spec-value {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-light);
+}
+
+/* ─── MATERIALS SECTION ─── */
+.materials-panel {
+  background: var(--bg-warm);
+  min-height: 100vh;
+  padding: 160px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.materials-header {
+  text-align: center;
+  margin-bottom: 100px;
+}
+
+.materials-header .info-label {
+  color: var(--accent);
+}
+
+.materials-header h2 {
+  font-family: var(--serif);
+  font-size: clamp(36px, 4.5vw, 64px);
+  font-weight: 300;
+  color: var(--text-dark);
+  line-height: 1.2;
+}
+
+.materials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 64px;
+  max-width: 1100px;
+  width: 100%;
+}
+
+.material-card {
+  position: relative;
+}
+
+.material-swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 4px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.material-swatch::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 0.5px solid rgba(30, 27, 22, 0.1);
+  border-radius: 4px;
+}
+
+.swatch-walnut {
+  background: linear-gradient(145deg, #5C3A1E 0%, #3D2510 50%, #6B4428 100%);
+}
+
+.swatch-linen {
+  background: linear-gradient(145deg, #C5C8B8 0%, #A8AE9C 50%, #D2D5C8 100%);
+}
+
+.swatch-brass {
+  background: linear-gradient(145deg, #C4AA7A 0%, #9B8561 50%, #D4BC8E 100%);
+}
+
+.material-name {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--text-dark);
+  margin-bottom: 12px;
+}
+
+.material-desc {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--text-muted);
+}
+
+/* ─── PHILOSOPHY SECTION ─── */
+.philosophy-panel {
+  background: var(--bg-deep);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 160px 80px;
+  position: relative;
+}
+
+.philosophy-content {
+  max-width: 800px;
+  text-align: center;
+}
+
+.philosophy-quote {
+  font-family: var(--serif);
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--text-light);
+  margin-bottom: 40px;
+}
+
+.philosophy-attr {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ─── CTA SECTION ─── */
+.cta-panel {
+  background: var(--bg-warm);
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 80px;
+  text-align: center;
+}
+
+.cta-content h2 {
+  font-family: var(--serif);
+  font-size: clamp(36px, 5vw, 72px);
+  font-weight: 300;
+  color: var(--text-dark);
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.cta-content p {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-muted);
+  margin-bottom: 48px;
+  line-height: 1.8;
+}
+
+.cta-btn {
+  display: inline-block;
+  padding: 18px 56px;
+  border: 1px solid var(--text-dark);
+  background: transparent;
+  color: var(--text-dark);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--text-dark);
+  transform: translateY(101%);
+  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.cta-btn:hover::before { transform: translateY(0); }
+.cta-btn:hover { color: var(--bg-warm); }
+.cta-btn span { position: relative; z-index: 1; }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--bg-deep);
+  padding: 80px 80px 48px;
+  border-top: 0.5px solid rgba(237, 230, 218, 0.06);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 64px;
+  margin-bottom: 80px;
+}
+
+.footer-brand p {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--text-light-muted);
+  max-width: 280px;
+  margin-top: 16px;
+}
+
+.footer-col h4 {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-light-muted);
+  margin-bottom: 20px;
+}
+
+.footer-col a {
+  display: block;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text-light);
+  text-decoration: none;
+  padding: 6px 0;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.footer-col a:hover { opacity: 1; }
+
+.footer-bottom {
+  padding-top: 32px;
+  border-top: 0.5px solid rgba(237, 230, 218, 0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-bottom span {
+  font-size: 12px;
+  color: var(--text-light-muted);
+  font-weight: 300;
+}
+
+/* ─── REVEAL ANIMATIONS ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.15s; }
+.reveal-delay-2 { transition-delay: 0.3s; }
+.reveal-delay-3 { transition-delay: 0.45s; }
+.reveal-delay-4 { transition-delay: 0.6s; }
+
+/* ─── GRAIN OVERLAY ─── */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ─── VERTICAL LABEL ─── */
+.side-label {
+  position: fixed;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  z-index: 100;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  mix-blend-mode: difference;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  nav { padding: 20px 24px; }
+  .nav-links { gap: 24px; }
+  .info-panel { grid-template-columns: 1fr; gap: 64px; padding: 120px 32px; }
+  .materials-grid { grid-template-columns: 1fr; gap: 48px; }
+  .materials-panel, .philosophy-panel, .cta-panel { padding: 120px 32px; }
+  footer { padding: 64px 32px 32px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .side-label { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="side-label">Of Stillness — Noku Studio 2026</div>
+
+<nav>
+  <div class="nav-logo">Noku</div>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#materials">Materials</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="scroll-prompt" id="scrollPrompt">
+  <span>Scroll</span>
+  <div class="scroll-line"></div>
+</div>
+
+<canvas id="three-canvas"></canvas>
+
+<div class="scroll-container">
+
+  <!-- HERO -->
+  <section class="hero panel" id="hero">
+    <h1 class="hero-title">Of Stillness</h1>
+    <p class="hero-sub">A barstool by Noku Studio</p>
+  </section>
+
+  <!-- PRODUCT INFO -->
+  <section class="panel" id="work" style="background: transparent;">
+    <div class="info-panel">
+      <div class="info-left">
+        <span class="info-label reveal">Collection 01</span>
+        <h2 class="info-title reveal reveal-delay-1">Where form<br>meets quiet</h2>
+        <p class="info-body reveal reveal-delay-2">A meditation on form and function. The barstool merges organic curves with structural precision — walnut meets linen in a conversation between strength and softness. Each joint is cut by hand, every curve refined through iteration.</p>
+      </div>
+      <div class="info-right">
+        <div class="spec-row reveal">
+          <span class="spec-label">Material</span>
+          <span class="spec-value">Solid walnut</span>
+        </div>
+        <div class="spec-row reveal reveal-delay-1">
+          <span class="spec-label">Upholstery</span>
+          <span class="spec-value">Belgian linen</span>
+        </div>
+        <div class="spec-row reveal reveal-delay-2">
+          <span class="spec-label">Joinery</span>
+          <span class="spec-value">Mortise &amp; tenon</span>
+        </div>
+        <div class="spec-row reveal reveal-delay-3">
+          <span class="spec-label">Height</span>
+          <span class="spec-value">760 mm</span>
+        </div>
+        <div class="spec-row reveal reveal-delay-4">
+          <span class="spec-label">Lead time</span>
+          <span class="spec-value">3–4 weeks</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MATERIALS -->
+  <section class="materials-panel panel" id="materials">
+    <div class="materials-header">
+      <span class="info-label reveal">Materiality</span>
+      <h2 class="reveal reveal-delay-1">Honest materials,<br>lasting presence</h2>
+    </div>
+    <div class="materials-grid">
+      <div class="material-card reveal">
+        <div class="material-swatch swatch-walnut"></div>
+        <h3 class="material-name">Walnut</h3>
+        <p class="material-desc">Rich, dark grain with natural warmth. Ages gracefully, developing deeper character over decades of use.</p>
+      </div>
+      <div class="material-card reveal reveal-delay-1">
+        <div class="material-swatch swatch-linen"></div>
+        <h3 class="material-name">Linen</h3>
+        <p class="material-desc">Breathable natural fibre that softens with time. Hand-selected from European mills for superior drape and texture.</p>
+      </div>
+      <div class="material-card reveal reveal-delay-2">
+        <div class="material-swatch swatch-brass"></div>
+        <h3 class="material-name">Brass</h3>
+        <p class="material-desc">Patinas beautifully with age. Subtle accents that ground modern forms in tactile, precious materiality.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHILOSOPHY -->
+  <section class="philosophy-panel panel" id="about">
+    <div class="philosophy-content">
+      <p class="philosophy-quote reveal">Good design is not about adding more. It is about honouring what remains when everything unnecessary has been removed.</p>
+      <span class="philosophy-attr reveal reveal-delay-1">Noku Studio — Design Philosophy</span>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-panel panel" id="contact">
+    <div class="cta-content">
+      <h2 class="reveal">Begin a conversation</h2>
+      <p class="reveal reveal-delay-1">Every piece starts with a dialogue. Tell us about your space,<br>and we'll craft something that belongs there.</p>
+      <a href="#" class="cta-btn reveal reveal-delay-2"><span>Get in touch</span></a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="color: var(--text-light);">Noku</div>
+        <p>Contemporary furniture that celebrates materials, detail, and the spaces we inhabit.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Studio</h4>
+        <a href="#">Work</a>
+        <a href="#">Process</a>
+        <a href="#">About</a>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <a href="#">Instagram</a>
+        <a href="#">Email</a>
+        <a href="#">Newsletter</a>
+      </div>
+      <div class="footer-col">
+        <h4>Info</h4>
+        <a href="#">Shipping</a>
+        <a href="#">Returns</a>
+        <a href="#">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Noku Studio</span>
+      <span>Bengaluru, India</span>
+    </div>
+  </footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function() {
+  // ─── THREE.JS SCENE ───
+  const canvas = document.getElementById('three-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.1;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(0, 1.2, 4.5);
+  camera.lookAt(0, 0.6, 0);
+
+  // ─── LIGHTING ───
+  const ambientLight = new THREE.AmbientLight(0xEDE6DA, 0.25);
+  scene.add(ambientLight);
+
+  const keyLight = new THREE.DirectionalLight(0xFFF5E6, 1.8);
+  keyLight.position.set(3, 5, 4);
+  keyLight.castShadow = true;
+  keyLight.shadow.mapSize.width = 1024;
+  keyLight.shadow.mapSize.height = 1024;
+  keyLight.shadow.camera.near = 0.5;
+  keyLight.shadow.camera.far = 20;
+  keyLight.shadow.camera.left = -3;
+  keyLight.shadow.camera.right = 3;
+  keyLight.shadow.camera.top = 3;
+  keyLight.shadow.camera.bottom = -3;
+  keyLight.shadow.bias = -0.001;
+  scene.add(keyLight);
+
+  const fillLight = new THREE.DirectionalLight(0xC8D8E8, 0.4);
+  fillLight.position.set(-3, 2, -1);
+  scene.add(fillLight);
+
+  const rimLight = new THREE.DirectionalLight(0xFFF0D0, 0.6);
+  rimLight.position.set(-1, 3, -4);
+  scene.add(rimLight);
+
+  const bottomFill = new THREE.PointLight(0xEDE6DA, 0.15, 10);
+  bottomFill.position.set(0, -1, 2);
+  scene.add(bottomFill);
+
+  // ─── MATERIALS ───
+  const woodMat = new THREE.MeshStandardMaterial({
+    color: 0x5C3A1E,
+    roughness: 0.65,
+    metalness: 0.0,
+  });
+
+  const woodDarkMat = new THREE.MeshStandardMaterial({
+    color: 0x3D2510,
+    roughness: 0.7,
+    metalness: 0.0,
+  });
+
+  const fabricMat = new THREE.MeshStandardMaterial({
+    color: 0xA8B5A0,
+    roughness: 0.92,
+    metalness: 0.0,
+  });
+
+  // ─── BUILD BARSTOOL ───
+  const stool = new THREE.Group();
+
+  // Seat cushion
+  const seatGeo = new THREE.CylinderGeometry(0.22, 0.23, 0.08, 32);
+  const seat = new THREE.Mesh(seatGeo, fabricMat);
+  seat.position.set(0, 0.88, 0);
+  seat.castShadow = true;
+  stool.add(seat);
+
+  // Seat frame ring
+  const seatFrameGeo = new THREE.TorusGeometry(0.24, 0.015, 8, 32);
+  const seatFrame = new THREE.Mesh(seatFrameGeo, woodMat);
+  seatFrame.position.set(0, 0.835, 0);
+  seatFrame.rotation.x = Math.PI / 2;
+  seatFrame.castShadow = true;
+  stool.add(seatFrame);
+
+  // Legs
+  const legPositions = [
+    { x: 0.16, z: 0.16, rx: 0.06, rz: -0.06 },
+    { x: -0.16, z: 0.16, rx: 0.06, rz: 0.06 },
+    { x: 0.16, z: -0.16, rx: -0.06, rz: -0.06 },
+    { x: -0.16, z: -0.16, rx: -0.06, rz: 0.06 },
+  ];
+
+  legPositions.forEach((pos) => {
+    const legGeo = new THREE.CylinderGeometry(0.015, 0.012, 0.85, 8);
+    const leg = new THREE.Mesh(legGeo, woodMat);
+    leg.position.set(pos.x, 0.42, pos.z);
+    leg.rotation.x = pos.rx;
+    leg.rotation.z = pos.rz;
+    leg.castShadow = true;
+    stool.add(leg);
+  });
+
+  // Footrest stretchers (lower cross bars)
+  const stretcherH = 0.22;
+  
+  // Front stretcher
+  const fStrGeo = new THREE.CylinderGeometry(0.01, 0.01, 0.32, 6);
+  const fStr = new THREE.Mesh(fStrGeo, woodMat);
+  fStr.rotation.z = Math.PI / 2;
+  fStr.position.set(0, stretcherH, 0.165);
+  fStr.castShadow = true;
+  stool.add(fStr);
+
+  // Back stretcher
+  const bStr = fStr.clone();
+  bStr.position.set(0, stretcherH, -0.165);
+  stool.add(bStr);
+
+  // Left stretcher
+  const lStrGeo = new THREE.CylinderGeometry(0.01, 0.01, 0.33, 6);
+  const lStr = new THREE.Mesh(lStrGeo, woodMat);
+  lStr.rotation.x = Math.PI / 2;
+  lStr.position.set(-0.165, stretcherH, 0);
+  lStr.castShadow = true;
+  stool.add(lStr);
+
+  // Right stretcher
+  const rStr = lStr.clone();
+  rStr.position.set(0.165, stretcherH, 0);
+  stool.add(rStr);
+
+  // Backrest support posts
+  const postGeoL = new THREE.CylinderGeometry(0.014, 0.013, 0.32, 8);
+  const postL = new THREE.Mesh(postGeoL, woodMat);
+  postL.position.set(-0.14, 1.06, -0.15);
+  postL.rotation.x = -0.08;
+  postL.castShadow = true;
+  stool.add(postL);
+
+  const postR = new THREE.Mesh(postGeoL, woodMat);
+  postR.position.set(0.14, 1.06, -0.15);
+  postR.rotation.x = -0.08;
+  postR.castShadow = true;
+  stool.add(postR);
+
+  // Backrest bar (curved)
+  const backrestCurve = new THREE.QuadraticBezierCurve3(
+    new THREE.Vector3(-0.18, 1.22, -0.17),
+    new THREE.Vector3(0, 1.24, -0.20),
+    new THREE.Vector3(0.18, 1.22, -0.17)
+  );
+  const backrestTubeGeo = new THREE.TubeGeometry(backrestCurve, 20, 0.016, 8, false);
+  const backrest = new THREE.Mesh(backrestTubeGeo, woodDarkMat);
+  backrest.castShadow = true;
+  stool.add(backrest);
+
+  // Shadow plane
+  const shadowGeo = new THREE.PlaneGeometry(4, 4);
+  const shadowMat = new THREE.ShadowMaterial({ opacity: 0.15 });
+  const shadowPlane = new THREE.Mesh(shadowGeo, shadowMat);
+  shadowPlane.rotation.x = -Math.PI / 2;
+  shadowPlane.position.y = -0.01;
+  shadowPlane.receiveShadow = true;
+  stool.add(shadowPlane);
+
+  scene.add(stool);
+
+  // ─── SCROLL STATE ───
+  let scrollProgress = 0;
+  let targetRotation = 0;
+  let currentRotation = 0;
+  let targetY = 0;
+  let currentY = 0;
+  let targetScale = 1;
+  let currentScale = 1;
+  let targetOpacity = 1;
+
+  function getScrollProgress() {
+    const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+    return totalScroll > 0 ? window.scrollY / totalScroll : 0;
+  }
+
+  window.addEventListener('scroll', () => {
+    scrollProgress = getScrollProgress();
+
+    // Hide scroll prompt after first scroll
+    const prompt = document.getElementById('scrollPrompt');
+    if (window.scrollY > 100) {
+      prompt.classList.add('hidden');
+    } else {
+      prompt.classList.remove('hidden');
+    }
+
+    // Rotation: full 360 over entire scroll
+    targetRotation = scrollProgress * Math.PI * 2.5;
+
+    // Y position: rise slightly, then settle
+    if (scrollProgress < 0.25) {
+      targetY = scrollProgress * 0.3;
+      targetScale = 1 + scrollProgress * 0.15;
+    } else if (scrollProgress < 0.5) {
+      targetY = 0.075 - (scrollProgress - 0.25) * 0.3;
+      targetScale = 1.04;
+    } else {
+      targetY = 0;
+      targetScale = 1 - (scrollProgress - 0.5) * 0.6;
+    }
+
+    // Opacity: fade out model as we reach materials section
+    if (scrollProgress > 0.35) {
+      targetOpacity = Math.max(0, 1 - (scrollProgress - 0.35) * 3.5);
+    } else {
+      targetOpacity = 1;
+    }
+  });
+
+  // ─── REVEAL ON SCROLL ───
+  const reveals = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+  reveals.forEach(el => revealObserver.observe(el));
+
+  // ─── ANIMATION LOOP ───
+  function animate() {
+    requestAnimationFrame(animate);
+
+    // Smooth interpolation
+    currentRotation += (targetRotation - currentRotation) * 0.04;
+    currentY += (targetY - currentY) * 0.06;
+    currentScale += (targetScale - currentScale) * 0.06;
+
+    stool.rotation.y = currentRotation;
+    stool.position.y = currentY;
+
+    const s = Math.max(0.01, currentScale);
+    stool.scale.set(s, s, s);
+
+    // Fade model
+    const o = Math.max(0, Math.min(1, targetOpacity));
+    stool.traverse((child) => {
+      if (child.isMesh && child.material !== shadowMat) {
+        child.material.transparent = true;
+        child.material.opacity = o;
+      }
+    });
+    shadowPlane.material.opacity = 0.15 * o;
+
+    // Subtle idle float
+    const time = Date.now() * 0.001;
+    stool.position.y = currentY + Math.sin(time * 0.6) * 0.008;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  // ─── RESIZE ───
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+})();
+</script>
+</body>
+</html>

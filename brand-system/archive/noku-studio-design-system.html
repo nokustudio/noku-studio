@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Noku Studio — Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@500;600;700&family=Quattrocento:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Design Tokens ─────────────────────────────────────────── */
+    :root {
+      --ink:          #2C2622;
+      --paper:        #F4F1EC;
+      --chamoisee:    #a27b5c;
+      --gunmetal:     #2c3639;
+      --outerspace:   #3f4e4f;
+      --muted:        #6B6258;
+      --deep-muted:   #3A342E;
+      --bone:         #dcd7c9;
+      --cream:        #EDE6DA;
+      --line:         #D8D2C8;
+      --border-soft:  #E0DBD3;
+      --light-muted:  #CFC7BD;
+      --dark-bg:      #241F1B;
+      --dark-border:  #5A5148;
+
+      --font--primary-family:   'Josefin Sans', sans-serif;
+      --font--secondary-family: 'Quattrocento', serif;
+
+      --border-width--main:       1.5px;
+      --radius--small:            0.5rem;
+      --radius--main:             1rem;
+      --radius--round:            100vw;
+      --max-width--main:          90rem;
+      --padding-horizontal--main: 3rem;
+
+      --line-height--1-1em: 1.1em;
+      --line-height--1-3em: 1.3em;
+      --line-height--1-5em: 1.5em;
+
+      --letter-spacing--0em:     0em;
+      --letter-spacing--0-03em: -0.03em;
+
+      /* Theme — Light */
+      --_theme---background:          #f4f5f1;
+      --_theme---text:                #a27b5c;
+      --_theme---border:              #D8D2C8;
+      --_theme---button--background:  #f4f5f1;
+      --_theme---button--text:        #a27b5c;
+      --_theme---button--border:      #a27b5c;
+      --_theme---button--background-hover: #a27b5c;
+      --_theme---button--text-hover:       #f4f5f1;
+      --_theme---card--background:    #fafaf8;
+      --_theme---card--text:          #a27b5c;
+    }
+
+    [data-theme="dark"] {
+      --_theme---background:          #2c3639;
+      --_theme---text:                #f4f5f1;
+      --_theme---border:              #5A5148;
+      --_theme---button--background:  #a27b5c;
+      --_theme---button--text:        #f4f5f1;
+      --_theme---button--border:      #a27b5c;
+      --_theme---button--background-hover: #2c3639;
+      --_theme---button--text-hover:       #f4f5f1;
+      --_theme---card--background:    #3f4e4f;
+      --_theme---card--text:          #f4f5f1;
+    }
+
+    /* ─── Reset ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font--secondary-family);
+      background-color: var(--_theme---background);
+      color: var(--ink);
+      transition: background-color 0.4s ease, color 0.4s ease;
+      overflow-x: hidden;
+    }
+
+    [data-theme="dark"] body,
+    [data-theme="dark"] {
+      color: var(--_theme---text);
+    }
+
+    /* ─── Noise texture overlay ──────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* ─── Typography ─────────────────────────────────────────────── */
+    .display {
+      font-family: var(--font--primary-family);
+      font-size: 2.5rem;
+      font-weight: 600;
+      line-height: var(--line-height--1-1em);
+      letter-spacing: var(--letter-spacing--0-03em);
+    }
+    h1, .h1 {
+      font-family: var(--font--primary-family);
+      font-size: 5rem;
+      font-weight: 600;
+      line-height: var(--line-height--1-1em);
+      letter-spacing: var(--letter-spacing--0-03em);
+    }
+    h2, .h2 {
+      font-family: var(--font--primary-family);
+      font-size: 4rem;
+      font-weight: 600;
+      line-height: var(--line-height--1-1em);
+      letter-spacing: var(--letter-spacing--0-03em);
+    }
+    h3, .h3 {
+      font-family: var(--font--primary-family);
+      font-size: 3rem;
+      font-weight: 600;
+      line-height: var(--line-height--1-3em);
+      letter-spacing: var(--letter-spacing--0-03em);
+    }
+    h4, .h4 {
+      font-family: var(--font--primary-family);
+      font-size: 2rem;
+      font-weight: 500;
+      line-height: var(--line-height--1-3em);
+      letter-spacing: var(--letter-spacing--0-03em);
+    }
+    h5, .h5 {
+      font-family: var(--font--primary-family);
+      font-size: 1.25rem;
+      font-weight: 500;
+      line-height: var(--line-height--1-3em);
+      letter-spacing: var(--letter-spacing--0-03em);
+    }
+    h6, .h6 {
+      font-family: var(--font--primary-family);
+      font-size: 1rem;
+      font-weight: 500;
+      line-height: var(--line-height--1-3em);
+      letter-spacing: var(--letter-spacing--0-03em);
+    }
+    .text-large  { font-family: var(--font--secondary-family); font-size: 1.25rem; line-height: var(--line-height--1-5em); }
+    .text-main   { font-family: var(--font--secondary-family); font-size: 1rem;    line-height: var(--line-height--1-5em); }
+    .text-small  { font-family: var(--font--secondary-family); font-size: 0.875rem; line-height: var(--line-height--1-5em); }
+    .text-caption { font-family: var(--font--primary-family); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
+
+    /* ─── Layout ─────────────────────────────────────────────────── */
+    .container {
+      max-width: var(--max-width--main);
+      margin: 0 auto;
+      padding: 0 var(--padding-horizontal--main);
+    }
+
+    section {
+      padding: 6rem 0;
+      position: relative;
+    }
+
+    section + section {
+      border-top: var(--border-width--main) solid var(--_theme---border);
+    }
+
+    .section-label {
+      font-family: var(--font--primary-family);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--chamoisee);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::after {
+      content: '';
+      display: block;
+      height: var(--border-width--main);
+      width: 3rem;
+      background: var(--chamoisee);
+      opacity: 0.5;
+    }
+
+    .section-title {
+      font-family: var(--font--primary-family);
+      font-size: 2.5rem;
+      font-weight: 600;
+      letter-spacing: var(--letter-spacing--0-03em);
+      line-height: var(--line-height--1-1em);
+      margin-bottom: 3rem;
+    }
+
+    [data-theme="dark"] .section-title {
+      color: var(--_theme---text);
+    }
+
+    /* ─── Navbar ─────────────────────────────────────────────────── */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 900;
+      background: var(--_theme---background);
+      border-bottom: var(--border-width--main) solid var(--_theme---border);
+      transition: background 0.4s ease, border-color 0.4s ease;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .navbar__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 4.5rem;
+    }
+
+    .navbar__logo {
+      font-family: var(--font--primary-family);
+      font-size: 1.125rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: color 0.3s;
+    }
+
+    [data-theme="dark"] .navbar__logo { color: var(--_theme---text); }
+
+    .navbar__logo-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--chamoisee);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .navbar__logo-mark svg { width: 14px; height: 14px; fill: var(--paper); }
+
+    .navbar__nav {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .navbar__nav a {
+      font-family: var(--font--primary-family);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .navbar__nav a:hover { color: var(--chamoisee); }
+
+    .theme-toggle {
+      background: none;
+      border: var(--border-width--main) solid var(--_theme---border);
+      border-radius: var(--radius--round);
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font--primary-family);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--muted);
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--chamoisee);
+      color: var(--chamoisee);
+    }
+
+    .theme-toggle__icon { font-size: 0.85rem; }
+
+    /* ─── Hero ───────────────────────────────────────────────────── */
+    #hero {
+      padding: 9rem 0 7rem;
+      border-bottom: var(--border-width--main) solid var(--_theme---border);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero__eyebrow {
+      font-family: var(--font--primary-family);
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--chamoisee);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.1s;
+    }
+
+    .hero__title {
+      font-family: var(--font--primary-family);
+      font-size: clamp(3.5rem, 7vw, 6.5rem);
+      font-weight: 600;
+      line-height: var(--line-height--1-1em);
+      letter-spacing: var(--letter-spacing--0-03em);
+      color: var(--ink);
+      max-width: 18ch;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.25s;
+    }
+
+    [data-theme="dark"] .hero__title { color: var(--_theme---text); }
+
+    .hero__title em {
+      font-style: normal;
+      color: var(--chamoisee);
+    }
+
+    .hero__sub {
+      font-family: var(--font--secondary-family);
+      font-size: 1.125rem;
+      line-height: var(--line-height--1-5em);
+      color: var(--muted);
+      max-width: 45ch;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 0.4s;
+    }
+
+    [data-theme="dark"] .hero__sub { color: var(--bone); }
+
+    .hero__actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 0.55s;
+    }
+
+    .hero__deco {
+      position: absolute;
+      right: -4rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 38vw;
+      max-width: 560px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: var(--border-width--main) solid var(--border-soft);
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    [data-theme="dark"] .hero__deco { border-color: var(--dark-border); opacity: 0.2; }
+
+    .hero__deco::before {
+      content: '';
+      position: absolute;
+      inset: 3rem;
+      border-radius: 50%;
+      border: var(--border-width--main) solid var(--chamoisee);
+      opacity: 0.3;
+    }
+
+    .hero__deco::after {
+      content: '';
+      position: absolute;
+      inset: 7rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--chamoisee) 0%, transparent 70%);
+      opacity: 0.12;
+    }
+
+    /* ─── Buttons ────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font--primary-family);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.9rem 2rem;
+      border-radius: var(--radius--round);
+      border: var(--border-width--main) solid transparent;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    .btn-primary:hover {
+      background: var(--chamoisee);
+      border-color: var(--chamoisee);
+      transform: translateY(-1px);
+    }
+
+    [data-theme="dark"] .btn-primary {
+      background: var(--chamoisee);
+      color: var(--paper);
+      border-color: var(--chamoisee);
+    }
+
+    [data-theme="dark"] .btn-primary:hover {
+      background: var(--gunmetal);
+      border-color: var(--bone);
+      color: var(--bone);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .btn-secondary:hover {
+      background: var(--ink);
+      color: var(--paper);
+      transform: translateY(-1px);
+    }
+
+    [data-theme="dark"] .btn-secondary {
+      color: var(--_theme---text);
+      border-color: var(--_theme---text);
+    }
+
+    [data-theme="dark"] .btn-secondary:hover {
+      background: var(--chamoisee);
+      border-color: var(--chamoisee);
+      color: var(--paper);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--chamoisee);
+      border-color: transparent;
+      padding-left: 0;
+      padding-right: 0;
+      position: relative;
+    }
+
+    .btn-ghost::after {
+      content: '';
+      position: absolute;
+      bottom: 0.6rem;
+      left: 0;
+      right: 0;
+      height: var(--border-width--main);
+      background: var(--chamoisee);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-ghost:hover::after { transform: scaleX(1); }
+    .btn-ghost:hover { color: var(--ink); }
+    [data-theme="dark"] .btn-ghost:hover { color: var(--_theme---text); }
+
+    .btn-sm {
+      padding: 0.6rem 1.25rem;
+      font-size: 0.65rem;
+    }
+
+    /* ─── Color Palette ──────────────────────────────────────────── */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .color-swatch {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .color-swatch:nth-child(1)  { animation-delay: 0.05s; }
+    .color-swatch:nth-child(2)  { animation-delay: 0.10s; }
+    .color-swatch:nth-child(3)  { animation-delay: 0.15s; }
+    .color-swatch:nth-child(4)  { animation-delay: 0.20s; }
+    .color-swatch:nth-child(5)  { animation-delay: 0.25s; }
+    .color-swatch:nth-child(6)  { animation-delay: 0.30s; }
+    .color-swatch:nth-child(7)  { animation-delay: 0.35s; }
+    .color-swatch:nth-child(8)  { animation-delay: 0.40s; }
+    .color-swatch:nth-child(9)  { animation-delay: 0.45s; }
+    .color-swatch:nth-child(10) { animation-delay: 0.50s; }
+    .color-swatch:nth-child(11) { animation-delay: 0.55s; }
+    .color-swatch:nth-child(12) { animation-delay: 0.60s; }
+    .color-swatch:nth-child(13) { animation-delay: 0.65s; }
+    .color-swatch:nth-child(14) { animation-delay: 0.70s; }
+
+    .color-chip {
+      width: 100%;
+      aspect-ratio: 1 / 0.85;
+      border-radius: var(--radius--main);
+      border: var(--border-width--main) solid rgba(0,0,0,0.06);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .color-chip::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+    }
+
+    .color-chip:hover {
+      transform: scale(1.04) translateY(-3px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.14);
+    }
+
+    .color-name {
+      font-family: var(--font--primary-family);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    [data-theme="dark"] .color-name { color: var(--_theme---text); }
+
+    .color-hex {
+      font-family: var(--font--secondary-family);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    [data-theme="dark"] .color-hex { color: var(--bone); }
+
+    /* ─── Typography section ─────────────────────────────────────── */
+    .type-row {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      align-items: baseline;
+      gap: 2rem;
+      padding: 2rem 0;
+      border-bottom: var(--border-width--main) solid var(--_theme---border);
+    }
+
+    .type-row:first-child { border-top: var(--border-width--main) solid var(--_theme---border); }
+
+    .type-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .type-meta__name {
+      font-family: var(--font--primary-family);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--chamoisee);
+    }
+
+    .type-meta__spec {
+      font-family: var(--font--secondary-family);
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    [data-theme="dark"] .type-meta__spec { color: var(--bone); }
+
+    .type-sample {
+      color: var(--ink);
+      transition: color 0.4s;
+    }
+
+    [data-theme="dark"] .type-sample { color: var(--_theme---text); }
+
+    /* ─── Button showcase ────────────────────────────────────────── */
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      padding: 2.5rem;
+      border: var(--border-width--main) solid var(--_theme---border);
+      border-radius: var(--radius--main);
+      background: var(--_theme---card--background);
+      transition: background 0.4s, border-color 0.4s;
+    }
+
+    .btn-group__label {
+      font-family: var(--font--primary-family);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    [data-theme="dark"] .btn-group__label { color: var(--bone); }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* ─── Cards ──────────────────────────────────────────────────── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background: var(--_theme---card--background);
+      border: var(--border-width--main) solid var(--_theme---border);
+      border-radius: var(--radius--main);
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  box-shadow 0.35s ease,
+                  background 0.4s ease,
+                  border-color 0.4s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 48px rgba(44, 38, 34, 0.12);
+    }
+
+    [data-theme="dark"] .card:hover {
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.3);
+    }
+
+    .card__image {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font--primary-family);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--paper);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card__image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%);
+    }
+
+    .card__body {
+      padding: 2rem;
+      color: var(--_theme---card--text);
+    }
+
+    .card__tag {
+      font-family: var(--font--primary-family);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--chamoisee);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .card__title {
+      font-family: var(--font--primary-family);
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: var(--line-height--1-3em);
+      letter-spacing: var(--letter-spacing--0-03em);
+      margin-bottom: 0.75rem;
+      color: var(--ink);
+    }
+
+    [data-theme="dark"] .card__title { color: var(--_theme---text); }
+
+    .card__text {
+      font-family: var(--font--secondary-family);
+      font-size: 0.9rem;
+      line-height: var(--line-height--1-5em);
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    [data-theme="dark"] .card__text { color: var(--bone); }
+
+    /* ─── Sample Hero ────────────────────────────────────────────── */
+    .sample-hero {
+      border-radius: var(--radius--main);
+      overflow: hidden;
+      position: relative;
+      padding: 6rem var(--padding-horizontal--main);
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    [data-theme="dark"] .sample-hero {
+      background: var(--dark-bg);
+    }
+
+    .sample-hero__bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 80% 50%, var(--chamoisee) 0%, transparent 60%);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    .sample-hero__eyebrow {
+      font-family: var(--font--primary-family);
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--chamoisee);
+      margin-bottom: 1.5rem;
+    }
+
+    .sample-hero__title {
+      font-family: var(--font--primary-family);
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 600;
+      line-height: var(--line-height--1-1em);
+      letter-spacing: var(--letter-spacing--0-03em);
+      color: var(--paper);
+      max-width: 16ch;
+      margin-bottom: 1.5rem;
+    }
+
+    .sample-hero__sub {
+      font-family: var(--font--secondary-family);
+      font-size: 1rem;
+      line-height: var(--line-height--1-5em);
+      color: var(--bone);
+      max-width: 42ch;
+      margin-bottom: 2.5rem;
+    }
+
+    .sample-hero__actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn-light {
+      background: var(--paper);
+      color: var(--ink);
+      border-color: var(--paper);
+    }
+
+    .btn-light:hover {
+      background: var(--chamoisee);
+      border-color: var(--chamoisee);
+      color: var(--paper);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline-light {
+      background: transparent;
+      color: var(--paper);
+      border-color: rgba(244, 241, 236, 0.4);
+    }
+
+    .btn-outline-light:hover {
+      background: rgba(244, 241, 236, 0.1);
+      border-color: var(--paper);
+      transform: translateY(-1px);
+    }
+
+    /* ─── CSS Vars table ─────────────────────────────────────────── */
+    .tokens-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1rem;
+    }
+
+    .token-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border: var(--border-width--main) solid var(--_theme---border);
+      border-radius: var(--radius--small);
+      background: var(--_theme---card--background);
+      transition: background 0.4s, border-color 0.4s;
+    }
+
+    .token-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--chamoisee);
+      flex-shrink: 0;
+    }
+
+    .token-name {
+      font-family: var(--font--secondary-family);
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-style: italic;
+      flex: 1;
+    }
+
+    [data-theme="dark"] .token-name { color: var(--bone); }
+
+    .token-value {
+      font-family: var(--font--primary-family);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.04em;
+    }
+
+    [data-theme="dark"] .token-value { color: var(--_theme---text); }
+
+    /* ─── Footer ─────────────────────────────────────────────────── */
+    .footer {
+      border-top: var(--border-width--main) solid var(--_theme---border);
+      padding: 3rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: gap;
+      gap: 1.5rem;
+    }
+
+    .footer__brand {
+      font-family: var(--font--primary-family);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    [data-theme="dark"] .footer__brand { color: var(--bone); }
+
+    .footer__note {
+      font-family: var(--font--secondary-family);
+      font-size: 0.8rem;
+      color: var(--light-muted);
+    }
+
+    /* ─── Animations ─────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ─── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      :root { --padding-horizontal--main: 1.5rem; }
+      h1, .h1 { font-size: 3rem; }
+      h2, .h2 { font-size: 2.5rem; }
+      .navbar__nav { display: none; }
+      .type-row { grid-template-columns: 1fr; }
+      .hero__deco { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── Navbar ───────────────────────────────────────────────── -->
+  <header class="navbar">
+    <div class="container">
+      <nav class="navbar__inner">
+        <a href="#" class="navbar__logo">
+          <div class="navbar__logo-mark">
+            <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="7" cy="7" r="2" fill="currentColor"/>
+            </svg>
+          </div>
+          Noku Studio
+        </a>
+
+        <ul class="navbar__nav">
+          <li><a href="#colors">Colors</a></li>
+          <li><a href="#typography">Type</a></li>
+          <li><a href="#buttons">Buttons</a></li>
+          <li><a href="#cards">Cards</a></li>
+          <li><a href="#hero-sample">Hero</a></li>
+        </ul>
+
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="theme-toggle__icon" id="themeIcon">☽</span>
+          <span id="themeLabel">Dark</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Hero ─────────────────────────────────────────────────── -->
+  <section id="hero">
+    <div class="hero__deco"></div>
+    <div class="container">
+      <p class="hero__eyebrow">Design System · v1.0</p>
+      <h1 class="hero__title">
+        Every token, every<br>
+        <em>intention.</em>
+      </h1>
+      <p class="hero__sub">
+        A living reference for the Noku Studio visual language — colours, typography,
+        spacing, and components, all in one place.
+      </p>
+      <div class="hero__actions">
+        <a href="#colors" class="btn btn-primary">Explore Tokens</a>
+        <a href="#hero-sample" class="btn btn-ghost">See Components ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Colors ────────────────────────────────────────────────── -->
+  <section id="colors">
+    <div class="container">
+      <p class="section-label">Colour Palette</p>
+      <h2 class="section-title reveal">Warm earth tones</h2>
+
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="color-chip" style="background:#2C2622;"></div>
+          <span class="color-name">ink</span>
+          <span class="color-hex">#2C2622</span>
+        </div>
+        <div class="color-swatch">
+          <div class="color-chip" style="background:#F4F1EC; border-color: var(--border-soft);"></div>
+          <span class="color-name">paper</span>
+          <span class="color-hex">#F4F1EC</span>
+        </div>
+        <div class="color-swatch">
+          <div class="color-chip" style="background:#a27b5c;"></div>
+          <span class="color-name">chamoisee</span>
+          <span class="color-hex">#a27b5c</span>
+        </div>
+        <div class="color-swatch">
+          <div class="color-chip" style="background:#2c3639;"></div>
+          <span class="color-name">gunmetal</span>
+          <span class="color-hex">#2c3639</span>
+        </div>
+        <div class="color-swatch">
+          <div class="color-chip" style="background:#3f4e4f;"></div>
+          <span class="color-name">outerspace</span>
+          <span class="color-hex">#3f4e4f</span>
+        </div>
+        <div class="color-swatch">
+          <div class="color-chip" style="background:#6B6258;"></div>
+          <span class="color-name">muted</span>
+          <span class="color-hex">#6B6258</span>
+        </div>
+        <div class="color-swatch">
+          <div class="color-chip" style="background:#3A342E;"></div>
+          <span class="color-name">deep-muted</span>
+          <span class="color-hex">#3A342E</span>
+        </div>
+        <div class="color-swatch">
+          <div class="color-chip" style="background:#dcd7c9; border-color:var(--border-soft);"></div>
+          <span class="color-name">bone</span>
+          <span class="color-hex">#dcd7c9</span>
+        </div>
+        <div class="color-swatch">
+          <div class="color-chip" style="background:#EDE6DA; border-color:var(--border-soft);"></div>
+          <span class="color-name">cream</span>
+          <span class="color-hex">#EDE6DA</span>
+        </div>
+        <div class="color-swatch">
+          <div class="color-chip" style="background:#D8D2C8; border-color:var(--border-soft);"></div>
+          <span class="color-name">line</span>
+          <span class="color-hex">#D8D2C8</span>
+        </div>
+        <div class="color-swatch">
+          <div class="color-chip" style="background:#E0DBD3; border-color:var(--border-soft);"></div>
+          <span class="color-name">border-soft</span>
+          <span class="color-hex">#E0DBD3</span>
+        </div>
+        <div class="color-swatch">
+          <div class="color-chip" style="background:#CFC7BD; border-color:var(--border-soft);"></div>
+          <span class="color-name">light-muted</span>
+          <span class="color-hex">#CFC7BD</span>
+        </div>
+        <div class="color-swatch">
+          <div class="color-chip" style="background:#241F1B;"></div>
+          <span class="color-name">dark-bg</span>
+          <span class="color-hex">#241F1B</span>
+        </div>
+        <div class="color-swatch">
+          <div class="color-chip" style="background:#5A5148;"></div>
+          <span class="color-name">dark-border</span>
+          <span class="color-hex">#5A5148</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Typography ────────────────────────────────────────────── -->
+  <section id="typography">
+    <div class="container">
+      <p class="section-label">Typography</p>
+      <h2 class="section-title reveal">Type scale</h2>
+
+      <div class="type-row reveal">
+        <div class="type-meta">
+          <span class="type-meta__name">Display</span>
+          <span class="type-meta__spec">Josefin Sans · 600<br>2.5rem · −0.03em</span>
+        </div>
+        <div class="display type-sample">The craft of space</div>
+      </div>
+
+      <div class="type-row reveal">
+        <div class="type-meta">
+          <span class="type-meta__name">Heading 1</span>
+          <span class="type-meta__spec">Josefin Sans · 600<br>5rem · −0.03em</span>
+        </div>
+        <div class="h1 type-sample" style="font-size:clamp(2rem,5vw,5rem);">Studio</div>
+      </div>
+
+      <div class="type-row reveal">
+        <div class="type-meta">
+          <span class="type-meta__name">Heading 2</span>
+          <span class="type-meta__spec">Josefin Sans · 600<br>4rem · −0.03em</span>
+        </div>
+        <div class="h2 type-sample" style="font-size:clamp(1.75rem,4vw,4rem);">Collections</div>
+      </div>
+
+      <div class="type-row reveal">
+        <div class="type-meta">
+          <span class="type-meta__name">Heading 3</span>
+          <span class="type-meta__spec">Josefin Sans · 600<br>3rem · −0.03em</span>
+        </div>
+        <div class="h3 type-sample" style="font-size:clamp(1.5rem,3vw,3rem);">Visual Identity</div>
+      </div>
+
+      <div class="type-row reveal">
+        <div class="type-meta">
+          <span class="type-meta__name">Heading 4</span>
+          <span class="type-meta__spec">Josefin Sans · 500<br>2rem</span>
+        </div>
+        <h4 class="type-sample">Brand Language</h4>
+      </div>
+
+      <div class="type-row reveal">
+        <div class="type-meta">
+          <span class="type-meta__name">Heading 5</span>
+          <span class="type-meta__spec">Josefin Sans · 500<br>1.25rem</span>
+        </div>
+        <h5 class="type-sample">Design Principles</h5>
+      </div>
+
+      <div class="type-row reveal">
+        <div class="type-meta">
+          <span class="type-meta__name">Heading 6</span>
+          <span class="type-meta__spec">Josefin Sans · 500<br>1rem</span>
+        </div>
+        <h6 class="type-sample">Project Overview</h6>
+      </div>
+
+      <div class="type-row reveal">
+        <div class="type-meta">
+          <span class="type-meta__name">Text Large</span>
+          <span class="type-meta__spec">Quattrocento · 400<br>1.25rem · 1.5em</span>
+        </div>
+        <p class="text-large type-sample">Refined details define the difference between good and remarkable work.</p>
+      </div>
+
+      <div class="type-row reveal">
+        <div class="type-meta">
+          <span class="type-meta__name">Text Main</span>
+          <span class="type-meta__spec">Quattrocento · 400<br>1rem · 1.5em</span>
+        </div>
+        <p class="text-main type-sample">Every element is considered. Every decision is intentional. The result is a language that speaks clearly and distinctly.</p>
+      </div>
+
+      <div class="type-row reveal">
+        <div class="type-meta">
+          <span class="type-meta__name">Text Small</span>
+          <span class="type-meta__spec">Quattrocento · 400<br>0.875rem · 1.5em</span>
+        </div>
+        <p class="text-small type-sample">Smaller text retains warmth and readability through careful type selection.</p>
+      </div>
+
+      <div class="type-row reveal">
+        <div class="type-meta">
+          <span class="type-meta__name">Caption</span>
+          <span class="type-meta__spec">Josefin Sans · 500<br>0.75rem · 0.2em spacing</span>
+        </div>
+        <span class="text-caption type-sample" style="color:var(--chamoisee);">Photography · Interior · Editorial</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Buttons ────────────────────────────────────────────────── -->
+  <section id="buttons">
+    <div class="container">
+      <p class="section-label">Components</p>
+      <h2 class="section-title reveal">Buttons</h2>
+
+      <div class="btn-grid">
+        <div class="btn-group reveal">
+          <p class="btn-group__label">Primary</p>
+          <div class="btn-row">
+            <button class="btn btn-primary">Get in Touch</button>
+            <button class="btn btn-primary btn-sm">Enquire</button>
+          </div>
+          <p class="text-small" style="color:var(--muted);">Used for the main call-to-action on a page. Filled with ink, transitions to chamoisee on hover.</p>
+        </div>
+
+        <div class="btn-group reveal">
+          <p class="btn-group__label">Secondary</p>
+          <div class="btn-row">
+            <button class="btn btn-secondary">View Portfolio</button>
+            <button class="btn btn-secondary btn-sm">Learn More</button>
+          </div>
+          <p class="text-small" style="color:var(--muted);">Outlined style for secondary actions. Inverts to filled on hover.</p>
+        </div>
+
+        <div class="btn-group reveal">
+          <p class="btn-group__label">Ghost / Text</p>
+          <div class="btn-row">
+            <button class="btn btn-ghost">Explore Projects</button>
+            <button class="btn btn-ghost btn-sm">Read Story</button>
+          </div>
+          <p class="text-small" style="color:var(--muted);">Minimal link-style with animated underline. Ideal for secondary navigation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Cards ─────────────────────────────────────────────────── -->
+  <section id="cards">
+    <div class="container">
+      <p class="section-label">Components</p>
+      <h2 class="section-title reveal">Cards</h2>
+
+      <div class="cards-grid">
+        <article class="card reveal">
+          <div class="card__image" style="background: linear-gradient(135deg, var(--gunmetal), var(--outerspace));">
+            <span style="font-family:var(--font--primary-family);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:600;color:var(--bone);opacity:0.6;">Interior</span>
+          </div>
+          <div class="card__body">
+            <span class="card__tag">Residential</span>
+            <h3 class="card__title">The Meridian Residence</h3>
+            <p class="card__text">A considered approach to warm minimalism in a private home where light becomes the primary design element.</p>
+            <button class="btn btn-ghost" style="font-size:0.7rem;">View Project →</button>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <div class="card__image" style="background: linear-gradient(135deg, var(--deep-muted), var(--muted));">
+            <span style="font-family:var(--font--primary-family);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:600;color:var(--bone);opacity:0.6;">Branding</span>
+          </div>
+          <div class="card__body">
+            <span class="card__tag">Identity</span>
+            <h3 class="card__title">Maison Colombe</h3>
+            <p class="card__text">Visual identity crafted around the French concept of savoir-faire — quiet confidence expressed through restrained elegance.</p>
+            <button class="btn btn-ghost" style="font-size:0.7rem;">View Project →</button>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <div class="card__image" style="background: linear-gradient(135deg, var(--chamoisee), var(--bone));">
+            <span style="font-family:var(--font--primary-family);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:600;color:var(--ink);opacity:0.5;">Editorial</span>
+          </div>
+          <div class="card__body">
+            <span class="card__tag">Photography</span>
+            <h3 class="card__title">Stillness &amp; Form</h3>
+            <p class="card__text">An editorial series exploring the relationship between handcrafted objects and the spaces they inhabit.</p>
+            <button class="btn btn-ghost" style="font-size:0.7rem;">View Project →</button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Hero Sample ────────────────────────────────────────────── -->
+  <section id="hero-sample">
+    <div class="container">
+      <p class="section-label">Components</p>
+      <h2 class="section-title reveal">Hero Section</h2>
+
+      <div class="sample-hero reveal">
+        <div class="sample-hero__bg"></div>
+        <p class="sample-hero__eyebrow">Noku Studio · Est. 2024</p>
+        <h2 class="sample-hero__title">Where craft meets intention</h2>
+        <p class="sample-hero__sub">
+          We design spaces, identities and experiences for those who believe that beauty
+          has a purpose — and that purpose can be beautiful.
+        </p>
+        <div class="sample-hero__actions">
+          <button class="btn btn-light">Our Work</button>
+          <button class="btn btn-outline-light">About Studio</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CSS Tokens Reference ───────────────────────────────────── -->
+  <section id="tokens">
+    <div class="container">
+      <p class="section-label">Reference</p>
+      <h2 class="section-title reveal">CSS Custom Properties</h2>
+
+      <div class="tokens-grid">
+        <div class="token-item reveal"><div class="token-dot"></div><span class="token-name">--font--primary-family</span><span class="token-value">Josefin Sans</span></div>
+        <div class="token-item reveal"><div class="token-dot"></div><span class="token-name">--font--secondary-family</span><span class="token-value">Quattrocento</span></div>
+        <div class="token-item reveal"><div class="token-dot"></div><span class="token-name">--border-width--main</span><span class="token-value">1.5px</span></div>
+        <div class="token-item reveal"><div class="token-dot"></div><span class="token-name">--radius--small</span><span class="token-value">0.5rem</span></div>
+        <div class="token-item reveal"><div class="token-dot"></div><span class="token-name">--radius--main</span><span class="token-value">1rem</span></div>
+        <div class="token-item reveal"><div class="token-dot"></div><span class="token-name">--radius--round</span><span class="token-value">100vw</span></div>
+        <div class="token-item reveal"><div class="token-dot"></div><span class="token-name">--max-width--main</span><span class="token-value">90rem</span></div>
+        <div class="token-item reveal"><div class="token-dot"></div><span class="token-name">--padding-horizontal--main</span><span class="token-value">3rem</span></div>
+        <div class="token-item reveal"><div class="token-dot"></div><span class="token-name">--line-height--1-5em</span><span class="token-value">1.5em</span></div>
+        <div class="token-item reveal"><div class="token-dot"></div><span class="token-name">--line-height--1-3em</span><span class="token-value">1.3em</span></div>
+        <div class="token-item reveal"><div class="token-dot"></div><span class="token-name">--line-height--1-1em</span><span class="token-value">1.1em</span></div>
+        <div class="token-item reveal"><div class="token-dot"></div><span class="token-name">--letter-spacing--0-03em</span><span class="token-value">−0.03em</span></div>
+        <div class="token-item reveal"><div class="token-dot"></div><span class="token-name">--_theme---background</span><span class="token-value">adaptive</span></div>
+        <div class="token-item reveal"><div class="token-dot"></div><span class="token-name">--_theme---text</span><span class="token-value">adaptive</span></div>
+        <div class="token-item reveal"><div class="token-dot"></div><span class="token-name">--_theme---border</span><span class="token-value">adaptive</span></div>
+        <div class="token-item reveal"><div class="token-dot"></div><span class="token-name">--_theme---button--background</span><span class="token-value">adaptive</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer">
+        <span class="footer__brand">Noku Studio · Design System</span>
+        <span class="footer__note">Tokens extracted from Webflow · 2026</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Theme toggle ──────────────────────────────────────────────
+    const html        = document.documentElement;
+    const toggleBtn   = document.getElementById('themeToggle');
+    const themeIcon   = document.getElementById('themeIcon');
+    const themeLabel  = document.getElementById('themeLabel');
+
+    toggleBtn.addEventListener('click', () => {
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      themeIcon.textContent  = isDark ? '☽' : '☀';
+      themeLabel.textContent = isDark ? 'Dark' : 'Light';
+    });
+
+    // ── Scroll reveal ─────────────────────────────────────────────
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('visible'), i * 60);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

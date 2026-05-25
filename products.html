@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noku Studio — All Pieces</title>
+  <meta name="description"
+    content="Explore the Noku Studio furniture catalog. Handcrafted modern minimalist furniture designed with intent.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Quattrocento:wght@400;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* ════════ DESIGN SYSTEM & TOKENS ════════ */
+    :root {
+      --paper: #F4F1EC;
+      --ink: #2C2622;
+      --muted: #6B6258;
+      --deep-muted: #3A342E;
+      --line: #D8D2C8;
+      --cream: #EDE6DA;
+      --light-muted: #CFC7BD;
+      --border-soft: #E0DBD3;
+      --chamoisee: #a27b5c;
+      
+      --font-display: 'Josefin Sans', sans-serif;
+      --font-body: 'Quattrocento', serif;
+    }
+
+    /* Reset & Base Styles */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--paper);
+      color: var(--ink);
+      font-size: 16px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--chamoisee) var(--paper);
+    }
+
+    body {
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      background-color: var(--paper);
+      color: var(--ink);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--paper);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--chamoisee);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 40px;
+      width: 100%;
+    }
+
+    /* Grain Layer Overlay */
+    .grain-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.02;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* ════════ STICKY NAVIGATION ════════ */
+    nav {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 40px);
+      max-width: 1320px;
+      height: 70px;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 40px;
+      background-color: rgba(244, 241, 236, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(44, 38, 34, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(44, 38, 34, 0.08);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    nav.scrolled {
+      top: 12px;
+      height: 60px;
+      background-color: rgba(244, 241, 236, 0.95);
+      border-color: rgba(44, 38, 34, 0.12);
+      box-shadow: 0 8px 30px rgba(44, 38, 34, 0.12);
+    }
+
+    .nav-logo-wrap {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-svg {
+      fill: var(--chamoisee);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 48px;
+      list-style: none;
+    }
+
+    .nav-link {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--ink);
+      transition: color 0.4s ease;
+      position: relative;
+      padding: 6px 0;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: var(--chamoisee);
+      transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .nav-link:hover {
+      color: var(--chamoisee);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .cart-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      transition: background-color 0.3s ease;
+    }
+
+    .cart-btn:hover {
+      background-color: rgba(44, 38, 34, 0.05);
+    }
+
+    .cart-icon {
+      stroke: var(--ink);
+    }
+
+    .cart-count {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: var(--chamoisee);
+      color: var(--paper);
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 600;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    /* ════════ HERO/HEADER SECTION ════════ */
+    .catalog-hero {
+      padding-top: 120px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .catalog-hero-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .catalog-eyebrow {
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--chamoisee);
+      margin-bottom: 16px;
+    }
+
+    .catalog-title {
+      font-family: var(--font-display);
+      font-weight: 200;
+      font-size: clamp(36px, 5vw, 64px);
+      color: var(--ink);
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* ════════ LAYOUT & SIDEBAR FILTER ════════ */
+    .catalog-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      padding-top: 60px;
+      padding-bottom: 120px;
+    }
+
+    /* Sidebar Filters */
+    .catalog-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      position: sticky;
+      top: 110px;
+      height: fit-content;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 24px;
+    }
+
+    .filter-group:last-child {
+      border-bottom: none;
+    }
+
+    .filter-title {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    /* Search Bar */
+    .search-wrap {
+      position: relative;
+      width: 100%;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px 18px 14px 44px;
+      background-color: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--ink);
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      background-color: #fff;
+      border-color: var(--chamoisee);
+      box-shadow: 0 4px 20px rgba(162, 123, 92, 0.05);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      stroke: var(--muted);
+      pointer-events: none;
+    }
+
+    /* Filter Pill Lists */
+    .filter-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .filter-pill {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--muted);
+      background-color: var(--cream);
+      border: 1px solid transparent;
+      border-radius: 20px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .filter-pill:hover {
+      background-color: var(--border-soft);
+      color: var(--ink);
+    }
+
+    .filter-pill.active {
+      background-color: var(--chamoisee);
+      color: var(--paper);
+    }
+
+    /* Filter Row Selection */
+    .filter-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .filter-btn-outline {
+      flex: 1;
+      font-family: var(--font-body);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .filter-btn-outline:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .filter-btn-outline.active {
+      background-color: var(--ink);
+      border-color: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn-reset-sidebar {
+      background: none;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 12px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-reset-sidebar:hover {
+      background-color: var(--ink);
+      border-color: var(--ink);
+      color: var(--paper);
+    }
+
+    /* ════════ MAIN CATALOG CONTAINER ════════ */
+    .catalog-main {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .catalog-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 16px;
+    }
+
+    .results-count {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* Product Grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      column-gap: 16px;
+      row-gap: 48px;
+    }
+
+    .product-card {
+      background-color: transparent;
+      border: 1px solid rgba(44, 38, 34, 0.06);
+      box-shadow: 0 4px 20px rgba(44, 38, 34, 0.03);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(44, 38, 34, 0.08);
+      border-color: rgba(162, 123, 92, 0.2);
+    }
+
+    .product-card-img-wrap {
+      overflow: hidden;
+      aspect-ratio: 2 / 2.5;
+      margin: 0;
+      border-radius: 12px 12px 0 0;
+      background-color: var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.4s ease;
+      width: 100%;
+    }
+
+    .product-card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .product-card:hover .product-card-img-wrap img {
+      transform: scale(1.05);
+    }
+
+    /* Filter select dropdown styles */
+    .filter-select {
+      width: 100%;
+      padding: 12px 16px;
+      background-color: var(--cream);
+      border: 1px solid transparent;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--ink);
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B6258' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      transition: all 0.3s ease;
+    }
+
+    .filter-select:focus {
+      outline: none;
+      background-color: #fff;
+      border-color: var(--chamoisee);
+      box-shadow: 0 4px 20px rgba(162, 123, 92, 0.05);
+    }
+
+    /* Sort dropdown styles */
+    .sort-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sort-label {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .sort-select {
+      padding: 8px 32px 8px 16px;
+      background-color: var(--cream);
+      border: 1px solid transparent;
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--ink);
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236B6258' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      transition: all 0.3s ease;
+    }
+
+    .sort-select:focus {
+      outline: none;
+      background-color: #fff;
+      border-color: var(--chamoisee);
+    }
+
+    .product-card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .product-card-header {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .product-name {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: 18px;
+      color: var(--chamoisee);
+    }
+
+    .product-materials {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .product-buy-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+    }
+
+    .product-price {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--chamoisee);
+    }
+
+    .product-add-to-cart-btn {
+      background-color: transparent;
+      border: 1px solid var(--chamoisee);
+      color: var(--chamoisee);
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-radius: 6px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .product-add-to-cart-btn:hover {
+      background-color: var(--chamoisee);
+      color: var(--paper);
+    }
+
+    /* Empty State */
+    .catalog-empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 80px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      background-color: #fff;
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+    }
+
+    .catalog-empty-state h3 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 400;
+    }
+
+    .catalog-empty-state p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .btn-reset-filters {
+      background-color: var(--chamoisee);
+      color: var(--paper);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 8px;
+      transition: opacity 0.3s ease;
+    }
+
+    .btn-reset-filters:hover {
+      opacity: 0.9;
+    }
+
+    /* ════════ SHOPPING CART SIDE-DRAWER ════════ */
+    .cart-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(44, 38, 34, 0.4);
+      opacity: 0;
+      visibility: hidden;
+      z-index: 10000;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(4px);
+    }
+
+    .cart-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 480px;
+      max-width: 100%;
+      height: 100vh;
+      background-color: var(--paper);
+      border-left: 1px solid var(--line);
+      box-shadow: -10px 0 50px rgba(44, 38, 34, 0.15);
+      z-index: 10001;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cart-drawer.active {
+      transform: translateX(0);
+    }
+
+    .cart-header {
+      padding: 32px 40px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 300;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--ink);
+    }
+
+    .cart-close-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cart-items-container {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 24px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .cart-empty-message {
+      text-align: center;
+      color: var(--muted);
+      font-family: var(--font-body);
+      font-size: 15px;
+      margin-top: 40px;
+    }
+
+    /* Cart Item */
+    .cart-item {
+      display: flex;
+      gap: 20px;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 24px;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .cart-item-img-wrap {
+      width: 90px;
+      height: 90px;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cart-item-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cart-item-details {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+    }
+
+    .cart-item-name {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: 15px;
+      color: var(--ink);
+    }
+
+    .cart-item-variants {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--muted);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .cart-item-price {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-top: 6px;
+      display: block;
+    }
+
+    .cart-item-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .qty-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 28px;
+      height: 28px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      transition: background-color 0.2s ease;
+    }
+
+    .qty-btn:hover {
+      background-color: var(--cream);
+    }
+
+    .qty-val {
+      font-family: var(--font-display);
+      font-size: 13px;
+      width: 32px;
+      text-align: center;
+      color: var(--ink);
+    }
+
+    .cart-item-remove {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-family: var(--font-body);
+      font-size: 12px;
+      text-decoration: underline;
+      transition: color 0.2s ease;
+    }
+
+    .cart-item-remove:hover {
+      color: #990000;
+    }
+
+    .cart-footer {
+      padding: 32px 40px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .cart-subtotal-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .subtotal-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+    }
+
+    .subtotal-price {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .checkout-btn {
+      background-color: var(--ink);
+      color: var(--paper);
+      border: none;
+      width: 100%;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .checkout-btn:hover:not(:disabled) {
+      background-color: var(--chamoisee);
+    }
+
+    .checkout-btn:disabled {
+      background-color: var(--light-muted);
+      cursor: not-allowed;
+    }
+
+    /* ════════ FOOTER ════════ */
+    footer {
+      border-top: 1px solid var(--line);
+      background-color: var(--cream);
+      padding: 80px 0 40px 0;
+      color: var(--ink);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 60px;
+    }
+
+    .footer-brand p {
+      margin-top: 24px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--muted);
+      max-width: 320px;
+    }
+
+    .footer-col h4 {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+      color: var(--ink);
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-col a {
+      font-size: 14px;
+      color: var(--muted);
+      transition: color 0.3s ease;
+    }
+
+    .footer-col a:hover {
+      color: var(--chamoisee);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--line);
+      padding-top: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-bottom-links a:hover {
+      color: var(--chamoisee);
+    }
+
+    /* ════════ RESPONSIVE LAYOUTS ════════ */
+    @media (max-width: 1024px) {
+      .catalog-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .catalog-sidebar {
+        position: static;
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 24px;
+        background-color: #fff;
+      }
+
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        padding: 0 20px;
+      }
+
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Grain Layer overlay -->
+  <div class="grain-overlay"></div>
+
+  <!-- STICKY HEADER NAVIGATION -->
+  <nav id="navbar">
+    <div class="nav-logo-wrap">
+      <a href="index.html" aria-label="Noku Home">
+        <svg class="logo-svg" width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
+          <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
+          <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
+          <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
+        </svg>
+      </a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html#collections" class="nav-link">Collections</a></li>
+      <li><a href="#" class="nav-link active" style="color: var(--chamoisee);">Products</a></li>
+      <li><a href="materials.html" class="nav-link">Materials</a></li>
+      <li><a href="sustainability.html" class="nav-link">Sustainability</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+      <li><a href="contact.html" class="nav-link">Contact</a></li>
+    </ul>
+    <button id="cart-toggle" class="cart-btn" aria-label="Open Shopping Cart">
+      <svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span id="cart-count-badge" class="cart-count">0</span>
+    </button>
+    <button class="mobile-menu-toggle" aria-label="Toggle Mobile Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- CATALOG HEADER -->
+  <header class="catalog-hero">
+    <div class="container catalog-hero-inner">
+      <h1 class="catalog-title">All Pieces</h1>
+    </div>
+  </header>
+
+  <!-- MAIN CATALOG BODY -->
+  <main class="container">
+    <div class="catalog-layout">
+
+      <!-- LEFT COLUMN: SIDEBAR FILTERS -->
+      <aside class="catalog-sidebar">
+        <!-- 1. Search Bar -->
+        <div class="filter-group">
+          <label class="filter-title" for="search-catalog">Search</label>
+          <div class="search-wrap">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="search-catalog" class="search-input" placeholder="Search furniture pieces...">
+          </div>
+        </div>
+
+        <!-- 2. Collections -->
+        <div class="filter-group">
+          <span class="filter-title">Collections</span>
+          <div class="filter-row">
+            <button class="filter-btn-outline filter-collection-btn active" data-value="all">All</button>
+            <button class="filter-btn-outline filter-collection-btn" data-value="stillness">Stillness</button>
+            <button class="filter-btn-outline filter-collection-btn" data-value="memories">Memories</button>
+          </div>
+        </div>
+
+        <!-- 3. Space (Room) -->
+        <div class="filter-group">
+          <label class="filter-title" for="filter-space-select">Space</label>
+          <select id="filter-space-select" class="filter-select">
+            <option value="all">All Spaces</option>
+            <option value="living room">Living Room</option>
+            <option value="dining room">Dining Room</option>
+            <option value="bedroom">Bedroom</option>
+            <option value="study">Study</option>
+          </select>
+        </div>
+
+        <!-- 4. Type of Furniture -->
+        <div class="filter-group">
+          <label class="filter-title" for="filter-type-select">Furniture Type</label>
+          <select id="filter-type-select" class="filter-select">
+            <option value="all">All Types</option>
+            <option value="chairs">Chairs</option>
+            <option value="barstools">Barstools</option>
+            <option value="tables">Tables</option>
+            <option value="sofas">Sofas</option>
+            <option value="beds">Beds</option>
+            <option value="benches">Benches</option>
+          </select>
+        </div>
+
+        <!-- 5. Material -->
+        <div class="filter-group">
+          <span class="filter-title">Material</span>
+          <ul class="filter-list">
+            <li><button class="filter-pill material-pill active" data-value="all">All Materials</button></li>
+            <li><button class="filter-pill material-pill" data-value="teak">Teak Wood</button></li>
+            <li><button class="filter-pill material-pill" data-value="white ash">White Ash</button></li>
+            <li><button class="filter-pill material-pill" data-value="reclaimed">Reclaimed Teak</button></li>
+            <li><button class="filter-pill material-pill" data-value="leather">Leather</button></li>
+            <li><button class="filter-pill material-pill" data-value="fabric">Fabric</button></li>
+          </ul>
+        </div>
+
+        <button class="btn-reset-sidebar" onclick="resetAllFilters()">Clear All Filters</button>
+      </aside>
+
+      <!-- RIGHT COLUMN: PRODUCT CATALOG GRID -->
+      <section class="catalog-main">
+        <div class="catalog-meta-row">
+          <span id="catalog-results-count" class="results-count">Loading products...</span>
+          <div class="sort-wrap">
+            <label for="sort-products" class="sort-label">Sort By:</label>
+            <select id="sort-products" class="sort-select">
+              <option value="featured">Featured</option>
+              <option value="name-asc">Name: A to Z</option>
+              <option value="name-desc">Name: Z to A</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="products-catalog-grid" class="products-grid">
+          <!-- SKELETON LOADERS (Replaced by JS) -->
+          <div class="product-card" style="opacity: 0.5; pointer-events: none;">
+            <div class="product-card-img-wrap" style="background-color: var(--cream);"></div>
+            <div class="product-card-body" style="height: 120px;"></div>
+          </div>
+          <div class="product-card" style="opacity: 0.5; pointer-events: none;">
+            <div class="product-card-img-wrap" style="background-color: var(--cream);"></div>
+            <div class="product-card-body" style="height: 120px;"></div>
+          </div>
+          <div class="product-card" style="opacity: 0.5; pointer-events: none;">
+            <div class="product-card-img-wrap" style="background-color: var(--cream);"></div>
+            <div class="product-card-body" style="height: 120px;"></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <svg width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg" style="fill: var(--chamoisee);">
+            <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
+            <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
+            <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
+            <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
+          </svg>
+          <p>
+            A contemporary furniture design studio blending traditional Indian craftsmanship with modern minimalist
+            design. Handmade in Bengaluru.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Studio</h4>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="https://nokustudio.webflow.io/projects" target="_blank">Our Projects</a></li>
+            <li><a href="contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Work</h4>
+          <ul>
+            <li><a href="index.html#collections">Collections</a></li>
+            <li><a href="#">Furniture Shop</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Knowledge</h4>
+          <ul>
+            <li><a href="./materials.html">Materials Guide</a></li>
+            <li><a href="./sustainability.html">Sustainability</a></li>
+            <li><a href="mailto:hello@nokustudio.in">hello@nokustudio.in</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Noku Studio. All Rights Reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms &amp; Conditions</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ════════ SHOPPING CART SIDE-DRAWER ════════ -->
+  <div id="cart-overlay" class="cart-overlay"></div>
+  <div id="cart-drawer" class="cart-drawer">
+    <div class="cart-header">
+      <h3 class="cart-title">Your Cart</h3>
+      <button id="cart-close" class="cart-close-btn" aria-label="Close Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="cart-items-container" id="cart-items-container">
+      <div class="cart-empty-message">Your cart is currently empty.</div>
+    </div>
+    
+    <div class="cart-footer">
+      <div class="cart-subtotal-row">
+        <span class="subtotal-label">Subtotal</span>
+        <span class="subtotal-price" id="cart-subtotal">₹0.00</span>
+      </div>
+      <button id="checkout-btn" class="checkout-btn" disabled>Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <script src="products.js"></script>
+  <script>
+    // Navigation scrolled class
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 40) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+  </script>
+</body>
+
+</html>

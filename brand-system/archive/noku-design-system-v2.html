@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Noku Studio — Design System v2 (from index.html)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Quattrocento:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ════════ DESIGN SYSTEM & TOKENS (verbatim from style.css) ════════ */
+    :root {
+      /* Primary Brand Palette */
+      --gunmetal:   #2c3639;
+      --chamoisee:  #a27b5c;
+      --outerspace: #3f4e4f;
+      --bone:       #dcd7c9;
+
+      /* Secondary Luxury Palette */
+      --paper:       #F4F1EC;
+      --ink:         #2C2622;
+      --muted:       #6B6258;
+      --deep-muted:  #3A342E;
+      --line:        #D8D2C8;
+      --cream:       #EDE6DA;
+      --light-muted: #CFC7BD;
+      --border-soft: #E0DBD3;
+      --dark-bg:     #241F1B;
+      --dark-border: #5A5148;
+
+      /* Typography */
+      --font-display: 'Josefin Sans', sans-serif;
+      --font-body:    'Quattrocento', serif;
+    }
+
+    /* ─── Reset ──────────────────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      background-color: var(--dark-bg);
+      scrollbar-width: thin;
+      scrollbar-color: var(--chamoisee) var(--dark-bg);
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--dark-bg); }
+    ::-webkit-scrollbar-thumb { background: var(--chamoisee); }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--dark-bg);
+      color: var(--paper);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; height: auto; }
+
+    /* ─── Grain overlay ──────────────────────────────────────────── */
+    .grain-overlay {
+      position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ─── Layout ──────────────────────────────────────────────────── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; width: 100%; }
+    .section-pad { padding: clamp(80px, 12vw, 140px) 0; }
+
+    /* ─── Common Type Utilities (from style.css) ─────────────────── */
+    .label {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--chamoisee);
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    .title-h2 {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 32px;
+      letter-spacing: -1px;
+    }
+
+    .title-h2.on-dark { color: var(--paper); }
+
+    .body-p {
+      font-size: 17px;
+      line-height: 1.85;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .body-p.on-dark { color: var(--bone); opacity: 0.85; }
+
+    /* ─── Sticky Nav (mirrors index.html nav) ────────────────────── */
+    nav.ds-nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      height: 70px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 40px;
+      background-color: rgba(36, 32, 29, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 200;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      color: var(--paper);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .nav-logo svg { fill: var(--paper); }
+
+    .nav-pill-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-pill-links a {
+      font-family: var(--font-body);
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--bone);
+      opacity: 0.7;
+      transition: color 0.3s, opacity 0.3s;
+    }
+
+    .nav-pill-links a:hover { color: var(--chamoisee); opacity: 1; }
+
+    .ds-badge {
+      font-family: var(--font-body);
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--chamoisee);
+      border: 1px solid rgba(162, 123, 92, 0.3);
+      border-radius: 100px;
+      padding: 5px 14px;
+    }
+
+    /* ─── Hero (dark, like the actual 3D hero zone) ──────────────── */
+    #hero {
+      background-color: var(--dark-bg);
+      padding: 120px 0 100px;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--dark-border);
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--chamoisee);
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUpIn 1s cubic-bezier(0.16,1,0.3,1) 0.2s forwards;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: 200;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      line-height: 1.05;
+      color: var(--paper);
+      margin-bottom: 28px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUpIn 1.1s cubic-bezier(0.16,1,0.3,1) 0.35s forwards;
+    }
+
+    .hero-tagline {
+      font-size: clamp(15px, 1.8vw, 18px);
+      font-weight: 300;
+      color: var(--bone);
+      max-width: 500px;
+      line-height: 1.7;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUpIn 1.1s cubic-bezier(0.16,1,0.3,1) 0.5s forwards;
+    }
+
+    .hero-deco-line {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--dark-border), transparent);
+      opacity: 0.6;
+    }
+
+    /* Large ghost number backdrop */
+    .hero-bg-num {
+      position: absolute;
+      right: -0.05em;
+      bottom: -0.15em;
+      font-family: var(--font-display);
+      font-size: clamp(180px, 25vw, 320px);
+      font-weight: 200;
+      line-height: 1;
+      color: rgba(162, 123, 92, 0.04);
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: -4px;
+    }
+
+    /* ─── Section wrappers (dark & light) ────────────────────────── */
+    .section-dark {
+      background-color: var(--dark-bg);
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-light {
+      background-color: var(--paper);
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-cream {
+      background-color: var(--cream);
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-separator-dark { border-top: 1px solid var(--dark-border); }
+    .section-separator-light { border-top: 1px solid var(--line); }
+
+    /* ─── Section header rows (like products-header) ─────────────── */
+    .ds-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 64px;
+    }
+
+    /* ─── COLOUR PALETTES ─────────────────────────────────────────── */
+
+    /* palette group label */
+    .palette-group-label {
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-weight: 400;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+    }
+
+    .palette-group-label.on-dark {
+      color: var(--chamoisee);
+      border-bottom: 1px solid var(--dark-border);
+    }
+
+    .palette-group-label.on-light {
+      color: var(--muted);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .swatch-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 20px;
+      margin-bottom: 56px;
+    }
+
+    .ds-swatch {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ds-chip {
+      width: 100%;
+      aspect-ratio: 1 / 0.78;
+      border-radius: 8px;
+      transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ds-chip::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 55%);
+    }
+
+    .ds-chip:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 16px 36px rgba(0,0,0,0.22);
+    }
+
+    .ds-swatch-name {
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .ds-swatch-name.on-dark { color: var(--bone); }
+    .ds-swatch-name.on-light { color: var(--ink); }
+
+    .ds-swatch-hex {
+      font-family: var(--font-body);
+      font-size: 12px;
+    }
+
+    .ds-swatch-hex.on-dark { color: var(--muted); }
+    .ds-swatch-hex.on-light { color: var(--muted); }
+
+    .ds-swatch-var {
+      font-family: var(--font-body);
+      font-size: 10px;
+      font-style: italic;
+      opacity: 0.5;
+    }
+
+    .ds-swatch-var.on-dark { color: var(--bone); }
+    .ds-swatch-var.on-light { color: var(--ink); }
+
+    /* ─── TYPOGRAPHY ──────────────────────────────────────────────── */
+    .type-block {
+      border-top: 1px solid var(--dark-border);
+    }
+
+    .type-row {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      align-items: baseline;
+      gap: 40px;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--dark-border);
+    }
+
+    .type-meta-label {
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--chamoisee);
+      margin-bottom: 8px;
+    }
+
+    .type-meta-spec {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .type-meta-class {
+      font-family: var(--font-body);
+      font-size: 10px;
+      font-style: italic;
+      color: var(--dark-border);
+      margin-top: 4px;
+    }
+
+    /* ─── COMPONENTS: Buttons ────────────────────────────────────── */
+    /* All buttons mirror style.css exactly */
+
+    /* Buy Now button style */
+    .btn-buy-now {
+      background-color: var(--chamoisee);
+      color: var(--paper);
+      border: none;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 16px 40px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+      box-shadow: 0 4px 12px rgba(162,123,92,0.2);
+      display: inline-block;
+    }
+
+    .btn-buy-now:hover {
+      background-color: var(--paper);
+      color: var(--ink);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(244,241,236,0.15);
+    }
+
+    /* Add to cart button style (product card) */
+    .btn-cart {
+      font-family: var(--font-body);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ink);
+      background-color: transparent;
+      border: 1px solid rgba(44,38,34,0.15);
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+      display: inline-block;
+    }
+
+    .btn-cart:hover {
+      background-color: var(--ink);
+      border-color: var(--ink);
+      color: var(--paper);
+      transform: translateY(-2px);
+    }
+
+    /* Checkout button */
+    .btn-checkout {
+      background-color: var(--chamoisee);
+      color: var(--paper);
+      border: none;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 18px 40px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+      box-shadow: 0 4px 15px rgba(162,123,92,0.25);
+      display: inline-block;
+    }
+
+    .btn-checkout:hover {
+      background-color: var(--paper);
+      color: var(--ink);
+      transform: translateY(-2px);
+    }
+
+    /* Wood / pill swatch button */
+    .btn-wood {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ink);
+      background-color: transparent;
+      border: 1px solid var(--border-soft);
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      display: inline-block;
+    }
+
+    .btn-wood:hover, .btn-wood.active {
+      background-color: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    /* Collection card link */
+    .btn-coll-link {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--chamoisee);
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: gap 0.4s ease, color 0.3s;
+    }
+
+    .btn-coll-link:hover { gap: 20px; color: var(--ink); }
+
+    /* View all link */
+    .btn-view-all {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--ink);
+      border-bottom: 1px solid var(--chamoisee);
+      padding-bottom: 6px;
+      transition: color 0.3s, border-color 0.3s;
+      background: none;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .btn-view-all:hover { color: var(--chamoisee); border-color: var(--ink); }
+
+    /* Materials pill */
+    .btn-materials-pill {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ink);
+      border: 1px solid var(--chamoisee);
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      background: none;
+      display: inline-block;
+    }
+
+    .btn-materials-pill:hover, .btn-materials-pill.active {
+      background-color: var(--chamoisee);
+      color: var(--paper);
+    }
+
+    /* Video control btn */
+    .btn-video {
+      width: 72px;
+      height: 72px;
+      border: 1px solid rgba(220,215,201,0.35);
+      background: rgba(36,31,27,0.4);
+      backdrop-filter: blur(10px);
+      border-radius: 50%;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .btn-video:hover {
+      border-color: var(--chamoisee);
+      background-color: var(--chamoisee);
+      transform: scale(1.05);
+    }
+
+    .btn-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    .btn-set {
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--dark-border);
+    }
+
+    .btn-set:last-child { border-bottom: none; }
+
+    .btn-set-label {
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--chamoisee);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .btn-row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+
+    /* ─── COMPONENTS: Product Card (mirrors style.css exactly) ───── */
+    .ds-products-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+
+    .product-card {
+      background-color: var(--paper);
+      border: 1px solid rgba(44,38,34,0.06);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      border-radius: 12px;
+      padding: 0 0 24px 0;
+      overflow: hidden;
+      transition: transform 0.5s cubic-bezier(0.16,1,0.3,1),
+                  box-shadow 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+
+    .product-card-img-wrap {
+      overflow: hidden;
+      aspect-ratio: 0.82;
+      margin: 12px 12px 20px 12px;
+      border-radius: 8px;
+      background-color: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: calc(100% - 24px);
+    }
+
+    .product-card-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--light-muted);
+    }
+
+    .product-card-body { padding: 0 24px 0 24px; }
+
+    .product-name {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 18px;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .product-materials {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+
+    .product-buy-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(44,38,34,0.08);
+      padding-top: 16px;
+    }
+
+    .product-price {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--ink);
+    }
+
+    /* ─── COMPONENTS: Collection Cards ───────────────────────────── */
+    .ds-collections-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .collection-card {
+      padding: 56px 40px;
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      border-radius: 8px;
+      transition: transform 0.6s cubic-bezier(0.16,1,0.3,1),
+                  border-color 0.6s;
+    }
+
+    .collection-card:hover { transform: translateY(-8px); border-color: var(--chamoisee); }
+
+    .coll-card-dark  { background-color: var(--dark-bg); border-color: var(--dark-border); }
+    .coll-card-cream { background-color: var(--cream); }
+    .coll-card-bone  { background-color: var(--bone); border-color: transparent; }
+
+    .coll-card-num {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 200;
+      color: rgba(162,123,92,0.25);
+      line-height: 1;
+      margin-bottom: 40px;
+    }
+
+    .coll-card-dark .coll-card-num { color: rgba(162,123,92,0.15); }
+
+    .coll-card-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+
+    .coll-card-dark .coll-card-title { color: var(--paper); }
+
+    .coll-card-desc {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--muted);
+      margin-bottom: 48px;
+      flex: 1;
+    }
+
+    .coll-card-dark .coll-card-desc { color: var(--bone); opacity: 0.8; }
+
+    /* ─── COMPONENTS: Spec Grid ───────────────────────────────────── */
+    .spec-grid {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid var(--dark-border);
+      max-width: 560px;
+    }
+
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--dark-border);
+    }
+
+    .spec-label {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--chamoisee);
+    }
+
+    .spec-val {
+      font-family: var(--font-display);
+      font-size: 17px;
+      color: var(--paper);
+    }
+
+    /* ─── COMPONENTS: Ticker ──────────────────────────────────────── */
+    .ds-ticker-wrap {
+      background-color: var(--dark-bg);
+      border-top: 1px solid rgba(244,241,236,0.06);
+      border-bottom: 1px solid rgba(244,241,236,0.06);
+      overflow: hidden;
+      padding: 20px 0;
+    }
+
+    .ticker-track {
+      display: flex;
+      width: max-content;
+      animation: tickerLoop 24s linear infinite;
+    }
+
+    .ticker-item {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--paper);
+      white-space: nowrap;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      opacity: 0.9;
+    }
+
+    .ticker-dot {
+      width: 5px; height: 5px;
+      background-color: var(--chamoisee);
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 40px;
+    }
+
+    /* ─── COMPONENTS: Material Swatch Card ────────────────────────── */
+    .ds-material-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 16px;
+    }
+
+    .swatch-card {
+      aspect-ratio: 1.15;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(44,38,34,0.08);
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1),
+                  box-shadow 0.4s cubic-bezier(0.16,1,0.3,1),
+                  border-color 0.4s;
+    }
+
+    .swatch-card:hover { transform: translateY(-4px); }
+
+    .swatch-card.active {
+      border-color: var(--chamoisee);
+      box-shadow: 0 12px 24px rgba(162,123,92,0.2);
+    }
+
+    .swatch-card-inner { position: absolute; inset: 0; background-size: cover; background-position: center; }
+
+    /* teak approximation */
+    .swatch-teak .swatch-card-inner { background: linear-gradient(135deg, #a27b5c 0%, #7d5a3e 50%, #5c3d24 100%); }
+    .swatch-honne .swatch-card-inner { background: linear-gradient(135deg, #c18c5d 0%, #9e6b40 50%, #764b27 100%); }
+    .swatch-matti .swatch-card-inner { background: linear-gradient(135deg, #423629 0%, #2f251b 60%, #17110c 100%); }
+    .swatch-rteak .swatch-card-inner { background: linear-gradient(135deg, #e3c193 0%, #cfa874 50%, #b88d56 100%); }
+
+    .swatch-label {
+      position: relative;
+      z-index: 3;
+      font-family: var(--font-body);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--paper);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s, transform 0.4s;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+    }
+
+    .swatch-card:hover .swatch-label,
+    .swatch-card.active .swatch-label { opacity: 1; transform: translateY(0); }
+
+    /* ─── VIDEO SECTION MOCK ──────────────────────────────────────── */
+    .ds-video-mock {
+      position: relative;
+      height: 420px;
+      background: linear-gradient(135deg, var(--dark-bg) 0%, var(--gunmetal) 50%, var(--deep-muted) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .ds-video-mock::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(36,31,27,0.2) 0%, rgba(36,31,27,0.85) 90%);
+    }
+
+    .ds-video-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 0 40px;
+      max-width: 600px;
+    }
+
+    /* ─── LOADING SCREEN MOCK ─────────────────────────────────────── */
+    .ds-loader-mock {
+      background-color: var(--dark-bg);
+      border: 1px solid var(--dark-border);
+      border-radius: 12px;
+      padding: 64px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      max-width: 380px;
+    }
+
+    .loader-logo-wrap {
+      color: var(--bone);
+    }
+
+    .loader-bar-wrap {
+      width: 120px;
+      height: 1px;
+      background-color: rgba(220,215,201,0.15);
+      position: relative;
+      overflow: hidden;
+      border-radius: 1px;
+    }
+
+    .loader-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 60%;
+      background-color: var(--chamoisee);
+    }
+
+    /* ─── CART DRAWER MOCK ───────────────────────────────────────── */
+    .ds-cart-mock {
+      background: rgba(36,32,29,0.85);
+      backdrop-filter: blur(25px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      max-width: 400px;
+    }
+
+    .cart-header-mock {
+      padding: 30px 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-title-mock {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: 20px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--paper);
+    }
+
+    .cart-item-mock {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      padding: 24px 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .cart-item-thumb {
+      width: 60px;
+      height: 76px;
+      background-color: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.05);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-family: var(--font-body);
+    }
+
+    .cart-item-name-mock {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--paper);
+      margin-bottom: 4px;
+    }
+
+    .cart-item-variant-mock {
+      font-family: var(--font-body);
+      font-size: 11px;
+      color: var(--chamoisee);
+      font-style: italic;
+    }
+
+    .cart-footer-mock {
+      padding: 24px 40px;
+      background-color: rgba(26,22,19,0.4);
+    }
+
+    .cart-subtotal-row-mock {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    /* ─── NAV MOCK ───────────────────────────────────────────────── */
+    .ds-nav-mock {
+      border-radius: 16px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      background-color: rgba(36,32,29,0.45);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .ds-nav-mock-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .ds-nav-mock-links span {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--bone);
+    }
+
+    /* ─── Scroll reveal ──────────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ─── Panel Numbers (narrative style) ────────────────────────── */
+    .panel-number {
+      font-family: var(--font-display);
+      font-size: 120px;
+      font-weight: 200;
+      line-height: 1;
+      color: rgba(162,123,92,0.08);
+      margin-bottom: -10px;
+      margin-left: -5px;
+    }
+
+    /* ─── Footer mock (on paper) ─────────────────────────────────── */
+    .ds-footer-mock {
+      background-color: var(--paper);
+      border-top: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 56px 48px 40px;
+    }
+
+    .ds-footer-grid {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-col-h {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+
+    .footer-col-link {
+      font-size: 14px;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .footer-col-link:hover { color: var(--chamoisee); }
+
+    .footer-bottom-mock {
+      border-top: 1px solid var(--line);
+      padding-top: 28px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .footer-bottom-mock span {
+      font-size: 12px;
+      color: var(--light-muted);
+    }
+
+    /* ─── Keyframes ──────────────────────────────────────────────── */
+    @keyframes fadeUpIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes tickerLoop {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ─── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .ds-products-grid  { grid-template-columns: repeat(2, 1fr); }
+      .ds-collections-grid { grid-template-columns: 1fr; gap: 20px; }
+      .ds-footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 0 24px; }
+      .type-row  { grid-template-columns: 1fr; }
+      .ds-products-grid { grid-template-columns: 1fr; }
+      .ds-section-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Grain -->
+  <div class="grain-overlay"></div>
+
+  <!-- ── Nav ──────────────────────────────────────────────────── -->
+  <nav class="ds-nav">
+    <div class="nav-logo">
+      <svg width="72" height="18" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
+        <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
+        <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
+        <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
+      </svg>
+    </div>
+    <ul class="nav-pill-links">
+      <li><a href="#palette">Palette</a></li>
+      <li><a href="#typography">Type</a></li>
+      <li><a href="#components">Components</a></li>
+      <li><a href="#patterns">Patterns</a></li>
+    </ul>
+    <span class="ds-badge">Design System v2</span>
+  </nav>
+
+  <!-- ── Hero ─────────────────────────────────────────────────── -->
+  <section id="hero" class="section-dark">
+    <div class="hero-deco-line"></div>
+    <div class="hero-bg-num">DS</div>
+    <div class="container">
+      <p class="hero-eyebrow">Design System · index.html + style.css</p>
+      <h1 class="hero-title">Noku Studio</h1>
+      <p class="hero-tagline">
+        A faithful reference of every colour token, typographic scale, and component pattern
+        used across the live index.html — extracted directly from style.css.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- ── COLOUR PALETTE ─────────────────────────────────────── -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="palette" class="section-dark section-separator-dark section-pad">
+    <div class="container">
+      <div class="ds-section-header reveal">
+        <div>
+          <span class="label">Tokens · Colour</span>
+          <h2 class="title-h2 on-dark">Colour Palette</h2>
+        </div>
+        <p style="color:var(--muted);font-size:14px;max-width:360px;line-height:1.7;">
+          Split into Primary brand colours and Secondary luxury surface tones, exactly as defined in <code style="color:var(--chamoisee);font-size:12px;">style.css :root</code>
+        </p>
+      </div>
+
+      <!-- PRIMARY -->
+      <p class="palette-group-label on-dark">Primary Brand Palette</p>
+      <div class="swatch-row">
+        <div class="ds-swatch">
+          <div class="ds-chip" style="background:#2c3639;"></div>
+          <span class="ds-swatch-name on-dark">Gunmetal</span>
+          <span class="ds-swatch-hex on-dark">#2c3639</span>
+          <span class="ds-swatch-var on-dark">--gunmetal</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-chip" style="background:#a27b5c;"></div>
+          <span class="ds-swatch-name on-dark">Chamoisee</span>
+          <span class="ds-swatch-hex on-dark">#a27b5c</span>
+          <span class="ds-swatch-var on-dark">--chamoisee</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-chip" style="background:#3f4e4f;"></div>
+          <span class="ds-swatch-name on-dark">Outerspace</span>
+          <span class="ds-swatch-hex on-dark">#3f4e4f</span>
+          <span class="ds-swatch-var on-dark">--outerspace</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-chip" style="background:#dcd7c9; border:1px solid rgba(255,255,255,0.08);"></div>
+          <span class="ds-swatch-name on-dark">Bone</span>
+          <span class="ds-swatch-hex on-dark">#dcd7c9</span>
+          <span class="ds-swatch-var on-dark">--bone</span>
+        </div>
+      </div>
+
+      <!-- SECONDARY -->
+      <p class="palette-group-label on-dark">Secondary Luxury Palette</p>
+      <div class="swatch-row">
+        <div class="ds-swatch">
+          <div class="ds-chip" style="background:#F4F1EC; border:1px solid rgba(255,255,255,0.08);"></div>
+          <span class="ds-swatch-name on-dark">Paper</span>
+          <span class="ds-swatch-hex on-dark">#F4F1EC</span>
+          <span class="ds-swatch-var on-dark">--paper</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-chip" style="background:#2C2622;"></div>
+          <span class="ds-swatch-name on-dark">Ink</span>
+          <span class="ds-swatch-hex on-dark">#2C2622</span>
+          <span class="ds-swatch-var on-dark">--ink</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-chip" style="background:#6B6258;"></div>
+          <span class="ds-swatch-name on-dark">Muted</span>
+          <span class="ds-swatch-hex on-dark">#6B6258</span>
+          <span class="ds-swatch-var on-dark">--muted</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-chip" style="background:#3A342E;"></div>
+          <span class="ds-swatch-name on-dark">Deep Muted</span>
+          <span class="ds-swatch-hex on-dark">#3A342E</span>
+          <span class="ds-swatch-var on-dark">--deep-muted</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-chip" style="background:#D8D2C8; border:1px solid rgba(255,255,255,0.08);"></div>
+          <span class="ds-swatch-name on-dark">Line</span>
+          <span class="ds-swatch-hex on-dark">#D8D2C8</span>
+          <span class="ds-swatch-var on-dark">--line</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-chip" style="background:#EDE6DA; border:1px solid rgba(255,255,255,0.08);"></div>
+          <span class="ds-swatch-name on-dark">Cream</span>
+          <span class="ds-swatch-hex on-dark">#EDE6DA</span>
+          <span class="ds-swatch-var on-dark">--cream</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-chip" style="background:#CFC7BD; border:1px solid rgba(255,255,255,0.08);"></div>
+          <span class="ds-swatch-name on-dark">Light Muted</span>
+          <span class="ds-swatch-hex on-dark">#CFC7BD</span>
+          <span class="ds-swatch-var on-dark">--light-muted</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-chip" style="background:#E0DBD3; border:1px solid rgba(255,255,255,0.08);"></div>
+          <span class="ds-swatch-name on-dark">Border Soft</span>
+          <span class="ds-swatch-hex on-dark">#E0DBD3</span>
+          <span class="ds-swatch-var on-dark">--border-soft</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-chip" style="background:#241F1B;"></div>
+          <span class="ds-swatch-name on-dark">Dark BG</span>
+          <span class="ds-swatch-hex on-dark">#241F1B</span>
+          <span class="ds-swatch-var on-dark">--dark-bg</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-chip" style="background:#5A5148;"></div>
+          <span class="ds-swatch-name on-dark">Dark Border</span>
+          <span class="ds-swatch-hex on-dark">#5A5148</span>
+          <span class="ds-swatch-var on-dark">--dark-border</span>
+        </div>
+      </div>
+
+      <!-- Colour Usage Note -->
+      <div class="reveal" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:16px;">
+        <div style="padding:24px;border:1px solid var(--dark-border);border-radius:8px;">
+          <p class="label" style="margin-bottom:12px;">Dark Sections</p>
+          <p style="font-size:13px;color:var(--bone);line-height:1.7;">Background: <code style="color:var(--chamoisee);">--dark-bg</code><br>Text: <code style="color:var(--chamoisee);">--paper</code><br>Secondary: <code style="color:var(--chamoisee);">--bone</code><br>Border: <code style="color:var(--chamoisee);">--dark-border</code></p>
+        </div>
+        <div style="padding:24px;border:1px solid var(--dark-border);border-radius:8px;">
+          <p class="label" style="margin-bottom:12px;">Light Sections</p>
+          <p style="font-size:13px;color:var(--bone);line-height:1.7;">Background: <code style="color:var(--chamoisee);">--paper / --cream</code><br>Text: <code style="color:var(--chamoisee);">--ink</code><br>Secondary: <code style="color:var(--chamoisee);">--muted</code><br>Border: <code style="color:var(--chamoisee);">--line</code></p>
+        </div>
+        <div style="padding:24px;border:1px solid var(--dark-border);border-radius:8px;">
+          <p class="label" style="margin-bottom:12px;">Brand Accent</p>
+          <p style="font-size:13px;color:var(--bone);line-height:1.7;"><code style="color:var(--chamoisee);">--chamoisee</code> is used for all labels, CTAs, hover states, active borders, scrollbars, and decorative accents.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- ── TYPOGRAPHY ─────────────────────────────────────────── -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="typography" class="section-dark section-separator-dark section-pad">
+    <div class="container">
+      <span class="label reveal">Tokens · Typography</span>
+      <h2 class="title-h2 on-dark reveal">Type System</h2>
+
+      <div class="type-block reveal">
+
+        <!-- Hero Title -->
+        <div class="type-row">
+          <div>
+            <p class="type-meta-label">Hero Title</p>
+            <p class="type-meta-spec">Josefin Sans · 200<br>clamp(48px–100px)<br>letter-spacing: 6px<br>uppercase</p>
+            <p class="type-meta-class">.hero-title</p>
+          </div>
+          <div style="font-family:var(--font-display);font-size:clamp(36px,6vw,72px);font-weight:200;letter-spacing:4px;text-transform:uppercase;color:var(--paper);line-height:1.05;">The Barstool</div>
+        </div>
+
+        <!-- H2 / Section title -->
+        <div class="type-row">
+          <div>
+            <p class="type-meta-label">Section Title</p>
+            <p class="type-meta-spec">Josefin Sans · 300<br>clamp(32px–56px)<br>letter-spacing: −1px<br>line-height: 1.15</p>
+            <p class="type-meta-class">.title-h2</p>
+          </div>
+          <div class="title-h2 on-dark" style="margin:0;">Every line, considered</div>
+        </div>
+
+        <!-- Label -->
+        <div class="type-row">
+          <div>
+            <p class="type-meta-label">Label / Eyebrow</p>
+            <p class="type-meta-spec">Quattrocento · 300<br>11px · letter-spacing: 5px<br>uppercase · chamoisee</p>
+            <p class="type-meta-class">.label</p>
+          </div>
+          <span class="label" style="margin:0;">Materiality</span>
+        </div>
+
+        <!-- Body paragraph -->
+        <div class="type-row">
+          <div>
+            <p class="type-meta-label">Body Paragraph</p>
+            <p class="type-meta-spec">Quattrocento · 400<br>17px · line-height: 1.85<br>color: --muted / --bone</p>
+            <p class="type-meta-class">.body-p</p>
+          </div>
+          <p class="body-p on-dark" style="margin:0;max-width:540px;">Renowned for its rich golden to medium brown hues that deepen with age, teak's straight grain and coarse texture exude timeless elegance.</p>
+        </div>
+
+        <!-- Hero Eyebrow -->
+        <div class="type-row">
+          <div>
+            <p class="type-meta-label">Eyebrow</p>
+            <p class="type-meta-spec">Quattrocento · 300<br>11px · letter-spacing: 6px<br>uppercase · chamoisee</p>
+            <p class="type-meta-class">.hero-eyebrow</p>
+          </div>
+          <span style="font-family:var(--font-body);font-size:11px;font-weight:300;letter-spacing:6px;text-transform:uppercase;color:var(--chamoisee);">Collection 01 — Of Stillness</span>
+        </div>
+
+        <!-- Spec label + value -->
+        <div class="type-row">
+          <div>
+            <p class="type-meta-label">Spec Label / Value</p>
+            <p class="type-meta-spec">Label: Quattrocento 11px 3px track<br>Value: Josefin Sans 17px --paper</p>
+            <p class="type-meta-class">.spec-label / .spec-val</p>
+          </div>
+          <div style="display:flex;gap:40px;align-items:baseline;">
+            <span class="spec-label">Lead Time</span>
+            <span class="spec-val">3–4 Weeks</span>
+          </div>
+        </div>
+
+        <!-- Product name -->
+        <div class="type-row">
+          <div>
+            <p class="type-meta-label">Product Name</p>
+            <p class="type-meta-spec">Josefin Sans · 600<br>18px · color: --ink</p>
+            <p class="type-meta-class">.product-name</p>
+          </div>
+          <span style="font-family:var(--font-display);font-weight:600;font-size:18px;color:var(--paper);">Grooved Sofa</span>
+        </div>
+
+        <!-- Nav link -->
+        <div class="type-row">
+          <div>
+            <p class="type-meta-label">Nav Link</p>
+            <p class="type-meta-spec">Quattrocento · 300<br>11px · letter-spacing: 3px<br>uppercase · --bone</p>
+            <p class="type-meta-class">.nav-link</p>
+          </div>
+          <div style="display:flex;gap:40px;">
+            <span style="font-family:var(--font-body);font-size:11px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:var(--bone);">Collections</span>
+            <span style="font-family:var(--font-body);font-size:11px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:var(--chamoisee);">Products ←hover</span>
+          </div>
+        </div>
+
+        <!-- Panel number -->
+        <div class="type-row">
+          <div>
+            <p class="type-meta-label">Panel Number</p>
+            <p class="type-meta-spec">Josefin Sans · 200<br>120px · chamoisee 8% opacity<br>Decorative backdrop</p>
+            <p class="type-meta-class">.panel-number</p>
+          </div>
+          <div class="panel-number">01</div>
+        </div>
+
+      </div><!-- /.type-block -->
+
+      <!-- Font families quick ref -->
+      <div class="reveal" style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:56px;">
+        <div style="padding:32px;border:1px solid var(--dark-border);border-radius:8px;">
+          <p class="label" style="margin-bottom:16px;">--font-display</p>
+          <p style="font-family:var(--font-display);font-size:36px;font-weight:200;color:var(--paper);letter-spacing:2px;">Josefin Sans</p>
+          <p style="font-family:var(--font-display);font-size:14px;font-weight:300;color:var(--muted);margin-top:12px;letter-spacing:1px;">Weights used: 200 · 300 · 500 · 600 · 700</p>
+          <p style="font-family:var(--font-body);font-size:12px;color:var(--dark-border);margin-top:8px;letter-spacing:1px;">Headings, nav, labels, product names, hero</p>
+        </div>
+        <div style="padding:32px;border:1px solid var(--dark-border);border-radius:8px;">
+          <p class="label" style="margin-bottom:16px;">--font-body</p>
+          <p style="font-family:var(--font-body);font-size:36px;font-weight:400;color:var(--paper);">Quattrocento</p>
+          <p style="font-family:var(--font-body);font-size:14px;font-weight:400;color:var(--muted);margin-top:12px;letter-spacing:1px;">Weights used: 400 · 700</p>
+          <p style="font-family:var(--font-body);font-size:12px;color:var(--dark-border);margin-top:8px;letter-spacing:1px;">Body text, captions, nav links, footer, buttons</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- ── TICKER ─────────────────────────────────────────────── -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="ds-ticker-wrap">
+    <div class="ticker-track">
+      <div class="ticker-item">Designed with Intent <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Crafted with Care <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Pieces for Living <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Of Stillness Collection <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Material Honesty <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Quiet Elegance <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Designed with Intent <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Crafted with Care <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Pieces for Living <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Of Stillness Collection <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Material Honesty <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Quiet Elegance <span class="ticker-dot"></span></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- ── COMPONENTS (LIGHT) ─────────────────────────────────── -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="components" class="section-light section-pad">
+    <div class="container">
+      <span class="label reveal" style="color:var(--chamoisee);">Components</span>
+      <h2 class="title-h2 reveal">Buttons</h2>
+
+      <div class="btn-grid reveal">
+
+        <div class="btn-set">
+          <span class="btn-set-label" style="color:var(--muted);">Primary CTA · .buy-now-btn / .checkout-btn</span>
+          <div class="btn-row">
+            <button class="btn-buy-now">Buy Now</button>
+            <button class="btn-checkout">Proceed to Checkout</button>
+          </div>
+          <p style="font-size:13px;color:var(--muted);margin-top:16px;line-height:1.7;">Chamoisee fill → paper on hover. Used for primary commerce actions.</p>
+        </div>
+
+        <div class="btn-set">
+          <span class="btn-set-label" style="color:var(--muted);">Secondary · .product-add-to-cart-btn</span>
+          <div class="btn-row">
+            <button class="btn-cart">Add to Cart</button>
+          </div>
+          <p style="font-size:13px;color:var(--muted);margin-top:16px;line-height:1.7;">Transparent border → fills ink on hover. Used on product cards.</p>
+        </div>
+
+        <div class="btn-set">
+          <span class="btn-set-label" style="color:var(--muted);">Selector Pills · .wood-swatch / .materials-pill</span>
+          <div class="btn-row">
+            <button class="btn-wood active">Teak</button>
+            <button class="btn-wood">White Ash</button>
+            <button class="btn-wood">Reclaimed Teak</button>
+          </div>
+          <div class="btn-row" style="margin-top:16px;">
+            <button class="btn-materials-pill active">Wood</button>
+            <button class="btn-materials-pill">Leather</button>
+            <button class="btn-materials-pill">Fabric</button>
+            <button class="btn-materials-pill">Metals</button>
+          </div>
+          <p style="font-size:13px;color:var(--muted);margin-top:16px;line-height:1.7;">Used in material selectors and configurator. wood-swatch uses rounded border, materials-pill is sharp-edged.</p>
+        </div>
+
+        <div class="btn-set">
+          <span class="btn-set-label" style="color:var(--muted);">Ghost Links · .coll-card-link / .view-collection-link</span>
+          <div class="btn-row">
+            <button class="btn-coll-link">Explore Collection →</button>
+            <button class="btn-view-all">View All Products</button>
+          </div>
+          <p style="font-size:13px;color:var(--muted);margin-top:16px;line-height:1.7;">Link-style CTAs. Collection link animates gap; view-all has chamoisee underline.</p>
+        </div>
+
+        <div class="btn-set">
+          <span class="btn-set-label" style="color:var(--muted);">Icon Btn · .video-control-btn (dark contexts)</span>
+          <div class="btn-row" style="background:var(--dark-bg);padding:24px;border-radius:8px;">
+            <button class="btn-video">
+              <svg width="20" height="20" viewBox="0 0 24 24">
+                <rect x="4" y="4" width="4" height="16" fill="var(--paper)"></rect>
+                <rect x="16" y="4" width="4" height="16" fill="var(--paper)"></rect>
+              </svg>
+            </button>
+          </div>
+          <p style="font-size:13px;color:var(--muted);margin-top:16px;line-height:1.7;">Circular glass icon button with blur backdrop. Used on the cinematic video section.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- ── PRODUCT CARDS ──────────────────────────────────────── -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section class="section-cream section-separator-light section-pad">
+    <div class="container">
+      <div class="ds-section-header reveal">
+        <div>
+          <span class="label" style="color:var(--chamoisee);">Components</span>
+          <h2 class="title-h2">Product Cards</h2>
+        </div>
+        <button class="btn-view-all">View All Products</button>
+      </div>
+
+      <div class="ds-products-grid reveal">
+        <div class="product-card">
+          <div class="product-card-img-wrap">
+            <div class="product-card-placeholder">Image</div>
+          </div>
+          <div class="product-card-body">
+            <h3 class="product-name">Grooved Sofa</h3>
+            <span class="product-materials">Solid Walnut / Belgian Linen</span>
+            <div class="product-buy-row">
+              <span class="product-price">₹81,000</span>
+              <button class="btn-cart">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-card-img-wrap">
+            <div class="product-card-placeholder">Image</div>
+          </div>
+          <div class="product-card-body">
+            <h3 class="product-name">Lounge Chair</h3>
+            <span class="product-materials">Solid Teak / Cane / Linen</span>
+            <div class="product-buy-row">
+              <span class="product-price">₹49,500</span>
+              <button class="btn-cart">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-card-img-wrap">
+            <div class="product-card-placeholder">Image</div>
+          </div>
+          <div class="product-card-body">
+            <h3 class="product-name">Dining Chair</h3>
+            <span class="product-materials">Solid Walnut / Natural Fabric</span>
+            <div class="product-buy-row">
+              <span class="product-price">₹11,500</span>
+              <button class="btn-cart">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-card-img-wrap">
+            <div class="product-card-placeholder">Image</div>
+          </div>
+          <div class="product-card-body">
+            <h3 class="product-name">Study Table</h3>
+            <span class="product-materials">Solid Teak / Brass Details</span>
+            <div class="product-buy-row">
+              <span class="product-price">₹35,000</span>
+              <button class="btn-cart">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- ── COLLECTION CARDS ───────────────────────────────────── -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section class="section-light section-separator-light section-pad">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:80px;" class="reveal">
+        <span class="label" style="color:var(--chamoisee);">Themes</span>
+        <h2 class="title-h2" style="color:var(--ink);">Our Collections</h2>
+      </div>
+
+      <div class="ds-collections-grid reveal">
+        <div class="collection-card coll-card-dark">
+          <div class="coll-card-num">01</div>
+          <h3 class="coll-card-title">Of Stillness</h3>
+          <p class="coll-card-desc">A meditation on silence. Mid-Century proportions paired with honest joinery. Rooted in our Chandigarh lineage, reimagined for contemporary living.</p>
+          <button class="btn-coll-link">Explore Collection →</button>
+        </div>
+        <div class="collection-card coll-card-cream">
+          <div class="coll-card-num">02</div>
+          <h3 class="coll-card-title">Of Memories</h3>
+          <p class="coll-card-desc">Exploring the warmth of familiar spaces. Traditional vernacular Indian shapes, bringing a vintage touch to contemporary materials.</p>
+          <button class="btn-coll-link">Explore Collection →</button>
+        </div>
+        <div class="collection-card coll-card-bone">
+          <div class="coll-card-num">03</div>
+          <h3 class="coll-card-title">Of Exploration</h3>
+          <p class="coll-card-desc">A sandbox for material fusions. Experimental prototypes exploring how brass, metal structures, and reclaimed timbers speak to each other.</p>
+          <button class="btn-coll-link">Explore Collection →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- ── PATTERNS ────────────────────────────────────────────── -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="patterns" class="section-dark section-separator-dark section-pad">
+    <div class="container">
+      <span class="label reveal">Patterns · Recurring Layouts</span>
+      <h2 class="title-h2 on-dark reveal">Patterns</h2>
+
+      <!-- Spec Grid Pattern -->
+      <div style="margin-bottom:80px;" class="reveal">
+        <p class="palette-group-label on-dark">Spec Grid — .spec-grid / .spec-row</p>
+        <div class="spec-grid">
+          <div class="spec-row">
+            <span class="spec-label">Joinery</span>
+            <span class="spec-val">Mortise &amp; Tenon</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Dimensions</span>
+            <span class="spec-val">51.5 × 49.5 × 93 cm</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Seat Height</span>
+            <span class="spec-val">76 cm</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Lead Time</span>
+            <span class="spec-val">3–4 Weeks</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Material Swatches Pattern -->
+      <div style="margin-bottom:80px;" class="reveal">
+        <p class="palette-group-label on-dark">Material Swatch Cards — .swatch-card</p>
+        <div class="ds-material-grid" style="max-width:640px;">
+          <div class="swatch-card swatch-teak active">
+            <div class="swatch-card-inner"></div>
+            <span class="swatch-label">Teak</span>
+          </div>
+          <div class="swatch-card swatch-honne">
+            <div class="swatch-card-inner"></div>
+            <span class="swatch-label">Honne</span>
+          </div>
+          <div class="swatch-card swatch-matti">
+            <div class="swatch-card-inner"></div>
+            <span class="swatch-label">Matti</span>
+          </div>
+          <div class="swatch-card swatch-rteak">
+            <div class="swatch-card-inner"></div>
+            <span class="swatch-label">Reclaimed Teak</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nav Pattern -->
+      <div style="margin-bottom:80px;" class="reveal">
+        <p class="palette-group-label on-dark">Navigation (Dark State) — nav / .light-nav</p>
+        <div class="ds-nav-mock">
+          <svg width="60" height="15" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg" style="fill:var(--paper);">
+            <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
+            <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
+            <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
+            <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
+          </svg>
+          <ul class="ds-nav-mock-links">
+            <li><span>Collections</span></li>
+            <li><span>Products</span></li>
+            <li><span style="color:var(--chamoisee);">Contact ← hover</span></li>
+          </ul>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--bone)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Video Section Pattern -->
+      <div style="margin-bottom:80px;" class="reveal">
+        <p class="palette-group-label on-dark">Video / Cinematic Section Pattern</p>
+        <div class="ds-video-mock">
+          <div class="ds-video-content">
+            <span class="label" style="color:var(--chamoisee);">The Workshop</span>
+            <h2 class="title-h2 on-dark" style="font-size:32px;margin-bottom:16px;">A document of patience, wood joints, and handcraft</h2>
+            <p style="color:var(--bone);font-size:15px;line-height:1.7;margin-bottom:24px;opacity:0.8;">Inside our Bengaluru atelier, we work with seasoned hardwoods — shaping, sanding, and assembling each piece with absolute precision.</p>
+            <button class="btn-video">
+              <svg width="20" height="20" viewBox="0 0 24 24">
+                <rect x="4" y="4" width="4" height="16" fill="var(--paper)"></rect>
+                <rect x="16" y="4" width="4" height="16" fill="var(--paper)"></rect>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cart Drawer + Loader side by side -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;" class="reveal">
+        <!-- Cart Drawer -->
+        <div>
+          <p class="palette-group-label on-dark">Cart Drawer — .cart-drawer</p>
+          <div class="ds-cart-mock">
+            <div class="cart-header-mock">
+              <span class="cart-title-mock">Your Cart</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--bone)" stroke-width="1.5">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </div>
+            <div class="cart-item-mock">
+              <div class="cart-item-thumb">Img</div>
+              <div>
+                <div class="cart-item-name-mock">Grooved Sofa</div>
+                <div class="cart-item-variant-mock">Teak / Linen Cushion</div>
+                <div style="font-family:var(--font-display);font-size:14px;color:var(--paper);margin-top:6px;">₹81,000</div>
+              </div>
+            </div>
+            <div class="cart-footer-mock">
+              <div class="cart-subtotal-row-mock">
+                <span style="font-family:var(--font-body);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--chamoisee);">Subtotal</span>
+                <span style="font-family:var(--font-display);font-size:18px;color:var(--paper);">₹81,000</span>
+              </div>
+              <button class="btn-checkout" style="width:100%;padding:16px 0;border-radius:6px;">Proceed to Checkout</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading Screen -->
+        <div>
+          <p class="palette-group-label on-dark">Loading Screen — #loading-screen</p>
+          <div class="ds-loader-mock">
+            <div class="loader-logo-wrap">
+              <svg width="36" height="44" viewBox="0 0 181.76 218.04" xmlns="http://www.w3.org/2000/svg" style="fill:var(--bone);">
+                <polygon points="181.76 5.61 181.76 218.04 145.86 218.04 145.86 144.74 35.91 71.06 35.91 218.04 0 218.04 0 0 145.86 101.35 145.86 5.61 181.76 5.61"/>
+              </svg>
+            </div>
+            <div class="loader-bar-wrap" style="width:160px;">
+              <div class="loader-bar" style="width:72%;"></div>
+            </div>
+            <p style="font-family:var(--font-body);font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);">Loading…</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- ── FOOTER PATTERN ─────────────────────────────────────── -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section class="section-light section-separator-light section-pad">
+    <div class="container">
+      <span class="label reveal" style="color:var(--chamoisee);">Patterns · Footer</span>
+      <h2 class="title-h2 reveal">Footer</h2>
+      <div class="ds-footer-mock reveal">
+        <div class="ds-footer-grid">
+          <div>
+            <svg width="72" height="18" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg" style="fill:var(--ink);margin-bottom:20px;">
+              <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
+              <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
+              <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
+              <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
+            </svg>
+            <p style="font-size:13px;line-height:1.8;color:var(--muted);max-width:280px;">A contemporary furniture design studio blending traditional Indian craftsmanship with modern minimalist design. Handmade in Bengaluru.</p>
+          </div>
+          <div>
+            <p class="footer-col-h">Studio</p>
+            <a class="footer-col-link">About Us</a>
+            <a class="footer-col-link">Our Projects</a>
+            <a class="footer-col-link">Get in Touch</a>
+          </div>
+          <div>
+            <p class="footer-col-h">Knowledge</p>
+            <a class="footer-col-link">Materials Guide</a>
+            <a class="footer-col-link">Sustainability</a>
+            <a class="footer-col-link">hello@nokustudio.in</a>
+          </div>
+        </div>
+        <div class="footer-bottom-mock">
+          <span>© 2026 Noku Studio. All Rights Reserved.</span>
+          <span>Privacy Policy · Terms &amp; Conditions</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Scroll reveal
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    // Swatch card interactivity
+    document.querySelectorAll('.swatch-card').forEach(card => {
+      card.addEventListener('click', () => {
+        card.closest('.ds-material-grid').querySelectorAll('.swatch-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
