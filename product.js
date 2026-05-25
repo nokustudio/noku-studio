@@ -640,6 +640,20 @@ function renderProductPage() {
     imageUrls.push('https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7724c1a8d27260d62288_Noku_ofStillness_Lounge_chair_02.jpeg');
   }
 
+  // Determine initial variant image to load first
+  let defaultImageUrl = imageUrls[0];
+  if (initialVariant && initialVariant.image && initialVariant.image.url) {
+    defaultImageUrl = initialVariant.image.url;
+  }
+
+  // Preload the rest of the images in the background
+  imageUrls.forEach(url => {
+    if (url !== defaultImageUrl) {
+      const img = new Image();
+      img.src = url;
+    }
+  });
+
   // Create Gallery HTML
   let thumbnailsHtml = '';
   imageUrls.forEach((url, idx) => {
@@ -705,7 +719,7 @@ function renderProductPage() {
     <!-- Gallery block -->
     <div class="product-gallery">
       <div class="main-image-viewport" id="main-viewport">
-        <img id="main-product-image" src="${imageUrls[0]}" alt="${currentProduct.title}">
+        <img id="main-product-image" src="${defaultImageUrl}" alt="${currentProduct.title}">
       </div>
       <div class="thumbnail-list" id="thumbnails-container">
         ${thumbnailsHtml}
@@ -731,8 +745,11 @@ function renderProductPage() {
 
       <!-- Detailed Swatch Description Block -->
       <div id="selected-materials-box" class="material-details-box" style="display: none;">
-        <h3 class="box-title">Material Details</h3>
-        <div class="material-details-grid" id="materials-grid-container">
+        <div class="material-details-header">
+          <h3 class="box-title">Material Details</h3>
+          <span class="dropdown-icon">▼</span>
+        </div>
+        <div class="material-details-grid" id="materials-grid-container" style="display: none; margin-top: 16px;">
           <!-- Filled dynamically when swatches are selected -->
         </div>
       </div>
@@ -849,6 +866,26 @@ function renderProductPage() {
       updateVariantDisplays();
     });
   });
+
+  // Toggle material details dropdown
+  const materialBox = document.getElementById('selected-materials-box');
+  if (materialBox) {
+    const header = materialBox.querySelector('.material-details-header');
+    const container = document.getElementById('materials-grid-container');
+    const icon = materialBox.querySelector('.dropdown-icon');
+    if (header && container && icon) {
+      header.addEventListener('click', () => {
+        const isOpen = container.style.display === 'flex' || container.style.display === 'block';
+        if (isOpen) {
+          container.style.display = 'none';
+          icon.style.transform = 'rotate(0deg)';
+        } else {
+          container.style.display = 'flex';
+          icon.style.transform = 'rotate(180deg)';
+        }
+      });
+    }
+  }
 
   // Initial draw of materials card info
   updateVariantDisplays(true);
@@ -1250,12 +1287,12 @@ async function loadRelatedProducts() {
     });
   }
 
-  // Display top 3 products
-  const displayProducts = productsList.slice(0, 3);
+  // Display top 4 products
+  const displayProducts = productsList.slice(0, 4);
 
   if (displayProducts.length === 0) {
-    // fallback to any 3 products in database if no collection match
-    displayProducts.push(...Object.values(FALLBACK_PRODUCTS_DB).filter(p => p.handle !== currentHandle).slice(0, 3));
+    // fallback to any 4 products in database if no collection match
+    displayProducts.push(...Object.values(FALLBACK_PRODUCTS_DB).filter(p => p.handle !== currentHandle).slice(0, 4));
   }
 
   grid.innerHTML = '';
