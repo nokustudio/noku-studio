@@ -52,11 +52,16 @@
       letter-spacing: 2px;
     }
 
+    /* Wider Container for Catalog Page */
+    .container {
+      max-width: 1500px;
+    }
+
     /* ════════ LAYOUT & SIDEBAR FILTER ════════ */
     .catalog-layout {
       display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 48px;
+      grid-template-columns: 220px 1fr;
+      gap: 40px;
       padding-top: 60px;
       padding-bottom: 120px;
     }
@@ -65,7 +70,7 @@
     .catalog-sidebar {
       display: flex;
       flex-direction: column;
-      gap: 40px;
+      gap: 20px;
       position: sticky;
       top: 110px;
       height: fit-content;
@@ -74,9 +79,9 @@
     .filter-group {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
       border-bottom: 1px solid rgba(44, 38, 34, 0.06);
-      padding-bottom: 20px;
+      padding-bottom: 12px;
     }
 
     .filter-group:last-child {
@@ -130,7 +135,7 @@
     .filter-link-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 6px;
     }
 
     .filter-link-text {
