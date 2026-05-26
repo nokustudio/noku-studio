@@ -78,9 +78,8 @@
       font-family: var(--font-display);
       font-size: 11px;
       font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--ink);
+      letter-spacing: 1px;
+      color: var(--muted);
     }
 
     .materials-browser-grid .materials-pills {
@@ -95,19 +94,27 @@
     .materials-browser-grid .materials-pill {
       font-family: var(--font-body);
       font-size: 13px;
-      padding: 10px 20px;
+      padding: 8px 16px;
       border-radius: 20px;
-      background-color: var(--cream);
-      border: 1px solid transparent;
+      background-color: transparent;
+      border: 1px solid var(--line);
       cursor: pointer;
       color: var(--muted);
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      text-transform: none;
+      letter-spacing: 0;
     }
 
-    .materials-browser-grid .materials-pill:hover,
+    .materials-browser-grid .materials-pill:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+      background-color: transparent;
+    }
+
     .materials-browser-grid .materials-pill.active {
-      background-color: var(--chamoisee);
-      color: var(--paper);
+      border-color: var(--chamoisee);
+      color: var(--chamoisee);
+      background-color: transparent;
     }
 
     .swatches-grid-container {
