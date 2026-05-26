@@ -714,6 +714,12 @@
           }, 1000);
         });
       });
+
+      // Reset transition overlay when user navigates back (BFCache reset)
+      window.addEventListener('pageshow', () => {
+        const overlays = document.querySelectorAll('.page-transition-overlay');
+        overlays.forEach(overlay => overlay.remove());
+      });
     });
   </script>
 
