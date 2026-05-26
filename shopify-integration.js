@@ -14,10 +14,6 @@ const SHOPIFY_CONFIG = {
   defaultPrice: 24500
 };
 
-// State of variants fetched from Shopify Storefront API
-let shopifyProductVariants = [];
-let isShopifyConnected = false;
-
 // Featured products data from Shopify Storefront API (Phase 2)
 let featuredProductsData = {};
 
@@ -54,53 +50,321 @@ const FEATURED_PRODUCTS_FALLBACK = {
   'barstool': {
     title: 'Barstool',
     price: 21000,
-    variantId: 'gid://shopify/ProductVariant/mock-barstool-default',
+    variantId: 'gid://shopify/ProductVariant/40585660366906',
     image: 'https://cdn.prod.website-files.com/667fb0113927090bb47059e6/67cfdbb331dba957c997c00e_5d1622c83584a245197f9005889b2b06_Noku_ofStillness_Barstool_03%20copy.webp',
-    variantTitle: 'Teak / Leather - Cognac'
-  },
-  'side-table': {
-    title: 'Side Table',
-    price: 21000,
-    variantId: 'gid://shopify/ProductVariant/mock-side-table-default',
-    image: 'https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d403fa184eebc59c05c_Side%20Table%2042%20B.png',
-    variantTitle: 'Solid Teak'
-  },
-  'poster-bed': {
-    title: 'Poster Bed',
-    price: 142000,
-    variantId: 'gid://shopify/ProductVariant/mock-poster-bed-default',
-    image: 'https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00dd8733454553abc99bc_Bed%2042%20A.png',
     variantTitle: 'Teak / Leather - Cognac'
   },
   'classic-study-table': {
     title: 'Classic Study Table',
     price: 41500,
-    variantId: 'gid://shopify/ProductVariant/mock-classic-study-default',
+    variantId: 'gid://shopify/ProductVariant/40573722853434',
     image: 'https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00e7f4ffc4c910059d042_Study%20Table%2019%20C.png',
+    variantTitle: 'Solid Teak'
+  },
+  'side-table': {
+    title: 'Side Table',
+    price: 21000,
+    variantId: 'gid://shopify/ProductVariant/40583459569722',
+    image: 'https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d403fa184eebc59c05c_Side%20Table%2042%20B.png',
     variantTitle: 'Solid Teak'
   },
   'lounge-sofa': {
     title: 'Lounge Sofa',
     price: 119500,
-    variantId: 'gid://shopify/ProductVariant/mock-lounge-sofa-default',
+    variantId: 'gid://shopify/ProductVariant/40573731110970',
     image: 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg',
     variantTitle: 'Teak / Leather - Cognac'
   },
   'upholstered-bench': {
     title: 'Upholstered Bench',
     price: 25500,
-    variantId: 'gid://shopify/ProductVariant/mock-upholstered-bench-default',
+    variantId: 'gid://shopify/ProductVariant/40583462649914',
     image: 'https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d41cd825187ac22552f_Chair%2042%20A.png',
     variantTitle: 'Teak / Leather - Cognac'
   },
   'rod-bed-with-curved-headboard': {
     title: 'Rod Bed',
     price: 81000,
-    variantId: 'gid://shopify/ProductVariant/mock-rod-bed-default',
+    variantId: 'gid://shopify/ProductVariant/40589542391866',
     image: 'https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00dd8733454553abc99bc_Bed%2042%20A.png',
     variantTitle: 'Solid Teak'
+  },
+  'poster-bed': {
+    title: 'Poster Bed',
+    price: 142000,
+    variantId: 'gid://shopify/ProductVariant/40589458997306',
+    image: 'https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00dd8733454553abc99bc_Bed%2042%20A.png',
+    variantTitle: 'Teak / Leather - Cognac'
   }
 };
+
+// Full Fallback catalog from products.js
+const FALLBACK_PRODUCTS = [
+  {
+    id: "gid://shopify/Product/7325874651194",
+    title: "Grooved Sofa",
+    handle: "sofa-2",
+    description: "A meditation on silence. Mid-Century proportions paired with honest joinery. Rooted in our Chandigarh lineage, reimagined for contemporary living.",
+    productType: "sofa",
+    tags: ["sofa", "fabric", "leather"],
+    collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
+    featuredImage: {
+      url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg",
+      altText: "Grooved Sofa"
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "gid://shopify/ProductVariant/mock-sofa-default",
+            title: "Solid Walnut / Belgian Linen",
+            price: { amount: "81000.0", currencyCode: "INR" }
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: "gid://shopify/Product/7319571562554",
+    title: "Lounge Chair",
+    handle: "lounge-chair",
+    description: "Celebrating mid-century restraint and fine craftsmanship. An elegant visual weight with refined lines.",
+    productType: "chair",
+    tags: ["chair", "lounge", "fabric", "leather"],
+    collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
+    featuredImage: {
+      url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7724c1a8d27260d62288_Noku_ofStillness_Lounge_chair_02.jpeg",
+      altText: "Lounge Chair"
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "gid://shopify/ProductVariant/mock-lounge-default",
+            title: "Solid Teak / Cane / Linen",
+            price: { amount: "49500.0", currencyCode: "INR" }
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: "gid://shopify/Product/7365013274682",
+    title: "Dining Chair",
+    handle: "dining-chair",
+    description: "Lightweight dining joinery in warm hardwood finishes. Perfect blend of comfort and structural honesty.",
+    productType: "chair",
+    tags: ["chair", "dining"],
+    collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
+    featuredImage: {
+      url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be7113654a_Noku_ofStillness_Dining_chair_03.jpeg",
+      altText: "Dining Chair"
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "gid://shopify/ProductVariant/mock-dining-default",
+            title: "Solid Walnut / Natural Fabric",
+            price: { amount: "11500.0", currencyCode: "INR" }
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: "gid://shopify/Product/7320294064186",
+    title: "Study Table",
+    handle: "modern-study-table",
+    description: "Premium solid teak workstation with elegant brass detailing. Built to inspire intent and focus.",
+    productType: "table",
+    tags: ["table", "study", "brass"],
+    collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
+    featuredImage: {
+      url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7d6f73c94da715b34a92_Noku_ofStillness_Study_table_03.jpeg",
+      altText: "Study Table"
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "gid://shopify/ProductVariant/mock-study-default",
+            title: "Solid Teak / Brass Details",
+            price: { amount: "35000.0", currencyCode: "INR" }
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: "gid://shopify/Product/7320281120826",
+    title: "Barstool",
+    handle: "barstool",
+    description: "A design statement of quiet elegance, wood, and upholstery. Handmade in India.",
+    productType: "barstool",
+    tags: ["barstool", "leather", "fabric"],
+    collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
+    featuredImage: {
+      url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/67cfdbb331dba957c997c00e_5d1622c83584a245197f9005889b2b06_Noku_ofStillness_Barstool_03%20copy.webp",
+      altText: "Barstool"
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "gid://shopify/ProductVariant/40585660366906",
+            title: "Teak / Leather - Cognac",
+            price: { amount: "21000.0", currencyCode: "INR" }
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: "gid://shopify/Product/7320292196410",
+    title: "Classic Study Table",
+    handle: "classic-study-table",
+    description: "Vernacular lines combined with modern ergonomics. Features solid joinery and drawer space.",
+    productType: "table",
+    tags: ["table", "study"],
+    collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
+    featuredImage: {
+      url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00e7f4ffc4c910059d042_Study%20Table%2019%20C.png",
+      altText: "Classic Study Table"
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "gid://shopify/ProductVariant/40573722853434",
+            title: "Solid Teak",
+            price: { amount: "41500.0", currencyCode: "INR" }
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: "gid://shopify/Product/7323011874874",
+    title: "Side Table",
+    handle: "side-table",
+    description: "Compact design block with elegant, clean lines, ideal as a bedside companion or sofa accompaniment.",
+    productType: "side table",
+    tags: ["side table", "table"],
+    collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
+    featuredImage: {
+      url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d403fa184eebc59c05c_Side%20Table%2042%20B.png",
+      altText: "Side Table"
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "gid://shopify/ProductVariant/40583459569722",
+            title: "Solid Teak",
+            price: { amount: "21000.0", currencyCode: "INR" }
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: "gid://shopify/Product/7325875505978",
+    title: "Lounge Sofa",
+    handle: "lounge-sofa",
+    description: "Deep, comfortable, and beautifully finished sofa. A warm center point for your living room conversations.",
+    productType: "sofa",
+    tags: ["sofa", "lounge", "fabric", "leather"],
+    collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
+    featuredImage: {
+      url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg",
+      altText: "Lounge Sofa"
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "gid://shopify/ProductVariant/40573731110970",
+            title: "Teak / Leather - Cognac",
+            price: { amount: "119500.0", currencyCode: "INR" }
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: "gid://shopify/Product/7323012792378",
+    title: "Upholstered Bench",
+    handle: "upholstered-bench",
+    description: "Elegant seating block with options for premium fabrics or leather, detailed with fine line stitch work.",
+    productType: "bench",
+    tags: ["bench", "fabric", "leather"],
+    collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
+    featuredImage: {
+      url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d41cd825187ac22552f_Chair%2042%20A.png",
+      altText: "Upholstered Bench"
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "gid://shopify/ProductVariant/40583462649914",
+            title: "Teak / Leather - Cognac",
+            price: { amount: "25500.0", currencyCode: "INR" }
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: "gid://shopify/Product/7323013152826",
+    title: "Rod Bed",
+    handle: "rod-bed-with-curved-headboard",
+    description: "Curved headboard bed with subtle spindle rod structures. Celebrating Chandigarh-heritage craft.",
+    productType: "bed",
+    tags: ["bed"],
+    collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
+    featuredImage: {
+      url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00dd8733454553abc99bc_Bed%2042%20A.png",
+      altText: "Rod Bed"
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "gid://shopify/ProductVariant/40589542391866",
+            title: "Solid Teak",
+            price: { amount: "81000.0", currencyCode: "INR" }
+          }
+        }
+      ]
+    }
+  },
+  {
+    id: "gid://shopify/Product/7325876781114",
+    title: "Poster Bed",
+    handle: "poster-bed",
+    description: "Timeless four-poster bed framing your rest. Built in solid teak and ash structures.",
+    productType: "bed",
+    tags: ["bed"],
+    collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
+    featuredImage: {
+      url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00dd8733454553abc99bc_Bed%2042%20A.png",
+      altText: "Poster Bed"
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "gid://shopify/ProductVariant/40589458997306",
+            title: "Teak / Leather - Cognac",
+            price: { amount: "142000.0", currencyCode: "INR" }
+          }
+        }
+      ]
+    }
+  }
+];
 
 // ─── PERSISTENT LOCAL STORAGE CART ───
 let cart = JSON.parse(localStorage.getItem('noku_cart')) || [];
@@ -271,45 +535,26 @@ async function loadShopifyProductData() {
           }
         }
       }
-      sideTable: product(handle: "side-table") {
-        id
-        title
-        variants(first: 10) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-                currencyCode
-              }
-              image {
-                url
-              }
-            }
-          }
-        }
-      }
-      posterBed: product(handle: "poster-bed") {
-        id
-        title
-        variants(first: 10) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-                currencyCode
-              }
-              image {
-                url
-              }
-            }
-          }
-        }
-      }
       classicStudyTable: product(handle: "classic-study-table") {
+        id
+        title
+        variants(first: 10) {
+          edges {
+            node {
+              id
+              title
+              price {
+                amount
+                currencyCode
+              }
+              image {
+                url
+              }
+            }
+          }
+        }
+      }
+      sideTable: product(handle: "side-table") {
         id
         title
         variants(first: 10) {
@@ -385,6 +630,25 @@ async function loadShopifyProductData() {
           }
         }
       }
+      posterBed: product(handle: "poster-bed") {
+        id
+        title
+        variants(first: 10) {
+          edges {
+            node {
+              id
+              title
+              price {
+                amount
+                currencyCode
+              }
+              image {
+                url
+              }
+            }
+          }
+        }
+      }
     }
   `;
   
@@ -404,12 +668,12 @@ async function loadShopifyProductData() {
       'dining-chair': data.data.diningChair,
       'modern-study-table': data.data.studyTable,
       'barstool': data.data.barstool,
-      'side-table': data.data.sideTable,
-      'poster-bed': data.data.posterBed,
       'classic-study-table': data.data.classicStudyTable,
+      'side-table': data.data.sideTable,
       'lounge-sofa': data.data.loungeSofa,
       'upholstered-bench': data.data.upholsteredBench,
-      'rod-bed-with-curved-headboard': data.data.rodBed
+      'rod-bed-with-curved-headboard': data.data.rodBed,
+      'poster-bed': data.data.posterBed
     };
     
     // Sync local carousel images with live Shopify CDN URLs
@@ -431,6 +695,7 @@ async function loadShopifyProductData() {
     updateFeaturedProductsUI();
   }
 }
+
 
 // Sync local carousel variant images to active Shopify CDN URLs
 function updateCarouselImagesToShopify() {
@@ -579,6 +844,145 @@ function addFeaturedItemToCart(handle) {
   
   saveCart();
   openCartDrawer();
+}
+
+/**
+ * Dynamic Collection Products Renderer
+ * Fetches all products (live from Shopify or from FALLBACK_PRODUCTS),
+ * filters them by the specified collection handle (e.g. 'of-stillness' or 'of-memories'),
+ * and renders them into the specified grid container.
+ */
+async function renderCollectionProducts(collectionHandle, gridId) {
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+
+  grid.innerHTML = '<div class="loader-placeholder" style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--muted); font-family: var(--font-body);">Resolving collection pieces...</div>';
+
+  let products = [];
+
+  // 1. Try to fetch live from Shopify Storefront API if connected
+  if (isShopifyConnected) {
+    try {
+      const query = `
+        query getCollectionProducts {
+          products(first: 100) {
+            edges {
+              node {
+                id
+                title
+                handle
+                description
+                productType
+                tags
+                collections(first: 5) {
+                  edges {
+                    node {
+                      title
+                      handle
+                    }
+                  }
+                }
+                featuredImage {
+                  url
+                  altText
+                }
+                variants(first: 50) {
+                  edges {
+                    node {
+                      id
+                      title
+                      price {
+                        amount
+                        currencyCode
+                      }
+                      image {
+                        url
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+      const data = await fetchFromShopify(query);
+      if (data && data.data && data.data.products) {
+        const fetched = data.data.products.edges.map(edge => edge.node);
+        products = fetched.filter(p => 
+          p.collections?.edges?.some(edge => 
+            edge.node.handle.toLowerCase() === collectionHandle.toLowerCase() ||
+            edge.node.title.toLowerCase().replace(/\s+/g, '-').includes(collectionHandle.toLowerCase())
+          )
+        );
+        console.log(`Resolved ${products.length} live products for collection "${collectionHandle}".`);
+      }
+    } catch (err) {
+      console.warn("Shopify collection fetch failed. Falling back to local data.", err);
+    }
+  }
+
+  // 2. Fall back to local catalog if offline or Shopify is not connected
+  if (products.length === 0) {
+    products = FALLBACK_PRODUCTS.filter(p => 
+      p.collections?.edges?.some(edge => 
+        edge.node.handle.toLowerCase() === collectionHandle.toLowerCase() ||
+        edge.node.title.toLowerCase().replace(/\s+/g, '-').includes(collectionHandle.toLowerCase())
+      )
+    );
+    console.log(`Resolved ${products.length} fallback products for collection "${collectionHandle}".`);
+  }
+
+  // 3. Clear placeholder and render products
+  grid.innerHTML = '';
+
+  if (products.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding: 40px; color: var(--muted);">No pieces currently available in this collection.</div>';
+    return;
+  }
+
+  products.forEach((p, idx) => {
+    const card = document.createElement('div');
+    card.className = `product-card reveal-el is-revealed delay-${idx % 4}`;
+    card.setAttribute('data-handle', p.handle);
+
+    const firstVariant = p.variants?.edges?.[0]?.node;
+    const price = firstVariant ? parseFloat(firstVariant.price.amount) : SHOPIFY_CONFIG.defaultPrice;
+    
+    // Format currency to Indian Rupees format
+    const displayPrice = new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 0
+    }).format(price);
+
+    const materials = firstVariant ? firstVariant.title : (p.tags ? p.tags.join(' / ') : 'Solid Hardwood');
+    const imageUrl = p.featuredImage?.url || 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg';
+
+    card.innerHTML = `
+      <a href="product.html?handle=${p.handle}" class="product-card-img-wrap">
+        <img src="${imageUrl}" alt="${p.title}">
+      </a>
+      <div class="product-card-body">
+        <a href="product.html?handle=${p.handle}" class="product-name">${p.title}</a>
+        <span class="product-materials">${materials}</span>
+        <div class="product-buy-row">
+          <span class="product-price">${displayPrice}</span>
+          <button class="product-add-to-cart-btn" aria-label="Add ${p.title} to Cart">Add to Cart</button>
+        </div>
+      </div>
+    `;
+
+    // Bind local click events to this dynamic card's Add to Cart button
+    const btn = card.querySelector('.product-add-to-cart-btn');
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      addFeaturedItemToCart(p.handle);
+    });
+
+    grid.appendChild(card);
+  });
 }
 
 // Map selected wood + cushion option to Shopify Variant ID and Price
@@ -966,16 +1370,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   // Featured Products Add to Cart: Hook clicks on Add to Cart buttons
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.product-add-to-cart-btn');
-    if (!btn) return;
-    
-    const card = btn.closest('.product-card');
-    if (!card) return;
-    
-    const handle = card.getAttribute('data-handle');
-    addFeaturedItemToCart(handle);
-  });
+  const productsGrid = document.querySelector('.products-grid');
+  if (productsGrid) {
+    productsGrid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.product-add-to-cart-btn');
+      if (!btn) return;
+      
+      const card = btn.closest('.product-card');
+      if (!card) return;
+      
+      const handle = card.getAttribute('data-handle');
+      addFeaturedItemToCart(handle);
+    });
+  }
   
   // Set up MutationObserver to update carousel images to Shopify CDN URLs dynamically on render
   if (carouselTrack) {

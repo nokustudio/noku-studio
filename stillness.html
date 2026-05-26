@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noku Studio — Of Stillness Collection</title>
+  <meta name="description"
+    content="Collection 01 — Of Stillness. Mid-century modern forms inspired by simplicity, honest joinery, and quiet endurance.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Quattrocento:wght@400;700&display=swap"
+    rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ════════ DESIGN SYSTEM & TOKENS OVERRIDES ════════ */
+    body {
+      background-color: var(--light) !important;
+      color: var(--ink) !important;
+    }
+
+    /* ════════ HERO SECTION ════════ */
+    .collection-hero {
+      padding-top: 140px;
+      padding-bottom: 60px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-eyebrow-main {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--chamoisee);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .hero-title-main {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: clamp(32px, 5vw, 54px);
+      color: var(--ink);
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+    }
+
+    .hero-tagline-main {
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .hero-image-wrap {
+      width: 100%;
+      aspect-ratio: 1.2 / 1;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.03);
+    }
+
+    .hero-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero-image-wrap:hover img {
+      transform: scale(1.03);
+    }
+
+    /* ════════ INFO SECTION ════════ */
+    .info-section {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+    }
+
+    .info-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-label {
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--chamoisee);
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 8px;
+    }
+
+    .info-value {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 300;
+      line-height: 1.4;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .info-desc {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    /* ════════ PREMIUM MOODBOARD SECTIONS ════════ */
+    .moodboard-section {
+      padding: 100px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .moodboard-header {
+      margin-bottom: 48px;
+      text-align: center;
+    }
+
+    /* Asymmetric Premium Grid Collage */
+    .collage-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: 100px;
+      gap: 20px;
+    }
+
+    .collage-item {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-soft);
+      background-color: var(--light-secondary);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collage-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collage-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(162, 123, 92, 0.08);
+      border-color: var(--chamoisee);
+      z-index: 10;
+    }
+
+    .collage-item:hover img {
+      transform: scale(1.05);
+    }
+
+    /* Captions with elegant glassmorphism hover */
+    .collage-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(44, 38, 34, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: var(--paper);
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 12px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(100%);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collage-item:hover .collage-caption {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Asymmetric sizing mapping for Stillness (11 items) */
+    .col-item-1 { grid-column: span 4; grid-row: span 4; } /* Teak texture */
+    .col-item-2 { grid-column: span 3; grid-row: span 3; } /* Sculpted wood */
+    .col-item-3 { grid-column: span 5; grid-row: span 5; } /* Chair structure */
+    .col-item-4 { grid-column: span 3; grid-row: span 4; } /* Linen swatch */
+    .col-item-5 { grid-column: span 4; grid-row: span 3; } /* Wood joinery */
+    .col-item-6 { grid-column: span 4; grid-row: span 4; } /* Cane detail */
+    .col-item-7 { grid-column: span 4; grid-row: span 3; } /* Brass detail */
+    .col-item-8 { grid-column: span 4; grid-row: span 4; } /* Interwoven cane */
+    .col-item-9 { grid-column: span 4; grid-row: span 3; } /* Leather texture */
+    .col-item-10 { grid-column: span 4; grid-row: span 4; } /* Fabric close-up */
+    .col-item-11 { grid-column: span 8; grid-row: span 3; } /* Atmospheric scene */
+
+    /* ════════ PRODUCT GALLERY ════════ */
+    .products-gallery-section {
+      padding: 100px 0;
+      background-color: var(--light-secondary);
+    }
+
+    .products-header-centered {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 32px;
+    }
+
+    /* Custom loader */
+    .loader-placeholder {
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--muted);
+      text-align: center;
+      padding: 60px 0;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .info-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+      .collage-grid {
+        grid-template-columns: repeat(6, 1fr);
+        grid-auto-rows: 90px;
+      }
+      .col-item-1 { grid-column: span 3; grid-row: span 3; }
+      .col-item-2 { grid-column: span 3; grid-row: span 3; }
+      .col-item-3 { grid-column: span 6; grid-row: span 4; }
+      .col-item-4 { grid-column: span 3; grid-row: span 3; }
+      .col-item-5 { grid-column: span 3; grid-row: span 2; }
+      .col-item-6 { grid-column: span 3; grid-row: span 3; }
+      .col-item-7 { grid-column: span 3; grid-row: span 2; }
+      .col-item-8 { grid-column: span 3; grid-row: span 3; }
+      .col-item-9 { grid-column: span 3; grid-row: span 2; }
+      .col-item-10 { grid-column: span 3; grid-row: span 3; }
+      .col-item-11 { grid-column: span 6; grid-row: span 2; }
+    }
+
+    @media (max-width: 640px) {
+      .collage-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 120px;
+        gap: 12px;
+      }
+      .collage-item {
+        grid-column: span 1 !important;
+        grid-row: span 1 !important;
+        aspect-ratio: 1;
+      }
+      .col-item-11 {
+        grid-column: span 2 !important;
+        aspect-ratio: 2 / 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Grain Layer overlay -->
+  <div class="grain-overlay"></div>
+
+  <!-- STICKY HEADER NAVIGATION -->
+  <nav id="navbar" class="light-nav">
+    <div class="nav-logo-wrap">
+      <a href="index.html" aria-label="Noku Home">
+        <svg class="logo-svg" width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
+          <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
+          <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
+          <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
+        </svg>
+      </a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html#collections" class="nav-link">Collections</a></li>
+      <li><a href="products.html" class="nav-link">Products</a></li>
+      <li><a href="materials.html" class="nav-link">Materials</a></li>
+      <li><a href="sustainability.html" class="nav-link">Sustainability</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+      <li><a href="contact.html" class="nav-link">Contact</a></li>
+    </ul>
+    <button id="cart-toggle" class="cart-btn" aria-label="Open Shopping Cart">
+      <svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span id="cart-count-badge" class="cart-count">0</span>
+    </button>
+    <button class="mobile-menu-toggle" aria-label="Toggle Mobile Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="1.5">
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- MAIN CONTAINER -->
+  <main>
+
+    <!-- HERO PANEL -->
+    <header class="collection-hero">
+      <div class="container hero-grid">
+        <div class="reveal-el">
+          <span class="hero-eyebrow-main">Collection 01</span>
+          <h1 class="hero-title-main">Of Stillness</h1>
+          <p class="hero-tagline-main">
+            Of Stillness is our first curated collection, inspired by the quiet endurance of mid-century design. 
+            Rooted in simplicity, each piece lets its materials speak. These forms have lingered through time—unassuming yet ever-relevant. 
+            Designed for comfort and adaptability, they settle effortlessly into diverse homes, carrying a quiet sense of stillness and belonging.
+          </p>
+        </div>
+        <div class="hero-image-wrap reveal-el delay-1">
+          <img src="Resources/Collection/of_stillness.webp" alt="Noku Of Stillness collection thumbnail">
+        </div>
+      </div>
+    </header>
+
+    <!-- DETAILS INDEX -->
+    <section class="info-section">
+      <div class="container info-grid">
+        <div class="info-block reveal-el">
+          <span class="info-label">Design Language</span>
+          <h3 class="info-value">Mid-Century Modern</h3>
+          <p class="info-desc">Drawing heavily from the Chandigarh lineage—featuring bold, sculptural wood joints, balanced structural symmetry, and deep organic textures.</p>
+        </div>
+        <div class="info-block reveal-el delay-1">
+          <span class="info-label">Context</span>
+          <h3 class="info-value">Residential &amp; Hospitality</h3>
+          <p class="info-desc">Silhouettes designed to adapt seamlessly, settling into contemporary living rooms, minimalist studies, and refined commercial lounges.</p>
+        </div>
+        <div class="info-block reveal-el delay-2">
+          <span class="info-label">Material Palette</span>
+          <h3 class="info-value">Honest &amp; Tactile</h3>
+          <p class="info-desc">Solid teak wood structures, hand-woven natural rattan panels, full-grain aniline leathers, and soft Belgian linens accented with subtle solid brass rods.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MOODBOARD SECTION -->
+    <section class="moodboard-section">
+      <div class="container">
+        <div class="moodboard-header reveal-el">
+          <span class="hero-eyebrow-main" style="text-align: center;">Curation</span>
+          <h2 class="title-h2" style="text-align: center; margin-top: 8px;">Stillness Moodboard</h2>
+          <p class="collections-subtext" style="margin: 16px auto 0; text-align: center; max-width: 600px;">A mid-century modern dialogue. Clean lines, warm wood volumes, and tactile cane textures.</p>
+        </div>
+
+        <!-- Asymmetric Collage -->
+        <div class="collage-grid reveal-el delay-1">
+          <div class="collage-item col-item-1">
+            <img src="https://framerusercontent.com/images/BBbAaGuw0TRiMvgI1IhyhzRTLkY.jpg" alt="Rich grain teak wood texture">
+            <div class="collage-caption">Teak Grain</div>
+          </div>
+          <div class="collage-item col-item-2">
+            <img src="https://framerusercontent.com/images/Xo1vQaQFydXt8p7NucKRfGLvb8.jpg" alt="Sculpted wood joinery curves">
+            <div class="collage-caption">Sculpted Form</div>
+          </div>
+          <div class="collage-item col-item-3">
+            <img src="https://framerusercontent.com/images/XWgDpR1HboujjyYD5kGXgbQ7A.jpg" alt="Minimalist chair joints structure">
+            <div class="collage-caption">Chair Profile</div>
+          </div>
+          <div class="collage-item col-item-4">
+            <img src="https://framerusercontent.com/images/rPqm6RI9HFnXkssovlalIny1iE.jpg" alt="Organic linen textile weave">
+            <div class="collage-caption">Woven Linen</div>
+          </div>
+          <div class="collage-item col-item-5">
+            <img src="https://framerusercontent.com/images/ddTKzfNcVFrzJBtibVBTeXUfujQ.jpg" alt="Close-up of wood tenon joint">
+            <div class="collage-caption">Honest Joinery</div>
+          </div>
+          <div class="collage-item col-item-6">
+            <img src="https://framerusercontent.com/images/1YtrfGAGrrEUn0h8eihvINwuHEI.jpg" alt="Natural rattan cane details">
+            <div class="collage-caption">Cane Weave</div>
+          </div>
+          <div class="collage-item col-item-7">
+            <img src="https://framerusercontent.com/images/b8EILOJ2gWaKngWMI2MXfz4E.png" alt="Brushed solid brass hardware">
+            <div class="collage-caption">Solid Brass</div>
+          </div>
+          <div class="collage-item col-item-8">
+            <img src="https://framerusercontent.com/images/Kq0ZAAvZac9XxL9mLA7s3jCoGg.jpg" alt="Tight rattan cane pattern">
+            <div class="collage-caption">Rattan Cane</div>
+          </div>
+          <div class="collage-item col-item-9">
+            <img src="https://framerusercontent.com/images/RjIWmEY81UxkrHzzZnNkT8wlw.png" alt="Cognac leather grain details">
+            <div class="collage-caption">Cognac Leather</div>
+          </div>
+          <div class="collage-item col-item-10">
+            <img src="https://framerusercontent.com/images/VPWdCxkZtSrrhAl6fjPBAQ8DHsQ.jpg" alt="Close-up of upholstery fabric threading">
+            <div class="collage-caption">Textured Weave</div>
+          </div>
+          <div class="collage-item col-item-11">
+            <img src="https://framerusercontent.com/images/LXbuhfDbcjsWjEOrVj0O3KVIHjw.jpg" alt="Atmospheric domestic setting with furniture shadows">
+            <div class="collage-caption">Light &amp; Shadow</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCT GALLERY -->
+    <section class="products-gallery-section">
+      <div class="container">
+        <div class="products-header-centered reveal-el">
+          <span class="hero-eyebrow-main">Catalog</span>
+          <h2 class="title-h2" style="margin-top: 8px;">Collection Pieces</h2>
+        </div>
+        
+        <!-- Grid dynamically rendered via shopify-integration.js -->
+        <div class="products-grid" id="stillness-products-grid">
+          <div class="loader-placeholder">Resolving collection pieces...</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ════════ FOOTER ════════ -->
+  <footer id="footer">
+    <div class="container">
+      <div class="footer-cta-line">
+        <p class="footer-cta-eyebrow">Ready to</p>
+        <a href="contact.html" class="btn-cta-arrow">Craft your furniture?<span class="arrow">↗</span></a>
+      </div>
+      <div class="footer-grid">
+        <div>
+          <p class="footer-wordmark">NOKU</p>
+        </div>
+        <div>
+          <p class="footer-col__heading">About</p>
+          <ul class="footer-col__links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col__heading">Work</p>
+          <ul class="footer-col__links">
+            <li><a href="products.html">Furniture Shop</a></li>
+            <li><a href="https://nokustudio.webflow.io/projects" target="_blank">Our Projects</a></li>
+            <li><a href="https://nokustudio.webflow.io/products" target="_blank">Collections</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col__heading">Knowledge</p>
+          <ul class="footer-col__links">
+            <li><a href="materials.html">Materials Guide</a></li>
+            <li><a href="sustainability.html">Sustainability</a></li>
+            <li><a href="mailto:hello@nokustudio.in">hello@nokustudio.in</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Noku Studio. All rights reserved.</span>
+        <span>Privacy Policy · Terms &amp; Conditions</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ════════ SHOPPING CART SIDE-DRAWER ════════ -->
+  <div id="cart-overlay" class="cart-overlay"></div>
+  <div id="cart-drawer" class="cart-drawer">
+    <div class="cart-header">
+      <h3 class="cart-title">Your Cart</h3>
+      <button id="cart-close" class="cart-close-btn" aria-label="Close Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="cart-items-container" id="cart-items-container">
+      <div class="cart-empty-message">Your cart is currently empty.</div>
+    </div>
+    
+    <div class="cart-footer">
+      <div class="cart-subtotal-row">
+        <span class="subtotal-label">Subtotal</span>
+        <span class="subtotal-price" id="cart-subtotal">₹0.00</span>
+      </div>
+      <button id="checkout-btn" class="checkout-btn" disabled>Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <script src="shopify-integration.js"></script>
+
+  <script>
+    // Navigation scrolled class toggler
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      if (navbar) {
+        if (window.scrollY > 40) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      }
+    }, { passive: true });
+
+    // Interaction observer for reveal animations on scroll
+    document.addEventListener('DOMContentLoaded', () => {
+      // Dynamic rendering of Of Stillness products from Shopify/fallback
+      renderCollectionProducts('of-stillness', 'stillness-products-grid');
+
+      const revealElements = document.querySelectorAll('.reveal-el');
+      
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -40px 0px'
+      });
+
+      revealElements.forEach(el => revealObserver.observe(el));
+    });
+  </script>
+
+</body>
+
+</html>
