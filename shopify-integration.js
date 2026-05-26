@@ -864,44 +864,42 @@ async function renderCollectionProducts(collectionHandle, gridId) {
 
   let products = [];
 
-  // 1. Try to fetch live from Shopify Storefront API if connected
-  if (isShopifyConnected) {
-    try {
-      const query = `
-        query getCollectionProducts {
-          products(first: 100) {
-            edges {
-              node {
-                id
-                title
-                handle
-                description
-                productType
-                tags
-                collections(first: 5) {
-                  edges {
-                    node {
-                      title
-                      handle
-                    }
+  // Try to fetch live from Shopify Storefront API directly
+  try {
+    const query = `
+      query getCollectionProducts {
+        products(first: 100) {
+          edges {
+            node {
+              id
+              title
+              handle
+              description
+              productType
+              tags
+              collections(first: 5) {
+                edges {
+                  node {
+                    title
+                    handle
                   }
                 }
-                featuredImage {
-                  url
-                  altText
-                }
-                variants(first: 50) {
-                  edges {
-                    node {
-                      id
-                      title
-                      price {
-                        amount
-                        currencyCode
-                      }
-                      image {
-                        url
-                      }
+              }
+              featuredImage {
+                url
+                altText
+              }
+              variants(first: 50) {
+                edges {
+                  node {
+                    id
+                    title
+                    price {
+                      amount
+                      currencyCode
+                    }
+                    image {
+                      url
                     }
                   }
                 }
@@ -909,45 +907,58 @@ async function renderCollectionProducts(collectionHandle, gridId) {
             }
           }
         }
-      `;
-      const data = await fetchFromShopify(query);
-      if (data && data.data && data.data.products) {
-        const fetched = data.data.products.edges.map(edge => edge.node);
-        products = fetched.filter(p => 
-          p.collections?.edges?.some(edge => 
-            edge.node.handle.toLowerCase() === collectionHandle.toLowerCase() ||
-            edge.node.title.toLowerCase().replace(/\s+/g, '-').includes(collectionHandle.toLowerCase())
-          )
-        );
-        console.log(`Resolved ${products.length} live products for collection "${collectionHandle}".`);
       }
-    } catch (err) {
-      console.warn("Shopify collection fetch failed. Falling back to local data.", err);
+    `;
+    const data = await fetchFromShopify(query);
+    if (data && data.data && data.data.products) {
+      const fetched = data.data.products.edges.map(edge => edge.node);
+      products = fetched.filter(p => 
+        p.collections?.edges?.some(edge => {
+          const h = edge.node.handle.toLowerCase();
+          const t = edge.node.title.toLowerCase();
+          const target = collectionHandle.toLowerCase();
+          return h === target || 
+                 h.replace(/-/g, '') === target.replace(/-/g, '') ||
+                 t.replace(/\s+/g, '-').includes(target) ||
+                 t.replace(/\s+/g, '').includes(target.replace(/-/g, ''));
+        })
+      );
+      console.log(`Resolved ${products.length} live products for collection "${collectionHandle}".`);
     }
+  } catch (err) {
+    console.warn("Shopify collection fetch failed. Falling back to local data.", err);
   }
 
-  // 2. Fall back to local catalog if offline or Shopify is not connected
+  // Fall back to local catalog if offline or Shopify fetch returned nothing
   if (products.length === 0) {
     products = FALLBACK_PRODUCTS.filter(p => 
-      p.collections?.edges?.some(edge => 
-        edge.node.handle.toLowerCase() === collectionHandle.toLowerCase() ||
-        edge.node.title.toLowerCase().replace(/\s+/g, '-').includes(collectionHandle.toLowerCase())
-      )
+      p.collections?.edges?.some(edge => {
+        const h = edge.node.handle.toLowerCase();
+        const t = edge.node.title.toLowerCase();
+        const target = collectionHandle.toLowerCase();
+        return h === target || 
+               h.replace(/-/g, '') === target.replace(/-/g, '') ||
+               t.replace(/\s+/g, '-').includes(target) ||
+               t.replace(/\s+/g, '').includes(target.replace(/-/g, ''));
+      })
     );
     console.log(`Resolved ${products.length} fallback products for collection "${collectionHandle}".`);
   }
 
-  // 3. Clear placeholder and render products
+  // Clear placeholder and render products
   grid.innerHTML = '';
 
   if (products.length === 0) {
-    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding: 40px; color: var(--muted);">No pieces currently available in this collection.</div>';
+    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding: 40px; color: var(--muted); font-family: var(--font-body);">No pieces currently available in this collection.</div>';
     return;
   }
 
   products.forEach((p, idx) => {
-    const card = document.createElement('div');
+    const card = document.createElement('a');
+    card.href = `product.html?handle=${p.handle}`;
     card.className = `product-card reveal-el is-revealed delay-${idx % 4}`;
+    card.style.textDecoration = 'none';
+    card.style.color = 'inherit';
     card.setAttribute('data-handle', p.handle);
 
     const firstVariant = p.variants?.edges?.[0]?.node;
@@ -964,12 +975,12 @@ async function renderCollectionProducts(collectionHandle, gridId) {
     const imageUrl = p.featuredImage?.url || 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg';
 
     card.innerHTML = `
-      <a href="product.html?handle=${p.handle}" class="product-card-img-wrap">
+      <div class="product-card-img-wrap">
         <img src="${imageUrl}" alt="${p.title}">
-      </a>
+      </div>
       <div class="product-card-body">
-        <a href="product.html?handle=${p.handle}" class="product-name">${p.title}</a>
-        <span class="product-materials">${materials}</span>
+        <h3 class="product-name" style="margin: 0 0 4px 0; font-family: var(--font-display); font-size: 18px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink);">${p.title}</h3>
+        <span class="product-materials" style="font-family: var(--font-body); font-size: 13px; color: var(--muted); display: block; margin-bottom: 12px;">${materials}</span>
         <div class="product-buy-row">
           <span class="product-price">${displayPrice}</span>
           <button class="product-add-to-cart-btn" aria-label="Add ${p.title} to Cart">Add to Cart</button>
