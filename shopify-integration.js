@@ -956,13 +956,13 @@ async function renderCollectionProducts(collectionHandle, gridId) {
   products.forEach((p, idx) => {
     const card = document.createElement('a');
     card.href = `product.html?handle=${p.handle}`;
-    card.className = `product-card reveal-el is-revealed delay-${idx % 4}`;
-    card.style.textDecoration = 'none';
-    card.style.color = 'inherit';
+    card.className = `gcard reveal-el is-revealed`;
+    card.style.animationDelay = `${(idx % 4) * 0.1}s`;
     card.setAttribute('data-handle', p.handle);
 
     const firstVariant = p.variants?.edges?.[0]?.node;
     const price = firstVariant ? parseFloat(firstVariant.price.amount) : SHOPIFY_CONFIG.defaultPrice;
+    const defaultVariantId = firstVariant ? firstVariant.id : `gid://shopify/ProductVariant/fallback-${p.handle}`;
     
     // Format currency to Indian Rupees format
     const displayPrice = new Intl.NumberFormat('en-IN', {
@@ -971,25 +971,32 @@ async function renderCollectionProducts(collectionHandle, gridId) {
       minimumFractionDigits: 0
     }).format(price);
 
-    const materials = firstVariant ? firstVariant.title : (p.tags ? p.tags.join(' / ') : 'Solid Hardwood');
+    const displayMaterial = firstVariant ? firstVariant.title : (p.tags ? p.tags.join(' / ') : 'Solid Hardwood');
     const imageUrl = p.featuredImage?.url || 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg';
 
     card.innerHTML = `
-      <div class="product-card-img-wrap">
-        <img src="${imageUrl}" alt="${p.title}">
-      </div>
-      <div class="product-card-body">
-        <h3 class="product-name" style="margin: 0 0 4px 0; font-family: var(--font-display); font-size: 18px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink);">${p.title}</h3>
-        <span class="product-materials" style="font-family: var(--font-body); font-size: 13px; color: var(--muted); display: block; margin-bottom: 12px;">${materials}</span>
-        <div class="product-buy-row">
-          <span class="product-price">${displayPrice}</span>
-          <button class="product-add-to-cart-btn" aria-label="Add ${p.title} to Cart">Add to Cart</button>
+      <div class="gcard__media">
+        <div class="gcard__media-inner">
+          <img src="${imageUrl}" alt="${p.title}" loading="lazy">
         </div>
+        <button class="gcard__add" 
+                data-id="${p.id}" 
+                data-variant-id="${defaultVariantId}"
+                data-title="${p.title}" 
+                data-price="${price}" 
+                data-image="${imageUrl}"
+                data-materials="${displayMaterial}"
+                aria-label="Add ${p.title} to Cart">
+          Add ↗
+        </button>
       </div>
+      <p class="gcard__cat" style="text-transform: none;">${displayMaterial}</p>
+      <h3 class="gcard__name">${p.title}</h3>
+      <p class="gcard__price">${displayPrice}</p>
     `;
 
     // Bind local click events to this dynamic card's Add to Cart button
-    const btn = card.querySelector('.product-add-to-cart-btn');
+    const btn = card.querySelector('.gcard__add');
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       e.preventDefault();

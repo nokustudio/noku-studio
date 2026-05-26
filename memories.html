@@ -270,11 +270,7 @@
       margin-bottom: 60px;
     }
 
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 32px;
-    }
+    /* Handled by global gallery-grid layout */
 
     /* Custom loader */
     .loader-placeholder {
@@ -482,7 +478,7 @@
         </div>
         
         <!-- Grid dynamically rendered via shopify-integration.js -->
-        <div class="products-grid" id="memories-products-grid">
+        <div class="gallery-grid" id="memories-products-grid">
           <div class="loader-placeholder">Resolving collection pieces...</div>
         </div>
       </div>
