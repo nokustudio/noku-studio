@@ -25,6 +25,7 @@
   --font-body: 'Quattrocento', serif;
 
   /* Spacing, Borders & Radius */
+  --radius-sm: 8px;
   --radius-md: 16px;
   --radius-pill: 9999px;
   --border-width: 1px;
