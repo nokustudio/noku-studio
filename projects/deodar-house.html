@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Noku Studio — Deodar House</title>
   <meta name="description"
-    content="Deodar House project by Noku Studio. Exploring different materials while considering sensibilities of existing structures and client-chosen interiors.">
+    content="Deodar House project by Noku Studio. Exploring materials and sensibilities of existing structures and client-chosen interiors.">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,212 +20,6 @@
     html, body {
       background-color: var(--light) !important;
       color: var(--ink) !important;
-    }
-
-    /* ════════ PROJECT HERO ════════ */
-    .project-hero {
-      position: relative;
-      height: 60vh;
-      min-height: 400px;
-      display: flex;
-      align-items: flex-end;
-      padding-bottom: 60px;
-      overflow: hidden;
-    }
-
-    .project-hero-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-    }
-
-    .project-hero-bg img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .project-hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(36, 31, 27, 0.65) 0%, rgba(36, 31, 27, 0.1) 100%);
-      z-index: 2;
-    }
-
-    .project-hero-title-wrap {
-      position: relative;
-      z-index: 3;
-      width: 100%;
-    }
-
-    .project-hero-title {
-      font-family: var(--font-display);
-      font-size: clamp(38px, 6vw, 64px);
-      font-weight: 300;
-      color: var(--paper);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    /* ════════ PROJECT DETAILS ════════ */
-    .project-body {
-      padding: 100px 0;
-    }
-
-    .project-grid {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 80px;
-      align-items: start;
-    }
-
-    .project-sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-      position: sticky;
-      top: 110px;
-    }
-
-    .sidebar-block {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      border-bottom: 1px solid var(--border-soft);
-      padding-bottom: 24px;
-    }
-
-    .sidebar-block:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .sidebar-label {
-      font-family: var(--font-display);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--chamoisee);
-    }
-
-    .sidebar-val {
-      font-size: 15px;
-      color: var(--deep-muted);
-      line-height: 1.6;
-    }
-
-    .project-gallery {
-      display: flex;
-      flex-direction: column;
-      gap: 80px;
-    }
-
-    .gallery-img-container {
-      width: 100%;
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      box-shadow: 0 15px 35px rgba(44, 38, 34, 0.04);
-      background-color: var(--cream);
-    }
-
-    .gallery-img-container img {
-      width: 100%;
-      height: auto;
-      display: block;
-      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .gallery-img-container:hover img {
-      transform: scale(1.02);
-    }
-
-    .gallery-row-2col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-    }
-
-    .project-narrative-block {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      padding: 24px 0;
-      border-top: 1px solid var(--border-soft);
-    }
-
-    .project-narrative-text {
-      font-size: 16px;
-      line-height: 1.8;
-      color: var(--muted);
-    }
-
-    /* ════════ PREV / NEXT NAV ════════ */
-    .project-navigation {
-      border-top: 1px solid var(--line);
-      padding: 60px 0;
-      background-color: var(--light-secondary);
-    }
-
-    .prevnext-flex {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 40px;
-    }
-
-    .prevnext-card {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 45%;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .prevnext-card.prev-card {
-      align-items: flex-start;
-    }
-
-    .prevnext-card.next-card {
-      align-items: flex-end;
-      text-align: right;
-    }
-
-    .prevnext-label {
-      font-family: var(--font-display);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--chamoisee);
-    }
-
-    .prevnext-title {
-      font-family: var(--font-display);
-      font-size: 20px;
-      font-weight: 300;
-      text-transform: uppercase;
-      color: var(--ink);
-      transition: color 0.3s ease;
-    }
-
-    .prevnext-card:hover .prevnext-title {
-      color: var(--chamoisee);
-    }
-
-    @media (max-width: 900px) {
-      .project-grid {
-        grid-template-columns: 1fr;
-        gap: 48px;
-      }
-      .project-sidebar {
-        position: static;
-      }
-      .gallery-row-2col {
-        grid-template-columns: 1fr;
-      }
     }
   </style>
 </head>
@@ -273,109 +67,112 @@
     </button>
   </nav>
 
-  <!-- HERO SECTION -->
-  <header class="project-hero">
-    <div class="project-hero-bg">
-      <img src="../Resources/Project images/compressed/Patterns A43 07 - compressed.webp" alt="Half poster teak bed with printed yellow fabric headboard and lathed leg">
+  <!-- HERO SECTION (EXACT WEBFLOW COPY) -->
+  <section data-theme="inherit" class="project_hero_wrap u-vflex-left-bottom">
+    <div class="g_visual_wrap u-cover-absolute">
+      <img alt="Deodar House bedrooms design header cover" src="../Resources/Project images/compressed/Patterns A43 07 - compressed.webp" class="g_visual_img u-cover-absolute">
+      <div style="opacity: 15%; background-color: var(--ink);" class="g_visual_overlay u-cover-absolute"></div>
     </div>
-    <div class="project-hero-overlay"></div>
-    <div class="container project-hero-title-wrap">
-      <h1 class="project-hero-title">Deodar House</h1>
+    <div data-padding-bottom="main" data-padding-top="main" class="project_hero_contain u-container u-vflex-left-center">
+      <h1 class="project_hero_title u-text-h1">Deodar House</h1>
     </div>
-  </header>
+  </section>
 
-  <!-- MAIN PROJECT BODY -->
-  <main class="container project-body">
-    <div class="project-grid">
+  <!-- MAIN PROJECT BODY (EXACT WEBFLOW COPY) -->
+  <section data-theme="inherit" class="project_detail_wrap">
+    <div data-padding-bottom="main" data-padding-top="main" class="project_detail_contain u-container u-grid-tablet">
 
-      <!-- Left Sidebar: Info Panel -->
-      <aside class="project-sidebar">
-        <div class="sidebar-block">
-          <span class="sidebar-label">Year</span>
-          <span class="sidebar-val">2023</span>
+      <!-- 3-Column Top Grid -->
+      <div class="project_detail_top u-column-12 u-grid-subgrid">
+        <div class="project_text_wrap u-column-4 u-vflex-left-top u-gap-large">
+          <div class="project_info_wrap u-vflex-left-top u-gap-small">
+            <div class="project_info_wrap">
+              <h5 class="project_info_title u-text-h5">Year</h5>
+              <p class="project_info_text u-text-main">2023</p>
+            </div>
+            <div class="project_info_wrap">
+              <h5 class="project_info_title u-text-h5">Spaces</h5>
+              <p class="project_info_text u-text-main">Dining & Bedrooms</p>
+            </div>
+            <div class="project_info_wrap">
+              <h5 class="project_info_title u-text-h5">Collaborators</h5>
+              <p class="project_info_text u-text-main">Studio Lore</p>
+            </div>
+          </div>
+          <div class="project_detail u-text-main">
+            <h5 class="project_info_title u-text-h5">Brief</h5>
+            <div class="project_description u-text-main w-richtext">
+              <p>A project where different materials were explored while considering the sensibilities of existing structures as well as the interiors chosen by the client. A common thread connected everything in a space that the furniture seamlessly tied into!</p>
+            </div>
+          </div>
         </div>
-        <div class="sidebar-block">
-          <span class="sidebar-label">Spaces</span>
-          <span class="sidebar-val">Dining & Bedrooms</span>
-        </div>
-        <div class="sidebar-block">
-          <span class="sidebar-label">Collaborators</span>
-          <span class="sidebar-val">Studio Lore</span>
-        </div>
-        <div class="sidebar-block">
-          <span class="sidebar-label">Brief</span>
-          <span class="sidebar-val">
-            A project where different materials were explored while considering the sensibilities of existing structures as well as the interiors chosen by the client. A common thread connected everything in a space that the furniture seamlessly tied into!
-          </span>
-        </div>
-      </aside>
-
-      <!-- Right Column: Visuals & Narrative -->
-      <section class="project-gallery">
         
-        <!-- Large image 1: Study table -->
-        <div class="gallery-img-container">
-          <img src="../Resources/Project images/compressed/Patterns A43 05 - compressed.webp" alt="Wooden study table with an open book and a wooden chair">
-        </div>
-
-        <!-- 2 columns: image + narrative -->
-        <div class="gallery-row-2col">
-          <div class="gallery-img-container">
-            <img src="../Resources/Project images/compressed/Patterns A43 04 - compressed.webp" alt="Queen bed with slats for backrest and light blue bed sheets with a side table">
-          </div>
-          <div class="project-narrative-block">
-            <span class="sidebar-label">Concept</span>
-            <p class="project-narrative-text">
-              Each bed in the house had a different style. The guest bed had woven cane panels on the headrest and footboard, an ode to Mid-Century Modern, while the children's bed had simple planks on the headboard, a more utilitarian design. The master bed was our impressive half-poster bed with turned details on the legs and an upholstered headboard that appeared to float between the legs.
-            </p>
+        <img loading="lazy" src="../Resources/Project images/compressed/Patterns A43 05 - compressed.webp" alt="Wooden study table with an open book and a wooden chair" class="project_img u-column-4">
+        
+        <div class="project_info u-column-4 u-vflex-center-top u-gap-small">
+          <img loading="lazy" src="../Resources/Project images/compressed/Patterns A43 04 - compressed.webp" alt="Queen bed with slats for backrest and light blue bed sheets with a side table" class="project_img">
+          <div class="project_text_wrap u-vflex-left-between u-gap-small">
+            <p class="project_text u-text-small">Each bed in the house had a different style. The guest bed had woven cane panels on the headrest and footboard, an ode to Mid-Century Modern, while the children's bed had simple planks on the headboard, a more utilitarian design. The master bed was our impressive half-poster bed with turned details on the legs and an upholstered headboard that appeared to float between the legs.</p>
           </div>
         </div>
+      </div>
 
-        <!-- Large image 2: Dining table -->
-        <div class="project-narrative-block">
-          <p class="project-narrative-text">
-            Solid Honne table was made to fit the open dining space that connected the living to the kitchen. The chairs were not upholstered to showcase the beauty of the wood.
-          </p>
-          <div class="gallery-img-container">
-            <img src="../Resources/Project images/compressed/Patterns A43 01 - compressed.webp" alt="Honne wood dining table with 6 wooden chairs in open dining space">
-          </div>
+      <!-- 2-Column Bottom Rows -->
+      <div class="project_detail_bottom u-grid-subgrid">
+        <div class="project_text_wrap u-column-4 u-vflex-left-bottom">
+          <p class="project_text u-text-small">Solid Honne table was made to fit the open dining space that connected the living to the kitchen. The chairs were not upholstered to showcase the beauty of the wood.</p>
         </div>
+        <img loading="lazy" src="../Resources/Project images/compressed/Patterns A43 01 - compressed.webp" alt="Honne wood dining table with 6 wooden chairs in open dining space" class="project_img u-column-8">
+      </div>
 
-        <!-- Large image 3: Cane bed with side table -->
-        <div class="project-narrative-block">
-          <p class="project-narrative-text">
-            Teak finish side tables with 2 drawers and grooved handles became a staple across all three bedrooms due to their simplicity.
-          </p>
-          <div class="gallery-img-container">
-            <img src="../Resources/Project images/compressed/Patterns A43 03 - compressed.webp" alt="Teak bed with cane on the head and foot board along with a side table with two drawers">
-          </div>
+      <div class="project_detail_bottom u-grid-subgrid">
+        <div class="project_text_wrap u-column-4 u-vflex-left-bottom">
+          <p class="project_text u-text-small">Teak finish side tables with 2 drawers and grooved handles became a staple across all three bedrooms due to their simplicity.</p>
         </div>
+        <img loading="lazy" src="../Resources/Project images/compressed/Patterns A43 03 - compressed.webp" alt="Teak bed with cane on the head and foot board along with a side table with two drawers" class="project_img u-column-8">
+      </div>
 
-        <!-- Large image 4: Chest of drawers -->
-        <div class="project-narrative-block">
-          <div class="gallery-img-container">
-            <img src="../Resources/Project images/compressed/Patterns A43 06 - compressed.webp" alt="Teak chest of drawers with assorted ceramic knobs with blue prints">
-          </div>
+      <div class="project_detail_bottom u-grid-subgrid">
+        <div class="project_text_wrap u-column-4 u-vflex-left-bottom">
+          <p class="project_text u-text-small">Assorted ceramic knobs with blue prints were used on a teak chest of drawers to add a layer of interest.</p>
         </div>
-
-      </section>
+        <img loading="lazy" src="../Resources/Project images/compressed/Patterns A43 06 - compressed.webp" alt="Teak chest of drawers with assorted ceramic knobs with blue prints" class="project_img u-column-8">
+      </div>
 
     </div>
-  </main>
+  </section>
 
-  <!-- PREVIOUS / NEXT NAVIGATION -->
-  <footer class="project-navigation">
-    <div class="container prevnext-flex">
-      <a href="temple-tree-house.html" class="prevnext-card prev-card">
-        <span class="prevnext-label">Previous Project</span>
-        <span class="prevnext-title">← Temple Tree House</span>
-      </a>
-      <a href="../projects.html" class="prevnext-card next-card">
-        <span class="prevnext-label">All Projects</span>
-        <span class="prevnext-title">Work Catalog →</span>
-      </a>
+  <!-- PREVIOUS / NEXT NAVIGATION (EXACT WEBFLOW COPY) -->
+  <section class="prevnext_wrap">
+    <div class="container prevnext_contain">
+      <div class="prevnext_layout">
+        <div class="prev_wrap">
+          <h3 class="prev_title">Previous</h3>
+          <div class="featured_card">
+            <a href="temple-tree-house.html" class="featured_card_link">
+              <div class="project_img_holder u-visual-wrap">
+                <img src="../Resources/Project images/compressed/Patterns B38 02 - compressed.webp" alt="Temple Tree House thumbnail" class="card_img u-cover-absolute">
+              </div>
+              <h5 class="card_title">Temple Tree House</h5>
+              <p class="card_text">Living, Bar & Bedrooms</p>
+            </a>
+          </div>
+        </div>
+        <div class="next_wrap">
+          <h3 class="next_title">Next</h3>
+          <div class="featured_card">
+            <a href="oak-house.html" class="featured_card_link">
+              <div class="project_img_holder u-visual-wrap">
+                <img src="../Resources/Project images/compressed/Patterns B33 03 - compressed.webp" alt="Oak House thumbnail" class="card_img u-cover-absolute">
+              </div>
+              <h5 class="card_title">Oak House</h5>
+              <p class="card_text">Bedrooms</p>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
-  </footer>
+  </section>
 
   <!-- ════════ FOOTER ════════ -->
   <footer id="footer">

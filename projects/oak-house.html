@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Noku Studio — Oak House</title>
   <meta name="description"
-    content="Oak House project by Noku Studio. Detailed Bedrooms designed with old-school richness through curation of color and materials.">
+    content="Oak House project by Noku Studio. Bringing old-school richness and distinct color palettes to bedroom furniture.">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,212 +20,6 @@
     html, body {
       background-color: var(--light) !important;
       color: var(--ink) !important;
-    }
-
-    /* ════════ PROJECT HERO ════════ */
-    .project-hero {
-      position: relative;
-      height: 60vh;
-      min-height: 400px;
-      display: flex;
-      align-items: flex-end;
-      padding-bottom: 60px;
-      overflow: hidden;
-    }
-
-    .project-hero-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-    }
-
-    .project-hero-bg img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .project-hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(36, 31, 27, 0.65) 0%, rgba(36, 31, 27, 0.1) 100%);
-      z-index: 2;
-    }
-
-    .project-hero-title-wrap {
-      position: relative;
-      z-index: 3;
-      width: 100%;
-    }
-
-    .project-hero-title {
-      font-family: var(--font-display);
-      font-size: clamp(38px, 6vw, 64px);
-      font-weight: 300;
-      color: var(--paper);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    /* ════════ PROJECT DETAILS ════════ */
-    .project-body {
-      padding: 100px 0;
-    }
-
-    .project-grid {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 80px;
-      align-items: start;
-    }
-
-    .project-sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-      position: sticky;
-      top: 110px;
-    }
-
-    .sidebar-block {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      border-bottom: 1px solid var(--border-soft);
-      padding-bottom: 24px;
-    }
-
-    .sidebar-block:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .sidebar-label {
-      font-family: var(--font-display);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--chamoisee);
-    }
-
-    .sidebar-val {
-      font-size: 15px;
-      color: var(--deep-muted);
-      line-height: 1.6;
-    }
-
-    .project-gallery {
-      display: flex;
-      flex-direction: column;
-      gap: 80px;
-    }
-
-    .gallery-img-container {
-      width: 100%;
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      box-shadow: 0 15px 35px rgba(44, 38, 34, 0.04);
-      background-color: var(--cream);
-    }
-
-    .gallery-img-container img {
-      width: 100%;
-      height: auto;
-      display: block;
-      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .gallery-img-container:hover img {
-      transform: scale(1.02);
-    }
-
-    .gallery-row-2col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-    }
-
-    .project-narrative-block {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      padding: 24px 0;
-      border-top: 1px solid var(--border-soft);
-    }
-
-    .project-narrative-text {
-      font-size: 16px;
-      line-height: 1.8;
-      color: var(--muted);
-    }
-
-    /* ════════ PREV / NEXT NAV ════════ */
-    .project-navigation {
-      border-top: 1px solid var(--line);
-      padding: 60px 0;
-      background-color: var(--light-secondary);
-    }
-
-    .prevnext-flex {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 40px;
-    }
-
-    .prevnext-card {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 45%;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .prevnext-card.prev-card {
-      align-items: flex-start;
-    }
-
-    .prevnext-card.next-card {
-      align-items: flex-end;
-      text-align: right;
-    }
-
-    .prevnext-label {
-      font-family: var(--font-display);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--chamoisee);
-    }
-
-    .prevnext-title {
-      font-family: var(--font-display);
-      font-size: 20px;
-      font-weight: 300;
-      text-transform: uppercase;
-      color: var(--ink);
-      transition: color 0.3s ease;
-    }
-
-    .prevnext-card:hover .prevnext-title {
-      color: var(--chamoisee);
-    }
-
-    @media (max-width: 900px) {
-      .project-grid {
-        grid-template-columns: 1fr;
-        gap: 48px;
-      }
-      .project-sidebar {
-        position: static;
-      }
-      .gallery-row-2col {
-        grid-template-columns: 1fr;
-      }
     }
   </style>
 </head>
@@ -273,99 +67,105 @@
     </button>
   </nav>
 
-  <!-- HERO SECTION -->
-  <header class="project-hero">
-    <div class="project-hero-bg">
-      <img src="../Resources/Project images/compressed/Patterns B33 03 - compressed.webp" alt="Oak House bedrooms design header cover">
+  <!-- HERO SECTION (EXACT WEBFLOW COPY) -->
+  <section data-theme="inherit" class="project_hero_wrap u-vflex-left-bottom">
+    <div class="g_visual_wrap u-cover-absolute">
+      <img alt="Oak House bedrooms design header cover" src="../Resources/Project images/compressed/Patterns B33 03 - compressed.webp" class="g_visual_img u-cover-absolute">
+      <div style="opacity: 15%; background-color: var(--ink);" class="g_visual_overlay u-cover-absolute"></div>
     </div>
-    <div class="project-hero-overlay"></div>
-    <div class="container project-hero-title-wrap">
-      <h1 class="project-hero-title">Oak House</h1>
+    <div data-padding-bottom="main" data-padding-top="main" class="project_hero_contain u-container u-vflex-left-center">
+      <h1 class="project_hero_title u-text-h1">Oak House</h1>
     </div>
-  </header>
+  </section>
 
-  <!-- MAIN PROJECT BODY -->
-  <main class="container project-body">
-    <div class="project-grid">
+  <!-- MAIN PROJECT BODY (EXACT WEBFLOW COPY) -->
+  <section data-theme="inherit" class="project_detail_wrap">
+    <div data-padding-bottom="main" data-padding-top="main" class="project_detail_contain u-container u-grid-tablet">
 
-      <!-- Left Sidebar: Info Panel -->
-      <aside class="project-sidebar">
-        <div class="sidebar-block">
-          <span class="sidebar-label">Year</span>
-          <span class="sidebar-val">2023</span>
+      <!-- 3-Column Top Grid -->
+      <div class="project_detail_top u-column-12 u-grid-subgrid">
+        <div class="project_text_wrap u-column-4 u-vflex-left-top u-gap-large">
+          <div class="project_info_wrap u-vflex-left-top u-gap-small">
+            <div class="project_info_wrap">
+              <h5 class="project_info_title u-text-h5">Year</h5>
+              <p class="project_info_text u-text-main">2023</p>
+            </div>
+            <div class="project_info_wrap">
+              <h5 class="project_info_title u-text-h5">Spaces</h5>
+              <p class="project_info_text u-text-main">Bedrooms</p>
+            </div>
+            <div class="project_info_wrap">
+              <h5 class="project_info_title u-text-h5">Collaborators</h5>
+              <p class="project_info_text u-text-main">Studio Lore</p>
+            </div>
+          </div>
+          <div class="project_detail u-text-main">
+            <h5 class="project_info_title u-text-h5">Brief</h5>
+            <div class="project_description u-text-main w-richtext">
+              <p>The focus of this project was on the bedrooms, where we wanted to bring in an old-school richness through the interiors and furniture. Each bedroom had a distinct color palette that reflected the user’s aesthetics. The furniture was designed to blend seamlessly with the overall space, working in harmony with other elements rather than standing out individually. So, although the furniture, in its essence, was to be more aligned with function than form, the magic happened when everything came together.</p>
+            </div>
+          </div>
         </div>
-        <div class="sidebar-block">
-          <span class="sidebar-label">Spaces</span>
-          <span class="sidebar-val">Bedrooms</span>
-        </div>
-        <div class="sidebar-block">
-          <span class="sidebar-label">Collaborators</span>
-          <span class="sidebar-val">Studio Lore</span>
-        </div>
-        <div class="sidebar-block">
-          <span class="sidebar-label">Brief</span>
-          <span class="sidebar-val">
-            The focus of this project was on the bedrooms, where we wanted to bring in an old-school richness through the interiors and furniture. Each bedroom had a distinct color palette that reflected the user’s aesthetics. The furniture was designed to blend seamlessly with the overall space, working in harmony with other elements rather than standing out individually. So, although the furniture, in its essence, was to be more aligned with function than form, the magic happened when everything came together.
-          </span>
-        </div>
-      </aside>
-
-      <!-- Right Column: Visuals & Narrative -->
-      <section class="project-gallery">
         
-        <!-- Large image 1 -->
-        <div class="gallery-img-container">
-          <img src="../Resources/Project images/compressed/Patterns B33 07 - compressed.webp" alt="Teak cabinets and study shelves with wooden study chair">
-        </div>
-
-        <!-- 2 columns of images / text description -->
-        <div class="gallery-row-2col">
-          <div class="gallery-img-container">
-            <img src="../Resources/Project images/compressed/Patterns B33 04 - compressed.webp" alt="Teak finish wardrobes in master bedroom">
-          </div>
-          <div class="project-narrative-block">
-            <span class="sidebar-label">Concept</span>
-            <p class="project-narrative-text">
-              The three beds were designed around a similar base structure with changes coming in the upholstered headboards and storage underneath.
-            </p>
+        <img loading="lazy" src="../Resources/Project images/compressed/Patterns B33 07 - compressed.webp" alt="Teak cabinets and study shelves with wooden study chair" class="project_img u-column-4">
+        
+        <div class="project_info u-column-4 u-vflex-center-top u-gap-small">
+          <img loading="lazy" src="../Resources/Project images/compressed/Patterns B33 04 - compressed.webp" alt="Teak finish wardrobes in master bedroom" class="project_img">
+          <div class="project_text_wrap u-vflex-left-between u-gap-small">
+            <p class="project_text u-text-small">The three beds were designed around a similar base structure with changes coming in the upholstered headboards and storage underneath.</p>
           </div>
         </div>
+      </div>
 
-        <!-- Large image 2 with description -->
-        <div class="project-narrative-block">
-          <p class="project-narrative-text">
-            The daughter's bedroom had a pastel and floral theme according to the client's preferences. We chose a clean headboard with a minimal wrap around the bed to make it stand out from the panel behind.
-          </p>
-          <div class="gallery-img-container">
-            <img src="../Resources/Project images/compressed/Patterns B33 05 - compressed.webp" alt="Daughter's bedroom with green panel and floral print wallpaper">
-          </div>
+      <!-- 2-Column Bottom Rows -->
+      <div class="project_detail_bottom u-grid-subgrid">
+        <div class="project_text_wrap u-column-4 u-vflex-left-bottom">
+          <p class="project_text u-text-small">The daughter's bedroom had a pastel and floral theme according to the client's preferences. We chose a clean headboard with a minimal wrap around the bed to make it stand out from the panel behind.</p>
         </div>
+        <img loading="lazy" src="../Resources/Project images/compressed/Patterns B33 05 - compressed.webp" alt="Daughter's bedroom with green panel and floral print wallpaper" class="project_img u-column-8">
+      </div>
 
-        <!-- Large image 3 with description -->
-        <div class="project-narrative-block">
-          <div class="gallery-img-container">
-            <img src="../Resources/Project images/compressed/Patterns B33 01 - compressed.webp" alt="Bedroom with grey headboard and golden decor pieces">
-          </div>
+      <div class="project_detail_bottom u-grid-subgrid">
+        <div class="project_text_wrap u-column-4 u-vflex-left-bottom">
+          <p class="project_text u-text-small">Teak wood textures with simple custom details were integrated throughout the workspace and side storage units, achieving a unified theme.</p>
         </div>
-
-      </section>
+        <img loading="lazy" src="../Resources/Project images/compressed/Patterns B33 01 - compressed.webp" alt="Bedroom with grey headboard and golden decor pieces" class="project_img u-column-8">
+      </div>
 
     </div>
-  </main>
+  </section>
 
-  <!-- PREVIOUS / NEXT NAVIGATION -->
-  <footer class="project-navigation">
-    <div class="container prevnext-flex">
-      <a href="../projects.html" class="prevnext-card prev-card">
-        <span class="prevnext-label">All Projects</span>
-        <span class="prevnext-title">← Work Catalog</span>
-      </a>
-      <a href="banyan-house.html" class="prevnext-card next-card">
-        <span class="prevnext-label">Next Project</span>
-        <span class="prevnext-title">Banyan House →</span>
-      </a>
+  <!-- PREVIOUS / NEXT NAVIGATION (EXACT WEBFLOW COPY) -->
+  <section class="prevnext_wrap">
+    <div class="container prevnext_contain">
+      <div class="prevnext_layout">
+        <div class="prev_wrap">
+          <h3 class="prev_title">Previous</h3>
+          <div class="featured_card">
+            <a href="deodar-house.html" class="featured_card_link">
+              <div class="project_img_holder u-visual-wrap">
+                <img src="../Resources/Project images/compressed/Patterns A43 07 - compressed.webp" alt="Deodar House thumbnail" class="card_img u-cover-absolute">
+              </div>
+              <h5 class="card_title">Deodar House</h5>
+              <p class="card_text">Dining & Bedrooms</p>
+            </a>
+          </div>
+        </div>
+        <div class="next_wrap">
+          <h3 class="next_title">Next</h3>
+          <div class="featured_card">
+            <a href="banyan-house.html" class="featured_card_link">
+              <div class="project_img_holder u-visual-wrap">
+                <img src="../Resources/Project images/compressed/Medley M14 01 - compressed.webp" alt="Banyan House thumbnail" class="card_img u-cover-absolute">
+              </div>
+              <h5 class="card_title">Banyan House</h5>
+              <p class="card_text">Living & Bedrooms</p>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
-  </footer>
+  </section>
 
   <!-- ════════ FOOTER ════════ -->
   <footer id="footer">

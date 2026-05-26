@@ -289,6 +289,138 @@ nav.light-nav .nav-link:hover {
   width: 100%;
 }
 
+/* ── Dropdown Menu Styling ── */
+.nav-dropdown-wrapper {
+  position: relative;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  padding: 6px 0;
+  display: flex;
+  align-items: center;
+  outline: none;
+}
+
+.dropdown-chevron {
+  display: inline-block;
+  font-size: 7px;
+  margin-left: 6px;
+  transition: transform 0.3s ease;
+  vertical-align: middle;
+}
+
+.nav-dropdown-wrapper:hover .dropdown-chevron {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background-color: rgba(36, 32, 29, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 180px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  list-style: none;
+  z-index: 1001;
+  text-align: left;
+}
+
+/* Light Theme dropdown colors */
+nav.light-nav .nav-dropdown {
+  background-color: rgba(244, 245, 241, 0.98);
+  border: 1px solid rgba(44, 38, 34, 0.1);
+  box-shadow: 0 10px 30px rgba(44, 38, 34, 0.08);
+}
+
+.nav-dropdown-wrapper:hover .nav-dropdown,
+.nav-dropdown-wrapper:focus-within .nav-dropdown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(4px);
+}
+
+.nav-link-sub {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--bone);
+  transition: color 0.3s ease;
+  display: block;
+  padding: 2px 0;
+  white-space: nowrap;
+}
+
+nav.light-nav .nav-link-sub {
+  color: var(--muted);
+}
+
+.nav-link-sub:hover {
+  color: var(--chamoisee);
+}
+
+/* Responsive Dropdown overrides for mobile drawer layout */
+@media (max-width: 768px) {
+  .nav-dropdown {
+    position: static !important;
+    transform: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 10px 0 0 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    background: transparent !important;
+    width: auto !important;
+  }
+  
+  .dropdown-toggle {
+    pointer-events: none; /* Acts as static category label on mobile */
+  }
+  
+  .dropdown-chevron {
+    display: none !important;
+  }
+  
+  nav.light-nav .nav-link-sub {
+    color: var(--muted) !important;
+  }
+  
+  .nav-link-sub {
+    color: var(--muted) !important;
+  }
+  
+  .nav-link-sub:hover {
+    color: var(--chamoisee) !important;
+  }
+}
+
+
 .mobile-menu-toggle {
   display: none;
   background: none;
@@ -2713,4 +2845,333 @@ nav.light-nav .cart-btn:hover {
 .cors-warning-banner .close-banner-btn:hover {
   opacity: 1;
   transform: scale(1.1);
+}
+
+/* ════════ NOKU STUDIO UTILITY GRID & FLEX SYSTEM ════════ */
+.u-grid-custom {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--grid-gap--main, 24px);
+  width: 100%;
+}
+
+.u-grid-subgrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--grid-gap--main, 24px);
+  grid-column: span 12;
+}
+
+.u-column-3 {
+  grid-column: span 3;
+}
+
+.u-column-4 {
+  grid-column: span 4;
+}
+
+.u-column-8 {
+  grid-column: span 8;
+}
+
+.u-column-9 {
+  grid-column: span 9;
+}
+
+.u-column-12 {
+  grid-column: span 12;
+}
+
+/* Flex layouts */
+.u-hflex-left-stretch {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.u-vflex-left-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.u-vflex-center-top {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.u-vflex-left-top {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.u-vflex-stretch-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+}
+
+/* Gap classes */
+.u-gap-xsmall {
+  gap: 8px;
+}
+
+.u-gap-small {
+  gap: 16px;
+}
+
+.u-gap-medium {
+  gap: 24px;
+}
+
+.u-gap-large {
+  gap: 40px;
+}
+
+/* Visual wrapper styles */
+.u-visual-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.u-cover-absolute {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.u-container {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+  box-sizing: border-box;
+}
+
+/* ════════ NOKU STUDIO INDIVIDUAL PROJECT DETAIL PAGES ════════ */
+.project_hero_wrap {
+  position: relative;
+  height: 100vh; /* Premium tall hero banner image matching Webflow */
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  overflow: hidden;
+  background-color: var(--dark-bg);
+}
+
+.project_hero_contain {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+}
+
+.project_hero_title {
+  font-family: var(--font-display);
+  font-size: clamp(38px, 6vw, 64px);
+  font-weight: 300;
+  color: var(--paper);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  line-height: 1.1;
+}
+
+.project_detail_wrap {
+  padding: 100px 0;
+  background-color: var(--light);
+}
+
+.project_detail_contain {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 60px;
+}
+
+.project_detail_top {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 60px;
+  grid-column: span 12;
+  align-items: start;
+}
+
+.project_text_wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.project_info_wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.project_info_title {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--chamoisee);
+  margin-bottom: 6px;
+}
+
+.project_info_text {
+  font-size: 15px;
+  color: var(--deep-muted);
+  line-height: 1.6;
+}
+
+.project_description {
+  font-size: 15px;
+  color: var(--deep-muted);
+  line-height: 1.7;
+}
+
+.project_img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 15px 35px rgba(44, 38, 34, 0.04);
+  display: block;
+}
+
+.project_img.u-column-4 {
+  aspect-ratio: 2/3;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project_info {
+  display: flex;
+  flex-direction: column;
+}
+
+.project_text {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+.project_detail_bottom {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 60px;
+  grid-column: span 12;
+  align-items: end;
+  margin-top: 80px;
+}
+
+/* Prev/Next nav wrap */
+.prevnext_wrap {
+  border-top: 1px solid var(--line);
+  padding: 80px 0;
+  background-color: var(--light-secondary);
+}
+
+.prevnext_contain {
+  display: flex;
+  flex-direction: column;
+}
+
+.prevnext_layout {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 40px;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.prev_wrap, .next_wrap {
+  grid-column: span 6;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.next_wrap {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.prev_title, .next_title {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--chamoisee);
+}
+
+.prev_card, .next_card {
+  font-size: 15px;
+  color: var(--deep-muted);
+}
+
+.prev_card.is-empty, .next_card.is-empty {
+  font-style: italic;
+  color: var(--muted);
+}
+
+.featured_card {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.featured_card_link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.project_img_holder {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(44, 38, 34, 0.03);
+}
+
+.card_img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.featured_card_link:hover .card_img {
+  transform: scale(1.02);
+}
+
+.card_title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-top: 8px;
+}
+
+.card_text {
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+/* Hide fallback collection items unless needed */
+.is-hidden {
+  display: none !important;
 }

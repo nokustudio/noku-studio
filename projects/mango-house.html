@@ -21,212 +21,6 @@
       background-color: var(--light) !important;
       color: var(--ink) !important;
     }
-
-    /* ════════ PROJECT HERO ════════ */
-    .project-hero {
-      position: relative;
-      height: 60vh;
-      min-height: 400px;
-      display: flex;
-      align-items: flex-end;
-      padding-bottom: 60px;
-      overflow: hidden;
-    }
-
-    .project-hero-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-    }
-
-    .project-hero-bg img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .project-hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(36, 31, 27, 0.65) 0%, rgba(36, 31, 27, 0.1) 100%);
-      z-index: 2;
-    }
-
-    .project-hero-title-wrap {
-      position: relative;
-      z-index: 3;
-      width: 100%;
-    }
-
-    .project-hero-title {
-      font-family: var(--font-display);
-      font-size: clamp(38px, 6vw, 64px);
-      font-weight: 300;
-      color: var(--paper);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    /* ════════ PROJECT DETAILS ════════ */
-    .project-body {
-      padding: 100px 0;
-    }
-
-    .project-grid {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 80px;
-      align-items: start;
-    }
-
-    .project-sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-      position: sticky;
-      top: 110px;
-    }
-
-    .sidebar-block {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      border-bottom: 1px solid var(--border-soft);
-      padding-bottom: 24px;
-    }
-
-    .sidebar-block:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .sidebar-label {
-      font-family: var(--font-display);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--chamoisee);
-    }
-
-    .sidebar-val {
-      font-size: 15px;
-      color: var(--deep-muted);
-      line-height: 1.6;
-    }
-
-    .project-gallery {
-      display: flex;
-      flex-direction: column;
-      gap: 80px;
-    }
-
-    .gallery-img-container {
-      width: 100%;
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      box-shadow: 0 15px 35px rgba(44, 38, 34, 0.04);
-      background-color: var(--cream);
-    }
-
-    .gallery-img-container img {
-      width: 100%;
-      height: auto;
-      display: block;
-      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .gallery-img-container:hover img {
-      transform: scale(1.02);
-    }
-
-    .gallery-row-2col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-    }
-
-    .project-narrative-block {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      padding: 24px 0;
-      border-top: 1px solid var(--border-soft);
-    }
-
-    .project-narrative-text {
-      font-size: 16px;
-      line-height: 1.8;
-      color: var(--muted);
-    }
-
-    /* ════════ PREV / NEXT NAV ════════ */
-    .project-navigation {
-      border-top: 1px solid var(--line);
-      padding: 60px 0;
-      background-color: var(--light-secondary);
-    }
-
-    .prevnext-flex {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 40px;
-    }
-
-    .prevnext-card {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 45%;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .prevnext-card.prev-card {
-      align-items: flex-start;
-    }
-
-    .prevnext-card.next-card {
-      align-items: flex-end;
-      text-align: right;
-    }
-
-    .prevnext-label {
-      font-family: var(--font-display);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--chamoisee);
-    }
-
-    .prevnext-title {
-      font-family: var(--font-display);
-      font-size: 20px;
-      font-weight: 300;
-      text-transform: uppercase;
-      color: var(--ink);
-      transition: color 0.3s ease;
-    }
-
-    .prevnext-card:hover .prevnext-title {
-      color: var(--chamoisee);
-    }
-
-    @media (max-width: 900px) {
-      .project-grid {
-        grid-template-columns: 1fr;
-        gap: 48px;
-      }
-      .project-sidebar {
-        position: static;
-      }
-      .gallery-row-2col {
-        grid-template-columns: 1fr;
-      }
-    }
   </style>
 </head>
 
@@ -273,84 +67,90 @@
     </button>
   </nav>
 
-  <!-- HERO SECTION -->
-  <header class="project-hero">
-    <div class="project-hero-bg">
-      <img src="../Resources/Project images/compressed/Medley M03 01 - compressed.webp" alt="Mango House teak entrywayKota stone">
+  <!-- HERO SECTION (EXACT WEBFLOW COPY) -->
+  <section data-theme="inherit" class="project_hero_wrap u-vflex-left-bottom">
+    <div class="g_visual_wrap u-cover-absolute">
+      <img alt="Mango House teak entryway cover" src="../Resources/Project images/compressed/Medley M03 01 - compressed.webp" class="g_visual_img u-cover-absolute">
+      <div style="opacity: 15%; background-color: var(--ink);" class="g_visual_overlay u-cover-absolute"></div>
     </div>
-    <div class="project-hero-overlay"></div>
-    <div class="container project-hero-title-wrap">
-      <h1 class="project-hero-title">Mango House</h1>
+    <div data-padding-bottom="main" data-padding-top="main" class="project_hero_contain u-container u-vflex-left-center">
+      <h1 class="project_hero_title u-text-h1">Mango House</h1>
     </div>
-  </header>
+  </section>
 
-  <!-- MAIN PROJECT BODY -->
-  <main class="container project-body">
-    <div class="project-grid">
+  <!-- MAIN PROJECT BODY (EXACT WEBFLOW COPY) -->
+  <section data-theme="inherit" class="project_detail_wrap">
+    <div data-padding-bottom="main" data-padding-top="main" class="project_detail_contain u-container u-grid-tablet">
 
-      <!-- Left Sidebar: Info Panel -->
-      <aside class="project-sidebar">
-        <div class="sidebar-block">
-          <span class="sidebar-label">Year</span>
-          <span class="sidebar-val">2021</span>
+      <!-- 3-Column Top Grid -->
+      <div class="project_detail_top u-column-12 u-grid-subgrid">
+        <div class="project_text_wrap u-column-4 u-vflex-left-top u-gap-large">
+          <div class="project_info_wrap u-vflex-left-top u-gap-small">
+            <div class="project_info_wrap">
+              <h5 class="project_info_title u-text-h5">Year</h5>
+              <p class="project_info_text u-text-main">2021</p>
+            </div>
+            <div class="project_info_wrap">
+              <h5 class="project_info_title u-text-h5">Spaces</h5>
+              <p class="project_info_text u-text-main">Living & Bedrooms</p>
+            </div>
+            <div class="project_info_wrap">
+              <h5 class="project_info_title u-text-h5">Collaborators</h5>
+              <p class="project_info_text u-text-main">Studio Lore</p>
+            </div>
+          </div>
+          <div class="project_detail u-text-main">
+            <h5 class="project_info_title u-text-h5">Brief</h5>
+            <div class="project_description u-text-main w-richtext">
+              <p>This project was to seamlessly bring together "contemporary" and "elegance" in the minds of everyone who saw it. Simple forms and clean details were layered with elements of intricacy and interest. The clients were highly particular about even the smallest details, resulting in a home that felt truly their own. They curated it piece by piece, and we became a part of that story.</p>
+            </div>
+          </div>
         </div>
-        <div class="sidebar-block">
-          <span class="sidebar-label">Spaces</span>
-          <span class="sidebar-val">Living & Bedrooms</span>
-        </div>
-        <div class="sidebar-block">
-          <span class="sidebar-label">Collaborators</span>
-          <span class="sidebar-val">Studio Lore</span>
-        </div>
-        <div class="sidebar-block">
-          <span class="sidebar-label">Brief</span>
-          <span class="sidebar-val">
-            This project was to seamlessly bring together "contemporary" and "elegance" in the minds of everyone who saw it. Simple forms and clean details were layered with elements of intricacy and interest. The clients were highly particular about even the smallest details, resulting in a home that felt truly their own. They curated it piece by piece, and we became a part of that story.
-          </span>
-        </div>
-      </aside>
-
-      <!-- Right Column: Visuals & Narrative -->
-      <section class="project-gallery">
         
-        <!-- Large image 1 -->
-        <div class="gallery-img-container">
-          <img src="../Resources/Project images/compressed/Medley M03 02 - compressed.webp" alt="Solid Honne wood TV console unit with handmade tiles and traditional shutter details">
-        </div>
-
-        <!-- 2 columns of images / text description -->
-        <div class="gallery-row-2col">
-          <div class="gallery-img-container">
-            <img src="../Resources/Project images/compressed/Medley M03 03 - compressed.webp" alt="Bedroom with rods headboard side table and wood ceiling beams">
-          </div>
-          <div class="project-narrative-block">
-            <span class="sidebar-label">Thoughtful Details</span>
-            <p class="project-narrative-text">
-              A TV console unit in solid Honne wood with traditional shutter details and handmade tiles matches the client's search for unique craftsmanship.
-              <br><br>
-              Side tables and centre tables were designed to be minimal, highlighting elegant details such as floral print ceramic knobs.
-            </p>
+        <img loading="lazy" src="../Resources/Project images/compressed/Medley M03 02 - compressed.webp" alt="Solid Honne wood TV console unit with handmade tiles and traditional shutter details" class="project_img u-column-4">
+        
+        <div class="project_info u-column-4 u-vflex-center-top u-gap-small">
+          <img loading="lazy" src="../Resources/Project images/compressed/Medley M03 03 - compressed.webp" alt="Bedroom with rods headboard side table and wood ceiling beams" class="project_img">
+          <div class="project_text_wrap u-vflex-left-between u-gap-small">
+            <p class="project_text u-text-small">A TV console unit in solid Honne wood with traditional shutter details and handmade tiles matches the client's search for unique craftsmanship. Side tables and centre tables were designed to be minimal, highlighting elegant details such as floral print ceramic knobs.</p>
           </div>
         </div>
-
-      </section>
+      </div>
 
     </div>
-  </main>
+  </section>
 
-  <!-- PREVIOUS / NEXT NAVIGATION -->
-  <footer class="project-navigation">
-    <div class="container prevnext-flex">
-      <a href="banyan-house.html" class="prevnext-card prev-card">
-        <span class="prevnext-label">Previous Project</span>
-        <span class="prevnext-title">← Banyan House</span>
-      </a>
-      <a href="temple-tree-house.html" class="prevnext-card next-card">
-        <span class="prevnext-label">Next Project</span>
-        <span class="prevnext-title">Temple Tree House →</span>
-      </a>
+  <!-- PREVIOUS / NEXT NAVIGATION (EXACT WEBFLOW COPY) -->
+  <section class="prevnext_wrap">
+    <div class="container prevnext_contain">
+      <div class="prevnext_layout">
+        <div class="prev_wrap">
+          <h3 class="prev_title">Previous</h3>
+          <div class="featured_card">
+            <a href="banyan-house.html" class="featured_card_link">
+              <div class="project_img_holder u-visual-wrap">
+                <img src="../Resources/Project images/compressed/Medley M14 01 - compressed.webp" alt="Banyan House thumbnail" class="card_img u-cover-absolute">
+              </div>
+              <h5 class="card_title">Banyan House</h5>
+              <p class="card_text">Living & Bedrooms</p>
+            </a>
+          </div>
+        </div>
+        <div class="next_wrap">
+          <h3 class="next_title">Next</h3>
+          <div class="featured_card">
+            <a href="temple-tree-house.html" class="featured_card_link">
+              <div class="project_img_holder u-visual-wrap">
+                <img src="../Resources/Project images/compressed/Patterns B38 02 - compressed.webp" alt="Temple Tree House thumbnail" class="card_img u-cover-absolute">
+              </div>
+              <h5 class="card_title">Temple Tree House</h5>
+              <p class="card_text">Living, Bar & Bedrooms</p>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
-  </footer>
+  </section>
 
   <!-- ════════ FOOTER ════════ -->
   <footer id="footer">

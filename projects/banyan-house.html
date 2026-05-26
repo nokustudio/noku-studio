@@ -21,212 +21,6 @@
       background-color: var(--light) !important;
       color: var(--ink) !important;
     }
-
-    /* ════════ PROJECT HERO ════════ */
-    .project-hero {
-      position: relative;
-      height: 60vh;
-      min-height: 400px;
-      display: flex;
-      align-items: flex-end;
-      padding-bottom: 60px;
-      overflow: hidden;
-    }
-
-    .project-hero-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-    }
-
-    .project-hero-bg img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .project-hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(36, 31, 27, 0.65) 0%, rgba(36, 31, 27, 0.1) 100%);
-      z-index: 2;
-    }
-
-    .project-hero-title-wrap {
-      position: relative;
-      z-index: 3;
-      width: 100%;
-    }
-
-    .project-hero-title {
-      font-family: var(--font-display);
-      font-size: clamp(38px, 6vw, 64px);
-      font-weight: 300;
-      color: var(--paper);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    /* ════════ PROJECT DETAILS ════════ */
-    .project-body {
-      padding: 100px 0;
-    }
-
-    .project-grid {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 80px;
-      align-items: start;
-    }
-
-    .project-sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-      position: sticky;
-      top: 110px;
-    }
-
-    .sidebar-block {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      border-bottom: 1px solid var(--border-soft);
-      padding-bottom: 24px;
-    }
-
-    .sidebar-block:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .sidebar-label {
-      font-family: var(--font-display);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--chamoisee);
-    }
-
-    .sidebar-val {
-      font-size: 15px;
-      color: var(--deep-muted);
-      line-height: 1.6;
-    }
-
-    .project-gallery {
-      display: flex;
-      flex-direction: column;
-      gap: 80px;
-    }
-
-    .gallery-img-container {
-      width: 100%;
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      box-shadow: 0 15px 35px rgba(44, 38, 34, 0.04);
-      background-color: var(--cream);
-    }
-
-    .gallery-img-container img {
-      width: 100%;
-      height: auto;
-      display: block;
-      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .gallery-img-container:hover img {
-      transform: scale(1.02);
-    }
-
-    .gallery-row-2col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-    }
-
-    .project-narrative-block {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      padding: 24px 0;
-      border-top: 1px solid var(--border-soft);
-    }
-
-    .project-narrative-text {
-      font-size: 16px;
-      line-height: 1.8;
-      color: var(--muted);
-    }
-
-    /* ════════ PREV / NEXT NAV ════════ */
-    .project-navigation {
-      border-top: 1px solid var(--line);
-      padding: 60px 0;
-      background-color: var(--light-secondary);
-    }
-
-    .prevnext-flex {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 40px;
-    }
-
-    .prevnext-card {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 45%;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .prevnext-card.prev-card {
-      align-items: flex-start;
-    }
-
-    .prevnext-card.next-card {
-      align-items: flex-end;
-      text-align: right;
-    }
-
-    .prevnext-label {
-      font-family: var(--font-display);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--chamoisee);
-    }
-
-    .prevnext-title {
-      font-family: var(--font-display);
-      font-size: 20px;
-      font-weight: 300;
-      text-transform: uppercase;
-      color: var(--ink);
-      transition: color 0.3s ease;
-    }
-
-    .prevnext-card:hover .prevnext-title {
-      color: var(--chamoisee);
-    }
-
-    @media (max-width: 900px) {
-      .project-grid {
-        grid-template-columns: 1fr;
-        gap: 48px;
-      }
-      .project-sidebar {
-        position: static;
-      }
-      .gallery-row-2col {
-        grid-template-columns: 1fr;
-      }
-    }
   </style>
 </head>
 
@@ -248,13 +42,20 @@
       </a>
     </div>
     <ul class="nav-links">
+      <li><a href="../products.html" class="nav-link">Products</a></li>
       <li><a href="../index.html#collections" class="nav-link">Collections</a></li>
       <li><a href="../projects.html" class="nav-link active" style="color: var(--chamoisee);">Work</a></li>
-      <li><a href="../products.html" class="nav-link">Products</a></li>
-      <li><a href="../materials.html" class="nav-link">Materials</a></li>
-      <li><a href="../sustainability.html" class="nav-link">Sustainability</a></li>
-      <li><a href="../about.html" class="nav-link">About</a></li>
-      <li><a href="../contact.html" class="nav-link">Contact</a></li>
+      <li class="nav-dropdown-wrapper">
+        <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+          Menu <span class="dropdown-chevron">▼</span>
+        </button>
+        <ul class="nav-dropdown">
+          <li><a href="../materials.html" class="nav-link-sub">Materials</a></li>
+          <li><a href="../sustainability.html" class="nav-link-sub">Sustainability</a></li>
+          <li><a href="../about.html" class="nav-link-sub">About</a></li>
+          <li><a href="../contact.html" class="nav-link-sub">Contact</a></li>
+        </ul>
+      </li>
     </ul>
     <button id="cart-toggle" class="cart-btn" aria-label="Open Shopping Cart">
       <svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -273,101 +74,106 @@
     </button>
   </nav>
 
-  <!-- HERO SECTION -->
-  <header class="project-hero">
-    <div class="project-hero-bg">
-      <img src="../Resources/Project images/compressed/Medley M14 01 - compressed.webp" alt="Banyan House swing in solid teak and cane">
+  <!-- HERO SECTION (EXACT WEBFLOW COPY) -->
+  <section data-theme="inherit" class="project_hero_wrap u-vflex-left-bottom">
+    <div class="g_visual_wrap u-cover-absolute">
+      <img alt="Banyan House living room swing background" src="../Resources/Project images/compressed/Medley M14 01 - compressed.webp" class="g_visual_img u-cover-absolute">
+      <div style="opacity: 15%; background-color: var(--ink);" class="g_visual_overlay u-cover-absolute"></div>
     </div>
-    <div class="project-hero-overlay"></div>
-    <div class="container project-hero-title-wrap">
-      <h1 class="project-hero-title">Banyan House</h1>
+    <div data-padding-bottom="main" data-padding-top="main" class="project_hero_contain u-container u-vflex-left-center">
+      <h1 class="project_hero_title u-text-h1">Banyan House</h1>
     </div>
-  </header>
+  </section>
 
-  <!-- MAIN PROJECT BODY -->
-  <main class="container project-body">
-    <div class="project-grid">
+  <!-- MAIN PROJECT BODY (EXACT WEBFLOW COPY) -->
+  <section data-theme="inherit" class="project_detail_wrap">
+    <div data-padding-bottom="main" data-padding-top="main" class="project_detail_contain u-container u-grid-tablet">
 
-      <!-- Left Sidebar: Info Panel -->
-      <aside class="project-sidebar">
-        <div class="sidebar-block">
-          <span class="sidebar-label">Year</span>
-          <span class="sidebar-val">2024</span>
+      <!-- 3-Column Top Grid -->
+      <div class="project_detail_top u-column-12 u-grid-subgrid">
+        <div class="project_text_wrap u-column-4 u-vflex-left-top u-gap-large">
+          <div class="project_info_wrap u-vflex-left-top u-gap-small">
+            <div class="project_info_wrap">
+              <h5 class="project_info_title u-text-h5">Year</h5>
+              <p class="project_info_text u-text-main">2040</p>
+            </div>
+            <div class="project_info_wrap">
+              <h5 class="project_info_title u-text-h5">Spaces</h5>
+              <p class="project_info_text u-text-main">Living & Bedrooms</p>
+            </div>
+            <div class="project_info_wrap">
+              <h5 class="project_info_title u-text-h5">Collaborators</h5>
+              <p class="project_info_text u-text-main">Studio Lore</p>
+            </div>
+          </div>
+          <div class="project_detail u-text-main">
+            <h5 class="project_info_title u-text-h5">Brief</h5>
+            <div class="project_description u-text-main w-richtext">
+              <p>Vamsi & Suneetha's home started with a brief of creating furniture pieces that blended with the interiors which was a perfect mix of traditional and modern. It was to bring out the richness of tradition while maintaining functionality offered by contemporary pieces. With this in mind, we closely worked with Studio Lore and the clients to create a home rooted in both the past and the present.</p>
+            </div>
+          </div>
         </div>
-        <div class="sidebar-block">
-          <span class="sidebar-label">Spaces</span>
-          <span class="sidebar-val">Living & Bedrooms</span>
-        </div>
-        <div class="sidebar-block">
-          <span class="sidebar-label">Collaborators</span>
-          <span class="sidebar-val">Studio Lore</span>
-        </div>
-        <div class="sidebar-block">
-          <span class="sidebar-label">Brief</span>
-          <span class="sidebar-val">
-            Vamsi & Suneetha's home started with a brief of creating furniture pieces that blended with the interiors which was a perfect mix of traditional and modern. It was to bring out the richness of tradition while maintaining functionality offered by contemporary pieces. With this in mind, we closely worked with Studio Lore and the clients to create a home that is rooted in both the past and the present.
-          </span>
-        </div>
-      </aside>
-
-      <!-- Right Column: Visuals & Narrative -->
-      <section class="project-gallery">
         
-        <!-- Large image 1 -->
-        <div class="gallery-img-container">
-          <img src="../Resources/Project images/compressed/Medley M14 03 - compressed.webp" alt="Traditional brass chain detail on a teak swing with cane woven backrest">
-        </div>
-
-        <!-- 2 columns of images / text description -->
-        <div class="gallery-row-2col">
-          <div class="gallery-img-container">
-            <img src="../Resources/Project images/compressed/Medley M14 05 - compressed.webp" alt="A Half poster bed with deep green upholstery headboard">
-          </div>
-          <div class="project-narrative-block">
-            <span class="sidebar-label">Living Room centerpiece & Guest bedroom</span>
-            <p class="project-narrative-text">
-              From the onset, the clients wanted a swing as the centerpiece of their living space. We chose a two-seater solid teak swing with a cane-woven backrest, blending tradition with modernity through solid brass chains with animal motifs and clean, simple forms.
-              <br><br>
-              The bedrooms were designed for coziness and comfort. The guest bed, a half-poster with antique-detailed legs, featured a green upholstered headboard contrasting with teak’s warmth and included four storage drawers for efficient space use.
-            </p>
+        <img loading="lazy" src="../Resources/Project images/compressed/Medley M14 03 - compressed.webp" alt="Traditional brass chain detail on a teak swing with cane woven backrest" class="project_img u-column-4">
+        
+        <div class="project_info u-column-4 u-vflex-center-top u-gap-small">
+          <img loading="lazy" src="../Resources/Project images/compressed/Medley M14 05 - compressed.webp" alt="A Half poster bed with deep green upholstery headboard" class="project_img">
+          <div class="project_text_wrap u-vflex-left-between u-gap-small">
+            <p class="project_text u-text-small">From the onset, the clients wanted a swing as the centerpiece of their living space. We chose a two-seater solid teak swing with a cane-woven backrest, blending tradition with modernity through solid brass chains with animal motifs and clean, simple forms.</p>
+            <p class="project_text u-text-small">The bedrooms were designed for coziness and comfort. The guest bed, a half-poster with antique-detailed legs, featured a green upholstered headboard contrasting with teak’s warmth and included four storage drawers for efficient space use.</p>
           </div>
         </div>
+      </div>
 
-        <!-- Large image 2 with description -->
-        <div class="project-narrative-block">
-          <p class="project-narrative-text">
-            The master bed perfectly embodied the brief. Carved stone, typically used for pillars, formed the front legs, offset within the frame for a lighter look and added safety. The heavy legs were balanced by a thin, elegant frame and a wall-mounted upholstered headboard, minimizing support structures. On the client's request, we found antique panels from Rajasthan that were fixed on either side of the headboard to frame it and bring in a sense of grandiose.
-          </p>
-          <div class="gallery-img-container">
-            <img src="../Resources/Project images/compressed/Medley M14 08 - compressed.webp" alt="Carved stone pillars used as bed legs">
-          </div>
+      <!-- 2-Column Bottom Rows -->
+      <div class="project_detail_bottom u-grid-subgrid">
+        <div class="project_text_wrap u-column-4 u-vflex-left-bottom">
+          <p class="project_text u-text-small">The master bed perfectly embodied the brief. Carved stone, typically used for pillars, formed the front legs, offset within the frame for a lighter look and added safety. The heavy legs were balanced by a thin, elegant frame and a wall-mounted upholstered headboard, minimizing support structures. On the client's request, we found antique panels from Rajasthan that were fixed on either side of the headboard to frame it and bring in a sense of grandiose.</p>
         </div>
+        <img loading="lazy" src="../Resources/Project images/compressed/Medley M14 08 - compressed.webp" alt="Carved stone pillars used as bed legs" class="project_img u-column-8">
+      </div>
 
-        <!-- Large image 3 with description -->
-        <div class="project-narrative-block">
-          <div class="gallery-img-container">
-            <img src="../Resources/Project images/compressed/Medley M14 06 - compressed.webp" alt="Backyard dining setup with teak table and chairs surrounded by lush greenery">
-          </div>
+      <div class="project_detail_bottom u-grid-subgrid">
+        <div class="project_text_wrap u-column-4 u-vflex-left-bottom">
+          <p class="project_text u-text-small">The backyard dining area featured a solid Honne dining table built to blend with outdoor elements, surrounded by high-comfort, lightweight teak wood dining chairs.</p>
         </div>
-
-      </section>
+        <img loading="lazy" src="../Resources/Project images/compressed/Medley M14 06 - compressed.webp" alt="Backyard dining setup with teak table and chairs surrounded by greenery" class="project_img u-column-8">
+      </div>
 
     </div>
-  </main>
+  </section>
 
-  <!-- PREVIOUS / NEXT NAVIGATION -->
-  <footer class="project-navigation">
-    <div class="container prevnext-flex">
-      <a href="oak-house.html" class="prevnext-card prev-card">
-        <span class="prevnext-label">Previous Project</span>
-        <span class="prevnext-title">← Oak House</span>
-      </a>
-      <a href="mango-house.html" class="prevnext-card next-card">
-        <span class="prevnext-label">Next Project</span>
-        <span class="prevnext-title">Mango House →</span>
-      </a>
+  <!-- PREVIOUS / NEXT NAVIGATION (EXACT WEBFLOW COPY) -->
+  <section class="prevnext_wrap">
+    <div class="container prevnext_contain">
+      <div class="prevnext_layout">
+        <div class="prev_wrap">
+          <h3 class="prev_title">Previous</h3>
+          <div class="featured_card">
+            <a href="oak-house.html" class="featured_card_link">
+              <div class="project_img_holder u-visual-wrap">
+                <img src="../Resources/Project images/compressed/Patterns B33 03 - compressed.webp" alt="Oak House thumbnail" class="card_img u-cover-absolute">
+              </div>
+              <h5 class="card_title">Oak House</h5>
+              <p class="card_text">Bedrooms</p>
+            </a>
+          </div>
+        </div>
+        <div class="next_wrap">
+          <h3 class="next_title">Next</h3>
+          <div class="featured_card">
+            <a href="mango-house.html" class="featured_card_link">
+              <div class="project_img_holder u-visual-wrap">
+                <img src="../Resources/Project images/compressed/Medley M03 01 - compressed.webp" alt="Mango House thumbnail" class="card_img u-cover-absolute">
+              </div>
+              <h5 class="card_title">Mango House</h5>
+              <p class="card_text">Living & Bedrooms</p>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
-  </footer>
+  </section>
 
   <!-- ════════ FOOTER ════════ -->
   <footer id="footer">

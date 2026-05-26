@@ -56,6 +56,8 @@
       display: flex;
       height: 100%;
       will-change: transform;
+      gap: 240px; /* Spacious separation between projects */
+      padding-right: 240px; /* Keeps the spacing after the last project */
     }
 
     /* ════════ EACH PROJECT PANEL ════════ */
@@ -63,21 +65,27 @@
       flex-shrink: 0;
       width: 100vw;
       height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 2.5fr; /* Info column vs Image column */
+      box-sizing: border-box;
+      padding: 5rem 7rem 3rem; /* Webflow padding */
       position: relative;
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: 2rem;
+      row-gap: 2rem;
+      align-items: center;
     }
 
     .project_card_heading {
+      grid-column: span 4;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 80px 48px 80px 64px;
-      gap: 20px;
+      gap: 16px;
       position: relative;
       z-index: 2;
-      background-color: var(--light);
-      border-right: 1px solid rgba(44, 38, 34, 0.08);
+      background-color: transparent;
+      border-right: none;
+      padding: 0;
     }
 
     .hero_heading {
@@ -117,15 +125,17 @@
     }
 
     .project_link {
+      grid-column: span 8;
       position: relative;
       display: flex;
       align-items: center;
-      justify-content: center;
-      height: 100%;
+      justify-content: flex-start;
       width: 100%;
+      aspect-ratio: 3 / 2;
+      text-decoration: none;
       overflow: hidden;
       cursor: pointer;
-      text-decoration: none;
+      box-sizing: border-box;
     }
 
     .project_card {
@@ -133,6 +143,9 @@
       height: 100%;
       position: relative;
       overflow: hidden;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 20px 45px rgba(44, 38, 34, 0.08);
+      aspect-ratio: 15 / 9;
     }
 
     .g_visual_img {
@@ -144,24 +157,6 @@
 
     .project_link:hover .g_visual_img {
       transform: scale(1.03);
-    }
-
-    /* Overlay gradient for readability */
-    .project_link::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 160px;
-      height: 100%;
-      background: linear-gradient(to right, rgba(44, 38, 34, 0.08), transparent);
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    /* Divider line between panels */
-    .panel + .panel {
-      border-left: 1px solid rgba(44, 38, 34, 0.08);
     }
 
     /* ════════ PROGRESS DOTS ════════ */
@@ -264,19 +259,29 @@
     /* ════════ RESPONSIVE OVERRIDES ════════ */
     @media (max-width: 1024px) {
       .panel {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr;
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        width: 100vw;
+        padding: 100px 32px 32px 32px;
+        box-sizing: border-box;
       }
 
       .project_card_heading {
-        padding: 100px 32px 32px 32px;
+        width: 100%;
         gap: 16px;
-        border-right: none;
         border-bottom: 1px solid rgba(44, 38, 34, 0.08);
+        padding-bottom: 24px;
       }
 
-      .project_link::before {
-        display: none;
+      .project_link {
+        width: 100%;
+        aspect-ratio: 3 / 2;
+        margin-top: 32px;
+      }
+
+      .project_card {
+        aspect-ratio: 15 / 9;
       }
     }
 
@@ -293,22 +298,24 @@
       }
 
       .track_flex {
-        flex-direction: column;
+        flex-direction: column !important;
         transform: none !important;
+        gap: 60px !important; /* Stacked spacing */
+        padding-right: 0 !important;
       }
 
       .panel {
-        width: 100%;
-        height: auto;
-        min-height: 100vh;
+        width: 100% !important;
+        height: auto !important;
+        padding: 80px 24px 24px 24px !important;
       }
 
       .project_card_heading {
-        padding: 100px 24px 24px 24px;
+        padding-bottom: 16px !important;
       }
 
       .project_link {
-        height: 50vh;
+        margin-top: 24px !important;
       }
 
       .scroll-progress,
@@ -337,13 +344,20 @@
       </a>
     </div>
     <ul class="nav-links">
+      <li><a href="products.html" class="nav-link">Products</a></li>
       <li><a href="index.html#collections" class="nav-link">Collections</a></li>
       <li><a href="projects.html" class="nav-link active" style="color: var(--chamoisee);">Work</a></li>
-      <li><a href="products.html" class="nav-link">Products</a></li>
-      <li><a href="materials.html" class="nav-link">Materials</a></li>
-      <li><a href="sustainability.html" class="nav-link">Sustainability</a></li>
-      <li><a href="about.html" class="nav-link">About</a></li>
-      <li><a href="contact.html" class="nav-link">Contact</a></li>
+      <li class="nav-dropdown-wrapper">
+        <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+          Menu <span class="dropdown-chevron">▼</span>
+        </button>
+        <ul class="nav-dropdown">
+          <li><a href="materials.html" class="nav-link-sub">Materials</a></li>
+          <li><a href="sustainability.html" class="nav-link-sub">Sustainability</a></li>
+          <li><a href="about.html" class="nav-link-sub">About</a></li>
+          <li><a href="contact.html" class="nav-link-sub">Contact</a></li>
+        </ul>
+      </li>
     </ul>
     <button id="cart-toggle" class="cart-btn" aria-label="Open Shopping Cart">
       <svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -370,81 +384,81 @@
           <div role="list" class="track_flex" id="track_flex">
 
             <!-- Panel 1: Oak House -->
-            <div role="listitem" class="panel">
-              <div class="project_card_heading">
-                <div class="hero_heading">Oak house</div>
+            <div role="listitem" class="panel u-grid-custom">
+              <div class="project_card_heading u-column-3 u-vflex-left-center u-gap-xsmall u-text-h2">
+                <div class="hero_heading u-text-h3">Oak house</div>
                 <div class="project_card_text u-text-small">Designed with old-school richness through curation of colour and materials</div>
                 <div class="project_card_text u-text-main">Bedrooms</div>
                 <div class="project_card_text u-text-main">Bangalore</div>
                 <div class="project_card_text u-text-main">2023</div>
               </div>
-              <a href="projects/oak-house.html" class="project_link">
-                <div class="project_card">
-                  <img src="Resources/Project images/compressed/Patterns B33 03 - compressed.webp" alt="Oak House Bedroom design with custom headboard and blue patterned wallpaper" class="g_visual_img">
+              <a href="projects/oak-house.html" class="project_link u-column-9 u-vflex-center-center w-inline-block">
+                <div data-theme="dark" class="project_card u-visual-wrap">
+                  <img src="Resources/Project images/compressed/Patterns B33 03 - compressed.webp" alt="Oak House Bedroom design with custom headboard and blue patterned wallpaper" class="g_visual_img u-cover-absolute">
                 </div>
               </a>
             </div>
 
             <!-- Panel 2: Banyan House -->
-            <div role="listitem" class="panel">
-              <div class="project_card_heading">
-                <div class="hero_heading">Banyan House</div>
+            <div role="listitem" class="panel u-grid-custom">
+              <div class="project_card_heading u-column-3 u-vflex-left-center u-gap-xsmall u-text-h2">
+                <div class="hero_heading u-text-h3">Banyan House</div>
                 <div class="project_card_text u-text-small">Celebration of tradition and modernity through crafted furniture</div>
                 <div class="project_card_text u-text-main">Living & Bedrooms</div>
                 <div class="project_card_text u-text-main">Bangalore</div>
-                <div class="project_card_text u-text-main">2024</div>
+                <div class="project_card_text u-text-main">2040</div>
               </div>
-              <a href="projects/banyan-house.html" class="project_link">
-                <div class="project_card">
-                  <img src="Resources/Project images/compressed/Medley M14 01 - compressed.webp" alt="Banyan House living room with wooden swing" class="g_visual_img">
+              <a href="projects/banyan-house.html" class="project_link u-column-9 u-vflex-center-center w-inline-block">
+                <div data-theme="dark" class="project_card u-visual-wrap">
+                  <img src="Resources/Project images/compressed/Medley M14 01 - compressed.webp" alt="Banyan House living room with wooden swing" class="g_visual_img u-cover-absolute">
                 </div>
               </a>
             </div>
 
             <!-- Panel 3: Mango House -->
-            <div role="listitem" class="panel">
-              <div class="project_card_heading">
-                <div class="hero_heading">Mango House</div>
+            <div role="listitem" class="panel u-grid-custom">
+              <div class="project_card_heading u-column-3 u-vflex-left-center u-gap-xsmall u-text-h2">
+                <div class="hero_heading u-text-h3">Mango House</div>
                 <div class="project_card_text u-text-small">A contemporary home defined by thoughtful details</div>
                 <div class="project_card_text u-text-main">Living & Bedrooms</div>
                 <div class="project_card_text u-text-main">Bangalore</div>
                 <div class="project_card_text u-text-main">2021</div>
               </div>
-              <a href="projects/mango-house.html" class="project_link">
-                <div class="project_card">
-                  <img src="Resources/Project images/compressed/Medley M03 01 - compressed.webp" alt="Mango House entrance with Kota stone" class="g_visual_img">
+              <a href="projects/mango-house.html" class="project_link u-column-9 u-vflex-center-center w-inline-block">
+                <div data-theme="dark" class="project_card u-visual-wrap">
+                  <img src="Resources/Project images/compressed/Medley M03 01 - compressed.webp" alt="Mango House entrance with Kota stone" class="g_visual_img u-cover-absolute">
                 </div>
               </a>
             </div>
 
             <!-- Panel 4: Temple Tree House -->
-            <div role="listitem" class="panel">
-              <div class="project_card_heading">
-                <div class="hero_heading">Temple Tree House</div>
+            <div role="listitem" class="panel u-grid-custom">
+              <div class="project_card_heading u-column-3 u-vflex-left-center u-gap-xsmall u-text-h2">
+                <div class="hero_heading u-text-h3">Temple Tree House</div>
                 <div class="project_card_text u-text-small">An Expression of Elegance and Subtle Opulence</div>
                 <div class="project_card_text u-text-main">Living, Bar & Bedrooms</div>
                 <div class="project_card_text u-text-main">Bangalore</div>
                 <div class="project_card_text u-text-main">2022</div>
               </div>
-              <a href="projects/temple-tree-house.html" class="project_link">
-                <div class="project_card">
-                  <img src="Resources/Project images/compressed/Patterns B38 02 - compressed.webp" alt="Temple Tree House bedroom with winged cushion headboard" class="g_visual_img">
+              <a href="projects/temple-tree-house.html" class="project_link u-column-9 u-vflex-center-center w-inline-block">
+                <div data-theme="dark" class="project_card u-visual-wrap">
+                  <img src="Resources/Project images/compressed/Patterns B38 02 - compressed.webp" alt="Temple Tree House bedroom with winged cushion headboard" class="g_visual_img u-cover-absolute">
                 </div>
               </a>
             </div>
 
             <!-- Panel 5: Deodar House -->
-            <div role="listitem" class="panel">
-              <div class="project_card_heading">
-                <div class="hero_heading">Deodar House</div>
+            <div role="listitem" class="panel u-grid-custom">
+              <div class="project_card_heading u-column-3 u-vflex-left-center u-gap-xsmall u-text-h2">
+                <div class="hero_heading u-text-h3">Deodar House</div>
                 <div class="project_card_text u-text-small">A project shaped by both design sensibilities and personal stories</div>
                 <div class="project_card_text u-text-main">Dining & Bedrooms</div>
                 <div class="project_card_text u-text-main">Bangalore</div>
                 <div class="project_card_text u-text-main">2023</div>
               </div>
-              <a href="projects/deodar-house.html" class="project_link">
-                <div class="project_card">
-                  <img src="Resources/Project images/compressed/Patterns A43 07 - compressed.webp" alt="Deodar House bedroom poster bed" class="g_visual_img">
+              <a href="projects/deodar-house.html" class="project_link u-column-9 u-vflex-center-center w-inline-block">
+                <div data-theme="dark" class="project_card u-visual-wrap">
+                  <img src="Resources/Project images/compressed/Patterns A43 07 - compressed.webp" alt="Deodar House bedroom poster bed" class="g_visual_img u-cover-absolute">
                 </div>
               </a>
             </div>
@@ -549,6 +563,7 @@
       const dots = document.querySelectorAll('.progress-dot');
       const counter = document.getElementById('progress-counter');
       const panelCount = panels.length;
+      const GAP = 240; // Separation gap between projects in pixels
 
       if (panelCount === 0) return;
 
@@ -585,8 +600,8 @@
         // How far we've scrolled into the wrapper (0 to 1)
         const scrollProgress = Math.max(0, Math.min(1, -wrapperRect.top / scrollableDistance));
         
-        // Translate the track
-        const maxTranslate = (panelCount - 1) * window.innerWidth;
+        // Translate the track including the gap between projects
+        const maxTranslate = (panelCount - 1) * (window.innerWidth + GAP);
         const translateX = scrollProgress * maxTranslate;
         track.style.transform = `translateX(-${translateX}px)`;
 
