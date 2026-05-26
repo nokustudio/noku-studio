@@ -14,6 +14,10 @@ const SHOPIFY_CONFIG = {
   defaultPrice: 24500
 };
 
+// State of variants fetched from Shopify Storefront API
+let shopifyProductVariants = [];
+let isShopifyConnected = false;
+
 // Featured products data from Shopify Storefront API (Phase 2)
 let featuredProductsData = {};
 
