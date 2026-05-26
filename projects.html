@@ -256,6 +256,27 @@
       color: var(--chamoisee) !important;
     }
 
+    /* ════════ PRELOADED PROJECT IFRAMES ════════ */
+    .project-iframe-container {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .project-iframe-container.revealed {
+      pointer-events: all;
+      opacity: 1;
+    }
+
+    .project-iframe-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
     /* ════════ RESPONSIVE OVERRIDES ════════ */
     @media (max-width: 1024px) {
       .panel {
@@ -665,6 +686,14 @@
 
     // ════════ PAGE TRANSITIONS ENGINE ════════
     document.addEventListener('DOMContentLoaded', () => {
+
+      // Build a map of href -> iframe container for instant lookup
+      const iframeMap = {};
+      document.querySelectorAll('.project-iframe-container').forEach(container => {
+        const key = container.dataset.href;
+        iframeMap[key] = container;
+      });
+
       const projectLinks = document.querySelectorAll('.project_link');
       projectLinks.forEach(link => {
         link.addEventListener('click', function(e) {
@@ -681,6 +710,7 @@
 
           const rect = card.getBoundingClientRect();
 
+          // Zoom overlay animation
           const overlay = document.createElement('div');
           overlay.className = 'page-transition-overlay';
 
@@ -699,7 +729,7 @@
           overlay.appendChild(transCard);
           document.body.appendChild(overlay);
 
-          // Force reflow
+          // Force reflow to trigger CSS transition
           overlay.offsetHeight;
 
           overlay.classList.add('active');
@@ -709,21 +739,67 @@
           transCard.style.height = '100vh';
           transCard.style.borderRadius = '0px';
 
+          // After zoom completes, reveal the preloaded iframe
           setTimeout(() => {
-            window.location.href = targetUrl;
+            const iframeContainer = iframeMap[targetUrl];
+            if (iframeContainer) {
+              // Push a history entry so the back button registers a step
+              history.pushState({ projectIframe: targetUrl }, '', targetUrl);
+              // Reveal iframe — instantly visible, no load gap
+              iframeContainer.classList.add('revealed');
+              // Remove the zoom overlay — iframe covers everything now
+              overlay.remove();
+            } else {
+              // Fallback if iframe wasn't preloaded
+              window.location.href = targetUrl;
+            }
           }, 1000);
         });
       });
 
-      // Reset transition overlay when user navigates back (BFCache reset)
-      window.addEventListener('pageshow', () => {
-        const overlays = document.querySelectorAll('.page-transition-overlay');
-        overlays.forEach(overlay => overlay.remove());
+      // Back button: popstate fires when the pushed history entry is popped
+      window.addEventListener('popstate', (e) => {
+        if (e.state && e.state.projectIframe) {
+          // Hide whichever iframe is currently revealed
+          document.querySelectorAll('.project-iframe-container').forEach(el => {
+            el.classList.remove('revealed');
+          });
+        }
+      });
+
+      // BFCache restore: clean up overlays and hidden iframes
+      window.addEventListener('pageshow', (e) => {
+        document.querySelectorAll('.page-transition-overlay').forEach(el => el.remove());
+        // Only reset iframes if this is a genuine BFCache restore (not a normal load)
+        if (e.persisted) {
+          document.querySelectorAll('.project-iframe-container').forEach(el => {
+            el.classList.remove('revealed');
+          });
+        }
       });
     });
   </script>
 
   <script src="shopify-integration.js"></script>
+
+  <!-- ════════ PRELOADED PROJECT IFRAMES ════════ -->
+  <!-- These load in the background so navigation feels instant -->
+  <div class="project-iframe-container" data-href="projects/oak-house.html">
+    <iframe src="projects/oak-house.html" title="Oak House Project" loading="eager"></iframe>
+  </div>
+  <div class="project-iframe-container" data-href="projects/banyan-house.html">
+    <iframe src="projects/banyan-house.html" title="Banyan House Project" loading="eager"></iframe>
+  </div>
+  <div class="project-iframe-container" data-href="projects/mango-house.html">
+    <iframe src="projects/mango-house.html" title="Mango House Project" loading="eager"></iframe>
+  </div>
+  <div class="project-iframe-container" data-href="projects/temple-tree-house.html">
+    <iframe src="projects/temple-tree-house.html" title="Temple Tree House Project" loading="eager"></iframe>
+  </div>
+  <div class="project-iframe-container" data-href="projects/deodar-house.html">
+    <iframe src="projects/deodar-house.html" title="Deodar House Project" loading="eager"></iframe>
+  </div>
+
 </body>
 
 </html>
