@@ -612,6 +612,21 @@
     </div>
   </div>
 
+  <!-- Hidden Zoho Form Submission Target -->
+  <iframe name="zoho-hidden-iframe" id="zoho-hidden-iframe" style="display: none;"></iframe>
+
+  <!-- Hidden Zoho Form mapping to Noku Studio User Detail Form -->
+  <form id="zoho-hidden-form" action="https://forms.zohopublic.in/nokustudioin/form/NokuStudioWebsiteUserDetailform/formperma/qyjJVWBzpqaTpujonI4wY09cd_lKn5KP6D60MAPMtJs/htmlRecords/submit" name="form" method="POST" accept-charset="UTF-8" enctype="multipart/form-data" target="zoho-hidden-iframe" style="display: none;">
+    <input type="hidden" name="zf_referrer_name" value="">
+    <input type="hidden" name="zf_redirect_url" value="">
+    <input type="hidden" name="zc_gad" value="">
+    <input type="hidden" name="Name_First" value="">
+    <input type="hidden" name="Name_Last" value="">
+    <input type="hidden" name="Email" value="">
+    <input type="hidden" name="PhoneNumber_countrycode" value="">
+    <input type="hidden" name="MultiLine" value="">
+  </form>
+
   <script src="shopify-integration.js"></script>
 
   <script>
@@ -656,18 +671,49 @@
       contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
-        // Collect form data (for local testing/logging)
-        const formData = {
-          name: document.getElementById('contact-name').value,
-          email: document.getElementById('contact-email').value,
-          phone: document.getElementById('contact-phone').value,
-          purpose: document.getElementById('contact-purpose').value,
-          message: document.getElementById('contact-message').value
-        };
+        // 1. Retrieve visible form inputs
+        const fullName = document.getElementById('contact-name').value.trim();
+        const email = document.getElementById('contact-email').value.trim();
+        const phone = document.getElementById('contact-phone').value.trim();
+        const purposeSelect = document.getElementById('contact-purpose');
+        const purposeText = purposeSelect.options[purposeSelect.selectedIndex].text;
+        const message = document.getElementById('contact-message').value.trim();
         
-        console.log('Form submission received:', formData);
+        // 2. Programmatically split Full Name into First Name & Last Name (mandatory in Zoho Forms)
+        const spaceIndex = fullName.indexOf(' ');
+        let firstName = '';
+        let lastName = '';
+        if (spaceIndex === -1) {
+          firstName = fullName;
+          lastName = '.'; // Fallback dot for Zoho's mandatory Name_Last field
+        } else {
+          firstName = fullName.substring(0, spaceIndex).trim();
+          lastName = fullName.substring(spaceIndex + 1).trim();
+        }
+
+        // 3. Format Message by combining it with the Inquiry Purpose
+        const formattedMessage = `Purpose of Inquiry: ${purposeText}\n\nMessage:\n${message}`;
+
+        // 4. Populate hidden Zoho Form fields
+        const zohoForm = document.getElementById('zoho-hidden-form');
+        zohoForm.querySelector('input[name="Name_First"]').value = firstName;
+        zohoForm.querySelector('input[name="Name_Last"]').value = lastName;
+        zohoForm.querySelector('input[name="Email"]').value = email;
+        zohoForm.querySelector('input[name="PhoneNumber_countrycode"]').value = phone;
+        zohoForm.querySelector('input[name="MultiLine"]').value = formattedMessage;
         
-        // Fade out form and display success message
+        console.log('Sending data to Zoho Forms:', {
+          firstName,
+          lastName,
+          email,
+          phone,
+          formattedMessage
+        });
+        
+        // 5. Submit the Zoho Form in the background (targets hidden iframe)
+        zohoForm.submit();
+        
+        // 6. Fade out visible form and display local success message
         contactForm.style.transition = 'opacity 0.4s ease';
         contactForm.style.opacity = '0';
         
