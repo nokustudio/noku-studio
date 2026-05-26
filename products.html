@@ -52,15 +52,15 @@
       letter-spacing: 2px;
     }
 
-    /* Wider Container for Catalog Main Area Only */
-    .catalog-container {
+    /* Wider Container ONLY for the main catalog layout */
+    main.container {
       max-width: 1400px;
     }
 
     /* ════════ LAYOUT & SIDEBAR FILTER ════════ */
     .catalog-layout {
       display: grid;
-      grid-template-columns: calc((100% - 96px) / 4) 1fr;
+      grid-template-columns: 1fr 3fr;
       gap: 32px;
       padding-top: 60px;
       padding-bottom: 120px;
@@ -207,7 +207,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 16px;
+      border-bottom: none;
+      padding-bottom: 0;
     }
 
     .results-count {
@@ -458,7 +459,7 @@
   </header>
 
   <!-- MAIN CATALOG BODY -->
-  <main class="container catalog-container">
+  <main class="container">
     <div class="catalog-layout">
 
       <!-- LEFT COLUMN: SIDEBAR FILTERS -->
