@@ -142,12 +142,11 @@
       text-align: center;
     }
 
-    /* Asymmetric Premium Grid Collage */
+    /* 3-Column Premium Grid Collage */
     .collage-grid {
       display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      grid-auto-rows: 100px;
-      gap: 20px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
     }
 
     .collage-item {
@@ -158,6 +157,7 @@
       background-color: var(--light-secondary);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
       transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      aspect-ratio: 1.2 / 1;
     }
 
     .collage-item img {
@@ -175,47 +175,84 @@
     }
 
     .collage-item:hover img {
-      transform: scale(1.05);
+      transform: scale(1.03);
     }
 
-    /* Captions with elegant glassmorphism hover */
-    .collage-caption {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(44, 38, 34, 0.85);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      color: var(--paper);
-      font-family: var(--font-body);
-      font-size: 11px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      padding: 12px;
+    /* ════════ MATERIAL PALETTE SECTION ════════ */
+    .material-palette-section {
+      padding: 80px 0 20px;
+      border-top: 1px solid var(--border-soft);
+      background-color: var(--light);
       text-align: center;
-      opacity: 0;
-      transform: translateY(100%);
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      margin-top: 60px;
     }
 
-    .collage-item:hover .collage-caption {
-      opacity: 1;
-      transform: translateY(0);
+    .palette-title {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--ink);
+      margin-bottom: 48px;
     }
 
-    /* Asymmetric sizing mapping for Stillness (11 items) */
-    .col-item-1 { grid-column: span 4; grid-row: span 4; } /* Teak texture */
-    .col-item-2 { grid-column: span 3; grid-row: span 3; } /* Sculpted wood */
-    .col-item-3 { grid-column: span 5; grid-row: span 5; } /* Chair structure */
-    .col-item-4 { grid-column: span 3; grid-row: span 4; } /* Linen swatch */
-    .col-item-5 { grid-column: span 4; grid-row: span 3; } /* Wood joinery */
-    .col-item-6 { grid-column: span 4; grid-row: span 4; } /* Cane detail */
-    .col-item-7 { grid-column: span 4; grid-row: span 3; } /* Brass detail */
-    .col-item-8 { grid-column: span 4; grid-row: span 4; } /* Interwoven cane */
-    .col-item-9 { grid-column: span 4; grid-row: span 3; } /* Leather texture */
-    .col-item-10 { grid-column: span 4; grid-row: span 4; } /* Fabric close-up */
-    .col-item-11 { grid-column: span 8; grid-row: span 3; } /* Atmospheric scene */
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      max-width: 800px;
+      margin: 0 auto;
+      justify-items: center;
+    }
+
+    .palette-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .palette-circle {
+      width: clamp(100px, 12vw, 150px);
+      height: clamp(100px, 12vw, 150px);
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .palette-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .palette-item:hover .palette-circle {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 32px rgba(162, 123, 92, 0.12);
+      border-color: var(--chamoisee);
+    }
+
+    .palette-item:hover .palette-circle img {
+      transform: scale(1.06);
+    }
+
+    .palette-label {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+
+    .palette-item:hover .palette-label {
+      color: var(--chamoisee);
+    }
 
     /* ════════ PRODUCT GALLERY ════════ */
     .products-gallery-section {
@@ -253,36 +290,19 @@
         gap: 30px;
       }
       .collage-grid {
-        grid-template-columns: repeat(6, 1fr);
-        grid-auto-rows: 90px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
       }
-      .col-item-1 { grid-column: span 3; grid-row: span 3; }
-      .col-item-2 { grid-column: span 3; grid-row: span 3; }
-      .col-item-3 { grid-column: span 6; grid-row: span 4; }
-      .col-item-4 { grid-column: span 3; grid-row: span 3; }
-      .col-item-5 { grid-column: span 3; grid-row: span 2; }
-      .col-item-6 { grid-column: span 3; grid-row: span 3; }
-      .col-item-7 { grid-column: span 3; grid-row: span 2; }
-      .col-item-8 { grid-column: span 3; grid-row: span 3; }
-      .col-item-9 { grid-column: span 3; grid-row: span 2; }
-      .col-item-10 { grid-column: span 3; grid-row: span 3; }
-      .col-item-11 { grid-column: span 6; grid-row: span 2; }
     }
 
     @media (max-width: 640px) {
       .collage-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .palette-grid {
         grid-template-columns: repeat(2, 1fr);
-        grid-auto-rows: 120px;
-        gap: 12px;
-      }
-      .collage-item {
-        grid-column: span 1 !important;
-        grid-row: span 1 !important;
-        aspect-ratio: 1;
-      }
-      .col-item-11 {
-        grid-column: span 2 !important;
-        aspect-ratio: 2 / 1;
+        gap: 32px 16px;
       }
     }
   </style>
@@ -381,51 +401,56 @@
           <p class="collections-subtext" style="margin: 16px auto 0; text-align: center; max-width: 600px;">A mid-century modern dialogue. Clean lines, warm wood volumes, and tactile cane textures.</p>
         </div>
 
-        <!-- Asymmetric Collage -->
+        <!-- 3-Column Symmetrical Collage -->
         <div class="collage-grid reveal-el delay-1">
-          <div class="collage-item col-item-1">
-            <img src="https://framerusercontent.com/images/BBbAaGuw0TRiMvgI1IhyhzRTLkY.jpg" alt="Rich grain teak wood texture">
-            <div class="collage-caption">Teak Grain</div>
-          </div>
-          <div class="collage-item col-item-2">
+          <div class="collage-item">
             <img src="https://framerusercontent.com/images/Xo1vQaQFydXt8p7NucKRfGLvb8.jpg" alt="Sculpted wood joinery curves">
-            <div class="collage-caption">Sculpted Form</div>
           </div>
-          <div class="collage-item col-item-3">
+          <div class="collage-item">
             <img src="https://framerusercontent.com/images/XWgDpR1HboujjyYD5kGXgbQ7A.jpg" alt="Minimalist chair joints structure">
-            <div class="collage-caption">Chair Profile</div>
           </div>
-          <div class="collage-item col-item-4">
-            <img src="https://framerusercontent.com/images/rPqm6RI9HFnXkssovlalIny1iE.jpg" alt="Organic linen textile weave">
-            <div class="collage-caption">Woven Linen</div>
-          </div>
-          <div class="collage-item col-item-5">
+          <div class="collage-item">
             <img src="https://framerusercontent.com/images/ddTKzfNcVFrzJBtibVBTeXUfujQ.jpg" alt="Close-up of wood tenon joint">
-            <div class="collage-caption">Honest Joinery</div>
           </div>
-          <div class="collage-item col-item-6">
-            <img src="https://framerusercontent.com/images/1YtrfGAGrrEUn0h8eihvINwuHEI.jpg" alt="Natural rattan cane details">
-            <div class="collage-caption">Cane Weave</div>
-          </div>
-          <div class="collage-item col-item-7">
-            <img src="https://framerusercontent.com/images/b8EILOJ2gWaKngWMI2MXfz4E.png" alt="Brushed solid brass hardware">
-            <div class="collage-caption">Solid Brass</div>
-          </div>
-          <div class="collage-item col-item-8">
-            <img src="https://framerusercontent.com/images/Kq0ZAAvZac9XxL9mLA7s3jCoGg.jpg" alt="Tight rattan cane pattern">
-            <div class="collage-caption">Rattan Cane</div>
-          </div>
-          <div class="collage-item col-item-9">
-            <img src="https://framerusercontent.com/images/RjIWmEY81UxkrHzzZnNkT8wlw.png" alt="Cognac leather grain details">
-            <div class="collage-caption">Cognac Leather</div>
-          </div>
-          <div class="collage-item col-item-10">
-            <img src="https://framerusercontent.com/images/VPWdCxkZtSrrhAl6fjPBAQ8DHsQ.jpg" alt="Close-up of upholstery fabric threading">
-            <div class="collage-caption">Textured Weave</div>
-          </div>
-          <div class="collage-item col-item-11">
+          <div class="collage-item">
             <img src="https://framerusercontent.com/images/LXbuhfDbcjsWjEOrVj0O3KVIHjw.jpg" alt="Atmospheric domestic setting with furniture shadows">
-            <div class="collage-caption">Light &amp; Shadow</div>
+          </div>
+          <div class="collage-item">
+            <img src="https://framerusercontent.com/images/5z6YdB1TgQyfNWQNTAmzIjVdQ.webp" alt="Stillness scenic setting">
+          </div>
+          <div class="collage-item">
+            <img src="https://framerusercontent.com/images/QgdWfgGc1aQSoZtRheAUhk4EE.webp" alt="Close-up of chair leg profile">
+          </div>
+        </div>
+
+        <!-- Material Palette Swatches -->
+        <div class="material-palette-section reveal-el delay-2">
+          <h2 class="palette-title">Material Palette</h2>
+          <div class="palette-grid">
+            <div class="palette-item">
+              <div class="palette-circle">
+                <img src="https://framerusercontent.com/images/BBbAaGuw0TRiMvgI1IhyhzRTLkY.jpg" alt="Rich grain teak wood swatch">
+              </div>
+              <span class="palette-label">Wood</span>
+            </div>
+            <div class="palette-item">
+              <div class="palette-circle">
+                <img src="https://framerusercontent.com/images/VPWdCxkZtSrrhAl6fjPBAQ8DHsQ.jpg" alt="Upholstery textured fabric weave swatch">
+              </div>
+              <span class="palette-label">Fabric</span>
+            </div>
+            <div class="palette-item">
+              <div class="palette-circle">
+                <img src="https://framerusercontent.com/images/b8EILOJ2gWaKngWMI2MXfz4E.png" alt="Brushed solid brass swatch">
+              </div>
+              <span class="palette-label">Brass</span>
+            </div>
+            <div class="palette-item">
+              <div class="palette-circle">
+                <img src="https://framerusercontent.com/images/Kq0ZAAvZac9XxL9mLA7s3jCoGg.jpg" alt="Tight rattan cane pattern swatch">
+              </div>
+              <span class="palette-label">Cane</span>
+            </div>
           </div>
         </div>
       </div>
