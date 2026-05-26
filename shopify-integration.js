@@ -1005,7 +1005,13 @@ function getProductVariant(woodName, cushionName) {
         const name = opt.name.toLowerCase();
         const val = opt.value.toLowerCase().replace(/[^a-z0-9]/g, '');
         if (name.includes('wood') || name.includes('finish')) {
-          matchesWood = val.includes(normWood) || normWood.includes(val);
+          if (normWood === 'reclaimedteak') {
+            matchesWood = val === 'reclaimedteak' || val.includes('reclaimedteak');
+          } else if (normWood === 'teak') {
+            matchesWood = (val === 'teak' || val === 'solidteak' || val.includes('teak')) && !val.includes('reclaimed');
+          } else {
+            matchesWood = val.includes(normWood) || normWood.includes(val);
+          }
         } else {
           matchesCushion = val.includes(normCushion) || normCushion.includes(val);
         }
