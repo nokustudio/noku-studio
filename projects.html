@@ -662,6 +662,59 @@
         navbar.classList.remove('scrolled');
       }
     }, { passive: true });
+
+    // ════════ PAGE TRANSITIONS ENGINE ════════
+    document.addEventListener('DOMContentLoaded', () => {
+      const projectLinks = document.querySelectorAll('.project_link');
+      projectLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          if (e.metaKey || e.ctrlKey || e.button === 1) return;
+
+          e.preventDefault();
+          const targetUrl = this.getAttribute('href');
+          const card = this.querySelector('.project_card');
+          const img = this.querySelector('.g_visual_img');
+          if (!card || !img) {
+            window.location.href = targetUrl;
+            return;
+          }
+
+          const rect = card.getBoundingClientRect();
+
+          const overlay = document.createElement('div');
+          overlay.className = 'page-transition-overlay';
+
+          const transCard = document.createElement('div');
+          transCard.className = 'transition-card';
+          transCard.style.top = rect.top + 'px';
+          transCard.style.left = rect.left + 'px';
+          transCard.style.width = rect.width + 'px';
+          transCard.style.height = rect.height + 'px';
+
+          const transImg = document.createElement('img');
+          transImg.className = 'transition-img';
+          transImg.src = img.src;
+
+          transCard.appendChild(transImg);
+          overlay.appendChild(transCard);
+          document.body.appendChild(overlay);
+
+          // Force reflow
+          overlay.offsetHeight;
+
+          overlay.classList.add('active');
+          transCard.style.top = '0px';
+          transCard.style.left = '0px';
+          transCard.style.width = '100vw';
+          transCard.style.height = '100vh';
+          transCard.style.borderRadius = '0px';
+
+          setTimeout(() => {
+            window.location.href = targetUrl;
+          }, 600);
+        });
+      });
+    });
   </script>
 
   <script src="shopify-integration.js"></script>
