@@ -563,6 +563,22 @@ async function loadProduct(handle) {
             }
           }
         }
+        media(first: 10) {
+          edges {
+            node {
+              mediaContentType
+              ... on Model3d {
+                id
+                alt
+                sources {
+                  url
+                  format
+                  mimeType
+                }
+              }
+            }
+          }
+        }
         images(first: 30) {
           edges {
             node {
@@ -968,7 +984,7 @@ function renderProductPage() {
     }
   }
 
-  // Render dimension images if metafield is present
+  // Render dimension images and 3D model if present
   const dimensionsSection = document.getElementById('product-dimensions-section');
   const dimensionsContainer = document.getElementById('dimensions-images-container');
 
@@ -985,16 +1001,59 @@ function renderProductPage() {
         .filter(url => !!url);
     }
     
-    if (dimensionUrls.length > 0) {
-      let imagesHtml = '';
+    let glbUrl = '';
+    let usdzUrl = '';
+    if (currentProduct && currentProduct.media) {
+      const mediaEdges = currentProduct.media.edges || [];
+      const model3dNode = mediaEdges.find(edge => edge.node.mediaContentType === 'MODEL_3D')?.node;
+      if (model3dNode && model3dNode.sources) {
+        const glbSource = model3dNode.sources.find(src => src.format === 'glb');
+        const usdzSource = model3dNode.sources.find(src => src.format === 'usdz');
+        if (glbSource) glbUrl = glbSource.url;
+        if (usdzSource) usdzUrl = usdzSource.url;
+      }
+    }
+    
+    if (dimensionUrls.length > 0 || glbUrl) {
+      let gridHtml = '';
+      
+      // 1. Render 2D Dimension views
       dimensionUrls.forEach((url, idx) => {
-        imagesHtml += `
-          <div class="dimensions-image-card">
+        gridHtml += `
+          <div class="dimensions-card">
             <img src="${url}" alt="${currentProduct.title} Dimensions ${idx + 1}" loading="lazy">
           </div>
         `;
       });
-      dimensionsContainer.innerHTML = imagesHtml;
+      
+      // 2. Render 3D Model viewer
+      if (glbUrl) {
+        gridHtml += `
+          <div class="dimensions-card model-card">
+            <model-viewer 
+              src="${glbUrl}" 
+              ${usdzUrl ? `ios-src="${usdzUrl}"` : ''} 
+              alt="${currentProduct.title} Interactive 3D Model" 
+              auto-rotate 
+              camera-controls 
+              ar 
+              shadow-intensity="1"
+              touch-action="pan-y">
+            </model-viewer>
+          </div>
+        `;
+      }
+      
+      dimensionsContainer.innerHTML = gridHtml;
+      
+      // Dynamically adjust grid layout if fewer than 3 columns are present
+      const totalItems = dimensionUrls.length + (glbUrl ? 1 : 0);
+      if (totalItems < 3) {
+        dimensionsContainer.style.gridTemplateColumns = `repeat(${totalItems}, 1fr)`;
+      } else {
+        dimensionsContainer.style.gridTemplateColumns = '';
+      }
+      
       dimensionsSection.style.display = 'flex';
     } else {
       dimensionsSection.style.display = 'none';
