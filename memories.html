@@ -14,7 +14,7 @@
     href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Quattrocento:wght@400;700&display=swap"
     rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=1.6">
 
   <style>
     /* ════════ DESIGN SYSTEM & TOKENS OVERRIDES ════════ */
@@ -197,14 +197,9 @@
       margin-top: 60px;
     }
 
-    .palette-title {
-      font-family: var(--font-display);
-      font-size: clamp(24px, 4vw, 36px);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--ink);
+    .palette-header {
       margin-bottom: 48px;
+      text-align: center;
     }
 
     .palette-grid {
@@ -444,29 +439,32 @@
 
         <!-- Material Palette Swatches -->
         <div class="material-palette-section reveal-el delay-2">
-          <h2 class="palette-title">Material Palette</h2>
+          <div class="palette-header">
+            <span class="hero-eyebrow-main" style="text-align: center; display: block;">Sourcing</span>
+            <h2 class="title-h2" style="text-align: center; margin-top: 8px; margin-bottom: 0;">Material Palette</h2>
+          </div>
           <div class="palette-grid">
             <div class="palette-item">
               <div class="palette-circle">
-                <img src="https://framerusercontent.com/images/MCH5JyD8553R16z4SsW6j0jT0.jpg" alt="Local wood grains texture swatch">
+                <img src="Resources/material%20images/Wood/Reclaimed%20teak.jpg" alt="Reclaimed teak wood swatch">
               </div>
-              <span class="palette-label">Wood</span>
+              <span class="palette-label">Reclaimed Teak</span>
             </div>
             <div class="palette-item">
               <div class="palette-circle">
-                <img src="https://framerusercontent.com/images/Njpbszy9l7oAWy4qeIc9V2Xy33c.jpg" alt="Paisley pattern traditional fabric swatch">
+                <img src="Resources/material%20images/Fabric/Rubik%20Linen.jpg" alt="Upholstery textured fabric swatch">
               </div>
               <span class="palette-label">Fabric</span>
             </div>
             <div class="palette-item">
               <div class="palette-circle">
-                <img src="https://framerusercontent.com/images/9VWAVJqiQ4DfvlGYRIu44he605Q.jpg" alt="Polished solid brass hardware swatch">
+                <img src="Resources/material%20images/Metals/brass-rod-port.jpeg" alt="Solid brass swatch">
               </div>
               <span class="palette-label">Brass</span>
             </div>
             <div class="palette-item">
               <div class="palette-circle">
-                <img src="https://framerusercontent.com/images/ALmLiFoKtqWbvr8TnNV10HLwh8c.jpg" alt="Traditional rattan cane weave swatch">
+                <img src="Resources/material%20images/Cane/Cane%20Weave.png" alt="Woven rattan cane swatch">
               </div>
               <span class="palette-label">Cane</span>
             </div>
