@@ -708,18 +708,30 @@
 
     track.innerHTML = '';
 
-    const woodNameMap = { 'teak': 'Teak', 'reclaimed-teak': 'Reclaimed Teak', 'white-ash': 'White Ash' };
-    const woodLabel = woodNameMap[selectedWood] || 'Teak';
+    const woodNameMap = {
+      'teak': 'Teak',
+      'reclaimed-teak': 'Reclaimed Teak',
+      'white-ash': 'White Ash'
+    };
+    const currentWoodName = woodNameMap[selectedWood] || 'Teak';
 
     cushions.forEach((cushion, idx) => {
-      // ── Try Shopify CDN image first ──
-      let imgPath = null;
-      if (typeof getProductVariant === 'function') {
+      let imgPath = '';
+
+      // Try to pull from Shopify headless store connection if available
+      if (
+        typeof isShopifyConnected !== 'undefined' && 
+        isShopifyConnected && 
+        typeof getProductVariant === 'function'
+      ) {
         const formattedCushion = cushion.charAt(0).toUpperCase() + cushion.slice(1);
-        const variant = getProductVariant(woodLabel, formattedCushion);
-        if (variant && variant.image) imgPath = variant.image;
+        const variant = getProductVariant(currentWoodName, formattedCushion);
+        if (variant && variant.image) {
+          imgPath = variant.image;
+        }
       }
-      // ── Fall back to local assets ──
+
+      // Fallback to local image path
       if (!imgPath) {
         let fileName = `barst-${selectedPrefix}-${cushion}.png`;
         if (selectedWood === 'reclaimed-teak' && cushion === 'charcoal') {
@@ -774,12 +786,6 @@
       selectedFolder = swatch.dataset.folder;
 
       renderCarousel();
-
-      // After re-render, patch any cards with live Shopify CDN URLs
-      // (runs immediately if Shopify data already loaded, no-op if not)
-      if (typeof updateCarouselImagesToShopify === 'function') {
-        updateCarouselImagesToShopify();
-      }
     });
   });
 

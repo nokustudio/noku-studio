@@ -663,12 +663,7 @@ async function loadShopifyProductData() {
   if (data && data.data && data.data.product) {
     shopifyProductVariants = data.data.product.variants.edges.map(edge => edge.node);
     isShopifyConnected = true;
-    console.log('Shopify variants loaded:', shopifyProductVariants.length);
-    console.log('First 3 variant option structures:', shopifyProductVariants.slice(0, 3).map(v => ({
-      title: v.title,
-      options: v.selectedOptions,
-      image: v.image ? v.image.url.slice(0, 80) + '...' : null
-    })));
+    console.log('Successfully connected to Shopify Storefront API. Loaded product variants.');
     
     // Store featured products data
     featuredProductsData = {
@@ -996,41 +991,29 @@ async function renderCollectionProducts(collectionHandle, gridId) {
 
 // Map selected wood + cushion option to Shopify Variant ID and Price
 function getProductVariant(woodName, cushionName) {
-  // Normalize: lowercase, strip non-alphanumeric
+  // Normalize names for comparison
   const normWood = woodName.toLowerCase().replace(/[^a-z0-9]/g, '');
   const normCushion = cushionName.toLowerCase().replace(/[^a-z0-9]/g, '');
-
+  
   if (isShopifyConnected && shopifyProductVariants.length > 0) {
+    // Try to find matching variant based on options
     const matched = shopifyProductVariants.find(variant => {
       let matchesWood = false;
       let matchesCushion = false;
-
+      
       variant.selectedOptions.forEach(opt => {
-        const optName = opt.name.toLowerCase();
-        // Normalize option value the same way
-        const optVal = opt.value.toLowerCase().replace(/[^a-z0-9]/g, '');
-
-        if (optName.includes('wood') || optName.includes('finish') || optName.includes('material')) {
-          // Multi-strategy wood match:
-          // 1. Exact normalised match
-          // 2. One contains the other (handles "teak" matching "solidteak")
-          // 3. Every word of input appears in option value
-          const inputWords = woodName.toLowerCase().split(/\s+/);
-          matchesWood = (optVal === normWood)
-            || optVal.includes(normWood)
-            || normWood.includes(optVal)
-            || inputWords.every(w => opt.value.toLowerCase().includes(w));
+        const name = opt.name.toLowerCase();
+        const val = opt.value.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (name.includes('wood') || name.includes('finish')) {
+          matchesWood = val.includes(normWood) || normWood.includes(val);
         } else {
-          // Cushion / upholstery match
-          matchesCushion = (optVal === normCushion)
-            || optVal.includes(normCushion)
-            || normCushion.includes(optVal);
+          matchesCushion = val.includes(normCushion) || normCushion.includes(val);
         }
       });
-
+      
       return matchesWood && matchesCushion;
     });
-
+    
     if (matched) {
       return {
         id: matched.id,
@@ -1039,8 +1022,8 @@ function getProductVariant(woodName, cushionName) {
       };
     }
   }
-
-  // Fallback / mock
+  
+  // Fallback / Mock variant matching
   return {
     id: `gid://shopify/ProductVariant/mock-barstool-${normWood}-${normCushion}`,
     price: SHOPIFY_CONFIG.defaultPrice,
