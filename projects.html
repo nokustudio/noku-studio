@@ -18,201 +18,338 @@
 
   <style>
     html, body {
-      background-color: var(--light) !important;
-      color: var(--ink) !important;
+      background-color: var(--ink) !important;
+      color: var(--bone) !important;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
     }
 
-    .projects-hero {
-      padding-top: 140px;
-      padding-bottom: 40px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .projects-hero-inner {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .projects-title {
-      font-family: var(--font-display);
-      font-weight: 600;
-      font-size: clamp(36px, 5vw, 56px);
-      color: var(--chamoisee);
-      line-height: 1.1;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-
-    /* Staggered Portfolio List Layout */
-    .portfolio-section {
-      padding: 80px 0 120px 0;
-    }
-
-    .portfolio-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 100px;
-    }
-
-    .portfolio-item {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 60px;
-      align-items: center;
-      border-bottom: 1px solid var(--border-soft);
-      padding-bottom: 80px;
-    }
-
-    .portfolio-item:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    /* Odd items reversed layout for staggering */
-    .portfolio-item:nth-child(odd) {
-      grid-template-columns: 0.8fr 1.2fr;
-    }
-
-    .portfolio-item:nth-child(odd) .portfolio-media-wrap {
-      grid-column: 2;
-    }
-
-    .portfolio-item:nth-child(odd) .portfolio-details-wrap {
-      grid-column: 1;
-      grid-row: 1;
-      padding-right: 40px;
-    }
-
-    .portfolio-media-wrap {
+    /* ════════ HORIZONTAL SCROLL SYSTEM ════════ */
+    .project_wrapper {
       position: relative;
-      overflow: hidden;
-      aspect-ratio: 16 / 10;
-      border-radius: var(--radius-md);
-      box-shadow: 0 15px 35px rgba(44, 38, 34, 0.04);
-      background-color: var(--cream);
+      background-color: var(--ink);
     }
 
-    .portfolio-img {
+    /* Sets the height of the scroll container: panelCount * 100vh */
+    .project_height {
+      position: relative;
+      height: 500vh; /* Controlled by JS dynamically */
+    }
+
+    .sticky_element {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: stretch;
+      background-color: var(--ink);
+    }
+
+    .track {
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .portfolio-media-wrap:hover .portfolio-img {
-      transform: scale(1.03);
+    .track_flex {
+      display: flex;
+      height: 100%;
+      will-change: transform;
     }
 
-    .portfolio-details-wrap {
+    /* ════════ EACH PROJECT PANEL ════════ */
+    .panel {
+      flex-shrink: 0;
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 2.5fr; /* Info column vs Image column */
+      position: relative;
+    }
+
+    .project_card_heading {
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      padding: 80px 48px 80px 64px;
       gap: 20px;
+      position: relative;
+      z-index: 2;
+      background-color: var(--ink);
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    .project-name-link {
-      display: inline-block;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .project-name-link h2 {
+    .hero_heading {
       font-family: var(--font-display);
-      font-size: clamp(28px, 3.5vw, 40px);
+      font-size: clamp(32px, 3.8vw, 52px);
       font-weight: 300;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: var(--ink);
-      transition: color 0.4s ease;
+      color: var(--bone);
+      line-height: 1.15;
     }
 
-    .project-name-link:hover h2 {
-      color: var(--chamoisee);
+    .project_card_text {
+      font-family: var(--font-body);
+      font-size: clamp(14px, 1.1vw, 15px);
+      line-height: 1.7;
+      color: rgba(237, 230, 218, 0.55);
+      max-width: 320px;
     }
 
-    .project-tagline {
-      font-size: 15px;
-      line-height: 1.6;
-      color: var(--muted);
-      font-style: italic;
+    /* Target specific metadata text values */
+    .project_card_text.u-text-small {
+      margin-bottom: 8px;
     }
 
-    .project-metadata {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      border-top: 1px solid var(--border-soft);
-      border-bottom: 1px solid var(--border-soft);
-      padding: 16px 0;
-      margin-top: 10px;
-    }
-
-    .meta-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .meta-label {
+    .project_card_text.u-text-main {
       font-family: var(--font-display);
-      font-size: 9px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--chamoisee);
-    }
-
-    .meta-val {
-      font-size: 13.5px;
-      color: var(--deep-muted);
-    }
-
-    .btn-explore-project {
-      align-self: flex-start;
-      font-family: var(--font-display);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
       letter-spacing: 3px;
       text-transform: uppercase;
-      color: var(--ink);
-      border-bottom: 1px solid var(--chamoisee);
-      padding-bottom: 4px;
-      margin-top: 12px;
-      transition: color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-explore-project::after {
-      content: '→';
-      transition: transform 0.3s ease;
-    }
-
-    .btn-explore-project:hover {
       color: var(--chamoisee);
-      border-color: var(--ink);
-      transform: translateX(4px);
+      border-bottom: 1px solid rgba(162, 123, 92, 0.2);
+      padding-bottom: 6px;
+      width: fit-content;
+      margin-top: 4px;
     }
 
-    .btn-explore-project:hover::after {
-      transform: translateX(4px);
+    .project_link {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      cursor: pointer;
+      text-decoration: none;
     }
 
+    .project_card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .g_visual_img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .project_link:hover .g_visual_img {
+      transform: scale(1.03);
+    }
+
+    /* Overlay gradient for readability */
+    .project_link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 160px;
+      height: 100%;
+      background: linear-gradient(to right, rgba(20, 18, 17, 0.45), transparent);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Divider line between panels */
+    .panel + .panel {
+      border-left: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* ════════ PROGRESS DOTS ════════ */
+    .scroll-progress {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+
+    .scroll-progress.visible {
+      opacity: 1;
+    }
+
+    .progress-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: rgba(237, 230, 218, 0.25);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .progress-dot.active {
+      background-color: var(--chamoisee);
+      transform: scale(1.4);
+    }
+
+    .progress-counter {
+      font-family: var(--font-display);
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: rgba(237, 230, 218, 0.5);
+      margin-left: 8px;
+    }
+
+    /* ════════ SCROLL HINT ════════ */
+    .scroll-hint {
+      position: fixed;
+      bottom: 40px;
+      right: 48px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      pointer-events: none;
+    }
+
+    .scroll-hint.visible {
+      opacity: 1;
+    }
+
+    .scroll-hint-text {
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(237, 230, 218, 0.4);
+    }
+
+    .scroll-hint-line {
+      width: 40px;
+      height: 1px;
+      background-color: rgba(237, 230, 218, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scroll-hint-line::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background-color: var(--chamoisee);
+      animation: scrollHintSlide 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollHintSlide {
+      0% { left: -100%; }
+      50% { left: 100%; }
+      100% { left: 100%; }
+    }
+
+    /* ════════ DARK NAV OVERRIDES ════════ */
+    #navbar {
+      background-color: transparent !important;
+      backdrop-filter: none !important;
+      border-bottom: none !important;
+      box-shadow: none !important;
+    }
+
+    #navbar.scrolled {
+      background-color: rgba(20, 18, 17, 0.9) !important;
+      backdrop-filter: blur(16px) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .nav-link {
+      color: rgba(237, 230, 218, 0.7) !important;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--bone) !important;
+    }
+
+    .logo-svg {
+      fill: var(--bone) !important;
+    }
+
+    .cart-icon {
+      stroke: var(--bone) !important;
+    }
+
+    .cart-count {
+      background-color: var(--chamoisee) !important;
+      color: var(--bone) !important;
+    }
+
+    .mobile-menu-toggle svg {
+      stroke: var(--bone) !important;
+    }
+
+    /* ════════ RESPONSIVE OVERRIDES ════════ */
     @media (max-width: 1024px) {
-      .portfolio-item,
-      .portfolio-item:nth-child(odd) {
+      .panel {
         grid-template-columns: 1fr;
-        gap: 32px;
-        padding-bottom: 60px;
+        grid-template-rows: auto 1fr;
       }
 
-      .portfolio-item:nth-child(odd) .portfolio-media-wrap {
-        grid-column: 1;
+      .project_card_heading {
+        padding: 100px 32px 32px 32px;
+        gap: 16px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       }
 
-      .portfolio-item:nth-child(odd) .portfolio-details-wrap {
-        padding-right: 0;
+      .project_link::before {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      /* Fall back to vertical scroll flow on mobile */
+      .project_wrapper {
+        height: auto !important;
+      }
+
+      .sticky_element {
+        position: relative;
+        height: auto;
+        overflow: visible;
+      }
+
+      .track_flex {
+        flex-direction: column;
+        transform: none !important;
+      }
+
+      .panel {
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .project_card_heading {
+        padding: 100px 24px 24px 24px;
+      }
+
+      .project_link {
+        height: 50vh;
+      }
+
+      .scroll-progress,
+      .scroll-hint {
+        display: none;
       }
     }
   </style>
@@ -224,7 +361,7 @@
   <div class="grain-overlay"></div>
 
   <!-- STICKY HEADER NAVIGATION -->
-  <nav id="navbar" class="light-nav">
+  <nav id="navbar">
     <div class="nav-logo-wrap">
       <a href="index.html" aria-label="Noku Home">
         <svg class="logo-svg" width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg">
@@ -261,160 +398,114 @@
     </button>
   </nav>
 
-  <!-- HERO SECTION -->
-  <header class="projects-hero">
-    <div class="container projects-hero-inner">
-      <span class="label">Portfolio</span>
-      <h1 class="projects-title">Our Projects</h1>
+  <!-- ════════ HORIZONTAL SCROLL PROJECTS ════════ -->
+  <div class="project_wrapper" id="project_wrapper">
+    <div class="project_height" id="project_height">
+      <div class="sticky_element" id="sticky_element">
+        <div class="track">
+          <div role="list" class="track_flex" id="track_flex">
+
+            <!-- Panel 1: Oak House -->
+            <div role="listitem" class="panel">
+              <div class="project_card_heading">
+                <div class="hero_heading">Oak house</div>
+                <div class="project_card_text u-text-small">Designed with old-school richness through curation of colour and materials</div>
+                <div class="project_card_text u-text-main">Bedrooms</div>
+                <div class="project_card_text u-text-main">Bangalore</div>
+                <div class="project_card_text u-text-main">2023</div>
+              </div>
+              <a href="projects/oak-house.html" class="project_link">
+                <div class="project_card">
+                  <img src="Resources/Project images/compressed/Patterns B33 03 - compressed.webp" alt="Oak House Bedroom design with custom headboard and blue patterned wallpaper" class="g_visual_img">
+                </div>
+              </a>
+            </div>
+
+            <!-- Panel 2: Banyan House -->
+            <div role="listitem" class="panel">
+              <div class="project_card_heading">
+                <div class="hero_heading">Banyan House</div>
+                <div class="project_card_text u-text-small">Celebration of tradition and modernity through crafted furniture</div>
+                <div class="project_card_text u-text-main">Living & Bedrooms</div>
+                <div class="project_card_text u-text-main">Bangalore</div>
+                <div class="project_card_text u-text-main">2024</div>
+              </div>
+              <a href="projects/banyan-house.html" class="project_link">
+                <div class="project_card">
+                  <img src="Resources/Project images/compressed/Medley M14 01 - compressed.webp" alt="Banyan House living room with wooden swing" class="g_visual_img">
+                </div>
+              </a>
+            </div>
+
+            <!-- Panel 3: Mango House -->
+            <div role="listitem" class="panel">
+              <div class="project_card_heading">
+                <div class="hero_heading">Mango House</div>
+                <div class="project_card_text u-text-small">A contemporary home defined by thoughtful details</div>
+                <div class="project_card_text u-text-main">Living & Bedrooms</div>
+                <div class="project_card_text u-text-main">Bangalore</div>
+                <div class="project_card_text u-text-main">2021</div>
+              </div>
+              <a href="projects/mango-house.html" class="project_link">
+                <div class="project_card">
+                  <img src="Resources/Project images/compressed/Medley M03 01 - compressed.webp" alt="Mango House entrance with Kota stone" class="g_visual_img">
+                </div>
+              </a>
+            </div>
+
+            <!-- Panel 4: Temple Tree House -->
+            <div role="listitem" class="panel">
+              <div class="project_card_heading">
+                <div class="hero_heading">Temple Tree House</div>
+                <div class="project_card_text u-text-small">An Expression of Elegance and Subtle Opulence</div>
+                <div class="project_card_text u-text-main">Living, Bar & Bedrooms</div>
+                <div class="project_card_text u-text-main">Bangalore</div>
+                <div class="project_card_text u-text-main">2022</div>
+              </div>
+              <a href="projects/temple-tree-house.html" class="project_link">
+                <div class="project_card">
+                  <img src="Resources/Project images/compressed/Patterns B38 02 - compressed.webp" alt="Temple Tree House bedroom with winged cushion headboard" class="g_visual_img">
+                </div>
+              </a>
+            </div>
+
+            <!-- Panel 5: Deodar House -->
+            <div role="listitem" class="panel">
+              <div class="project_card_heading">
+                <div class="hero_heading">Deodar House</div>
+                <div class="project_card_text u-text-small">A project shaped by both design sensibilities and personal stories</div>
+                <div class="project_card_text u-text-main">Dining & Bedrooms</div>
+                <div class="project_card_text u-text-main">Bangalore</div>
+                <div class="project_card_text u-text-main">2023</div>
+              </div>
+              <a href="projects/deodar-house.html" class="project_link">
+                <div class="project_card">
+                  <img src="Resources/Project images/compressed/Patterns A43 07 - compressed.webp" alt="Deodar House bedroom poster bed" class="g_visual_img">
+                </div>
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
     </div>
-  </header>
+  </div>
 
-  <!-- PORTFOLIO SECTION -->
-  <main class="container portfolio-section">
-    <div class="portfolio-grid">
+  <!-- Progress indicators -->
+  <div class="scroll-progress" id="scroll-progress">
+    <div class="progress-dot active" data-index="0"></div>
+    <div class="progress-dot" data-index="1"></div>
+    <div class="progress-dot" data-index="2"></div>
+    <div class="progress-dot" data-index="3"></div>
+    <div class="progress-dot" data-index="4"></div>
+    <span class="progress-counter" id="progress-counter">01 / 05</span>
+  </div>
 
-      <!-- Project 1: Oak House -->
-      <section class="portfolio-item">
-        <a href="projects/oak-house.html" class="portfolio-media-wrap">
-          <img src="Resources/Project images/compressed/Patterns B33 03 - compressed.webp" alt="Oak House Bedroom design with custom headboard and blue patterned wallpaper" class="portfolio-img">
-        </a>
-        <div class="portfolio-details-wrap">
-          <a href="projects/oak-house.html" class="project-name-link">
-            <h2>Oak House</h2>
-          </a>
-          <p class="project-tagline">Designed with old-school richness through curation of colour and materials</p>
-          <div class="project-metadata">
-            <div class="meta-group">
-              <span class="meta-label">Spaces</span>
-              <span class="meta-val">Bedrooms</span>
-            </div>
-            <div class="meta-group">
-              <span class="meta-label">Location</span>
-              <span class="meta-val">Bangalore</span>
-            </div>
-            <div class="meta-group">
-              <span class="meta-label">Year</span>
-              <span class="meta-val">2023</span>
-            </div>
-          </div>
-          <a href="projects/oak-house.html" class="btn-explore-project">Explore Project</a>
-        </div>
-      </section>
-
-      <!-- Project 2: Banyan House -->
-      <section class="portfolio-item">
-        <a href="projects/banyan-house.html" class="portfolio-media-wrap">
-          <img src="Resources/Project images/compressed/Medley M14 01 - compressed.webp" alt="Banyan House living room with wooden swing" class="portfolio-img">
-        </a>
-        <div class="portfolio-details-wrap">
-          <a href="projects/banyan-house.html" class="project-name-link">
-            <h2>Banyan House</h2>
-          </a>
-          <p class="project-tagline">Celebration of tradition and modernity through crafted furniture</p>
-          <div class="project-metadata">
-            <div class="meta-group">
-              <span class="meta-label">Spaces</span>
-              <span class="meta-val">Living & Bedrooms</span>
-            </div>
-            <div class="meta-group">
-              <span class="meta-label">Location</span>
-              <span class="meta-val">Bangalore</span>
-            </div>
-            <div class="meta-group">
-              <span class="meta-label">Year</span>
-              <span class="meta-val">2024</span>
-            </div>
-          </div>
-          <a href="projects/banyan-house.html" class="btn-explore-project">Explore Project</a>
-        </div>
-      </section>
-
-      <!-- Project 3: Mango House -->
-      <section class="portfolio-item">
-        <a href="projects/mango-house.html" class="portfolio-media-wrap">
-          <img src="Resources/Project images/compressed/Medley M03 01 - compressed.webp" alt="Mango House entrance with Kota stone" class="portfolio-img">
-        </a>
-        <div class="portfolio-details-wrap">
-          <a href="projects/mango-house.html" class="project-name-link">
-            <h2>Mango House</h2>
-          </a>
-          <p class="project-tagline">A contemporary home defined by thoughtful details</p>
-          <div class="project-metadata">
-            <div class="meta-group">
-              <span class="meta-label">Spaces</span>
-              <span class="meta-val">Living & Bedrooms</span>
-            </div>
-            <div class="meta-group">
-              <span class="meta-label">Location</span>
-              <span class="meta-val">Bangalore</span>
-            </div>
-            <div class="meta-group">
-              <span class="meta-label">Year</span>
-              <span class="meta-val">2021</span>
-            </div>
-          </div>
-          <a href="projects/mango-house.html" class="btn-explore-project">Explore Project</a>
-        </div>
-      </section>
-
-      <!-- Project 4: Temple Tree House -->
-      <section class="portfolio-item">
-        <a href="projects/temple-tree-house.html" class="portfolio-media-wrap">
-          <img src="Resources/Project images/compressed/Patterns B38 02 - compressed.webp" alt="Temple Tree House bedroom with winged cushion headboard" class="portfolio-img">
-        </a>
-        <div class="portfolio-details-wrap">
-          <a href="projects/temple-tree-house.html" class="project-name-link">
-            <h2>Temple Tree House</h2>
-          </a>
-          <p class="project-tagline">An Expression of Elegance and Subtle Opulence</p>
-          <div class="project-metadata">
-            <div class="meta-group">
-              <span class="meta-label">Spaces</span>
-              <span class="meta-val">Living, Bar & Bedrooms</span>
-            </div>
-            <div class="meta-group">
-              <span class="meta-label">Location</span>
-              <span class="meta-val">Bangalore</span>
-            </div>
-            <div class="meta-group">
-              <span class="meta-label">Year</span>
-              <span class="meta-val">2022</span>
-            </div>
-          </div>
-          <a href="projects/temple-tree-house.html" class="btn-explore-project">Explore Project</a>
-        </div>
-      </section>
-
-      <!-- Project 5: Deodar House -->
-      <section class="portfolio-item">
-        <a href="projects/deodar-house.html" class="portfolio-media-wrap">
-          <img src="Resources/Project images/compressed/Patterns A43 07 - compressed.webp" alt="Deodar House bedroom poster bed" class="portfolio-img">
-        </a>
-        <div class="portfolio-details-wrap">
-          <a href="projects/deodar-house.html" class="project-name-link">
-            <h2>Deodar House</h2>
-          </a>
-          <p class="project-tagline">A project shaped by both design sensibilities and personal stories</p>
-          <div class="project-metadata">
-            <div class="meta-group">
-              <span class="meta-label">Spaces</span>
-              <span class="meta-val">Dining & Bedrooms</span>
-            </div>
-            <div class="meta-group">
-              <span class="meta-label">Location</span>
-              <span class="meta-val">Bangalore</span>
-            </div>
-            <div class="meta-group">
-              <span class="meta-label">Year</span>
-              <span class="meta-val">2023</span>
-            </div>
-          </div>
-          <a href="projects/deodar-house.html" class="btn-explore-project">Explore Project</a>
-        </div>
-      </section>
-
-    </div>
-  </main>
+  <!-- Scroll hint -->
+  <div class="scroll-hint" id="scroll-hint">
+    <span class="scroll-hint-text">Scroll</span>
+    <div class="scroll-hint-line"></div>
+  </div>
 
   <!-- ════════ FOOTER ════════ -->
   <footer id="footer">
@@ -483,7 +574,107 @@
   </div>
 
   <script>
-    // Scroll header styling
+    // ════════ HORIZONTAL SCROLL ENGINE ════════
+    (function() {
+      const wrapper = document.getElementById('project_wrapper');
+      const heightContainer = document.getElementById('project_height');
+      const track = document.getElementById('track_flex');
+      const panels = document.querySelectorAll('.panel');
+      const progressEl = document.getElementById('scroll-progress');
+      const hintEl = document.getElementById('scroll-hint');
+      const dots = document.querySelectorAll('.progress-dot');
+      const counter = document.getElementById('progress-counter');
+      const panelCount = panels.length;
+
+      if (panelCount === 0) return;
+
+      let ticking = false;
+      let initialized = false;
+
+      function initScroll() {
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+          if (initialized) {
+            track.style.transform = '';
+            heightContainer.style.height = '';
+            progressEl.classList.remove('visible');
+            hintEl.classList.remove('visible');
+            initialized = false;
+          }
+          return;
+        }
+
+        // Desktop initialization
+        heightContainer.style.height = (panelCount * 100) + 'vh';
+        progressEl.classList.add('visible');
+        hintEl.classList.add('visible');
+        initialized = true;
+        updateScroll();
+      }
+
+      function updateScroll() {
+        if (!initialized) return;
+
+        const wrapperRect = heightContainer.getBoundingClientRect();
+        const scrollableDistance = heightContainer.offsetHeight - window.innerHeight;
+        
+        // How far we've scrolled into the wrapper (0 to 1)
+        const scrollProgress = Math.max(0, Math.min(1, -wrapperRect.top / scrollableDistance));
+        
+        // Translate the track
+        const maxTranslate = (panelCount - 1) * window.innerWidth;
+        const translateX = scrollProgress * maxTranslate;
+        track.style.transform = `translateX(-${translateX}px)`;
+
+        // Determine active panel
+        const activeIndex = Math.min(
+          panelCount - 1,
+          Math.floor(scrollProgress * panelCount)
+        );
+
+        // Update dots
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === activeIndex);
+        });
+
+        // Update counter
+        counter.textContent = String(activeIndex + 1).padStart(2, '0') + ' / ' + String(panelCount).padStart(2, '0');
+
+        // Hide scroll hint after first panel
+        if (scrollProgress > 0.1) {
+          hintEl.classList.remove('visible');
+        } else {
+          hintEl.classList.add('visible');
+        }
+
+        // Show/hide progress based on scroll wrapper visibility
+        if (wrapperRect.top > window.innerHeight || wrapperRect.bottom < 0) {
+          progressEl.classList.remove('visible');
+        } else {
+          progressEl.classList.add('visible');
+        }
+
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', function() {
+        if (!initialized) return;
+        if (!ticking) {
+          requestAnimationFrame(updateScroll);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      // Initial call
+      initScroll();
+
+      // Recalculate on resize
+      window.addEventListener('resize', function() {
+        initScroll();
+      });
+    })();
+
+    // Navbar scroll handler
     window.addEventListener('scroll', () => {
       const navbar = document.getElementById('navbar');
       if (window.scrollY > 40) {
@@ -491,8 +682,10 @@
       } else {
         navbar.classList.remove('scrolled');
       }
-    });
+    }, { passive: true });
   </script>
+
+  <script src="shopify-integration.js"></script>
 </body>
 
 </html>
