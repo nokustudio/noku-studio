@@ -995,8 +995,8 @@ function updateVariantDisplays(isInitial = false) {
     let gridHtml = '';
     let foundAny = false;
 
-    matched.selectedOptions.forEach(opt => {
-      const mat = findMaterialDetails(opt.value);
+    Object.values(selectedOptions).forEach(val => {
+      const mat = findMaterialDetails(val);
       if (mat) {
         foundAny = true;
         gridHtml += `
