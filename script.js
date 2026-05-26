@@ -708,13 +708,25 @@
 
     track.innerHTML = '';
 
-    cushions.forEach((cushion, idx) => {
-      let fileName = `barst-${selectedPrefix}-${cushion}.png`;
-      if (selectedWood === 'reclaimed-teak' && cushion === 'charcoal') {
-        fileName = 'barst-rt-charcoalpng.png';
-      }
+    const woodNameMap = { 'teak': 'Teak', 'reclaimed-teak': 'Reclaimed Teak', 'white-ash': 'White Ash' };
+    const woodLabel = woodNameMap[selectedWood] || 'Teak';
 
-      const imgPath = `Resources/Barstool variants/${selectedFolder}/${fileName}`;
+    cushions.forEach((cushion, idx) => {
+      // ── Try Shopify CDN image first ──
+      let imgPath = null;
+      if (typeof getProductVariant === 'function') {
+        const formattedCushion = cushion.charAt(0).toUpperCase() + cushion.slice(1);
+        const variant = getProductVariant(woodLabel, formattedCushion);
+        if (variant && variant.image) imgPath = variant.image;
+      }
+      // ── Fall back to local assets ──
+      if (!imgPath) {
+        let fileName = `barst-${selectedPrefix}-${cushion}.png`;
+        if (selectedWood === 'reclaimed-teak' && cushion === 'charcoal') {
+          fileName = 'barst-rt-charcoalpng.png';
+        }
+        imgPath = `Resources/Barstool variants/${selectedFolder}/${fileName}`;
+      }
 
       const card = document.createElement('div');
       card.className = 'carousel-card';
@@ -762,6 +774,12 @@
       selectedFolder = swatch.dataset.folder;
 
       renderCarousel();
+
+      // After re-render, patch any cards with live Shopify CDN URLs
+      // (runs immediately if Shopify data already loaded, no-op if not)
+      if (typeof updateCarouselImagesToShopify === 'function') {
+        updateCarouselImagesToShopify();
+      }
     });
   });
 
