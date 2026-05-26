@@ -2145,7 +2145,7 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--cream);
+  background-color: transparent;
   margin-bottom: 16px;
 }
 
