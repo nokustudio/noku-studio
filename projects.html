@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noku Studio — Our Work</title>
+  <meta name="description"
+    content="Explore the interior design projects and custom furniture commissions by Noku Studio. Crafted with intent and detailed to perfection.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Quattrocento:wght@400;700&display=swap"
+    rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    html, body {
+      background-color: var(--light) !important;
+      color: var(--ink) !important;
+    }
+
+    .projects-hero {
+      padding-top: 140px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .projects-hero-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .projects-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: clamp(36px, 5vw, 56px);
+      color: var(--chamoisee);
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* Staggered Portfolio List Layout */
+    .portfolio-section {
+      padding: 80px 0 120px 0;
+    }
+
+    .portfolio-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 100px;
+    }
+
+    .portfolio-item {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 60px;
+      align-items: center;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 80px;
+    }
+
+    .portfolio-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    /* Odd items reversed layout for staggering */
+    .portfolio-item:nth-child(odd) {
+      grid-template-columns: 0.8fr 1.2fr;
+    }
+
+    .portfolio-item:nth-child(odd) .portfolio-media-wrap {
+      grid-column: 2;
+    }
+
+    .portfolio-item:nth-child(odd) .portfolio-details-wrap {
+      grid-column: 1;
+      grid-row: 1;
+      padding-right: 40px;
+    }
+
+    .portfolio-media-wrap {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 16 / 10;
+      border-radius: var(--radius-md);
+      box-shadow: 0 15px 35px rgba(44, 38, 34, 0.04);
+      background-color: var(--cream);
+    }
+
+    .portfolio-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .portfolio-media-wrap:hover .portfolio-img {
+      transform: scale(1.03);
+    }
+
+    .portfolio-details-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .project-name-link {
+      display: inline-block;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .project-name-link h2 {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 300;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--ink);
+      transition: color 0.4s ease;
+    }
+
+    .project-name-link:hover h2 {
+      color: var(--chamoisee);
+    }
+
+    .project-tagline {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .project-metadata {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      border-top: 1px solid var(--border-soft);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 16px 0;
+      margin-top: 10px;
+    }
+
+    .meta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .meta-label {
+      font-family: var(--font-display);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--chamoisee);
+    }
+
+    .meta-val {
+      font-size: 13.5px;
+      color: var(--deep-muted);
+    }
+
+    .btn-explore-project {
+      align-self: flex-start;
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--ink);
+      border-bottom: 1px solid var(--chamoisee);
+      padding-bottom: 4px;
+      margin-top: 12px;
+      transition: color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-explore-project::after {
+      content: '→';
+      transition: transform 0.3s ease;
+    }
+
+    .btn-explore-project:hover {
+      color: var(--chamoisee);
+      border-color: var(--ink);
+      transform: translateX(4px);
+    }
+
+    .btn-explore-project:hover::after {
+      transform: translateX(4px);
+    }
+
+    @media (max-width: 1024px) {
+      .portfolio-item,
+      .portfolio-item:nth-child(odd) {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        padding-bottom: 60px;
+      }
+
+      .portfolio-item:nth-child(odd) .portfolio-media-wrap {
+        grid-column: 1;
+      }
+
+      .portfolio-item:nth-child(odd) .portfolio-details-wrap {
+        padding-right: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Grain Layer overlay -->
+  <div class="grain-overlay"></div>
+
+  <!-- STICKY HEADER NAVIGATION -->
+  <nav id="navbar" class="light-nav">
+    <div class="nav-logo-wrap">
+      <a href="index.html" aria-label="Noku Home">
+        <svg class="logo-svg" width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
+          <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
+          <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
+          <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
+        </svg>
+      </a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html#collections" class="nav-link">Collections</a></li>
+      <li><a href="projects.html" class="nav-link active" style="color: var(--chamoisee);">Work</a></li>
+      <li><a href="products.html" class="nav-link">Products</a></li>
+      <li><a href="materials.html" class="nav-link">Materials</a></li>
+      <li><a href="sustainability.html" class="nav-link">Sustainability</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+      <li><a href="contact.html" class="nav-link">Contact</a></li>
+    </ul>
+    <button id="cart-toggle" class="cart-btn" aria-label="Open Shopping Cart">
+      <svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span id="cart-count-badge" class="cart-count">0</span>
+    </button>
+    <button class="mobile-menu-toggle" aria-label="Toggle Mobile Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <header class="projects-hero">
+    <div class="container projects-hero-inner">
+      <span class="label">Portfolio</span>
+      <h1 class="projects-title">Our Projects</h1>
+    </div>
+  </header>
+
+  <!-- PORTFOLIO SECTION -->
+  <main class="container portfolio-section">
+    <div class="portfolio-grid">
+
+      <!-- Project 1: Oak House -->
+      <section class="portfolio-item">
+        <a href="projects/oak-house.html" class="portfolio-media-wrap">
+          <img src="Resources/Project images/compressed/Patterns B33 03 - compressed.webp" alt="Oak House Bedroom design with custom headboard and blue patterned wallpaper" class="portfolio-img">
+        </a>
+        <div class="portfolio-details-wrap">
+          <a href="projects/oak-house.html" class="project-name-link">
+            <h2>Oak House</h2>
+          </a>
+          <p class="project-tagline">Designed with old-school richness through curation of colour and materials</p>
+          <div class="project-metadata">
+            <div class="meta-group">
+              <span class="meta-label">Spaces</span>
+              <span class="meta-val">Bedrooms</span>
+            </div>
+            <div class="meta-group">
+              <span class="meta-label">Location</span>
+              <span class="meta-val">Bangalore</span>
+            </div>
+            <div class="meta-group">
+              <span class="meta-label">Year</span>
+              <span class="meta-val">2023</span>
+            </div>
+          </div>
+          <a href="projects/oak-house.html" class="btn-explore-project">Explore Project</a>
+        </div>
+      </section>
+
+      <!-- Project 2: Banyan House -->
+      <section class="portfolio-item">
+        <a href="projects/banyan-house.html" class="portfolio-media-wrap">
+          <img src="Resources/Project images/compressed/Medley M14 01 - compressed.webp" alt="Banyan House living room with wooden swing" class="portfolio-img">
+        </a>
+        <div class="portfolio-details-wrap">
+          <a href="projects/banyan-house.html" class="project-name-link">
+            <h2>Banyan House</h2>
+          </a>
+          <p class="project-tagline">Celebration of tradition and modernity through crafted furniture</p>
+          <div class="project-metadata">
+            <div class="meta-group">
+              <span class="meta-label">Spaces</span>
+              <span class="meta-val">Living & Bedrooms</span>
+            </div>
+            <div class="meta-group">
+              <span class="meta-label">Location</span>
+              <span class="meta-val">Bangalore</span>
+            </div>
+            <div class="meta-group">
+              <span class="meta-label">Year</span>
+              <span class="meta-val">2024</span>
+            </div>
+          </div>
+          <a href="projects/banyan-house.html" class="btn-explore-project">Explore Project</a>
+        </div>
+      </section>
+
+      <!-- Project 3: Mango House -->
+      <section class="portfolio-item">
+        <a href="projects/mango-house.html" class="portfolio-media-wrap">
+          <img src="Resources/Project images/compressed/Medley M03 01 - compressed.webp" alt="Mango House entrance with Kota stone" class="portfolio-img">
+        </a>
+        <div class="portfolio-details-wrap">
+          <a href="projects/mango-house.html" class="project-name-link">
+            <h2>Mango House</h2>
+          </a>
+          <p class="project-tagline">A contemporary home defined by thoughtful details</p>
+          <div class="project-metadata">
+            <div class="meta-group">
+              <span class="meta-label">Spaces</span>
+              <span class="meta-val">Living & Bedrooms</span>
+            </div>
+            <div class="meta-group">
+              <span class="meta-label">Location</span>
+              <span class="meta-val">Bangalore</span>
+            </div>
+            <div class="meta-group">
+              <span class="meta-label">Year</span>
+              <span class="meta-val">2021</span>
+            </div>
+          </div>
+          <a href="projects/mango-house.html" class="btn-explore-project">Explore Project</a>
+        </div>
+      </section>
+
+      <!-- Project 4: Temple Tree House -->
+      <section class="portfolio-item">
+        <a href="projects/temple-tree-house.html" class="portfolio-media-wrap">
+          <img src="Resources/Project images/compressed/Patterns B38 02 - compressed.webp" alt="Temple Tree House bedroom with winged cushion headboard" class="portfolio-img">
+        </a>
+        <div class="portfolio-details-wrap">
+          <a href="projects/temple-tree-house.html" class="project-name-link">
+            <h2>Temple Tree House</h2>
+          </a>
+          <p class="project-tagline">An Expression of Elegance and Subtle Opulence</p>
+          <div class="project-metadata">
+            <div class="meta-group">
+              <span class="meta-label">Spaces</span>
+              <span class="meta-val">Living, Bar & Bedrooms</span>
+            </div>
+            <div class="meta-group">
+              <span class="meta-label">Location</span>
+              <span class="meta-val">Bangalore</span>
+            </div>
+            <div class="meta-group">
+              <span class="meta-label">Year</span>
+              <span class="meta-val">2022</span>
+            </div>
+          </div>
+          <a href="projects/temple-tree-house.html" class="btn-explore-project">Explore Project</a>
+        </div>
+      </section>
+
+      <!-- Project 5: Deodar House -->
+      <section class="portfolio-item">
+        <a href="projects/deodar-house.html" class="portfolio-media-wrap">
+          <img src="Resources/Project images/compressed/Patterns A43 07 - compressed.webp" alt="Deodar House bedroom poster bed" class="portfolio-img">
+        </a>
+        <div class="portfolio-details-wrap">
+          <a href="projects/deodar-house.html" class="project-name-link">
+            <h2>Deodar House</h2>
+          </a>
+          <p class="project-tagline">A project shaped by both design sensibilities and personal stories</p>
+          <div class="project-metadata">
+            <div class="meta-group">
+              <span class="meta-label">Spaces</span>
+              <span class="meta-val">Dining & Bedrooms</span>
+            </div>
+            <div class="meta-group">
+              <span class="meta-label">Location</span>
+              <span class="meta-val">Bangalore</span>
+            </div>
+            <div class="meta-group">
+              <span class="meta-label">Year</span>
+              <span class="meta-val">2023</span>
+            </div>
+          </div>
+          <a href="projects/deodar-house.html" class="btn-explore-project">Explore Project</a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ════════ FOOTER ════════ -->
+  <footer id="footer">
+    <div class="container">
+      <div class="footer-cta-line">
+        <p class="footer-cta-eyebrow">Ready to</p>
+        <a href="contact.html" class="btn-cta-arrow">Craft your furniture?<span class="arrow">↗</span></a>
+      </div>
+      <div class="footer-grid">
+        <div>
+          <p class="footer-wordmark">NOKU</p>
+        </div>
+        <div>
+          <p class="footer-col__heading">About</p>
+          <ul class="footer-col__links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col__heading">Work</p>
+          <ul class="footer-col__links">
+            <li><a href="products.html">Furniture Shop</a></li>
+            <li><a href="projects.html">Our Projects</a></li>
+            <li><a href="index.html#collections">Collections</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col__heading">Knowledge</p>
+          <ul class="footer-col__links">
+            <li><a href="materials.html">Materials Guide</a></li>
+            <li><a href="sustainability.html">Sustainability</a></li>
+            <li><a href="mailto:hello@nokustudio.in">hello@nokustudio.in</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Noku Studio. All rights reserved.</span>
+        <span>Privacy Policy · Terms &amp; Conditions</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ════════ SHOPPING CART SIDE-DRAWER ════════ -->
+  <div id="cart-overlay" class="cart-overlay"></div>
+  <div id="cart-drawer" class="cart-drawer">
+    <div class="cart-header">
+      <h3 class="cart-title">Your Cart</h3>
+      <button id="cart-close" class="cart-close-btn" aria-label="Close Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="cart-items-container" id="cart-items-container">
+      <div class="cart-empty-message">Your cart is currently empty.</div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-subtotal-row">
+        <span class="subtotal-label">Subtotal</span>
+        <span class="subtotal-price" id="cart-subtotal">₹0.00</span>
+      </div>
+      <button id="checkout-btn" class="checkout-btn" disabled>Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <script>
+    // Scroll header styling
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 40) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+  </script>
+</body>
+
+</html>

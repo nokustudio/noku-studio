@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noku Studio — Mango House</title>
+  <meta name="description"
+    content="Mango House project by Noku Studio. A contemporary home defined by thoughtful details and Kota stone flooring.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Quattrocento:wght@400;700&display=swap"
+    rel="stylesheet">
+  
+  <link rel="stylesheet" href="../style.css">
+
+  <style>
+    html, body {
+      background-color: var(--light) !important;
+      color: var(--ink) !important;
+    }
+
+    /* ════════ PROJECT HERO ════════ */
+    .project-hero {
+      position: relative;
+      height: 60vh;
+      min-height: 400px;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 60px;
+      overflow: hidden;
+    }
+
+    .project-hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .project-hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .project-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(36, 31, 27, 0.65) 0%, rgba(36, 31, 27, 0.1) 100%);
+      z-index: 2;
+    }
+
+    .project-hero-title-wrap {
+      position: relative;
+      z-index: 3;
+      width: 100%;
+    }
+
+    .project-hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(38px, 6vw, 64px);
+      font-weight: 300;
+      color: var(--paper);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ════════ PROJECT DETAILS ════════ */
+    .project-body {
+      padding: 100px 0;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .project-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      position: sticky;
+      top: 110px;
+    }
+
+    .sidebar-block {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 24px;
+    }
+
+    .sidebar-block:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .sidebar-label {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--chamoisee);
+    }
+
+    .sidebar-val {
+      font-size: 15px;
+      color: var(--deep-muted);
+      line-height: 1.6;
+    }
+
+    .project-gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 80px;
+    }
+
+    .gallery-img-container {
+      width: 100%;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(44, 38, 34, 0.04);
+      background-color: var(--cream);
+    }
+
+    .gallery-img-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .gallery-img-container:hover img {
+      transform: scale(1.02);
+    }
+
+    .gallery-row-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .project-narrative-block {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: 24px 0;
+      border-top: 1px solid var(--border-soft);
+    }
+
+    .project-narrative-text {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    /* ════════ PREV / NEXT NAV ════════ */
+    .project-navigation {
+      border-top: 1px solid var(--line);
+      padding: 60px 0;
+      background-color: var(--light-secondary);
+    }
+
+    .prevnext-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .prevnext-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 45%;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .prevnext-card.prev-card {
+      align-items: flex-start;
+    }
+
+    .prevnext-card.next-card {
+      align-items: flex-end;
+      text-align: right;
+    }
+
+    .prevnext-label {
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--chamoisee);
+    }
+
+    .prevnext-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 300;
+      text-transform: uppercase;
+      color: var(--ink);
+      transition: color 0.3s ease;
+    }
+
+    .prevnext-card:hover .prevnext-title {
+      color: var(--chamoisee);
+    }
+
+    @media (max-width: 900px) {
+      .project-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+      .project-sidebar {
+        position: static;
+      }
+      .gallery-row-2col {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Grain Layer overlay -->
+  <div class="grain-overlay"></div>
+
+  <!-- STICKY HEADER NAVIGATION -->
+  <nav id="navbar" class="light-nav">
+    <div class="nav-logo-wrap">
+      <a href="../index.html" aria-label="Noku Home">
+        <svg class="logo-svg" width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
+          <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
+          <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
+          <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
+        </svg>
+      </a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="../index.html#collections" class="nav-link">Collections</a></li>
+      <li><a href="../projects.html" class="nav-link active" style="color: var(--chamoisee);">Work</a></li>
+      <li><a href="../products.html" class="nav-link">Products</a></li>
+      <li><a href="../materials.html" class="nav-link">Materials</a></li>
+      <li><a href="../sustainability.html" class="nav-link">Sustainability</a></li>
+      <li><a href="../about.html" class="nav-link">About</a></li>
+      <li><a href="../contact.html" class="nav-link">Contact</a></li>
+    </ul>
+    <button id="cart-toggle" class="cart-btn" aria-label="Open Shopping Cart">
+      <svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span id="cart-count-badge" class="cart-count">0</span>
+    </button>
+    <button class="mobile-menu-toggle" aria-label="Toggle Mobile Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <header class="project-hero">
+    <div class="project-hero-bg">
+      <img src="../Resources/Project images/compressed/Medley M03 01 - compressed.webp" alt="Mango House teak entrywayKota stone">
+    </div>
+    <div class="project-hero-overlay"></div>
+    <div class="container project-hero-title-wrap">
+      <h1 class="project-hero-title">Mango House</h1>
+    </div>
+  </header>
+
+  <!-- MAIN PROJECT BODY -->
+  <main class="container project-body">
+    <div class="project-grid">
+
+      <!-- Left Sidebar: Info Panel -->
+      <aside class="project-sidebar">
+        <div class="sidebar-block">
+          <span class="sidebar-label">Year</span>
+          <span class="sidebar-val">2021</span>
+        </div>
+        <div class="sidebar-block">
+          <span class="sidebar-label">Spaces</span>
+          <span class="sidebar-val">Living & Bedrooms</span>
+        </div>
+        <div class="sidebar-block">
+          <span class="sidebar-label">Collaborators</span>
+          <span class="sidebar-val">Studio Lore</span>
+        </div>
+        <div class="sidebar-block">
+          <span class="sidebar-label">Brief</span>
+          <span class="sidebar-val">
+            This project was to seamlessly bring together "contemporary" and "elegance" in the minds of everyone who saw it. Simple forms and clean details were layered with elements of intricacy and interest. The clients were highly particular about even the smallest details, resulting in a home that felt truly their own. They curated it piece by piece, and we became a part of that story.
+          </span>
+        </div>
+      </aside>
+
+      <!-- Right Column: Visuals & Narrative -->
+      <section class="project-gallery">
+        
+        <!-- Large image 1 -->
+        <div class="gallery-img-container">
+          <img src="../Resources/Project images/compressed/Medley M03 02 - compressed.webp" alt="Solid Honne wood TV console unit with handmade tiles and traditional shutter details">
+        </div>
+
+        <!-- 2 columns of images / text description -->
+        <div class="gallery-row-2col">
+          <div class="gallery-img-container">
+            <img src="../Resources/Project images/compressed/Medley M03 03 - compressed.webp" alt="Bedroom with rods headboard side table and wood ceiling beams">
+          </div>
+          <div class="project-narrative-block">
+            <span class="sidebar-label">Thoughtful Details</span>
+            <p class="project-narrative-text">
+              A TV console unit in solid Honne wood with traditional shutter details and handmade tiles matches the client's search for unique craftsmanship.
+              <br><br>
+              Side tables and centre tables were designed to be minimal, highlighting elegant details such as floral print ceramic knobs.
+            </p>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- PREVIOUS / NEXT NAVIGATION -->
+  <footer class="project-navigation">
+    <div class="container prevnext-flex">
+      <a href="banyan-house.html" class="prevnext-card prev-card">
+        <span class="prevnext-label">Previous Project</span>
+        <span class="prevnext-title">← Banyan House</span>
+      </a>
+      <a href="temple-tree-house.html" class="prevnext-card next-card">
+        <span class="prevnext-label">Next Project</span>
+        <span class="prevnext-title">Temple Tree House →</span>
+      </a>
+    </div>
+  </footer>
+
+  <!-- ════════ FOOTER ════════ -->
+  <footer id="footer">
+    <div class="container">
+      <div class="footer-cta-line">
+        <p class="footer-cta-eyebrow">Ready to</p>
+        <a href="../contact.html" class="btn-cta-arrow">Craft your furniture?<span class="arrow">↗</span></a>
+      </div>
+      <div class="footer-grid">
+        <div>
+          <p class="footer-wordmark">NOKU</p>
+        </div>
+        <div>
+          <p class="footer-col__heading">About</p>
+          <ul class="footer-col__links">
+            <li><a href="../about.html">About Us</a></li>
+            <li><a href="../contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col__heading">Work</p>
+          <ul class="footer-col__links">
+            <li><a href="../products.html">Furniture Shop</a></li>
+            <li><a href="../projects.html">Our Projects</a></li>
+            <li><a href="../index.html#collections">Collections</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col__heading">Knowledge</p>
+          <ul class="footer-col__links">
+            <li><a href="../materials.html">Materials Guide</a></li>
+            <li><a href="../sustainability.html">Sustainability</a></li>
+            <li><a href="mailto:hello@nokustudio.in">hello@nokustudio.in</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Noku Studio. All rights reserved.</span>
+        <span>Privacy Policy · Terms &amp; Conditions</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 40) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+  </script>
+</body>
+
+</html>
