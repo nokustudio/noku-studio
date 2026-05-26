@@ -910,13 +910,16 @@ function renderProductPage() {
 
   // Bind option swatch selection events
   const swatches = document.querySelectorAll('.swatch-circle, .swatch-pill');
+  console.log('Binding swatch click listeners. Found swatches:', swatches.length);
   swatches.forEach(swatch => {
     swatch.addEventListener('click', () => {
       const optName = swatch.dataset.option;
       const optVal = swatch.dataset.value;
+      console.log('Swatch clicked:', optName, '->', optVal);
       
       // Update selected options map
       selectedOptions[optName] = optVal;
+      console.log('Updated selectedOptions:', JSON.stringify(selectedOptions));
       
       // Recalculate options view
       const group = swatch.closest('.option-group');
@@ -994,9 +997,11 @@ function updateVariantDisplays(isInitial = false) {
   if (materialBox && materialsGrid) {
     let gridHtml = '';
     let foundAny = false;
+    console.log('Generating material details for selected options:', JSON.stringify(selectedOptions));
 
     Object.values(selectedOptions).forEach(val => {
       const mat = findMaterialDetails(val);
+      console.log('Resolving material details for:', val, '-> found:', mat ? mat.name : 'null');
       if (mat) {
         foundAny = true;
         gridHtml += `
@@ -1023,8 +1028,10 @@ function updateVariantDisplays(isInitial = false) {
       `;
       materialsGrid.innerHTML = gridHtml;
       materialBox.style.display = 'flex';
+      console.log('Injected material details grid HTML. Displaying box.');
     } else {
       materialBox.style.display = 'none';
+      console.log('No materials resolved. Hiding box.');
     }
   }
 }
