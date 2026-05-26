@@ -550,6 +550,19 @@ async function loadProduct(handle) {
         metafield(namespace: "custom", key: "dimension") {
           value
         }
+        dimensionImagesMetafield: metafield(namespace: "custom", key: "dimension_images") {
+          references(first: 10) {
+            edges {
+              node {
+                ... on MediaImage {
+                  image {
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
         images(first: 30) {
           edges {
             node {
@@ -952,6 +965,39 @@ function renderProductPage() {
           icon.style.transform = 'rotate(180deg)';
         }
       });
+    }
+  }
+
+  // Render dimension images if metafield is present
+  const dimensionsSection = document.getElementById('product-dimensions-section');
+  const dimensionsContainer = document.getElementById('dimensions-images-container');
+
+  if (dimensionsSection && dimensionsContainer) {
+    let dimensionUrls = [];
+    if (
+      currentProduct && 
+      currentProduct.dimensionImagesMetafield && 
+      currentProduct.dimensionImagesMetafield.references
+    ) {
+      const edges = currentProduct.dimensionImagesMetafield.references.edges || [];
+      dimensionUrls = edges
+        .map(edge => edge.node.image?.url)
+        .filter(url => !!url);
+    }
+    
+    if (dimensionUrls.length > 0) {
+      let imagesHtml = '';
+      dimensionUrls.forEach((url, idx) => {
+        imagesHtml += `
+          <div class="dimensions-image-card">
+            <img src="${url}" alt="${currentProduct.title} Dimensions ${idx + 1}" loading="lazy">
+          </div>
+        `;
+      });
+      dimensionsContainer.innerHTML = imagesHtml;
+      dimensionsSection.style.display = 'flex';
+    } else {
+      dimensionsSection.style.display = 'none';
     }
   }
 
