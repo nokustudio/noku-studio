@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+  <!-- Inline script: must run before first paint to suppress loader flash on repeat visits -->
+  <script>if(sessionStorage.getItem('noku_loader_shown')){document.documentElement.style.setProperty('--loader-display','none');var s=document.createElement('style');s.textContent='#loading-screen{display:none!important}';document.head.appendChild(s);}</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Noku Studio — Designed with Intent. Crafted with Care.</title>
