@@ -56,8 +56,8 @@
       display: flex;
       height: 100%;
       will-change: transform;
-      gap: 240px; /* Spacious separation between projects */
-      padding-right: 240px; /* Keeps the spacing after the last project */
+      gap: 0; /* Gap handled by panel paddings naturally */
+      padding-right: 0;
     }
 
     /* ════════ EACH PROJECT PANEL ════════ */
@@ -563,7 +563,7 @@
       const dots = document.querySelectorAll('.progress-dot');
       const counter = document.getElementById('progress-counter');
       const panelCount = panels.length;
-      const GAP = 240; // Separation gap between projects in pixels
+      const GAP = 0; // Separation gap between projects in pixels
 
       if (panelCount === 0) return;
 

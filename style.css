@@ -2996,7 +2996,7 @@ nav.light-nav .cart-btn:hover {
 .project_hero_title {
   font-family: var(--font-display);
   font-size: clamp(38px, 6vw, 64px);
-  font-weight: 300;
+  font-weight: 600;
   color: var(--paper);
   text-transform: uppercase;
   letter-spacing: 2px;
