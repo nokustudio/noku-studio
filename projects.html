@@ -606,8 +606,6 @@
 
         // Desktop initialization
         heightContainer.style.height = (panelCount * 100) + 'vh';
-        progressEl.classList.add('visible');
-        hintEl.classList.add('visible');
         initialized = true;
         updateScroll();
       }
@@ -640,8 +638,8 @@
         // Update counter
         counter.textContent = String(activeIndex + 1).padStart(2, '0') + ' / ' + String(panelCount).padStart(2, '0');
 
-        // Hide scroll hint after first panel
-        if (scrollProgress > 0.1) {
+        // Hide scroll hint after first panel; also hide when outside wrapper
+        if (scrollProgress > 0.1 || wrapperRect.top > window.innerHeight || wrapperRect.bottom < 0) {
           hintEl.classList.remove('visible');
         } else {
           hintEl.classList.add('visible');

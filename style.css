@@ -3101,100 +3101,171 @@ nav.light-nav .cart-btn:hover {
 }
 
 /* Prev/Next nav wrap */
+/* ════════ PREV / NEXT NAVIGATION — EDITORIAL ════════ */
 .prevnext_wrap {
-  border-top: 1px solid var(--line);
-  padding: 80px 0;
   background-color: var(--light-secondary);
+  border-top: 1px solid var(--line);
+  padding: 0;
 }
 
 .prevnext_contain {
   display: flex;
   flex-direction: column;
+  max-width: 100%;
+  padding: 0;
 }
 
 .prevnext_layout {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 40px;
+  grid-template-columns: 1fr 1fr;
   width: 100%;
-  margin-bottom: 40px;
+  margin: 0;
+  gap: 0;
 }
 
-.prev_wrap, .next_wrap {
-  grid-column: span 6;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
+/* Each half */
+.prev_wrap,
 .next_wrap {
-  align-items: flex-end;
-  text-align: right;
-}
-
-.prev_title, .next_title {
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--chamoisee);
-}
-
-.prev_card, .next_card {
-  font-size: 15px;
-  color: var(--deep-muted);
-}
-
-.prev_card.is-empty, .next_card.is-empty {
-  font-style: italic;
-  color: var(--muted);
-}
-
-.featured_card {
-  text-decoration: none;
-  color: inherit;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  padding: 56px 72px;
+  gap: 0;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.4s ease;
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.prev_wrap {
+  border-right: 1px solid var(--line);
+}
+
+.prev_wrap:hover,
+.next_wrap:hover {
+  background-color: rgba(162, 123, 92, 0.035);
+}
+
+/* Make the entire card clickable — wrap links cover full area */
+.featured_card {
+  display: contents;
 }
 
 .featured_card_link {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   text-decoration: none;
   color: inherit;
+  height: 100%;
 }
 
+/* Direction eyebrow */
+.prev_title,
+.next_title {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--chamoisee);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.prev_title::before {
+  content: '←';
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0;
+}
+
+.next_title::after {
+  content: '→';
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0;
+}
+
+.next_wrap .next_title {
+  justify-content: flex-end;
+}
+
+/* Image thumbnail */
 .project_img_holder {
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 7;
   border-radius: var(--radius-sm);
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(44, 38, 34, 0.03);
+  margin-bottom: 24px;
+  box-shadow: 0 8px 32px rgba(44, 38, 34, 0.07);
+  flex-shrink: 0;
 }
 
 .card_img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: block;
 }
 
 .featured_card_link:hover .card_img {
-  transform: scale(1.02);
+  transform: scale(1.04);
 }
 
+/* Project name */
 .card_title {
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: clamp(22px, 2.4vw, 32px);
   font-weight: 300;
   text-transform: uppercase;
+  letter-spacing: 1px;
   color: var(--ink);
-  margin-top: 8px;
+  margin-bottom: 6px;
+  line-height: 1.15;
+  transition: color 0.3s ease;
 }
 
+.featured_card_link:hover .card_title {
+  color: var(--chamoisee);
+}
+
+.next_wrap .card_title {
+  text-align: right;
+}
+
+/* Category */
 .card_text {
-  font-size: 13.5px;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
   color: var(--muted);
+}
+
+.next_wrap .card_text {
+  text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .prevnext_layout {
+    grid-template-columns: 1fr;
+  }
+
+  .prev_wrap {
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .prev_wrap,
+  .next_wrap {
+    padding: 40px 24px;
+  }
 }
 
 /* Hide fallback collection items unless needed */
