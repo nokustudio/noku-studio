@@ -3,6 +3,10 @@
   const loaderProgress = document.getElementById('loader-progress');
   const loaderScreen = document.getElementById('loading-screen');
 
+  // Track whether loader has been shown this session
+  const LOADER_KEY = 'noku_loader_shown';
+  const hasSeenLoader = sessionStorage.getItem(LOADER_KEY);
+
   function updateLoader(percentage) {
     if (loaderProgress) {
       loaderProgress.style.width = percentage + '%';
@@ -13,6 +17,7 @@
           loaderScreen.classList.add('fade-out');
           document.body.style.backgroundColor = 'var(--dark-bg)';
         }
+        sessionStorage.setItem(LOADER_KEY, '1');
       }, 400);
     }
   }
@@ -21,12 +26,19 @@
   let loadPercent = 0;
   let loaderInterval = null;
   if (loaderScreen) {
-    loaderInterval = setInterval(() => {
-      if (loadPercent < 85) {
-        loadPercent += Math.random() * 12;
-        updateLoader(Math.min(loadPercent, 85));
-      }
-    }, 80);
+    if (hasSeenLoader) {
+      // Skip loader instantly on repeat visits
+      loaderScreen.style.display = 'none';
+      document.body.style.backgroundColor = 'var(--dark-bg)';
+    } else {
+      // First visit — run the full loader animation
+      loaderInterval = setInterval(() => {
+        if (loadPercent < 85) {
+          loadPercent += Math.random() * 12;
+          updateLoader(Math.min(loadPercent, 85));
+        }
+      }, 80);
+    }
   }
 
   // ─── THREE.JS 3D CANVAS REDIRECTS ───
