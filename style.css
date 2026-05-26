@@ -2112,7 +2112,7 @@ footer {
   opacity: 0.4;
   transform: scale(0.92);
   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  background-color: var(--paper);
+  background-color: transparent;
   border: 1px solid transparent;
   border-radius: 12px;
   padding: 16px;
