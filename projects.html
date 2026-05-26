@@ -18,17 +18,17 @@
 
   <style>
     html, body {
-      background-color: var(--ink) !important;
-      color: var(--bone) !important;
+      background-color: var(--light) !important;
+      color: var(--ink) !important;
       margin: 0;
       padding: 0;
-      overflow-x: hidden;
+      overflow: visible !important; /* Critical for position: sticky to pin relative to viewport without failing */
     }
 
     /* ════════ HORIZONTAL SCROLL SYSTEM ════════ */
     .project_wrapper {
       position: relative;
-      background-color: var(--ink);
+      background-color: var(--light);
     }
 
     /* Sets the height of the scroll container: panelCount * 100vh */
@@ -44,7 +44,7 @@
       overflow: hidden;
       display: flex;
       align-items: stretch;
-      background-color: var(--ink);
+      background-color: var(--light);
     }
 
     .track {
@@ -76,8 +76,8 @@
       gap: 20px;
       position: relative;
       z-index: 2;
-      background-color: var(--ink);
-      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      background-color: var(--light);
+      border-right: 1px solid rgba(44, 38, 34, 0.08);
     }
 
     .hero_heading {
@@ -86,7 +86,7 @@
       font-weight: 300;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: var(--bone);
+      color: var(--ink);
       line-height: 1.15;
     }
 
@@ -94,7 +94,7 @@
       font-family: var(--font-body);
       font-size: clamp(14px, 1.1vw, 15px);
       line-height: 1.7;
-      color: rgba(237, 230, 218, 0.55);
+      color: var(--muted);
       max-width: 320px;
     }
 
@@ -110,7 +110,7 @@
       letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--chamoisee);
-      border-bottom: 1px solid rgba(162, 123, 92, 0.2);
+      border-bottom: 1px solid rgba(162, 123, 92, 0.25);
       padding-bottom: 6px;
       width: fit-content;
       margin-top: 4px;
@@ -154,14 +154,14 @@
       left: 0;
       width: 160px;
       height: 100%;
-      background: linear-gradient(to right, rgba(20, 18, 17, 0.45), transparent);
+      background: linear-gradient(to right, rgba(44, 38, 34, 0.08), transparent);
       z-index: 1;
       pointer-events: none;
     }
 
     /* Divider line between panels */
     .panel + .panel {
-      border-left: 1px solid rgba(255, 255, 255, 0.05);
+      border-left: 1px solid rgba(44, 38, 34, 0.08);
     }
 
     /* ════════ PROGRESS DOTS ════════ */
@@ -187,7 +187,7 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background-color: rgba(237, 230, 218, 0.25);
+      background-color: rgba(44, 38, 34, 0.15);
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -200,7 +200,7 @@
       font-family: var(--font-display);
       font-size: 11px;
       letter-spacing: 3px;
-      color: rgba(237, 230, 218, 0.5);
+      color: rgba(44, 38, 34, 0.5);
       margin-left: 8px;
     }
 
@@ -228,13 +228,13 @@
       font-weight: 600;
       letter-spacing: 3px;
       text-transform: uppercase;
-      color: rgba(237, 230, 218, 0.4);
+      color: rgba(44, 38, 34, 0.4);
     }
 
     .scroll-hint-line {
       width: 40px;
       height: 1px;
-      background-color: rgba(237, 230, 218, 0.2);
+      background-color: rgba(44, 38, 34, 0.15);
       position: relative;
       overflow: hidden;
     }
@@ -256,45 +256,9 @@
       100% { left: 100%; }
     }
 
-    /* ════════ DARK NAV OVERRIDES ════════ */
-    #navbar {
-      background-color: transparent !important;
-      backdrop-filter: none !important;
-      border-bottom: none !important;
-      box-shadow: none !important;
-    }
-
-    #navbar.scrolled {
-      background-color: rgba(20, 18, 17, 0.9) !important;
-      backdrop-filter: blur(16px) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
-    }
-
-    .nav-link {
-      color: rgba(237, 230, 218, 0.7) !important;
-    }
-
-    .nav-link:hover,
-    .nav-link.active {
-      color: var(--bone) !important;
-    }
-
-    .logo-svg {
-      fill: var(--bone) !important;
-    }
-
-    .cart-icon {
-      stroke: var(--bone) !important;
-    }
-
-    .cart-count {
-      background-color: var(--chamoisee) !important;
-      color: var(--bone) !important;
-    }
-
-    .mobile-menu-toggle svg {
-      stroke: var(--bone) !important;
+    /* Active nav link color overrides for light nav style */
+    nav.light-nav .nav-link.active {
+      color: var(--chamoisee) !important;
     }
 
     /* ════════ RESPONSIVE OVERRIDES ════════ */
@@ -308,7 +272,7 @@
         padding: 100px 32px 32px 32px;
         gap: 16px;
         border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(44, 38, 34, 0.08);
       }
 
       .project_link::before {
@@ -361,7 +325,7 @@
   <div class="grain-overlay"></div>
 
   <!-- STICKY HEADER NAVIGATION -->
-  <nav id="navbar">
+  <nav id="navbar" class="light-nav">
     <div class="nav-logo-wrap">
       <a href="index.html" aria-label="Noku Home">
         <svg class="logo-svg" width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg">
