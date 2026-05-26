@@ -330,12 +330,6 @@ nav.light-nav .nav-dropdown-wrapper:hover .dropdown-toggle {
   background: none;
   border: none;
   cursor: pointer;
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
-  color: inherit;
   padding: 6px 0;
   display: flex;
   align-items: center;
