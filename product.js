@@ -1385,22 +1385,24 @@ async function loadRelatedProducts() {
       materialsStr = p.variants.edges[0]?.node.title || '';
     }
 
-    const card = document.createElement('div');
+    const card = document.createElement('a');
+    card.href = `product.html?handle=${p.handle}`;
     card.className = 'gcard';
     card.innerHTML = `
-      <a href="product.html?handle=${p.handle}" class="gcard__media">
+      <div class="gcard__media">
         <div class="gcard__media-inner">
           <img src="${imgUrl}" alt="${p.title}" loading="lazy">
         </div>
         <button class="gcard__add" data-handle="${p.handle}">Details ↗</button>
-      </a>
+      </div>
       <p class="gcard__cat">${materialsStr}</p>
-      <h3 class="gcard__name"><a href="product.html?handle=${p.handle}">${p.title}</a></h3>
+      <h3 class="gcard__name">${p.title}</h3>
       <p class="gcard__price">${formatCurrency(parseFloat(priceVal))}</p>
     `;
 
     card.querySelector('.gcard__add').addEventListener('click', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       window.location.href = `product.html?handle=${p.handle}`;
     });
 

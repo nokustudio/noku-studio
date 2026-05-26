@@ -50,6 +50,55 @@ const FEATURED_PRODUCTS_FALLBACK = {
     variantId: 'gid://shopify/ProductVariant/mock-study-default',
     image: 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7d6f73c94da715b34a92_Noku_ofStillness_Study_table_03.jpeg',
     variantTitle: 'Solid Teak / Brass Details'
+  },
+  'barstool': {
+    title: 'Barstool',
+    price: 21000,
+    variantId: 'gid://shopify/ProductVariant/mock-barstool-default',
+    image: 'https://cdn.prod.website-files.com/667fb0113927090bb47059e6/67cfdbb331dba957c997c00e_5d1622c83584a245197f9005889b2b06_Noku_ofStillness_Barstool_03%20copy.webp',
+    variantTitle: 'Teak / Leather - Cognac'
+  },
+  'side-table': {
+    title: 'Side Table',
+    price: 21000,
+    variantId: 'gid://shopify/ProductVariant/mock-side-table-default',
+    image: 'https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d403fa184eebc59c05c_Side%20Table%2042%20B.png',
+    variantTitle: 'Solid Teak'
+  },
+  'poster-bed': {
+    title: 'Poster Bed',
+    price: 142000,
+    variantId: 'gid://shopify/ProductVariant/mock-poster-bed-default',
+    image: 'https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00dd8733454553abc99bc_Bed%2042%20A.png',
+    variantTitle: 'Teak / Leather - Cognac'
+  },
+  'classic-study-table': {
+    title: 'Classic Study Table',
+    price: 41500,
+    variantId: 'gid://shopify/ProductVariant/mock-classic-study-default',
+    image: 'https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00e7f4ffc4c910059d042_Study%20Table%2019%20C.png',
+    variantTitle: 'Solid Teak'
+  },
+  'lounge-sofa': {
+    title: 'Lounge Sofa',
+    price: 119500,
+    variantId: 'gid://shopify/ProductVariant/mock-lounge-sofa-default',
+    image: 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg',
+    variantTitle: 'Teak / Leather - Cognac'
+  },
+  'upholstered-bench': {
+    title: 'Upholstered Bench',
+    price: 25500,
+    variantId: 'gid://shopify/ProductVariant/mock-upholstered-bench-default',
+    image: 'https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d41cd825187ac22552f_Chair%2042%20A.png',
+    variantTitle: 'Teak / Leather - Cognac'
+  },
+  'rod-bed-with-curved-headboard': {
+    title: 'Rod Bed',
+    price: 81000,
+    variantId: 'gid://shopify/ProductVariant/mock-rod-bed-default',
+    image: 'https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00dd8733454553abc99bc_Bed%2042%20A.png',
+    variantTitle: 'Solid Teak'
   }
 };
 
@@ -203,6 +252,139 @@ async function loadShopifyProductData() {
           }
         }
       }
+      barstool: product(handle: "barstool") {
+        id
+        title
+        variants(first: 10) {
+          edges {
+            node {
+              id
+              title
+              price {
+                amount
+                currencyCode
+              }
+              image {
+                url
+              }
+            }
+          }
+        }
+      }
+      sideTable: product(handle: "side-table") {
+        id
+        title
+        variants(first: 10) {
+          edges {
+            node {
+              id
+              title
+              price {
+                amount
+                currencyCode
+              }
+              image {
+                url
+              }
+            }
+          }
+        }
+      }
+      posterBed: product(handle: "poster-bed") {
+        id
+        title
+        variants(first: 10) {
+          edges {
+            node {
+              id
+              title
+              price {
+                amount
+                currencyCode
+              }
+              image {
+                url
+              }
+            }
+          }
+        }
+      }
+      classicStudyTable: product(handle: "classic-study-table") {
+        id
+        title
+        variants(first: 10) {
+          edges {
+            node {
+              id
+              title
+              price {
+                amount
+                currencyCode
+              }
+              image {
+                url
+              }
+            }
+          }
+        }
+      }
+      loungeSofa: product(handle: "lounge-sofa") {
+        id
+        title
+        variants(first: 10) {
+          edges {
+            node {
+              id
+              title
+              price {
+                amount
+                currencyCode
+              }
+              image {
+                url
+              }
+            }
+          }
+        }
+      }
+      upholsteredBench: product(handle: "upholstered-bench") {
+        id
+        title
+        variants(first: 10) {
+          edges {
+            node {
+              id
+              title
+              price {
+                amount
+                currencyCode
+              }
+              image {
+                url
+              }
+            }
+          }
+        }
+      }
+      rodBed: product(handle: "rod-bed-with-curved-headboard") {
+        id
+        title
+        variants(first: 10) {
+          edges {
+            node {
+              id
+              title
+              price {
+                amount
+                currencyCode
+              }
+              image {
+                url
+              }
+            }
+          }
+        }
+      }
     }
   `;
   
@@ -220,7 +402,14 @@ async function loadShopifyProductData() {
       'sofa-2': data.data.sofa,
       'lounge-chair': data.data.loungeChair,
       'dining-chair': data.data.diningChair,
-      'modern-study-table': data.data.studyTable
+      'modern-study-table': data.data.studyTable,
+      'barstool': data.data.barstool,
+      'side-table': data.data.sideTable,
+      'poster-bed': data.data.posterBed,
+      'classic-study-table': data.data.classicStudyTable,
+      'lounge-sofa': data.data.loungeSofa,
+      'upholstered-bench': data.data.upholsteredBench,
+      'rod-bed-with-curved-headboard': data.data.rodBed
     };
     
     // Sync local carousel images with live Shopify CDN URLs
@@ -777,19 +966,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   // Featured Products Add to Cart: Hook clicks on Add to Cart buttons
-  const productsGrid = document.querySelector('.products-grid');
-  if (productsGrid) {
-    productsGrid.addEventListener('click', (e) => {
-      const btn = e.target.closest('.product-add-to-cart-btn');
-      if (!btn) return;
-      
-      const card = btn.closest('.product-card');
-      if (!card) return;
-      
-      const handle = card.getAttribute('data-handle');
-      addFeaturedItemToCart(handle);
-    });
-  }
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.product-add-to-cart-btn');
+    if (!btn) return;
+    
+    const card = btn.closest('.product-card');
+    if (!card) return;
+    
+    const handle = card.getAttribute('data-handle');
+    addFeaturedItemToCart(handle);
+  });
   
   // Set up MutationObserver to update carousel images to Shopify CDN URLs dynamically on render
   if (carouselTrack) {

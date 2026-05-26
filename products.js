@@ -576,7 +576,8 @@ function renderProductsGrid() {
 
   // Render cards
   filtered.forEach((p, idx) => {
-    const card = document.createElement('div');
+    const card = document.createElement('a');
+    card.href = `product.html?handle=${p.handle}`;
     card.className = `gcard reveal-el is-revealed`; // reveal immediately
     card.style.animationDelay = `${(idx % 4) * 0.1}s`;
     
@@ -587,7 +588,7 @@ function renderProductsGrid() {
     const defaultVariantId = firstVariant ? firstVariant.id : `gid://shopify/ProductVariant/fallback-${p.handle}`;
 
     card.innerHTML = `
-      <a href="product.html?handle=${p.handle}" class="gcard__media">
+      <div class="gcard__media">
         <div class="gcard__media-inner">
           <img src="${defaultImage}" alt="${p.title}" loading="lazy">
         </div>
@@ -601,9 +602,9 @@ function renderProductsGrid() {
                 aria-label="Add ${p.title} to Cart">
           Add ↗
         </button>
-      </a>
+      </div>
       <p class="gcard__cat">${displayMaterial}</p>
-      <h3 class="gcard__name"><a href="product.html?handle=${p.handle}">${p.title}</a></h3>
+      <h3 class="gcard__name">${p.title}</h3>
       <p class="gcard__price">${formatCurrency(displayPrice)}</p>
     `;
     

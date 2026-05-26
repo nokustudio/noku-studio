@@ -568,21 +568,23 @@
         const priceVal = p.priceRange?.minVariantPrice?.amount ? parseFloat(p.priceRange.minVariantPrice.amount) : SHOPIFY_CONFIG.defaultPrice;
         const imgUrl = p.featuredImage?.url || 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7724c1a8d27260d62288_Noku_ofStillness_Lounge_chair_02.jpeg';
         
-        const pCard = document.createElement('div');
+        const pCard = document.createElement('a');
+        pCard.href = `product.html?handle=${p.handle}`;
         pCard.className = 'gcard';
         pCard.innerHTML = `
-          <a href="product.html?handle=${p.handle}" class="gcard__media">
+          <div class="gcard__media">
             <div class="gcard__media-inner">
               <img src="${imgUrl}" alt="${p.title}" loading="lazy">
             </div>
             <button class="gcard__add" data-handle="${p.handle}">Details ↗</button>
-          </a>
+          </div>
           <p class="gcard__cat">Piece</p>
-          <h3 class="gcard__name"><a href="product.html?handle=${p.handle}">${p.title}</a></h3>
+          <h3 class="gcard__name">${p.title}</h3>
           <p class="gcard__price">${formatCurrency(priceVal)}</p>
         `;
         pCard.querySelector('.gcard__add').addEventListener('click', (e) => {
           e.preventDefault();
+          e.stopPropagation();
           window.location.href = `product.html?handle=${p.handle}`;
         });
         usedProductsGrid.appendChild(pCard);
