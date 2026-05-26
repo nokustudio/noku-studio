@@ -17,6 +17,7 @@ const SHOPIFY_CONFIG = {
 let currentProduct = null;
 let selectedOptions = {};
 let activeImageIndex = 0;
+let imageUrls = [];
 let cart = JSON.parse(localStorage.getItem('noku_cart')) || [];
 
 // Fallback Product Database (Matches catalog products.js)
@@ -662,7 +663,7 @@ function renderProductPage() {
   const initialPrice = initialVariant ? parseFloat(initialVariant.price.amount) : SHOPIFY_CONFIG.defaultPrice;
 
   // Get image URLs list
-  const imageUrls = currentProduct.images.edges.map(e => e.node.url);
+  imageUrls = currentProduct.images.edges.map(e => e.node.url);
   if (imageUrls.length === 0) {
     imageUrls.push('https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7724c1a8d27260d62288_Noku_ofStillness_Lounge_chair_02.jpeg');
   }
