@@ -3865,3 +3865,24 @@ body.secondary-landing-page.scrolled-dark-bg {
   background-color: var(--ink) !important;
   color: var(--paper) !important;
 }
+
+/* Hero section sticky scroll pinning rules */
+.secondary-landing-page .hero-pin-container {
+  height: calc(100vh + 450px);
+  position: relative;
+  width: 100%;
+}
+
+.secondary-landing-page .hero-pin-container .narrative-hero {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  z-index: 2;
+}

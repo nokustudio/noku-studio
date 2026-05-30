@@ -296,7 +296,7 @@
   let introModelX = 0.0;
   let introModelY = 0.05;
   let introModelScale = 0.65;
-  let introModelRotY = 0.0; // Front-facing to match the static 2D photo
+  let introModelRotY = 30 * Math.PI / 180; // Starts 30 degrees rotated to the right
 
   let targetRotY = 0;
   let currentRotY = 0;
@@ -409,135 +409,181 @@
   function evaluateScrollCalculations() {
     if (!isIntroComplete) return;
 
+    const PIN_SCROLL = 450; // Scroll distance in pixels where the image fades and 3D model appears
     const scrollY = window.scrollY;
     const viewportHeight = window.innerHeight;
     const total3DZoneHeight = viewportHeight * 3;
 
-    scrollProgress = Math.min(Math.max(scrollY / total3DZoneHeight, 0), 1);
+    // --- PHASE 1: INTRO PINNED PHASE ---
+    if (scrollY <= PIN_SCROLL) {
+      // Hero section remains pinned. Static image fades out as the 3D model fades in.
+      const ratio = Math.min(Math.max(scrollY / PIN_SCROLL, 0), 1);
+      modelFadeInRatio = ratio * ratio * (3 - 2 * ratio); // Smoothstep
 
-    // Fade out static hero image as the 3D model fades in.
-    // Uses the same smoothstep curve as modelFadeInRatio (scrollY 0–250)
-    // so the image dissolves at the exact rate the model materialises.
-    const staticImg = document.getElementById('hero-static-image');
-    if (staticImg) {
-      if (scrollY > 0 && staticImg.style.transition !== 'none') {
-        staticImg.style.transition = 'none';
+      const staticImg = document.getElementById('hero-static-image');
+      if (staticImg) {
+        if (scrollY > 0 && staticImg.style.transition !== 'none') {
+          staticImg.style.transition = 'none';
+        }
+        const staticOpacity = 1 - modelFadeInRatio;
+        const imgScale = 1 - modelFadeInRatio * 0.08;
+        const imgTranslateY = scrollY * 0.12;
+
+        staticImg.style.opacity = staticOpacity.toFixed(3);
+        staticImg.style.transform = `translateY(-${imgTranslateY}px) scale(${imgScale.toFixed(4)})`;
+
+        if (staticOpacity <= 0.01) {
+          staticImg.style.display = 'none';
+        } else {
+          staticImg.style.display = 'block';
+        }
       }
-      const fadeRaw = Math.min(Math.max(scrollY / 250, 0), 1);
-      const fadeEased = fadeRaw * fadeRaw * (3 - 2 * fadeRaw); // Smoothstep
-      const staticOpacity = 1 - fadeEased;
 
-      // Subtle scale-down + upward drift reinforce the "solidifying into 3D" feeling
-      const imgScale = 1 - fadeEased * 0.08; // shrinks very slightly (1 → 0.92)
-      const imgTranslateY = scrollY * 0.12;   // gentle upward drift
+      // Lock the 3D model at intro coords, rotated 30 degrees to the right
+      targetPosX = introModelX;
+      targetPosY = introModelY;
+      targetScale = introModelScale;
+      targetRotY = 30 * Math.PI / 180; // 30 degrees right
 
-      staticImg.style.opacity   = staticOpacity.toFixed(3);
-      staticImg.style.transform = `translateY(-${imgTranslateY}px) scale(${imgScale.toFixed(4)})`;
+      // Fade-in opacity is 1.0 (actual visibility controlled by modelFadeInRatio in render loop)
+      targetOpacity = 1.0;
 
-      // Toggle display none to prevent compositing overhead once fully faded
-      if (staticOpacity <= 0.01) {
+      // Scroll progress for narrative keyframes is 0 during pinning
+      scrollProgress = 0;
+
+      // Fade out scroll indicator of hero panel as user scrolls
+      const scrollIndicator = document.querySelector('#hero-panel .scroll-indicator');
+      if (scrollIndicator) {
+        const indicatorOpacity = Math.max(0, 1 - scrollY / 100);
+        scrollIndicator.style.opacity = indicatorOpacity.toFixed(3);
+        if (indicatorOpacity <= 0) {
+          scrollIndicator.style.display = 'none';
+        } else {
+          scrollIndicator.style.display = 'block';
+        }
+      }
+
+    } else {
+      // --- PHASE 2: NARRATIVE SCROLL PHASE ---
+      // Image is fully hidden, hero scrolls away, model is fully visible
+      const staticImg = document.getElementById('hero-static-image');
+      if (staticImg) {
+        staticImg.style.opacity = '0';
         staticImg.style.display = 'none';
-      } else {
-        staticImg.style.display = 'block';
       }
-    }
 
-    // Dynamic scroll-based body background-color transition is removed to keep it light themed
+      modelFadeInRatio = 1.0;
 
-    // Calculate 3D model scroll-fade-in ratio (fades in between scrollY 40 and 240)
-    let ratio = Math.min(Math.max((scrollY - 40) / 200, 0), 1);
-    modelFadeInRatio = ratio * ratio * (3 - 2 * ratio); // Smoothstep
-
-    // Position X, Y, Scale, and Y-Rotation keyframe mapping
-    if (window.innerWidth > 1024) {
-      const xKeyframes = [
-        [0.0, 0.0],    // Start in the center (matching the static image position)
-        [0.35, 0.95],  // Shift to right column (as the first narrative is on the left)
-        [0.65, -0.95], // Shift to left column (as the second narrative is on the right)
-        [1.0, 0.0]     // Merge to center for the configurator
-      ];
-      const yKeyframes = [
-        [0.0, 0.05],   // Align vertically
-        [0.35, 0.05],
-        [0.65, 0.08],
-        [1.0, 0.22]
-      ];
-      const scaleKeyframes = [
-        [0.0, 0.95],   // Initial scale
-        [0.35, 0.95],
-        [0.65, 0.95],
-        [1.0, 1.0]
-      ];
-      const rotYKeyframes = [
-        [0.0, 0.0],             // Start facing front — matching the static photo orientation
-        [0.35, 0.65 * Math.PI],
-        [0.65, 1.35 * Math.PI],
-        [1.0, 2.0 * Math.PI]
-      ];
-
-      targetPosX = interpolate(scrollProgress, xKeyframes);
-      targetPosY = interpolate(scrollProgress, yKeyframes);
-      targetScale = interpolate(scrollProgress, scaleKeyframes);
-      targetRotY = interpolate(scrollProgress, rotYKeyframes);
-    } else {
-      const yKeyframesMobile = [
-        [0.0, 0.2],    // Align vertically stack
-        [0.35, 0.2],
-        [0.65, -0.2],
-        [1.0, 0.0]
-      ];
-      const rotYKeyframesMobile = [
-        [0.0, 0.0],             // Start facing front — matching the static photo orientation
-        [0.35, 0.65 * Math.PI],
-        [0.65, 1.35 * Math.PI],
-        [1.0, 2.0 * Math.PI]
-      ];
-
-      targetPosX = 0;
-      targetPosY = interpolate(scrollProgress, yKeyframesMobile);
-      targetScale = 0.72;
-      targetRotY = interpolate(scrollProgress, rotYKeyframesMobile);
-    }
-
-    // ─── INTRO → NARRATIVE POSITION/SCALE/ROTATION BLEND ───
-    // While the 3D model is fading in (modelFadeInRatio < 1), blend its position,
-    // scale, and rotation from the hero-image coords toward the narrative coords.
-    // This makes the model appear to "emerge" from exactly where the photo was.
-    if (modelFadeInRatio < 1.0) {
-      const blend = modelFadeInRatio; // 0 = at image, 1 = at narrative position
-
-      // Smoothstep the blend for a more organic transition
-      const smoothBlend = blend * blend * (3 - 2 * blend);
-
-      targetPosX   = introModelX   * (1 - smoothBlend) + targetPosX   * smoothBlend;
-      targetPosY   = introModelY   * (1 - smoothBlend) + targetPosY   * smoothBlend;
-      targetScale  = introModelScale * (1 - smoothBlend) + targetScale  * smoothBlend;
-      targetRotY   = introModelRotY  * (1 - smoothBlend) + targetRotY   * smoothBlend;
-    }
-
-    // Calculate targetOpacity based on projected model bottom and card top position
-    if (threeMetricsCached && modelGroup && camera) {
-      const cardTopY = configTopDoc + cardTopOffsetFromConfig - scrollY;
-      const modelBottomVec = new THREE.Vector3(targetPosX, targetPosY - 0.55, 0);
-      modelBottomVec.project(camera);
-
-      const modelBottomY = (1 - modelBottomVec.y) * (window.innerHeight / 2) + 30;
-      const fadeEndDiff = 20;
-      const fadeStartDiff = 90;
-
-      if (cardTopY > modelBottomY + fadeStartDiff) {
-        targetOpacity = 1.0;
-      } else if (cardTopY > modelBottomY + fadeEndDiff) {
-        const t = (cardTopY - (modelBottomY + fadeEndDiff)) / (fadeStartDiff - fadeEndDiff);
-        targetOpacity = t * t * (3 - 2 * t);
-      } else {
-        targetOpacity = 0.0;
+      // Hide the hero scroll indicator completely
+      const scrollIndicator = document.querySelector('#hero-panel .scroll-indicator');
+      if (scrollIndicator) {
+        scrollIndicator.style.opacity = '0';
+        scrollIndicator.style.display = 'none';
       }
-    } else {
-      if (scrollProgress > 0.8) {
-        targetOpacity = Math.max(0, 1 - (scrollProgress - 0.8) * 5.0);
+
+      // Calculate progress of scroll through narrative panels
+      const narrativeScrollY = scrollY - PIN_SCROLL;
+      const totalNarrativeScrollHeight = Math.max(100, total3DZoneHeight - PIN_SCROLL);
+      scrollProgress = Math.min(Math.max(narrativeScrollY / totalNarrativeScrollHeight, 0), 1);
+
+      // Get standard keyframe target values
+      let basePosX = 0;
+      let basePosY = 0;
+      let baseScale = 1.0;
+      let baseRotY = 0;
+
+      if (window.innerWidth > 1024) {
+        const xKeyframes = [
+          [0.0, 0.0],
+          [0.35, 0.95],
+          [0.65, -0.95],
+          [1.0, 0.0]
+        ];
+        const yKeyframes = [
+          [0.0, 0.05],
+          [0.35, 0.05],
+          [0.65, 0.08],
+          [1.0, 0.22]
+        ];
+        const scaleKeyframes = [
+          [0.0, 0.95],
+          [0.35, 0.95],
+          [0.65, 0.95],
+          [1.0, 1.0]
+        ];
+        const rotYKeyframes = [
+          [0.0, 30 * Math.PI / 180], // Start at 30 degrees right to match the end of intro phase
+          [0.35, 0.65 * Math.PI],
+          [0.65, 1.35 * Math.PI],
+          [1.0, 2.0 * Math.PI]
+        ];
+
+        basePosX = interpolate(scrollProgress, xKeyframes);
+        basePosY = interpolate(scrollProgress, yKeyframes);
+        baseScale = interpolate(scrollProgress, scaleKeyframes);
+        baseRotY = interpolate(scrollProgress, rotYKeyframes);
       } else {
-        targetOpacity = 1.0;
+        const yKeyframesMobile = [
+          [0.0, 0.2],
+          [0.35, 0.2],
+          [0.65, -0.2],
+          [1.0, 0.0]
+        ];
+        const rotYKeyframesMobile = [
+          [0.0, 30 * Math.PI / 180], // Start at 30 degrees right
+          [0.35, 0.65 * Math.PI],
+          [0.65, 1.35 * Math.PI],
+          [1.0, 2.0 * Math.PI]
+        ];
+
+        basePosX = 0;
+        basePosY = interpolate(scrollProgress, yKeyframesMobile);
+        baseScale = 0.72;
+        baseRotY = interpolate(scrollProgress, rotYKeyframesMobile);
+      }
+
+      // Smoothly blend from the intro model coordinates to the narrative keyframes
+      // over the first 15% of the narrative scroll to ensure a seamless transition
+      const blendRange = 0.15;
+      if (scrollProgress < blendRange) {
+        const blendRaw = scrollProgress / blendRange;
+        const blendEased = blendRaw * blendRaw * (3 - 2 * blendRaw); // smoothstep
+
+        targetPosX = introModelX * (1 - blendEased) + basePosX * blendEased;
+        targetPosY = introModelY * (1 - blendEased) + basePosY * blendEased;
+        targetScale = introModelScale * (1 - blendEased) + baseScale * blendEased;
+        targetRotY = (30 * Math.PI / 180) * (1 - blendEased) + baseRotY * blendEased;
+      } else {
+        targetPosX = basePosX;
+        targetPosY = basePosY;
+        targetScale = baseScale;
+        targetRotY = baseRotY;
+      }
+
+      // Calculate targetOpacity based on projected model bottom and card top position
+      if (threeMetricsCached && modelGroup && camera) {
+        const cardTopY = configTopDoc + cardTopOffsetFromConfig - scrollY;
+        const modelBottomVec = new THREE.Vector3(targetPosX, targetPosY - 0.55, 0);
+        modelBottomVec.project(camera);
+
+        const modelBottomY = (1 - modelBottomVec.y) * (window.innerHeight / 2) + 30;
+        const fadeEndDiff = 20;
+        const fadeStartDiff = 90;
+
+        if (cardTopY > modelBottomY + fadeStartDiff) {
+          targetOpacity = 1.0;
+        } else if (cardTopY > modelBottomY + fadeEndDiff) {
+          const t = (cardTopY - (modelBottomY + fadeEndDiff)) / (fadeStartDiff - fadeEndDiff);
+          targetOpacity = t * t * (3 - 2 * t);
+        } else {
+          targetOpacity = 0.0;
+        }
+      } else {
+        if (scrollProgress > 0.8) {
+          targetOpacity = Math.max(0, 1 - (scrollProgress - 0.8) * 5.0);
+        } else {
+          targetOpacity = 1.0;
+        }
       }
     }
 
