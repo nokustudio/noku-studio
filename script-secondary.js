@@ -296,7 +296,7 @@
   let introModelX = 0.0;
   let introModelY = 0.05;
   let introModelScale = 0.65;
-  let introModelRotY = 30 * Math.PI / 180; // Starts 30 degrees rotated to the right
+  let introModelRotY = -30 * Math.PI / 180; // Starts 30 degrees rotated to the left
 
   let targetRotY = 0;
   let currentRotY = 0;
@@ -439,11 +439,11 @@
         }
       }
 
-      // Lock the 3D model at intro coords, rotated 30 degrees to the right
+      // Lock the 3D model at intro coords, rotated 30 degrees to the left
       targetPosX = introModelX;
       targetPosY = introModelY;
       targetScale = introModelScale;
-      targetRotY = 30 * Math.PI / 180; // 30 degrees right
+      targetRotY = -30 * Math.PI / 180; // 30 degrees left
 
       // Fade-in opacity is 1.0 (actual visibility controlled by modelFadeInRatio in render loop)
       targetOpacity = 1.0;
@@ -512,7 +512,7 @@
           [1.0, 1.0]
         ];
         const rotYKeyframes = [
-          [0.0, 30 * Math.PI / 180], // Start at 30 degrees right to match the end of intro phase
+          [0.0, -30 * Math.PI / 180], // Start at 30 degrees left to match the end of intro phase
           [0.35, 0.65 * Math.PI],
           [0.65, 1.35 * Math.PI],
           [1.0, 2.0 * Math.PI]
@@ -530,7 +530,7 @@
           [1.0, 0.0]
         ];
         const rotYKeyframesMobile = [
-          [0.0, 30 * Math.PI / 180], // Start at 30 degrees right
+          [0.0, -30 * Math.PI / 180], // Start at 30 degrees left
           [0.35, 0.65 * Math.PI],
           [0.65, 1.35 * Math.PI],
           [1.0, 2.0 * Math.PI]
@@ -552,7 +552,7 @@
         targetPosX = introModelX * (1 - blendEased) + basePosX * blendEased;
         targetPosY = introModelY * (1 - blendEased) + basePosY * blendEased;
         targetScale = introModelScale * (1 - blendEased) + baseScale * blendEased;
-        targetRotY = (30 * Math.PI / 180) * (1 - blendEased) + baseRotY * blendEased;
+        targetRotY = (-30 * Math.PI / 180) * (1 - blendEased) + baseRotY * blendEased;
       } else {
         targetPosX = basePosX;
         targetPosY = basePosY;
