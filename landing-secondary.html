@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noku Studio — Crafted with Intent.</title>
+  <meta name="description"
+    content="Contemporary Indian furniture studio based in Bengaluru. Celebrating mid-century restraint, material honesty, and fine craftsmanship.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Quattrocento:wght@400;700&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css?v=1.6">
+</head>
+
+<body class="secondary-landing-page">
+
+  <!-- Loading Screen Overlay -->
+  <div id="loading-screen">
+    <div class="loader-logo">
+      <svg width="140" height="35" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg" style="fill: currentColor;">
+        <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
+        <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
+        <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
+        <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
+      </svg>
+    </div>
+    <div class="loader-bar-wrap">
+      <div class="loader-bar" id="loader-progress"></div>
+    </div>
+  </div>
+
+
+  <!-- Grain Layer overlay -->
+  <div class="grain-overlay"></div>
+
+  <!-- STICKY HEADER NAVIGATION -->
+  <nav id="navbar">
+    <div class="nav-logo-wrap">
+      <a href="#" aria-label="Noku Home">
+        <svg class="logo-svg" width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
+          <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
+          <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
+          <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
+        </svg>
+      </a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="products.html" class="nav-link">Products</a></li>
+      <li><a href="#collections" class="nav-link">Collections</a></li>
+      <li><a href="projects.html" class="nav-link">Work</a></li>
+      <li class="nav-dropdown-wrapper">
+        <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+          Menu <span class="dropdown-chevron">▼</span>
+        </button>
+        <ul class="nav-dropdown">
+          <li><a href="materials.html" class="nav-link-sub">Materials</a></li>
+          <li><a href="sustainability.html" class="nav-link-sub">Sustainability</a></li>
+          <li><a href="about.html" class="nav-link-sub">About</a></li>
+          <li><a href="contact.html" class="nav-link-sub">Contact</a></li>
+        </ul>
+      </li>
+    </ul>
+    <button id="cart-toggle" class="cart-btn" aria-label="Open Shopping Cart">
+      <svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--bone)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span id="cart-count-badge" class="cart-count">0</span>
+    </button>
+    <button class="mobile-menu-toggle" aria-label="Toggle Mobile Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--bone)" stroke-width="1.5">
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- THREE.JS 3D CANVAS WRAPPER -->
+  <div id="three-container">
+    <canvas id="three-canvas"></canvas>
+  </div>
+
+  <!-- SCROLL NARRATIVE SECTIONS OVERLAYING 3D HERO CANVAS -->
+  <div class="scroll-narrative">
+
+    <!-- Hero Segment (Visible at Start) -->
+    <section class="narrative-panel narrative-hero" id="hero-panel">
+      <div class="hero-three-column-grid">
+        <div class="hero-left-col">
+          <div class="hero-eyebrow">Collection 01 — Of Stillness</div>
+          <h1 class="hero-title">The Barstool</h1>
+        </div>
+        <div class="hero-center-col">
+          <img id="hero-static-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Noku Of Stillness Barstool Centerpiece">
+        </div>
+        <div class="hero-right-col">
+          <p class="hero-tagline">A design statement of quiet elegance, wood, and upholstery. Handmade in India.</p>
+        </div>
+      </div>
+      <div class="scroll-indicator">
+        <span>Scroll</span>
+        <div class="scroll-indicator-line"></div>
+      </div>
+    </section>
+
+    <!-- Narrative Section 1: Story (Fades in model shifts to right) -->
+    <section class="narrative-panel" id="story-panel">
+      <div class="narrative-grid">
+        <div class="narrative-col">
+          <div class="panel-number">01</div>
+          <span class="label">Philosophy</span>
+          <h2 class="title-h2">Where form meets quiet</h2>
+          <p class="body-p">
+            Mid-Century architecture and furniture was characterised by clean, flowing lines that serve a specific
+            purpose.
+            We have distilled this design logic into the Barstool—a quiet assertion of form, pair of solid walnut
+            joints,
+            and linen textures that sits naturally in any home context.
+          </p>
+        </div>
+        <div class="narrative-col empty-col"></div>
+      </div>
+    </section>
+
+    <!-- Narrative Section 2: Specs (Fades in model shifts to left) -->
+    <section class="narrative-panel" id="specs-panel">
+      <div class="narrative-grid">
+        <div class="narrative-col empty-col"></div>
+        <div class="narrative-col">
+          <div class="panel-number">02</div>
+          <span class="label">Specifications</span>
+          <h2 class="title-h2">Every line, considered</h2>
+          <p class="body-p">Handmade details crafted in solid wood joinery. Made to order at our workshop in Bengaluru,
+            India.</p>
+
+          <div class="spec-grid">
+            <div class="spec-row">
+              <span class="spec-label">Joinery</span>
+              <span class="spec-val">Mortise &amp; Tenon</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Dimensions</span>
+              <span class="spec-val">51.5 × 49.5 × 93 cm</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Seat Height</span>
+              <span class="spec-val">76 cm</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Lead Time</span>
+              <span class="spec-val">3–4 Weeks</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Narrative Section 3: Customize (Fades in model in center for carousel merge) -->
+    <section class="narrative-panel" id="config-panel">
+      <div class="narrative-grid">
+        <div class="narrative-col">
+          <div class="panel-number">03</div>
+          <span class="label">Tailored Design</span>
+          <h2 class="title-h2">Configure your custom piece</h2>
+          <p class="body-p">
+            Scroll down to explore the carousel of finishes and cushion variants. Tailor the barstool to fit the voice
+            of your home.
+          </p>
+          <div class="buy-now-wrapper">
+            <button id="buy-now-btn" class="buy-now-btn">Buy Now</button>
+            <span class="buy-now-helper">Pick your barstool</span>
+            <span class="buy-now-scroll-indicator">(scroll down)</span>
+          </div>
+        </div>
+        <div class="narrative-col empty-col"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════ INTERACTIVE VARIANTS CONFIGURATOR ════════ -->
+  <section class="variants-section section-pad" id="configurator">
+    <div class="variants-bg"></div>
+    <div class="container">
+      <!-- Horizontal Carousel -->
+      <div class="carousel-outer-wrap reveal-el">
+        <button class="carousel-nav-btn prev-btn" aria-label="Previous Cushion">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <div class="carousel-track-container">
+          <div class="carousel-track">
+            <!-- Dynamically populated carousel cards -->
+          </div>
+        </div>
+        <button class="carousel-nav-btn next-btn" aria-label="Next Cushion">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Wood Finish Swatch Selector -->
+      <div class="wood-selector reveal-el">
+        <span class="selector-label">Solid Wood Finish:</span>
+        <div class="wood-swatches">
+          <button class="wood-swatch active" data-wood="teak" data-prefix="t" data-folder="Teak">Teak</button>
+          <button class="wood-swatch" data-wood="reclaimed-teak" data-prefix="rt" data-folder="Reclaimed teak">Reclaimed
+            Teak</button>
+          <button class="wood-swatch" data-wood="white-ash" data-prefix="wha" data-folder="White ash">White Ash</button>
+        </div>
+      </div>
+
+      <!-- Customization Status Display -->
+      <div class="selected-details reveal-el">
+        <span class="selected-wood-label">Teak</span> + <span class="selected-cushion-label">Linen Cushion</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ PHILOSOPHY QUOTE & SCATTER IMAGES (MIMIC) ════════ -->
+  <section class="quote_wrap">
+    <div class="quote_contain">
+      <div class="quote_text_wrap">
+        <p class="quote">"An exploration of the essence behind the art and craft spread across this diverse country and
+          beyond."</p>
+      </div>
+      <p class="quote-sub">and there's more!</p>
+      <div class="radial-scatter__item barstool-item" data-depth="0.18">
+        <img
+          src="https://cdn.prod.website-files.com/667fb0113927090bb47059e6/67cfdbb331dba957c997c00e_5d1622c83584a245197f9005889b2b06_Noku_ofStillness_Barstool_03%20copy.webp"
+          alt="Noku Of Stillness Barstool">
+      </div>
+      <div class="radial-scatter__item" data-depth="0.22">
+        <img
+          src="https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d3f26f9123161e4e4ac_ChatGPT%20Image%20Mar%202%2C%202026%2C%2010_46_44%20AM.png"
+          alt="Creative Furniture Design">
+      </div>
+      <div class="radial-scatter__item" data-depth="0.26">
+        <img
+          src="https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d41cd825187ac22552f_Chair%2042%20A.png"
+          alt="Minimalist Chair Line">
+      </div>
+      <div class="radial-scatter__item" data-depth="0.30">
+        <img
+          src="https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d403fa184eebc59c05c_Side%20Table%2042%20B.png"
+          alt="Solid Oak Table">
+      </div>
+      <div class="radial-scatter__item" data-depth="0.34">
+        <img src="https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00dd8733454553abc99bc_Bed%2042%20A.png"
+          alt="Luxury Bed Design">
+      </div>
+      <div class="radial-scatter__item" data-depth="0.38">
+        <img
+          src="https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00e7f4ffc4c910059d042_Study%20Table%2019%20C.png"
+          alt="Study Desk Woodwork">
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ FEATURED PRODUCTS GRID ════════ -->
+  <section class="products-section section-pad">
+    <div class="container" id="products">
+      <div class="products-header reveal-el">
+        <div class="products-header-left">
+          <span class="label">Portfolio</span>
+          <h2 class="title-h2">Featured Pieces</h2>
+        </div>
+        <a href="./products.html" class="view-collection-link">View All
+          Products</a>
+      </div>
+
+      <div class="products-grid">
+        <!-- 1. Sofa -->
+        <div class="product-card reveal-el" data-handle="sofa-2" data-materials="Solid Walnut / Belgian Linen" data-dim="167 × 78 × 84 cm">
+          <a href="product.html?handle=sofa-2" class="product-card-img-wrap">
+            <img
+              src="https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg"
+              alt="Grooved Sofa — Walnut and Belgian Linen">
+          </a>
+          <div class="product-card-body">
+            <a href="product.html?handle=sofa-2" class="product-name">Grooved Sofa</a>
+            <span class="product-materials">Solid Walnut / Belgian Linen</span>
+            <div class="product-buy-row">
+              <span class="product-price">₹81,000</span>
+              <button class="product-add-to-cart-btn" aria-label="Add Grooved Sofa to Cart">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Lounge Chair -->
+        <div class="product-card reveal-el delay-1" data-handle="lounge-chair" data-materials="Solid Teak / Cane / Linen" data-dim="64 × 83 × 91 cm">
+          <a href="product.html?handle=lounge-chair" class="product-card-img-wrap">
+            <img
+              src="https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7724c1a8d27260d62288_Noku_ofStillness_Lounge_chair_02.jpeg"
+              alt="Lounge Chair — Modern curves in teak">
+          </a>
+          <div class="product-card-body">
+            <a href="product.html?handle=lounge-chair" class="product-name">Lounge Chair</a>
+            <span class="product-materials">Solid Teak / Cane / Linen</span>
+            <div class="product-buy-row">
+              <span class="product-price">₹49,500</span>
+              <button class="product-add-to-cart-btn" aria-label="Add Lounge Chair to Cart">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Dining Chair -->
+        <div class="product-card reveal-el delay-2" data-handle="dining-chair" data-materials="Solid Walnut / Natural Fabric" data-dim="45 × 51 × 83 cm">
+          <a href="product.html?handle=dining-chair" class="product-card-img-wrap">
+            <img
+              src="https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be7113654a_Noku_ofStillness_Dining_chair_03.jpeg"
+              alt="Dining Chair — Lightweight dining joinery">
+          </a>
+          <div class="product-card-body">
+            <a href="product.html?handle=dining-chair" class="product-name">Dining Chair</a>
+            <span class="product-materials">Solid Walnut / Natural Fabric</span>
+            <div class="product-buy-row">
+              <span class="product-price">₹11,500</span>
+              <button class="product-add-to-cart-btn" aria-label="Add Dining Chair to Cart">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Study Table -->
+        <div class="product-card reveal-el delay-3" data-handle="modern-study-table" data-materials="Solid Teak / Brass Details" data-dim="120 × 60 × 75 cm">
+          <a href="product.html?handle=modern-study-table" class="product-card-img-wrap">
+            <img src="https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7d6f73c94da715b34a92_Noku_ofStillness_Study_table_03.jpeg"
+              alt="Study Table — Premium solid teak workstation">
+          </a>
+          <div class="product-card-body">
+            <a href="product.html?handle=modern-study-table" class="product-name">Study Table</a>
+            <span class="product-materials">Solid Teak / Brass Details</span>
+            <div class="product-buy-row">
+              <span class="product-price">₹35,000</span>
+              <button class="product-add-to-cart-btn" aria-label="Add Study Table to Cart">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ MARQUEE / TICKER STRIP ════════ -->
+  <div class="ticker-container">
+    <div class="ticker-track">
+      <div class="ticker-item">Designed with Intent <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Crafted with Care <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Pieces for Living <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Of Stillness Collection <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Material Honesty <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Quiet Elegance <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Designed with Intent <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Crafted with Care <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Pieces for Living <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Of Stillness Collection <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Material Honesty <span class="ticker-dot"></span></div>
+      <div class="ticker-item">Quiet Elegance <span class="ticker-dot"></span></div>
+    </div>
+  </div>
+
+  <!-- ════════ COLLECTIONS CARDS ════════ -->
+  <section class="collections-section section-pad" id="collections">
+    <div class="container">
+      <div class="collections-header reveal-el">
+        <span class="label">Themes</span>
+        <h2 class="title-h2" style="color: var(--ink);">Our Collections</h2>
+        <p class="collections-subtext">Collections is where you get to experience the studio's diversity. We explore themes from across the country and from different eras to create furniture that fit into your home.</p>
+      </div>
+
+      <div class="collections-grid">
+        <!-- Card 1: Of Stillness -->
+        <a href="stillness.html" class="collection-card reveal-el">
+          <div class="coll-card-img-wrap">
+            <img src="Resources/Collection/of_stillness.webp" alt="Of Stillness Collection">
+          </div>
+          <div class="coll-card-content">
+            <span class="coll-card-eyebrow">Collection 01</span>
+            <h3 class="coll-card-title">Of Stillness</h3>
+            <p class="coll-card-desc">
+              Mid-Century Modern forms rooted in simplicity and material honesty
+            </p>
+          </div>
+        </a>
+
+        <!-- Card 2: Of Memories -->
+        <a href="memories.html" class="collection-card reveal-el delay-1">
+          <div class="coll-card-img-wrap">
+            <img src="Resources/Collection/of_memories.webp" alt="Of Memories Collection">
+          </div>
+          <div class="coll-card-content">
+            <span class="coll-card-eyebrow">Collection 02</span>
+            <h3 class="coll-card-title">Of Memories</h3>
+            <p class="coll-card-desc">
+              The warmth of familiar spaces through timeless material and detail.
+            </p>
+          </div>
+        </a>
+
+        <!-- Card 3: Of Exploration -->
+        <a href="#exploration" class="collection-card reveal-el delay-2">
+          <div class="coll-card-img-wrap">
+            <img src="Resources/Collection/of_exploration.webp" alt="Of Exploration Collection">
+          </div>
+          <div class="coll-card-content">
+            <span class="coll-card-eyebrow">Collection 03</span>
+            <h3 class="coll-card-title">Of Exploration</h3>
+            <p class="coll-card-desc">
+              More diverse works from the studio that exist beyond a specific theme
+            </p>
+            <div class="tag-wrap">
+              <span class="coll-card-tag">Arriving Soon!</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ MATERIALS STORYTELLING & MOODBOARD ════════ -->
+  <section class="materials-section section-pad">
+    <div class="container">
+      <div class="materials-story-grid">
+        <div class="materials-story-content reveal-el">
+          <span class="label">Materiality</span>
+          <h2 class="title-h2">The Soul of the Object</h2>
+          <div class="story-divider"></div>
+          <p class="story-intro">
+            We believe a piece of furniture is only as honest as the materials from which it is born. At Noku Studio, we do not mask the organic. We celebrate it.
+          </p>
+          <p class="body-p">
+            Our <strong>reclaimed teak</strong> is rescued from decades-old structures in Southern India—seasoned naturally by sun and monsoon, carrying a warm history and unparalleled stability.
+          </p>
+          <p class="body-p">
+            Each strand of <strong>natural rattan cane</strong> is meticulously hand-woven by local master artisans, marrying breathing mid-century forms with India’s living heritage.
+          </p>
+          <p class="body-p">
+            Our <strong>certified hides</strong> are left aniline-finished, preserving the natural grain, scars, and creases, designed to acquire a unique, rich patina with every touch.
+          </p>
+          <div class="story-cta-wrap">
+            <a href="materials.html" class="materials-cta-btn">
+              Explore Our Materials <span class="arrow">→</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="materials-moodboard reveal-el delay-1">
+          <div class="moodboard-item item-large">
+            <img src="Resources/material%20images/Wood/Reclaimed%20teak.jpg" alt="Reclaimed Teak Wood texture">
+            <span class="moodboard-caption">Reclaimed Teak</span>
+          </div>
+          <div class="moodboard-item item-medium">
+            <img src="Resources/material%20images/Leather/Vagabond%20Cognac.jpeg" alt="Vagabond Cognac Full-Grain Leather">
+            <span class="moodboard-caption">Vagabond Cognac Leather</span>
+          </div>
+          <div class="moodboard-item item-square-1">
+            <img src="Resources/material%20images/Cane/Cane%20Weave.png" alt="Woven Cane Pattern">
+            <span class="moodboard-caption">Woven Cane</span>
+          </div>
+          <div class="moodboard-item item-square-2">
+            <img src="Resources/material%20images/Wood/Bhilwara.png" alt="Matti Wood Details">
+            <span class="moodboard-caption">Matti Wood</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ CINEMATIC WORKSHOP VIDEO SECTION ════════ -->
+  <section class="video-section">
+    <video class="video-background" id="workshop-video" autoplay muted loop playsinline preload="auto">
+      <source src="Resources/Video Project 2.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="video-overlay"></div>
+
+    <div class="video-content reveal-el">
+      <span class="label" style="color: var(--chamoisee);">The Workshop</span>
+      <h2 class="title-h2" style="font-weight: 300;">A document of patience, wood joints, and handcraft</h2>
+      <p class="body-p" style="color: var(--bone); opacity: 0.8; font-size: 16px;">
+        Inside our Bengaluru atelier, we work with seasoned hardwoods—teak, honne, walnut—shaping, sanding, and
+        assembling each furniture piece with absolute precision.
+      </p>
+      <button class="video-control-btn" id="video-toggle" aria-label="Pause Video">
+        <svg id="pause-icon" width="20" height="20" viewBox="0 0 24 24">
+          <rect x="4" y="4" width="4" height="16" fill="var(--paper)"></rect>
+          <rect x="16" y="4" width="4" height="16" fill="var(--paper)"></rect>
+        </svg>
+        <svg id="play-icon" width="20" height="20" viewBox="0 0 24 24" style="display: none;">
+          <path d="M8 5v14l11-7z" fill="var(--paper)"></path>
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ════════ FOOTER ════════ -->
+  <footer id="footer">
+    <div class="container">
+      <div class="footer-cta-line">
+        <p class="footer-cta-eyebrow">Ready to</p>
+        <a href="contact.html" class="btn-cta-arrow">Craft your furniture?<span class="arrow">↗</span></a>
+      </div>
+      <div class="footer-grid">
+        <div>
+          <p class="footer-wordmark">NOKU</p>
+        </div>
+        <div>
+          <p class="footer-col__heading">About</p>
+          <ul class="footer-col__links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col__heading">Work</p>
+          <ul class="footer-col__links">
+            <li><a href="products.html">Furniture Shop</a></li>
+            <li><a href="https://nokustudio.webflow.io/projects" target="_blank">Our Projects</a></li>
+            <li><a href="https://nokustudio.webflow.io/products" target="_blank">Collections</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col__heading">Knowledge</p>
+          <ul class="footer-col__links">
+            <li><a href="materials.html">Materials Guide</a></li>
+            <li><a href="sustainability.html">Sustainability</a></li>
+            <li><a href="mailto:hello@nokustudio.in">hello@nokustudio.in</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Noku Studio. All rights reserved.</span>
+        <span>Privacy Policy · Terms &amp; Conditions</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ════════ SHOPPING CART SIDE-DRAWER ════════ -->
+  <div id="cart-overlay" class="cart-overlay"></div>
+  <div id="cart-drawer" class="cart-drawer">
+    <div class="cart-header">
+      <h3 class="cart-title">Your Cart</h3>
+      <button id="cart-close" class="cart-close-btn" aria-label="Close Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="cart-items-container" id="cart-items-container">
+      <div class="cart-empty-message">Your cart is currently empty.</div>
+    </div>
+    
+    <div class="cart-footer">
+      <div class="cart-subtotal-row">
+        <span class="subtotal-label">Subtotal</span>
+        <span class="subtotal-price" id="cart-subtotal">₹0.00</span>
+      </div>
+      <button id="checkout-btn" class="checkout-btn" disabled>Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <!-- ════════ THREE.JS WEBGL LIBRARIES ════════ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+
+  <script src="script-secondary.js?v=1.3"></script>
+  <script src="shopify-integration.js?v=1.3"></script>
+
+</body>
+
+</html>

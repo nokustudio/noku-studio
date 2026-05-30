@@ -3306,3 +3306,594 @@ nav.light-nav .cart-btn:hover {
   height: 100%;
   object-fit: cover;
 }
+
+/* ════════ SECONDARY LANDING PAGE OVERRIDES & ANIMATIONS ════════ */
+
+body.secondary-landing-page {
+  background-color: var(--light);
+  color: var(--ink);
+  transition: background-color 1s cubic-bezier(0.16, 1, 0.3, 1), color 1s ease;
+}
+
+body.secondary-landing-page.scrolled-dark-bg {
+  background-color: var(--dark-bg);
+}
+
+/* Hero text styling overrides for initial light background */
+.secondary-landing-page .hero-title {
+  color: var(--ink);
+  text-shadow: none;
+  transition: color 1s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.secondary-landing-page .hero-tagline {
+  color: var(--muted);
+  text-shadow: none;
+  transition: color 1s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.secondary-landing-page .hero-eyebrow {
+  color: var(--chamoisee);
+  text-shadow: none;
+  transition: color 1s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Text styles transition when background scrolls to dark */
+.secondary-landing-page.scrolled-dark-bg .hero-title {
+  color: var(--paper);
+  text-shadow:
+    0 0 40px rgba(10, 8, 6, 0.95),
+    0 2px 6px rgba(10, 8, 6, 0.9),
+    0 8px 24px rgba(10, 8, 6, 0.75);
+}
+
+.secondary-landing-page.scrolled-dark-bg .hero-tagline {
+  color: var(--bone);
+  text-shadow:
+    0 0 20px rgba(10, 8, 6, 0.9),
+    0 2px 12px rgba(10, 8, 6, 0.75);
+}
+
+.secondary-landing-page.scrolled-dark-bg .hero-eyebrow {
+  color: var(--chamoisee);
+  text-shadow:
+    0 0 20px rgba(12, 10, 8, 0.9);
+}
+
+/* Clean, borderless transparent navbar on load */
+.secondary-landing-page nav {
+  background-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-color: transparent;
+  box-shadow: none;
+  transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              backdrop-filter 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Standard styles when scrolled or active light-nav is applied */
+.secondary-landing-page nav.scrolled {
+  background-color: rgba(244, 245, 241, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(44, 38, 34, 0.1);
+  box-shadow: 0 4px 20px rgba(44, 38, 34, 0.08);
+}
+
+.secondary-landing-page nav.light-nav {
+  background-color: rgba(244, 245, 241, 0.85);
+  border-color: rgba(44, 38, 34, 0.1);
+  box-shadow: 0 4px 20px rgba(44, 38, 34, 0.08);
+}
+
+.secondary-landing-page nav.light-nav.scrolled {
+  background-color: rgba(244, 245, 241, 0.95);
+  border-color: rgba(44, 38, 34, 0.15);
+  box-shadow: 0 8px 30px rgba(44, 38, 34, 0.12);
+}
+
+/* Scattered Intro Overlay Container */
+#scattered-intro-container {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background-color: var(--light);
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), visibility 1s;
+}
+
+#scattered-intro-container.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.scattered-card {
+  position: absolute;
+  background: #ffffff;
+  border: 1px solid rgba(44, 38, 34, 0.08);
+  border-radius: 8px;
+  box-shadow: 0 15px 45px rgba(44, 38, 34, 0.06);
+  padding: 2px; /* Very minimal padding */
+  opacity: 0;
+  transform: translate(-50%, -50%) translateY(60px) scale(calc(var(--sc, 1) * 0.9));
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#scattered-intro-container.active .scattered-card {
+  opacity: 1;
+  transform: translate(-50%, -50%) translateY(0) scale(var(--sc, 1));
+}
+
+/* Outward fade animation for scattered cards when intro is finishing */
+#scattered-intro-container.exit .scattered-card {
+  opacity: 0;
+  transform: translate(-50%, -50%) translateY(-40px) scale(calc(var(--sc, 1) * 0.95));
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scattered-card-img-wrap {
+  width: 100%;
+  aspect-ratio: 2 / 2.5;
+  overflow: hidden;
+  border-radius: 6px;
+  background: transparent; /* No background color visible */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scattered-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Fully cover the container */
+  transition: transform 0.6s ease;
+}
+
+.scattered-card:hover img {
+  transform: scale(1.06);
+}
+
+/* Precise scattered cards placement & layout */
+.scattered-card.pos-right {
+  left: calc(50% + 36vw);
+  top: 50%;
+  width: clamp(140px, 13vw, 180px);
+  --sc: 0.95;
+}
+.scattered-card.pos-bottom {
+  left: 50%;
+  top: calc(50% + 33vh);
+  width: clamp(140px, 13vw, 180px);
+  --sc: 0.95;
+}
+.scattered-card.pos-left {
+  left: calc(50% - 36vw);
+  top: 50%;
+  width: clamp(140px, 13vw, 180px);
+  --sc: 0.95;
+}
+.scattered-card.pos-top {
+  left: 50%;
+  top: calc(50% - 33vh);
+  width: clamp(140px, 13vw, 180px);
+  --sc: 0.95;
+}
+
+.scattered-card.pos-bottom-right {
+  left: calc(50% + 22vw);
+  top: calc(50% + 28vh);
+  width: clamp(90px, 9vw, 110px);
+  --sc: 0.65;
+}
+.scattered-card.pos-bottom-left {
+  left: calc(50% - 22vw);
+  top: calc(50% + 28vh);
+  width: clamp(90px, 9vw, 110px);
+  --sc: 0.65;
+}
+.scattered-card.pos-top-left {
+  left: calc(50% - 22vw);
+  top: calc(50% - 28vh);
+  width: clamp(90px, 9vw, 110px);
+  --sc: 0.65;
+}
+.scattered-card.pos-top-right {
+  left: calc(50% + 22vw);
+  top: calc(50% - 28vh);
+  width: clamp(90px, 9vw, 110px);
+  --sc: 0.65;
+}
+
+/* Tablet viewports (iPad/portrait tablets) */
+@media (max-width: 1024px) {
+  .scattered-card.pos-right {
+    left: calc(50% + 33vw);
+    width: clamp(100px, 12vw, 130px);
+  }
+  .scattered-card.pos-bottom {
+    top: calc(50% + 32vh);
+    width: clamp(100px, 12vw, 130px);
+  }
+  .scattered-card.pos-left {
+    left: calc(50% - 33vw);
+    width: clamp(100px, 12vw, 130px);
+  }
+  .scattered-card.pos-top {
+    top: calc(50% - 32vh);
+    width: clamp(100px, 12vw, 130px);
+  }
+  .scattered-card.pos-bottom-right {
+    left: calc(50% + 20vw);
+    top: calc(50% + 24vh);
+    width: clamp(80px, 8vw, 95px);
+  }
+  .scattered-card.pos-bottom-left {
+    left: calc(50% - 20vw);
+    top: calc(50% + 24vh);
+    width: clamp(80px, 8vw, 95px);
+  }
+  .scattered-card.pos-top-left {
+    left: calc(50% - 20vw);
+    top: calc(50% - 24vh);
+    width: clamp(80px, 8vw, 95px);
+  }
+  .scattered-card.pos-top-right {
+    left: calc(50% + 20vw);
+    top: calc(50% - 24vh);
+    width: clamp(80px, 8vw, 95px);
+  }
+}
+
+/* Mobile viewports (iPhone/portrait mobile) */
+@media (max-width: 600px) {
+  .scattered-card.pos-right {
+    left: calc(50% + 34vw);
+    top: 50%;
+    width: clamp(75px, 19vw, 90px);
+    --sc: 0.85;
+  }
+  .scattered-card.pos-bottom {
+    left: 50%;
+    top: calc(50% + 36vh);
+    width: clamp(75px, 19vw, 90px);
+    --sc: 0.85;
+  }
+  .scattered-card.pos-left {
+    left: calc(50% - 34vw);
+    top: 50%;
+    width: clamp(75px, 19vw, 90px);
+    --sc: 0.85;
+  }
+  .scattered-card.pos-top {
+    left: 50%;
+    top: calc(50% - 36vh);
+    width: clamp(75px, 19vw, 90px);
+    --sc: 0.85;
+  }
+  .scattered-card.pos-bottom-right {
+    left: calc(50% + 25vw);
+    top: calc(50% + 24vh);
+    width: clamp(55px, 14vw, 70px);
+    --sc: 0.65;
+  }
+  .scattered-card.pos-bottom-left {
+    left: calc(50% - 25vw);
+    top: calc(50% + 24vh);
+    width: clamp(55px, 14vw, 70px);
+    --sc: 0.65;
+  }
+  .scattered-card.pos-top-left {
+    left: calc(50% - 25vw);
+    top: calc(50% - 24vh);
+    width: clamp(55px, 14vw, 70px);
+    --sc: 0.65;
+  }
+  .scattered-card.pos-top-right {
+    left: calc(50% + 25vw);
+    top: calc(50% - 24vh);
+    width: clamp(55px, 14vw, 70px);
+    --sc: 0.65;
+  }
+}
+
+.scattered-card-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 12px;
+  opacity: 0.8;
+  border-top: 1px solid rgba(44, 38, 34, 0.04);
+  padding-top: 10px;
+}
+
+/* 3-Column Split Hero Section Layouts for Secondary Landing Page */
+.secondary-landing-page .narrative-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+}
+
+.secondary-landing-page .hero-three-column-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.2fr;
+  align-items: center;
+  gap: clamp(20px, 4vw, 60px);
+  width: 90%;
+  max-width: 1280px;
+  margin: 0 auto;
+  min-height: 60vh;
+  position: relative;
+  z-index: 10;
+}
+
+.secondary-landing-page .hero-left-col {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.secondary-landing-page .hero-center-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.secondary-landing-page .hero-right-col {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.secondary-landing-page .hero-title {
+  font-size: clamp(28px, 3.5vw, 48px);
+  line-height: 1.15;
+  margin-bottom: 12px;
+  color: var(--ink);
+  text-shadow: none;
+}
+
+.secondary-landing-page .hero-eyebrow {
+  margin-bottom: 12px;
+  font-size: 10px;
+  letter-spacing: 4px;
+}
+
+.secondary-landing-page .hero-tagline {
+  font-size: clamp(14px, 1.1vw, 16px);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 100%;
+  text-align: left;
+  color: var(--muted);
+  text-shadow: none;
+}
+
+#hero-static-image {
+  width: 100%;
+  max-width: clamp(220px, 25vw, 320px);
+  height: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(30px);
+}
+
+.intro-complete #hero-static-image {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 1024px) {
+  .secondary-landing-page .hero-three-column-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 30px;
+    text-align: center;
+    padding-top: 100px;
+    padding-bottom: 60px;
+    min-height: auto;
+  }
+  
+  .secondary-landing-page .hero-left-col,
+  .secondary-landing-page .hero-right-col {
+    text-align: center;
+    align-items: center;
+  }
+  
+  .secondary-landing-page .hero-tagline {
+    text-align: center;
+    margin: 0 auto;
+    max-width: 480px;
+  }
+  
+  .secondary-landing-page #hero-static-image {
+    max-width: clamp(200px, 45vw, 280px);
+  }
+}
+
+/* Adjust scroll indicator color for light background */
+.secondary-landing-page .scroll-indicator span {
+  color: var(--muted);
+  transition: color 1s ease;
+}
+
+.secondary-landing-page.scrolled-dark-bg .scroll-indicator span {
+  color: var(--chamoisee);
+}
+
+/* Set z-index of hero content wrap above static image but below three container */
+.secondary-landing-page .hero-content-wrap {
+  position: relative;
+  z-index: 6;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.secondary-landing-page.intro-complete .hero-content-wrap {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Cancel inline keyframe animations in HTML for secondary homepage */
+.secondary-landing-page .hero-eyebrow,
+.secondary-landing-page .hero-title,
+.secondary-landing-page .hero-tagline,
+.secondary-landing-page .scroll-indicator {
+  animation: none !important;
+  opacity: 1;
+  transform: none;
+}
+
+/* Light Theme Loading Screen Overrides */
+.secondary-landing-page #loading-screen {
+  background-color: var(--light) !important;
+}
+
+.secondary-landing-page #loading-screen .loader-logo {
+  color: var(--ink) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.secondary-landing-page #loading-screen .loader-bar-wrap {
+  background-color: rgba(44, 38, 34, 0.1) !important;
+}
+
+.secondary-landing-page #loading-screen .loader-bar {
+  background-color: var(--ink) !important;
+}
+
+/* Light Theme 3D Model Scroll Animation Section Overrides */
+.secondary-landing-page {
+  background-color: var(--light) !important;
+}
+
+.secondary-landing-page.scrolled-dark-bg {
+  background-color: var(--light) !important;
+}
+
+.secondary-landing-page .narrative-panel {
+  background-color: transparent !important;
+}
+
+.secondary-landing-page .narrative-panel .title-h2 {
+  color: var(--ink) !important;
+  text-shadow: none !important;
+}
+
+.secondary-landing-page .narrative-panel .body-p {
+  color: var(--muted) !important;
+  text-shadow: none !important;
+  opacity: 0.9 !important;
+}
+
+.secondary-landing-page .narrative-panel .panel-number {
+  color: rgba(44, 38, 34, 0.05) !important;
+}
+
+.secondary-landing-page .narrative-panel .label {
+  color: var(--chamoisee) !important;
+}
+
+/* Specification grid rows and labels */
+.secondary-landing-page .spec-grid {
+  border-top-color: rgba(44, 38, 34, 0.15) !important;
+}
+
+.secondary-landing-page .spec-row {
+  border-bottom-color: rgba(44, 38, 34, 0.1) !important;
+}
+
+.secondary-landing-page .spec-label {
+  color: var(--muted) !important;
+}
+
+.secondary-landing-page .spec-val {
+  color: var(--ink) !important;
+}
+
+/* Buy now scroll helper text */
+.secondary-landing-page .buy-now-helper,
+.secondary-landing-page .buy-now-scroll-indicator {
+  color: var(--muted) !important;
+}
+
+/* Configurator section light theme overrides */
+.secondary-landing-page .variants-section {
+  background-color: var(--light) !important;
+  color: var(--ink) !important;
+}
+
+.secondary-landing-page .variants-bg {
+  background-color: var(--light) !important;
+}
+
+.secondary-landing-page .carousel-card {
+  background-color: #ffffff !important;
+  border-color: rgba(44, 38, 34, 0.08) !important;
+  box-shadow: 0 10px 30px rgba(44, 38, 34, 0.04) !important;
+}
+
+.secondary-landing-page .carousel-card.highlighted {
+  border-color: var(--ink) !important;
+}
+
+.secondary-landing-page .cushion-name {
+  color: var(--ink) !important;
+}
+
+.secondary-landing-page .carousel-card-info {
+  border-top-color: rgba(44, 38, 34, 0.04) !important;
+}
+
+.secondary-landing-page .wood-selector {
+  border-color: rgba(44, 38, 34, 0.1) !important;
+}
+
+.secondary-landing-page .selector-label {
+  color: var(--muted) !important;
+}
+
+.secondary-landing-page .wood-swatch {
+  border-color: rgba(44, 38, 34, 0.15) !important;
+  color: var(--muted) !important;
+  background-color: transparent !important;
+}
+
+.secondary-landing-page .wood-swatch:hover,
+.secondary-landing-page .wood-swatch.active {
+  background-color: var(--ink) !important;
+  color: var(--paper) !important;
+  border-color: var(--ink) !important;
+}
+
+.secondary-landing-page .carousel-nav-btn {
+  background-color: #ffffff !important;
+  color: var(--ink) !important;
+  border-color: rgba(44, 38, 34, 0.1) !important;
+  box-shadow: 0 4px 12px rgba(44, 38, 34, 0.08) !important;
+}
+
+.secondary-landing-page .carousel-nav-btn:hover {
+  background-color: var(--ink) !important;
+  color: var(--paper) !important;
+}

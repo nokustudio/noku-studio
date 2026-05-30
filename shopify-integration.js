@@ -698,6 +698,8 @@ async function loadShopifyProductData() {
     // Ensure featured products UI runs in simulation/fallback mode
     updateFeaturedProductsUI();
   }
+  // Dispatch custom event to notify secondary landing page that product data is loaded
+  window.dispatchEvent(new CustomEvent('shopifyloaded'));
 }
 
 
