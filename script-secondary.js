@@ -585,15 +585,79 @@
 
   revealElements.forEach(el => revealObserver.observe(el));
 
-  // ─── NAV BAR BARGROUND SHIFT THEME CONTROLLER ───
+  // ─── NAV BAR BACKGROUND SHIFT THEME CONTROLLER ───
+  // Mirrors the same section-aware logic as script.js so the navbar
+  // seamlessly transitions between light and dark states as the user scrolls
+  // through the different sections of the secondary landing page.
   const navbar = document.getElementById('navbar');
 
   function updateNavbarTheme() {
     if (!navbar) return;
     const scrollY = window.scrollY;
     navbar.classList.toggle('scrolled', scrollY > 40);
-    navbar.classList.add('light-nav');
+
+    const navHeight = navbar.offsetHeight || 70;
+    const checkY = scrollY + navHeight / 2;
+
+    // Sections with a light background — navbar should use light-nav state
+    const lightSections = [
+      { selector: '#configurator' },
+      { selector: '.materials-section' },
+      { selector: '.products-section' },
+      { selector: '.collections-section' }
+    ];
+
+    // The 3D narrative scroll zone uses the secondary page's light body background,
+    // so the navbar stays light-nav there too — we include the hero/narrative zone.
+    const darkSections = [
+      { selector: '.video-section' }
+    ];
+
+    // Check if currently over a dark section (remove light-nav)
+    let isDark = false;
+    for (const sec of darkSections) {
+      const el = document.querySelector(sec.selector);
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY;
+        const height = el.offsetHeight;
+        if (checkY >= top && checkY < top + height) {
+          isDark = true;
+          break;
+        }
+      }
+    }
+
+    if (isDark) {
+      navbar.classList.remove('light-nav');
+      return;
+    }
+
+    // For all other sections (light bg), check explicitly
+    let isLight = false;
+    for (const sec of lightSections) {
+      const el = document.querySelector(sec.selector);
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY;
+        const height = el.offsetHeight;
+        if (checkY >= top && checkY < top + height) {
+          isLight = true;
+          break;
+        }
+      }
+    }
+
+    // Secondary landing page is always light-themed in the 3D narrative + hero zone
+    // so default to light-nav unless explicitly over the dark video section
+    if (isLight || !isDark) {
+      navbar.classList.add('light-nav');
+    } else {
+      navbar.classList.remove('light-nav');
+    }
   }
+
+  window.addEventListener('scroll', updateNavbarTheme, { passive: true });
+  window.addEventListener('resize', updateNavbarTheme, { passive: true });
+  updateNavbarTheme();
 
   // ─── OPTIMIZED CRAFTSMANSHIP VIDEO PLAYER CONTROLS ───
   const video = document.getElementById('workshop-video');
