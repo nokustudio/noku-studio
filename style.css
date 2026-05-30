@@ -3361,37 +3361,60 @@ body.secondary-landing-page.scrolled-dark-bg {
 }
 
 /* Clean, borderless transparent navbar on load */
+/* Clean, borderless transparent navbar on load */
 .secondary-landing-page nav {
-  background-color: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border-color: transparent;
-  box-shadow: none;
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
   transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1),
               backdrop-filter 0.6s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Standard styles when scrolled or active light-nav is applied */
+.secondary-landing-page nav .logo-svg {
+  fill: var(--chamoisee) !important;
+}
+
+.secondary-landing-page nav .nav-link,
+.secondary-landing-page nav .nav-link-sub {
+  color: var(--ink) !important;
+}
+
+.secondary-landing-page nav .nav-link:hover,
+.secondary-landing-page nav .nav-link-sub:hover,
+.secondary-landing-page nav .nav-dropdown-wrapper:hover .dropdown-toggle {
+  color: var(--chamoisee) !important;
+}
+
+.secondary-landing-page nav .cart-icon,
+.secondary-landing-page nav .mobile-menu-toggle svg {
+  stroke: var(--ink) !important;
+}
+
+.secondary-landing-page nav .cart-count {
+  background-color: var(--chamoisee) !important;
+  color: var(--white) !important;
+}
+
+.secondary-landing-page nav .cart-btn {
+  color: var(--ink) !important;
+  border-color: rgba(44, 38, 34, 0.15) !important;
+}
+
+.secondary-landing-page nav .cart-btn:hover {
+  color: var(--chamoisee) !important;
+}
+
+/* Standard styles when scrolled */
 .secondary-landing-page nav.scrolled {
-  background-color: rgba(244, 245, 241, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(44, 38, 34, 0.1);
-  box-shadow: 0 4px 20px rgba(44, 38, 34, 0.08);
-}
-
-.secondary-landing-page nav.light-nav {
-  background-color: rgba(244, 245, 241, 0.85);
-  border-color: rgba(44, 38, 34, 0.1);
-  box-shadow: 0 4px 20px rgba(44, 38, 34, 0.08);
-}
-
-.secondary-landing-page nav.light-nav.scrolled {
-  background-color: rgba(244, 245, 241, 0.95);
-  border-color: rgba(44, 38, 34, 0.15);
-  box-shadow: 0 8px 30px rgba(44, 38, 34, 0.12);
+  background-color: rgba(244, 245, 241, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(44, 38, 34, 0.15) !important;
+  box-shadow: 0 8px 30px rgba(44, 38, 34, 0.12) !important;
 }
 
 /* Scattered Intro Overlay Container */
