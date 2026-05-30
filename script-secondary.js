@@ -20,6 +20,7 @@
 
     // Recalculate metrics now that scroll is active and layout shifts are stable
     updateThreeLayoutMetrics();
+    computeIntroModelCoords();
     evaluateScrollCalculations();
     updateNavbarTheme();
   }
@@ -52,6 +53,12 @@
       }
 
       staticImg.src = centerpieceUrl;
+
+      // Once the hero image loads, recompute the intro model coordinates so
+      // the 3D model is placed at the exact position and apparent size of the image
+      staticImg.onload = function () {
+        computeIntroModelCoords();
+      };
     }
   }
 
@@ -281,6 +288,16 @@
   let scrollProgress = 0;
   let modelFadeInRatio = 0.0; // Dynamic 3d model opacity fade-in ratio on scroll
 
+  // ─── HERO IMAGE → 3D MODEL INTRO COORDINATES ───
+  // These store the world-space position and scale that make the 3D model
+  // appear at the exact same location and size as the static hero image.
+  // The model transitions from these intro coords to the narrative coords
+  // as the user scrolls and the image fades out.
+  let introModelX = 0.0;
+  let introModelY = 0.05;
+  let introModelScale = 0.65;
+  let introModelRotY = 0.0; // Front-facing to match the static 2D photo
+
   let targetRotY = 0;
   let currentRotY = 0;
 
@@ -316,6 +333,38 @@
       current = current.offsetParent;
     }
     return { top, left, width, height };
+  }
+
+  // Computes the 3D model position and scale that visually overlays the static
+  // hero image — so the model can fade in exactly where the photo was.
+  function computeIntroModelCoords() {
+    const staticImg = document.getElementById('hero-static-image');
+    if (!staticImg || !camera) return;
+
+    const rect = staticImg.getBoundingClientRect();
+    // If the image hasn't rendered (e.g. naturalHeight is 0), fall back to defaults
+    if (rect.width < 10 || rect.height < 10) return;
+
+    // Frustum half-dimensions at z=0 (the model plane), camera sitting at z=4.5
+    const camDist = camera.position.z;
+    const halfFrustumH = camDist * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    const halfFrustumW = halfFrustumH * camera.aspect;
+
+    // Centre of the image in NDC [-1, 1] space
+    const imgCX = rect.left + rect.width  / 2;
+    const imgCY = rect.top  + rect.height / 2;
+    const ndcX  =  (imgCX / window.innerWidth)  * 2 - 1;
+    const ndcY  = -((imgCY / window.innerHeight) * 2 - 1);
+
+    // Project NDC → world-space X/Y at z=0
+    introModelX = ndcX * halfFrustumW;
+    introModelY = ndcY * halfFrustumH + camera.position.y * 0.05; // subtle camera-y correction
+
+    // Scale: the normalized model is ~1.35 world units tall.
+    // We want it to subtend the same visual angle as the image.
+    const imgHeightWorld = (rect.height / window.innerHeight) * (halfFrustumH * 2);
+    // Use 0.9x so the model starts slightly smaller and blooms into view
+    introModelScale = Math.max(0.25, Math.min(1.1, (imgHeightWorld / 1.35) * 0.9));
   }
 
   let configTopDoc = 0;
@@ -366,15 +415,27 @@
 
     scrollProgress = Math.min(Math.max(scrollY / total3DZoneHeight, 0), 1);
 
-    // Fade out static product image on scroll with upward translation
+    // Fade out static hero image as the 3D model fades in.
+    // Uses the same smoothstep curve as modelFadeInRatio (scrollY 0–250)
+    // so the image dissolves at the exact rate the model materialises.
     const staticImg = document.getElementById('hero-static-image');
     if (staticImg) {
-      const staticOpacity = Math.max(0, 1 - scrollY / 250);
-      staticImg.style.opacity = staticOpacity.toFixed(3);
-      staticImg.style.transform = `translateY(-${scrollY * 0.2}px)`;
-      
-      // Toggle display none to prevent graphics card overhead once fully faded
-      if (staticOpacity <= 0) {
+      if (scrollY > 0 && staticImg.style.transition !== 'none') {
+        staticImg.style.transition = 'none';
+      }
+      const fadeRaw = Math.min(Math.max(scrollY / 250, 0), 1);
+      const fadeEased = fadeRaw * fadeRaw * (3 - 2 * fadeRaw); // Smoothstep
+      const staticOpacity = 1 - fadeEased;
+
+      // Subtle scale-down + upward drift reinforce the "solidifying into 3D" feeling
+      const imgScale = 1 - fadeEased * 0.08; // shrinks very slightly (1 → 0.92)
+      const imgTranslateY = scrollY * 0.12;   // gentle upward drift
+
+      staticImg.style.opacity   = staticOpacity.toFixed(3);
+      staticImg.style.transform = `translateY(-${imgTranslateY}px) scale(${imgScale.toFixed(4)})`;
+
+      // Toggle display none to prevent compositing overhead once fully faded
+      if (staticOpacity <= 0.01) {
         staticImg.style.display = 'none';
       } else {
         staticImg.style.display = 'block';
@@ -408,7 +469,7 @@
         [1.0, 1.0]
       ];
       const rotYKeyframes = [
-        [0.0, -0.25 * Math.PI], // Start rotated 45 degrees to the opposite side
+        [0.0, 0.0],             // Start facing front — matching the static photo orientation
         [0.35, 0.65 * Math.PI],
         [0.65, 1.35 * Math.PI],
         [1.0, 2.0 * Math.PI]
@@ -426,7 +487,7 @@
         [1.0, 0.0]
       ];
       const rotYKeyframesMobile = [
-        [0.0, -0.25 * Math.PI], // Start rotated 45 degrees to the opposite side
+        [0.0, 0.0],             // Start facing front — matching the static photo orientation
         [0.35, 0.65 * Math.PI],
         [0.65, 1.35 * Math.PI],
         [1.0, 2.0 * Math.PI]
@@ -436,6 +497,22 @@
       targetPosY = interpolate(scrollProgress, yKeyframesMobile);
       targetScale = 0.72;
       targetRotY = interpolate(scrollProgress, rotYKeyframesMobile);
+    }
+
+    // ─── INTRO → NARRATIVE POSITION/SCALE/ROTATION BLEND ───
+    // While the 3D model is fading in (modelFadeInRatio < 1), blend its position,
+    // scale, and rotation from the hero-image coords toward the narrative coords.
+    // This makes the model appear to "emerge" from exactly where the photo was.
+    if (modelFadeInRatio < 1.0) {
+      const blend = modelFadeInRatio; // 0 = at image, 1 = at narrative position
+
+      // Smoothstep the blend for a more organic transition
+      const smoothBlend = blend * blend * (3 - 2 * blend);
+
+      targetPosX   = introModelX   * (1 - smoothBlend) + targetPosX   * smoothBlend;
+      targetPosY   = introModelY   * (1 - smoothBlend) + targetPosY   * smoothBlend;
+      targetScale  = introModelScale * (1 - smoothBlend) + targetScale  * smoothBlend;
+      targetRotY   = introModelRotY  * (1 - smoothBlend) + targetRotY   * smoothBlend;
     }
 
     // Calculate targetOpacity based on projected model bottom and card top position
@@ -491,6 +568,7 @@
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
     updateThreeLayoutMetrics();
+    computeIntroModelCoords(); // Recompute image-aligned intro coords after resize
     evaluateScrollCalculations();
     updateNavbarTheme();
     centerActiveCard(false);
