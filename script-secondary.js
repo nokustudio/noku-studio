@@ -295,7 +295,7 @@
   // as the user scrolls and the image fades out.
   let introModelX = 0.0;
   let introModelY = 0.05;
-  let introModelScale = 0.65;
+  let introModelScale = 0.45;
   let introModelRotY = -30 * Math.PI / 180; // Starts 30 degrees rotated to the left
 
   let targetRotY = 0;
@@ -363,8 +363,8 @@
     // Scale: the normalized model is ~1.35 world units tall.
     // We want it to subtend the same visual angle as the image.
     const imgHeightWorld = (rect.height / window.innerHeight) * (halfFrustumH * 2);
-    // Use 0.9x so the model starts slightly smaller and blooms into view
-    introModelScale = Math.max(0.25, Math.min(1.1, (imgHeightWorld / 1.35) * 0.9));
+    // Use 0.55x so the model starts significantly smaller and blooms into view
+    introModelScale = Math.max(0.15, Math.min(1.1, (imgHeightWorld / 1.35) * 0.55));
   }
 
   let configTopDoc = 0;
