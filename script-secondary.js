@@ -41,7 +41,7 @@
         evaluateScrollCalculations();
       };
 
-      const defaultImgPath = 'Resources/hero-barstool-img/barst-t-linen.png';
+      const defaultImgPath = 'Resources/hero-barstool-img/barst-t-chestnut.png';
       
       // Attempt to dynamically find the image file in the directory (in case the name changed)
       fetch('Resources/hero-barstool-img/')
