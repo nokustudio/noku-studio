@@ -85,7 +85,7 @@
   const scene = new THREE.Scene();
 
   const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.set(0, 0.6, 4.5); // CONFIG: camera_position
+  camera.position.set(0.0, 0.6, 4.5); // CONFIG: camera_position
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -339,7 +339,7 @@
     // Project NDC → world-space X/Y at z=0.
     // Correct projection requires adding camera.position.y. We also add an extra 0.02 offset
     // to align the visual center of the barstool (which has more visual mass in the upper seat/back).
-    introModelX = ndcX * halfFrustumW + 0.0; // CONFIG: x_offset
+    introModelX = ndcX * halfFrustumW + camera.position.x + 0.0; // CONFIG: x_offset
     introModelY = ndcY * halfFrustumH + camera.position.y + 0.015; // CONFIG: y_offset
 
     // Scale: the normalized model is ~1.35 world units tall.

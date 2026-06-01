@@ -11,6 +11,7 @@ def get_current_values():
         'x_offset': 0.0,
         'y_offset': 0.02,
         'rotation_angle': -30,
+        'camera_x': 0.0,
         'camera_y': 0.45,
         'zoom': 4.5
     }
@@ -22,14 +23,15 @@ def get_current_values():
         with open(js_file_path, 'r', encoding='utf-8') as f:
             content = f.read()
 
-        # 1. Extract camera Y and zoom (camera Z)
-        camera_match = re.search(r'camera\.position\.set\(0,\s*([\d\.-]+),\s*([\d\.-]+)\);\s*//\s*CONFIG:\s*camera_position', content)
+        # 1. Extract camera X, Y and zoom (camera Z)
+        camera_match = re.search(r'camera\.position\.set\(([\d\.-]+),\s*([\d\.-]+),\s*([\d\.-]+)\);\s*//\s*CONFIG:\s*camera_position', content)
         if camera_match:
-            defaults['camera_y'] = float(camera_match.group(1))
-            defaults['zoom'] = float(camera_match.group(2))
+            defaults['camera_x'] = float(camera_match.group(1))
+            defaults['camera_y'] = float(camera_match.group(2))
+            defaults['zoom'] = float(camera_match.group(3))
 
         # 2. Extract X-position offset
-        x_match = re.search(r'introModelX\s*=\s*ndcX\s*\*\s*halfFrustumW\s*\+\s*([\d\.-]+);\s*//\s*CONFIG:\s*x_offset', content)
+        x_match = re.search(r'introModelX\s*=\s*ndcX\s*\*\s*halfFrustumW\s*\+\s*camera\.position\.x\s*\+\s*([\d\.-]+);\s*//\s*CONFIG:\s*x_offset', content)
         if x_match:
             defaults['x_offset'] = float(x_match.group(1))
 
@@ -54,8 +56,8 @@ def get_current_values():
 
     return defaults
 
-def run_update(scale_factor, x_offset, y_offset, rotation_angle, camera_y, zoom):
-    fallback_x = x_offset
+def run_update(scale_factor, x_offset, y_offset, rotation_angle, camera_x, camera_y, zoom):
+    fallback_x = camera_x + x_offset
     fallback_y = camera_y + y_offset
     fallback_scale = 0.70 * scale_factor
     fallback_rot_y = (rotation_angle * math.pi) / 180.0
@@ -64,10 +66,10 @@ def run_update(scale_factor, x_offset, y_offset, rotation_angle, camera_y, zoom)
         with open(js_file_path, 'r', encoding='utf-8') as f:
             content = f.read()
 
-        # 1. Camera position (Y and Z)
+        # 1. Camera position (X, Y and Z)
         content = re.sub(
-            r'camera\.position\.set\(0,\s*[\d\.-]+,\s*[\d\.-]+\);\s*//\s*CONFIG:\s*camera_position',
-            f'camera.position.set(0, {camera_y}, {zoom}); // CONFIG: camera_position',
+            r'camera\.position\.set\([\d\.-]+,\s*[\d\.-]+,\s*[\d\.-]+\);\s*//\s*CONFIG:\s*camera_position',
+            f'camera.position.set({camera_x}, {camera_y}, {zoom}); // CONFIG: camera_position',
             content
         )
 
@@ -101,8 +103,8 @@ def run_update(scale_factor, x_offset, y_offset, rotation_angle, camera_y, zoom)
 
         # 6. X Offset in dynamic calculation
         content = re.sub(
-            r'introModelX\s*=\s*ndcX\s*\*\s*halfFrustumW\s*\+\s*[\d\.-]+;\s*//\s*CONFIG:\s*x_offset',
-            f'introModelX = ndcX * halfFrustumW + {x_offset}; // CONFIG: x_offset',
+            r'introModelX\s*=\s*ndcX\s*\*\s*halfFrustumW\s*\+\s*camera\.position\.x\s*\+\s*[\d\.-]+;\s*//\s*CONFIG:\s*x_offset',
+            f'introModelX = ndcX * halfFrustumW + camera.position.x + {x_offset}; // CONFIG: x_offset',
             content
         )
 
@@ -158,6 +160,7 @@ def run_update(scale_factor, x_offset, y_offset, rotation_angle, camera_y, zoom)
         print(f'- X-Position Offset: {x_offset}')
         print(f'- Y-Position Offset: {y_offset}')
         print(f'- Rotation Angle:    {rotation_angle} deg ({fallback_rot_y:.4f} rad)')
+        print(f'- Camera X Position: {camera_x}')
         print(f'- Camera Y Position: {camera_y}')
         print(f'- Zoom (Camera Z):   {zoom}')
         print('----------------------------------------')
@@ -191,15 +194,19 @@ def main():
     ans = input(f"Enter Rotation Angle in Degrees (e.g. -30 for left, 30 for right) [{current['rotation_angle']}]: ").strip()
     rotation_angle = float(ans) if ans else current['rotation_angle']
     
-    # 5. Camera Y Position
+    # 5. Camera X Position
+    ans = input(f"Enter Camera X Position [{current['camera_x']}]: ").strip()
+    camera_x = float(ans) if ans else current['camera_x']
+    
+    # 6. Camera Y Position
     ans = input(f"Enter Camera Y Position [{current['camera_y']}]: ").strip()
     camera_y = float(ans) if ans else current['camera_y']
 
-    # 6. Zoom (Camera Z)
+    # 7. Zoom (Camera Z)
     ans = input(f"Enter Zoom / Camera Z Position [{current['zoom']}]: ").strip()
     zoom = float(ans) if ans else current['zoom']
     
-    run_update(scale_factor, x_offset, y_offset, rotation_angle, camera_y, zoom)
+    run_update(scale_factor, x_offset, y_offset, rotation_angle, camera_x, camera_y, zoom)
 
 if __name__ == '__main__':
     main()
