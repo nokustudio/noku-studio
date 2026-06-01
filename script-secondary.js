@@ -294,8 +294,8 @@
   // The model transitions from these intro coords to the narrative coords
   // as the user scrolls and the image fades out.
   let introModelX = 0.0;
-  let introModelY = 0.35;
-  let introModelScale = 0.45;
+  let introModelY = 0.52;
+  let introModelScale = 0.7;
   let introModelRotY = -30 * Math.PI / 180; // Starts 30 degrees rotated to the left
 
   let targetRotY = 0;
@@ -357,16 +357,16 @@
     const ndcY  = -((imgCY / window.innerHeight) * 2 - 1);
 
     // Project NDC → world-space X/Y at z=0.
-    // Correct projection requires adding camera.position.y. We also add an extra 0.08 offset
+    // Correct projection requires adding camera.position.y. We also add an extra 0.22 offset
     // to align the visual center of the barstool (which has more visual mass in the upper seat/back).
     introModelX = ndcX * halfFrustumW;
-    introModelY = ndcY * halfFrustumH + camera.position.y + 0.08;
+    introModelY = ndcY * halfFrustumH + camera.position.y + 0.22;
 
     // Scale: the normalized model is ~1.35 world units tall.
     // We want it to subtend the same visual angle as the image.
     const imgHeightWorld = (rect.height / window.innerHeight) * (halfFrustumH * 2);
-    // Use 0.55x so the model starts significantly smaller and blooms into view
-    introModelScale = Math.max(0.15, Math.min(1.1, (imgHeightWorld / 1.35) * 0.55));
+    // Use 1.0x so the model matches the visual size of the image on load
+    introModelScale = Math.max(0.25, Math.min(1.1, (imgHeightWorld / 1.35) * 1.0));
   }
 
   let configTopDoc = 0;
