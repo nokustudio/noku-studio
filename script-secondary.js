@@ -76,43 +76,7 @@
     populateSecondaryLandingImages();
   }, 1200);
 
-  // Track whether loader has been shown this session
-  const LOADER_KEY = 'noku_loader_shown';
-  const hasSeenLoader = sessionStorage.getItem(LOADER_KEY);
 
-  function updateLoader(percentage) {
-    if (loaderProgress) {
-      loaderProgress.style.width = percentage + '%';
-    }
-    if (percentage >= 100) {
-      setTimeout(() => {
-        if (loaderScreen) {
-          loaderScreen.classList.add('fade-out');
-        }
-        sessionStorage.setItem(LOADER_KEY, '1');
-        initializeLandingSection();
-      }, 400);
-    }
-  }
-
-  // Background loader progress animation for Three.js progress representation
-  let loadPercent = 0;
-  let loaderInterval = null;
-  if (loaderScreen) {
-    if (hasSeenLoader) {
-      loaderScreen.style.display = 'none';
-      initializeLandingSection();
-    } else {
-      loaderInterval = setInterval(() => {
-        if (loadPercent < 85) {
-          loadPercent += Math.random() * 15;
-          updateLoader(Math.min(loadPercent, 85));
-        }
-      }, 100);
-    }
-  } else {
-    initializeLandingSection();
-  }
 
   // ─── THREE.JS 3D CANVAS REDIRECTS ───
   const container = document.getElementById('three-container');
@@ -1328,5 +1292,43 @@
 
     requestAnimationFrame(renderScatter);
   })();
+
+  // Track whether loader has been shown this session
+  const LOADER_KEY = 'noku_loader_shown';
+  const hasSeenLoader = sessionStorage.getItem(LOADER_KEY);
+
+  function updateLoader(percentage) {
+    if (loaderProgress) {
+      loaderProgress.style.width = percentage + '%';
+    }
+    if (percentage >= 100) {
+      setTimeout(() => {
+        if (loaderScreen) {
+          loaderScreen.classList.add('fade-out');
+        }
+        sessionStorage.setItem(LOADER_KEY, '1');
+        initializeLandingSection();
+      }, 400);
+    }
+  }
+
+  // Background loader progress animation for Three.js progress representation
+  let loadPercent = 0;
+  let loaderInterval = null;
+  if (loaderScreen) {
+    if (hasSeenLoader) {
+      loaderScreen.style.display = 'none';
+      initializeLandingSection();
+    } else {
+      loaderInterval = setInterval(() => {
+        if (loadPercent < 85) {
+          loadPercent += Math.random() * 15;
+          updateLoader(Math.min(loadPercent, 85));
+        }
+      }, 100);
+    }
+  } else {
+    initializeLandingSection();
+  }
 }
 )();
