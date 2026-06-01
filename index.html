@@ -40,25 +40,31 @@
     <div class="nav-logo-wrap">
       <a href="#" aria-label="Noku Home">
         <svg class="logo-svg" width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg">
-          <polygon
-            points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09" />
-          <path
-            d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44" />
-          <polygon
-            points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28" />
-          <path
-            d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55" />
+          <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
+          <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
+          <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
+          <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
         </svg>
       </a>
     </div>
     <ul class="nav-links">
+      <li><a href="products.html" class="nav-link">Products</a></li>
       <li><a href="#collections" class="nav-link">Collections</a></li>
-      <li><a href="#products" class="nav-link">Products</a></li>
-      <li><a href="#footer" class="nav-link">Contact</a></li>
+      <li><a href="projects.html" class="nav-link">Work</a></li>
+      <li class="nav-dropdown-wrapper">
+        <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+          Menu <span class="dropdown-chevron">▼</span>
+        </button>
+        <ul class="nav-dropdown">
+          <li><a href="materials.html" class="nav-link-sub">Materials</a></li>
+          <li><a href="sustainability.html" class="nav-link-sub">Sustainability</a></li>
+          <li><a href="about.html" class="nav-link-sub">About</a></li>
+          <li><a href="contact.html" class="nav-link-sub">Contact</a></li>
+        </ul>
+      </li>
     </ul>
     <button id="cart-toggle" class="cart-btn" aria-label="Open Shopping Cart">
-      <svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--bone)"
-        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--bone)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
         <line x1="3" y1="6" x2="21" y2="6"></line>
         <path d="M16 10a4 4 0 0 1-8 0"></path>
@@ -66,7 +72,6 @@
       <span id="cart-count-badge" class="cart-count">0</span>
     </button>
     <button class="mobile-menu-toggle" aria-label="Toggle Mobile Menu">
-      <!-- Minimalist mobile burger bar -->
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--bone)" stroke-width="1.5">
         <line x1="4" y1="6" x2="20" y2="6"></line>
         <line x1="4" y1="12" x2="20" y2="12"></line>
