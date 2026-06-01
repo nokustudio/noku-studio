@@ -27,7 +27,7 @@
 
   let hasPopulatedSecondaryImages = false;
 
-  // Dynamic image loader from live Shopify store variants data
+  // Dynamic image loader from local folder
   function populateSecondaryLandingImages() {
     if (hasPopulatedSecondaryImages) return;
     hasPopulatedSecondaryImages = true;
@@ -35,31 +35,42 @@
     // Populate centerpiece image
     const staticImg = document.getElementById('hero-static-image');
     if (staticImg) {
-      let centerpieceUrl = '';
-      if (
-        typeof isShopifyConnected !== 'undefined' &&
-        isShopifyConnected &&
-        typeof getProductVariant === 'function'
-      ) {
-        const variant = getProductVariant('Teak', 'Linen');
-        if (variant && variant.image) {
-          centerpieceUrl = variant.image;
-        }
-      }
-
-      if (!centerpieceUrl) {
-        // Safe remote CDN fallback (never use local images per user requirements)
-        centerpieceUrl = 'https://cdn.prod.website-files.com/667fb0113927090bb47059e6/67cfdbb331dba957c997c00e_5d1622c83584a245197f9005889b2b06_Noku_ofStillness_Barstool_03%20copy.webp';
-      }
-
-      staticImg.src = centerpieceUrl;
-
-      // Once the hero image loads, recompute the intro model coordinates so
-      // the 3D model is placed at the exact position and apparent size of the image
+      // Once the hero image loads, recompute the intro model coordinates
       staticImg.onload = function () {
         computeIntroModelCoords();
         evaluateScrollCalculations();
       };
+
+      const defaultImgPath = 'Resources/hero-barstool-img/barst-t-linen.png';
+      
+      // Attempt to dynamically find the image file in the directory (in case the name changed)
+      fetch('Resources/hero-barstool-img/')
+        .then(response => {
+          if (!response.ok) throw new Error('Directory listing not available');
+          return response.text();
+        })
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const links = Array.from(doc.querySelectorAll('a'));
+          const imageLink = links.find(a => {
+            const href = a.getAttribute('href') || '';
+            return href.match(/\.(png|jpe?g|webp|gif)$/i);
+          });
+          
+          if (imageLink) {
+            let href = imageLink.getAttribute('href');
+            if (!href.startsWith('http') && !href.startsWith('/')) {
+              href = 'Resources/hero-barstool-img/' + href.split('/').pop();
+            }
+            staticImg.src = href;
+          } else {
+            staticImg.src = defaultImgPath;
+          }
+        })
+        .catch(() => {
+          staticImg.src = defaultImgPath;
+        });
 
       if (staticImg.complete) {
         computeIntroModelCoords();
