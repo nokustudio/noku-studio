@@ -121,7 +121,7 @@
   const scene = new THREE.Scene();
 
   const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.set(0, 0.3, 4.5);
+  camera.position.set(0, 0.45, 4.5);
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -310,8 +310,8 @@
   // The model transitions from these intro coords to the narrative coords
   // as the user scrolls and the image fades out.
   let introModelX = 0.0;
-  let introModelY = 0.52;
-  let introModelScale = 0.53;
+  let introModelY = 0.67;
+  let introModelScale = 0.42;
   let introModelRotY = -30 * Math.PI / 180; // Starts 30 degrees rotated to the left
 
   let targetRotY = 0;
@@ -381,8 +381,8 @@
     // Scale: the normalized model is ~1.35 world units tall.
     // We want it to subtend the same visual angle as the image.
     const imgHeightWorld = (rect.height / window.innerHeight) * (halfFrustumH * 2);
-    // Use 1.0x so the model matches the visual size of the image on load
-    introModelScale = Math.max(0.25, Math.min(1.1, (imgHeightWorld / 1.35) * 0.75));
+    // Use 0.6x so the model starts at 60% scale of the image on load
+    introModelScale = Math.max(0.25, Math.min(1.1, (imgHeightWorld / 1.35) * 0.6));
   }
 
   let configTopDoc = 0;
@@ -444,10 +444,9 @@
           staticImg.style.transition = 'none';
         }
         const staticOpacity = 1 - modelFadeInRatio;
-        const imgTranslateY = scrollY * 0.12;
 
         staticImg.style.opacity = staticOpacity.toFixed(3);
-        staticImg.style.transform = `translateY(-${imgTranslateY}px)`;
+        staticImg.style.transform = 'none';
 
         if (staticOpacity <= 0.01) {
           staticImg.style.display = 'none';
