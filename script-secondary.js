@@ -37,8 +37,8 @@
     if (staticImg) {
       let centerpieceUrl = '';
       if (
-        typeof isShopifyConnected !== 'undefined' && 
-        isShopifyConnected && 
+        typeof isShopifyConnected !== 'undefined' &&
+        isShopifyConnected &&
         typeof getProductVariant === 'function'
       ) {
         const variant = getProductVariant('Teak', 'Linen');
@@ -295,7 +295,7 @@
   // as the user scrolls and the image fades out.
   let introModelX = 0.0;
   let introModelY = 0.52;
-  let introModelScale = 0.7;
+  let introModelScale = 0.53;
   let introModelRotY = -30 * Math.PI / 180; // Starts 30 degrees rotated to the left
 
   let targetRotY = 0;
@@ -351,10 +351,10 @@
     const halfFrustumW = halfFrustumH * camera.aspect;
 
     // Centre of the image in NDC [-1, 1] space
-    const imgCX = rect.left + rect.width  / 2;
-    const imgCY = rect.top  + rect.height / 2;
-    const ndcX  =  (imgCX / window.innerWidth)  * 2 - 1;
-    const ndcY  = -((imgCY / window.innerHeight) * 2 - 1);
+    const imgCX = rect.left + rect.width / 2;
+    const imgCY = rect.top + rect.height / 2;
+    const ndcX = (imgCX / window.innerWidth) * 2 - 1;
+    const ndcY = -((imgCY / window.innerHeight) * 2 - 1);
 
     // Project NDC → world-space X/Y at z=0.
     // Correct projection requires adding camera.position.y. We also add an extra 0.22 offset
@@ -366,7 +366,7 @@
     // We want it to subtend the same visual angle as the image.
     const imgHeightWorld = (rect.height / window.innerHeight) * (halfFrustumH * 2);
     // Use 1.0x so the model matches the visual size of the image on load
-    introModelScale = Math.max(0.25, Math.min(1.1, (imgHeightWorld / 1.35) * 1.0));
+    introModelScale = Math.max(0.25, Math.min(1.1, (imgHeightWorld / 1.35) * 0.75));
   }
 
   let configTopDoc = 0;
@@ -900,8 +900,8 @@
       let imgPath = '';
 
       if (
-        typeof isShopifyConnected !== 'undefined' && 
-        isShopifyConnected && 
+        typeof isShopifyConnected !== 'undefined' &&
+        isShopifyConnected &&
         typeof getProductVariant === 'function'
       ) {
         const formattedCushion = cushion.charAt(0).toUpperCase() + cushion.slice(1);
