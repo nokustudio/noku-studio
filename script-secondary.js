@@ -58,7 +58,13 @@
       // the 3D model is placed at the exact position and apparent size of the image
       staticImg.onload = function () {
         computeIntroModelCoords();
+        evaluateScrollCalculations();
       };
+
+      if (staticImg.complete) {
+        computeIntroModelCoords();
+        evaluateScrollCalculations();
+      }
     }
   }
 
@@ -233,6 +239,11 @@
     barstoolPivot.add(stoolGroup);
     isModelLoaded = true;
 
+    // Recompute metrics and positions now that the fallback 3D model is loaded and in the scene
+    updateThreeLayoutMetrics();
+    computeIntroModelCoords();
+    evaluateScrollCalculations();
+
     clearInterval(loaderInterval);
     updateLoader(100);
   }
@@ -268,6 +279,11 @@
 
       barstoolPivot.add(barstoolMesh);
       isModelLoaded = true;
+
+      // Recompute metrics and positions now that the live 3D model is loaded and in the scene
+      updateThreeLayoutMetrics();
+      computeIntroModelCoords();
+      evaluateScrollCalculations();
 
       clearInterval(loaderInterval);
       updateLoader(100);
