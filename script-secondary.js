@@ -428,11 +428,10 @@
           staticImg.style.transition = 'none';
         }
         const staticOpacity = 1 - modelFadeInRatio;
-        const imgScale = 1 - modelFadeInRatio * 0.08;
         const imgTranslateY = scrollY * 0.12;
 
         staticImg.style.opacity = staticOpacity.toFixed(3);
-        staticImg.style.transform = `translateY(-${imgTranslateY}px) scale(${imgScale.toFixed(4)})`;
+        staticImg.style.transform = `translateY(-${imgTranslateY}px)`;
 
         if (staticOpacity <= 0.01) {
           staticImg.style.display = 'none';
