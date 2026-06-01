@@ -620,7 +620,8 @@ nav.light-nav .nav-dropdown {
   font-size: 120px;
   font-weight: 200;
   line-height: 1;
-  color: rgba(162, 123, 92, 0.08);
+  color: var(--chamoisee);
+  opacity: 0.15;
   margin-bottom: -10px;
   margin-left: -5px;
 }
