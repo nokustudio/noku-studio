@@ -486,9 +486,9 @@
           [1.0, 0.22]
         ];
         const scaleKeyframes = [
-          [0.0, 0.95],
-          [0.35, 0.95],
-          [0.65, 0.95],
+          [0.0, 1.0],
+          [0.35, 1.0],
+          [0.65, 1.0],
           [1.0, 1.0]
         ];
         const rotYKeyframes = [
@@ -500,7 +500,7 @@
 
         basePosX = interpolate(scrollProgress, xKeyframes);
         basePosY = interpolate(scrollProgress, yKeyframes);
-        baseScale = interpolate(scrollProgress, scaleKeyframes);
+        baseScale = introModelScale * interpolate(scrollProgress, scaleKeyframes);
         baseRotY = interpolate(scrollProgress, rotYKeyframes);
       } else {
         const yKeyframesMobile = [
@@ -518,7 +518,7 @@
 
         basePosX = 0;
         basePosY = interpolate(scrollProgress, yKeyframesMobile);
-        baseScale = 0.72;
+        baseScale = introModelScale * 1.0;
         baseRotY = interpolate(scrollProgress, rotYKeyframesMobile);
       }
 
