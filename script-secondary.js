@@ -85,7 +85,7 @@
   const scene = new THREE.Scene();
 
   const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.set(0.0, 0.3, 4.0); // CONFIG: camera_position
+  camera.position.set(0.0, 0.3, 3.5); // CONFIG: camera_position
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -273,8 +273,8 @@
   // appear at the exact same location and size as the static hero image.
   // The model transitions from these intro coords to the narrative coords
   // as the user scrolls and the image fades out.
-  let introModelX = 0.1000; // CONFIG: fallback_x
-  let introModelY = 0.3100; // CONFIG: fallback_y
+  let introModelX = 0.0500; // CONFIG: fallback_x
+  let introModelY = 0.3000; // CONFIG: fallback_y
   let introModelScale = 0.4200; // CONFIG: fallback_scale
   let introModelRotY = -0.959931; // CONFIG: fallback_rot_y
 
@@ -339,8 +339,8 @@
     // Project NDC → world-space X/Y at z=0.
     // Correct projection requires adding camera.position.y. We also add an extra 0.02 offset
     // to align the visual center of the barstool (which has more visual mass in the upper seat/back).
-    introModelX = ndcX * halfFrustumW + camera.position.x + 0.1; // CONFIG: x_offset
-    introModelY = ndcY * halfFrustumH + camera.position.y + 0.01; // CONFIG: y_offset
+    introModelX = ndcX * halfFrustumW + camera.position.x + 0.05; // CONFIG: x_offset
+    introModelY = ndcY * halfFrustumH + camera.position.y + 0.0; // CONFIG: y_offset
 
     // Scale: the normalized model is ~1.35 world units tall.
     // We want it to subtend the same visual angle as the image.
