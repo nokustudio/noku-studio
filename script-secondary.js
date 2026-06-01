@@ -85,7 +85,7 @@
   const scene = new THREE.Scene();
 
   const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.set(0, 0.45, 4.5);
+  camera.position.set(0, 0.45, 4.5); // CONFIG: camera_y
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -274,9 +274,9 @@
   // The model transitions from these intro coords to the narrative coords
   // as the user scrolls and the image fades out.
   let introModelX = 0.0;
-  let introModelY = 0.47;
-  let introModelScale = 0.42;
-  let introModelRotY = -30 * Math.PI / 180; // Starts 30 degrees rotated to the left
+  let introModelY = 0.4700; // CONFIG: fallback_y
+  let introModelScale = 0.4200; // CONFIG: fallback_scale
+  let introModelRotY = -0.523599; // CONFIG: fallback_rot_y
 
   let targetRotY = 0;
   let currentRotY = 0;
@@ -340,13 +340,13 @@
     // Correct projection requires adding camera.position.y. We also add an extra 0.02 offset
     // to align the visual center of the barstool (which has more visual mass in the upper seat/back).
     introModelX = ndcX * halfFrustumW;
-    introModelY = ndcY * halfFrustumH + camera.position.y + 0.02;
+    introModelY = ndcY * halfFrustumH + camera.position.y + 0.02; // CONFIG: y_offset
 
     // Scale: the normalized model is ~1.35 world units tall.
     // We want it to subtend the same visual angle as the image.
     const imgHeightWorld = (rect.height / window.innerHeight) * (halfFrustumH * 2);
     // Use 0.6x so the model starts at 60% scale of the image on load
-    introModelScale = Math.max(0.25, Math.min(1.1, (imgHeightWorld / 1.35) * 0.6));
+    introModelScale = Math.max(0.25, Math.min(1.1, (imgHeightWorld / 1.35) * 0.6)); // CONFIG: scale_factor
   }
 
   let configTopDoc = 0;
@@ -423,7 +423,7 @@
       targetPosX = introModelX;
       targetPosY = introModelY;
       targetScale = introModelScale;
-      targetRotY = -30 * Math.PI / 180; // 30 degrees left
+      targetRotY = -0.523599; // CONFIG: rot_y_phase1
 
       // Fade-in opacity is 1.0 (actual visibility controlled by modelFadeInRatio in render loop)
       targetOpacity = 1.0;
@@ -492,7 +492,7 @@
           [1.0, 1.0]
         ];
         const rotYKeyframes = [
-          [0.0, -30 * Math.PI / 180], // Start at 30 degrees left to match the end of intro phase
+          [0.0, -0.523599], // CONFIG: rot_y_phase2_desktop
           [0.35, 0.65 * Math.PI],
           [0.65, 1.35 * Math.PI],
           [1.0, 2.0 * Math.PI]
@@ -510,7 +510,7 @@
           [1.0, 0.0]
         ];
         const rotYKeyframesMobile = [
-          [0.0, -30 * Math.PI / 180], // Start at 30 degrees left
+          [0.0, -0.523599], // CONFIG: rot_y_phase2_mobile
           [0.35, 0.65 * Math.PI],
           [0.65, 1.35 * Math.PI],
           [1.0, 2.0 * Math.PI]
@@ -532,7 +532,7 @@
         targetPosX = introModelX * (1 - blendEased) + basePosX * blendEased;
         targetPosY = introModelY * (1 - blendEased) + basePosY * blendEased;
         targetScale = introModelScale * (1 - blendEased) + baseScale * blendEased;
-        targetRotY = (-30 * Math.PI / 180) * (1 - blendEased) + baseRotY * blendEased;
+        targetRotY = (-0.523599) * (1 - blendEased) + baseRotY * blendEased; // CONFIG: rot_y_blend
       } else {
         targetPosX = basePosX;
         targetPosY = basePosY;
