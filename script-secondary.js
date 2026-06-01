@@ -85,7 +85,7 @@
   const scene = new THREE.Scene();
 
   const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.set(0.0, 0.3, 3.25); // CONFIG: camera_position
+  camera.position.set(0.0, 0.275, 3.25); // CONFIG: camera_position
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -227,7 +227,7 @@
 
       barstoolMesh.position.x = -center.x * scaleFactor;
       barstoolMesh.position.z = -center.z * scaleFactor;
-      barstoolMesh.position.y = -0.70 - (box.min.y * scaleFactor);
+      barstoolMesh.position.y = -0.75 - (box.min.y * scaleFactor);
 
       barstoolMesh.traverse((child) => {
         if (child.isMesh) {
@@ -274,7 +274,7 @@
   // The model transitions from these intro coords to the narrative coords
   // as the user scrolls and the image fades out.
   let introModelX = 0.0500; // CONFIG: fallback_x
-  let introModelY = 0.4000; // CONFIG: fallback_y
+  let introModelY = 0.3750; // CONFIG: fallback_y
   let introModelScale = 0.3850; // CONFIG: fallback_scale
   let introModelRotY = -0.907571; // CONFIG: fallback_rot_y
 

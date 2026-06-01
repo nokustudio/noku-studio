@@ -205,9 +205,9 @@
       barstoolMesh.position.x = -center.x * scaleFactor;
       barstoolMesh.position.z = -center.z * scaleFactor;
 
-      // Align the bottom of the scaled model with y = -0.75 (plus 0.05 fine-tune)
-      // bottom in parent space is: position.y + box.min.y * scaleFactor = -0.70
-      barstoolMesh.position.y = -0.70 - (box.min.y * scaleFactor);
+      // Align the bottom of the scaled model with y = -0.75
+      // bottom in parent space is: position.y + box.min.y * scaleFactor = -0.75
+      barstoolMesh.position.y = -0.75 - (box.min.y * scaleFactor);
 
       // Enable shadow support on all model parts
       barstoolMesh.traverse((child) => {
