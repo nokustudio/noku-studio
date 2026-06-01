@@ -3780,8 +3780,8 @@ body.secondary-landing-page.scrolled-dark-bg {
 }
 
 .secondary-landing-page .narrative-panel .panel-number {
-  color: var(--chamoisee) !important;
-  opacity: 1 !important;
+  color: var(--bone) !important;
+  opacity: 0.85 !important;
 }
 
 .secondary-landing-page .narrative-panel .label {
