@@ -487,9 +487,9 @@
         ];
         const scaleKeyframes = [
           [0.0, 1.0],
-          [0.35, 1.0],
-          [0.65, 1.0],
-          [1.0, 1.0]
+          [0.35, 1.12],
+          [0.65, 1.12],
+          [1.0, 1.12]
         ];
         const rotYKeyframes = [
           [0.0, -0.907571], // CONFIG: rot_y_phase2_desktop
@@ -515,10 +515,16 @@
           [0.65, 1.35 * Math.PI],
           [1.0, 2.0 * Math.PI]
         ];
+        const scaleKeyframesMobile = [
+          [0.0, 1.0],
+          [0.35, 1.12],
+          [0.65, 1.12],
+          [1.0, 1.12]
+        ];
 
         basePosX = 0;
         basePosY = interpolate(scrollProgress, yKeyframesMobile);
-        baseScale = introModelScale * 1.0;
+        baseScale = introModelScale * interpolate(scrollProgress, scaleKeyframesMobile);
         baseRotY = interpolate(scrollProgress, rotYKeyframesMobile);
       }
 
