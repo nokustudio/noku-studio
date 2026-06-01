@@ -294,7 +294,7 @@
   // The model transitions from these intro coords to the narrative coords
   // as the user scrolls and the image fades out.
   let introModelX = 0.0;
-  let introModelY = 0.05;
+  let introModelY = 0.35;
   let introModelScale = 0.45;
   let introModelRotY = -30 * Math.PI / 180; // Starts 30 degrees rotated to the left
 
@@ -356,9 +356,11 @@
     const ndcX  =  (imgCX / window.innerWidth)  * 2 - 1;
     const ndcY  = -((imgCY / window.innerHeight) * 2 - 1);
 
-    // Project NDC → world-space X/Y at z=0
+    // Project NDC → world-space X/Y at z=0.
+    // Correct projection requires adding camera.position.y. We also add an extra 0.08 offset
+    // to align the visual center of the barstool (which has more visual mass in the upper seat/back).
     introModelX = ndcX * halfFrustumW;
-    introModelY = ndcY * halfFrustumH + camera.position.y * 0.05; // subtle camera-y correction
+    introModelY = ndcY * halfFrustumH + camera.position.y + 0.08;
 
     // Scale: the normalized model is ~1.35 world units tall.
     // We want it to subtend the same visual angle as the image.
