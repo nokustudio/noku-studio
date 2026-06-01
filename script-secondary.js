@@ -85,7 +85,7 @@
   const scene = new THREE.Scene();
 
   const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.set(0.0, 0.3, 3.5); // CONFIG: camera_position
+  camera.position.set(0.0, 0.3, 3.25); // CONFIG: camera_position
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -275,7 +275,7 @@
   // as the user scrolls and the image fades out.
   let introModelX = 0.0500; // CONFIG: fallback_x
   let introModelY = 0.3000; // CONFIG: fallback_y
-  let introModelScale = 0.4200; // CONFIG: fallback_scale
+  let introModelScale = 0.3850; // CONFIG: fallback_scale
   let introModelRotY = -0.959931; // CONFIG: fallback_rot_y
 
   let targetRotY = 0;
@@ -346,7 +346,7 @@
     // We want it to subtend the same visual angle as the image.
     const imgHeightWorld = (rect.height / window.innerHeight) * (halfFrustumH * 2);
     // Use 0.6x so the model starts at 60% scale of the image on load
-    introModelScale = Math.max(0.25, Math.min(1.1, (imgHeightWorld / 1.35) * 0.6)); // CONFIG: scale_factor
+    introModelScale = Math.max(0.25, Math.min(1.1, (imgHeightWorld / 1.35) * 0.55)); // CONFIG: scale_factor
   }
 
   let configTopDoc = 0;
