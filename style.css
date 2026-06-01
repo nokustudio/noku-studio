@@ -550,6 +550,10 @@ nav.light-nav .nav-dropdown {
     0 40px 100px rgba(10, 8, 6, 0.3);
 }
 
+body:not(.secondary-landing-page) .hero-title {
+  font-size: clamp(32px, 5vw, 52px);
+}
+
 .hero-tagline {
   font-size: clamp(14px, 1.5vw, 17px);
   font-weight: 300;
