@@ -487,7 +487,7 @@ nav.light-nav .nav-dropdown {
   justify-content: flex-start;
   align-items: center;
   text-align: center;
-  padding-top: clamp(160px, 20vh, 220px);
+  padding-top: clamp(110px, 14vh, 160px);
   padding-bottom: 60px;
 }
 
@@ -517,10 +517,10 @@ nav.light-nav .nav-dropdown {
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 300;
-  letter-spacing: 10px;
+  letter-spacing: 8px;
   text-transform: uppercase;
   color: var(--chamoisee);
-  margin-bottom: clamp(20px, 3vh, 32px);
+  margin-bottom: clamp(12px, 2vh, 20px);
   opacity: 0;
   transform: translateY(20px);
   animation: fadeUpIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
@@ -532,13 +532,13 @@ nav.light-nav .nav-dropdown {
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(48px, 8.5vw, 96px);
+  font-size: clamp(40px, 7vw, 78px);
   font-weight: 200;
-  letter-spacing: 12px;
+  letter-spacing: 10px;
   text-transform: uppercase;
   line-height: 1.1;
   color: var(--paper);
-  margin-bottom: clamp(24px, 4.5vh, 44px);
+  margin-bottom: clamp(16px, 3vh, 28px);
   opacity: 0;
   transform: translateY(30px);
   animation: fadeUpIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards;
@@ -551,12 +551,12 @@ nav.light-nav .nav-dropdown {
 }
 
 .hero-tagline {
-  font-size: clamp(16px, 1.8vw, 20px);
+  font-size: clamp(14px, 1.5vw, 17px);
   font-weight: 300;
   color: var(--bone);
-  max-width: 580px;
+  max-width: 520px;
   margin: 0 auto;
-  line-height: 1.75;
+  line-height: 1.7;
   opacity: 0;
   transform: translateY(20px);
   animation: fadeUpIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
