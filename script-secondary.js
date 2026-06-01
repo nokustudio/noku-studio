@@ -601,9 +601,19 @@
     }
   }
 
+  function updateBodyTheme() {
+    const scrollY = window.scrollY;
+    if (scrollY > 400) {
+      document.body.classList.add('scrolled-light-bg');
+    } else {
+      document.body.classList.remove('scrolled-light-bg');
+    }
+  }
+
   window.addEventListener('scroll', () => {
     evaluateScrollCalculations();
     updateNavbarTheme();
+    updateBodyTheme();
   }, { passive: true });
 
   window.addEventListener('resize', () => {
@@ -715,6 +725,13 @@
   function updateNavbarTheme() {
     if (!navbar) return;
     const scrollY = window.scrollY;
+    
+    if (scrollY < 400) {
+      navbar.classList.remove('light-nav');
+      navbar.classList.toggle('scrolled', scrollY > 40);
+      return;
+    }
+
     navbar.classList.toggle('scrolled', scrollY > 40);
 
     const navHeight = navbar.offsetHeight || 70;
@@ -776,9 +793,16 @@
     }
   }
 
-  window.addEventListener('scroll', updateNavbarTheme, { passive: true });
-  window.addEventListener('resize', updateNavbarTheme, { passive: true });
+  window.addEventListener('scroll', () => {
+    updateNavbarTheme();
+    updateBodyTheme();
+  }, { passive: true });
+  window.addEventListener('resize', () => {
+    updateNavbarTheme();
+    updateBodyTheme();
+  }, { passive: true });
   updateNavbarTheme();
+  updateBodyTheme();
 
   // ─── OPTIMIZED CRAFTSMANSHIP VIDEO PLAYER CONTROLS ───
   const video = document.getElementById('workshop-video');

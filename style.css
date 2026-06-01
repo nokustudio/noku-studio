@@ -3324,46 +3324,7 @@ body.secondary-landing-page.scrolled-dark-bg {
   background-color: var(--dark-bg);
 }
 
-/* Hero text styling overrides for initial light background */
-.secondary-landing-page .hero-title {
-  color: var(--ink);
-  text-shadow: none;
-  transition: color 1s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 1s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.secondary-landing-page .hero-tagline {
-  color: var(--muted);
-  text-shadow: none;
-  transition: color 1s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 1s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.secondary-landing-page .hero-eyebrow {
-  color: var(--chamoisee);
-  text-shadow: none;
-  transition: color 1s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 1s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Text styles transition when background scrolls to dark */
-.secondary-landing-page.scrolled-dark-bg .hero-title {
-  color: var(--paper);
-  text-shadow:
-    0 0 40px rgba(10, 8, 6, 0.95),
-    0 2px 6px rgba(10, 8, 6, 0.9),
-    0 8px 24px rgba(10, 8, 6, 0.75);
-}
-
-.secondary-landing-page.scrolled-dark-bg .hero-tagline {
-  color: var(--bone);
-  text-shadow:
-    0 0 20px rgba(10, 8, 6, 0.9),
-    0 2px 12px rgba(10, 8, 6, 0.75);
-}
-
-.secondary-landing-page.scrolled-dark-bg .hero-eyebrow {
-  color: var(--chamoisee);
-  text-shadow:
-    0 0 20px rgba(12, 10, 8, 0.9);
-}
+/* Hero text styling overrides for index styling compatibility */
 
 
 
@@ -3700,15 +3661,7 @@ body.secondary-landing-page.scrolled-dark-bg {
   }
 }
 
-/* Adjust scroll indicator color for light background */
-.secondary-landing-page .scroll-indicator span {
-  color: var(--muted);
-  transition: color 1s ease;
-}
-
-.secondary-landing-page.scrolled-dark-bg .scroll-indicator span {
-  color: var(--chamoisee);
-}
+/* Adjust scroll indicator color (uses defaults) */
 
 /* Set z-index of hero content wrap above static image but below three container */
 .secondary-landing-page .hero-content-wrap {
@@ -3735,32 +3688,12 @@ body.secondary-landing-page.scrolled-dark-bg {
   transform: none;
 }
 
-/* Light Theme Loading Screen Overrides */
-.secondary-landing-page #loading-screen {
-  background-color: var(--light) !important;
-}
-
-.secondary-landing-page #loading-screen .loader-logo {
-  color: var(--ink) !important;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.secondary-landing-page #loading-screen .loader-bar-wrap {
-  background-color: rgba(44, 38, 34, 0.1) !important;
-}
-
-.secondary-landing-page #loading-screen .loader-bar {
-  background-color: var(--ink) !important;
-}
-
-/* Light Theme 3D Model Scroll Animation Section Overrides */
+/* Dark/Light transition 3D Model Scroll Animation Section Overrides */
 .secondary-landing-page {
-  background-color: var(--light) !important;
+  background-color: var(--dark-bg) !important;
 }
 
-.secondary-landing-page.scrolled-dark-bg {
+.secondary-landing-page.scrolled-light-bg {
   background-color: var(--light) !important;
 }
 
