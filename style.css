@@ -70,7 +70,7 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   background-color: var(--dark-bg);
-  transition: background-color 0.8s ease;
+  transition: background-color 0.3s ease;
 }
 
 ::-webkit-scrollbar {
@@ -3317,7 +3317,7 @@ nav.light-nav .cart-btn:hover {
 body.secondary-landing-page {
   background-color: var(--light);
   color: var(--ink);
-  transition: background-color 1s cubic-bezier(0.16, 1, 0.3, 1), color 1s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body.secondary-landing-page.scrolled-dark-bg {

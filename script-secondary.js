@@ -718,7 +718,8 @@
     navbar.classList.toggle('scrolled', scrollY > 40);
 
     const navHeight = navbar.offsetHeight || 70;
-    const checkY = scrollY + navHeight / 2;
+    const checkY = scrollY + navHeight / 2; // For navbar class toggling near the top
+    const checkY_body = scrollY + window.innerHeight / 2; // For body background transitions at screen center
 
     // Sections with a light background — navbar should use light-nav state
     const lightSections = [
@@ -737,48 +738,74 @@
       { selector: '.quote_wrap' }
     ];
 
-    // Check if currently over a dark section (remove light-nav)
-    let isDark = false;
+    // 1. Check if navbar is currently over a dark section (remove light-nav)
+    let isDarkNavbar = false;
     for (const sec of darkSections) {
       const el = document.querySelector(sec.selector);
       if (el) {
         const top = el.getBoundingClientRect().top + window.scrollY;
         const height = el.offsetHeight;
         if (checkY >= top && checkY < top + height) {
-          isDark = true;
+          isDarkNavbar = true;
           break;
         }
       }
     }
 
-    if (isDark) {
-      navbar.classList.remove('light-nav');
-      document.body.classList.add('scrolled-dark-bg');
-      return;
-    }
-
-    // For all other sections (light bg), check explicitly
-    let isLight = false;
+    // 2. Check explicitly for navbar light sections
+    let isLightNavbar = false;
     for (const sec of lightSections) {
       const el = document.querySelector(sec.selector);
       if (el) {
         const top = el.getBoundingClientRect().top + window.scrollY;
         const height = el.offsetHeight;
         if (checkY >= top && checkY < top + height) {
-          isLight = true;
+          isLightNavbar = true;
+          break;
+        }
+      }
+    }
+
+    if (isLightNavbar || !isDarkNavbar) {
+      navbar.classList.add('light-nav');
+    } else {
+      navbar.classList.remove('light-nav');
+    }
+
+    // 3. Body background: check if body center is over a dark section
+    let isDarkBody = false;
+    for (const sec of darkSections) {
+      const el = document.querySelector(sec.selector);
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY;
+        const height = el.offsetHeight;
+        if (checkY_body >= top && checkY_body < top + height) {
+          isDarkBody = true;
+          break;
+        }
+      }
+    }
+
+    // 4. Body background: check explicitly for light sections
+    let isLightBody = false;
+    for (const sec of lightSections) {
+      const el = document.querySelector(sec.selector);
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY;
+        const height = el.offsetHeight;
+        if (checkY_body >= top && checkY_body < top + height) {
+          isLightBody = true;
           break;
         }
       }
     }
 
     // Secondary landing page is always light-themed in the 3D narrative + hero zone
-    // so default to light-nav unless explicitly over the dark video section
-    if (isLight || !isDark) {
-      navbar.classList.add('light-nav');
-      document.body.classList.remove('scrolled-dark-bg');
-    } else {
-      navbar.classList.remove('light-nav');
+    // so default to light body (remove scrolled-dark-bg) unless center is explicitly over a dark section
+    if (isDarkBody && !isLightBody) {
       document.body.classList.add('scrolled-dark-bg');
+    } else {
+      document.body.classList.remove('scrolled-dark-bg');
     }
   }
 

@@ -565,7 +565,8 @@
     }
 
     const navHeight = navbar.offsetHeight || 70;
-    const checkY = scrollY + navHeight / 2;
+    const checkY = scrollY + navHeight / 2; // For navbar class toggling near the top
+    const checkY_body = scrollY + window.innerHeight / 2; // For body background transitions at screen center
 
     const lightSections = [
       { selector: '#configurator' },
@@ -576,8 +577,8 @@
       { selector: 'footer' }
     ];
 
-    let isLight = false;
-
+    // 1. Check light sections for navbar theme
+    let isLightNavbar = false;
     for (const sec of lightSections) {
       const el = document.querySelector(sec.selector);
       if (el) {
@@ -585,17 +586,36 @@
         const top = rect.top + window.scrollY;
         const height = el.offsetHeight;
         if (checkY >= top && checkY < top + height) {
-          isLight = true;
+          isLightNavbar = true;
           break;
         }
       }
     }
 
-    if (isLight) {
+    // 2. Check light sections for body background theme
+    let isLightBody = false;
+    for (const sec of lightSections) {
+      const el = document.querySelector(sec.selector);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        const top = rect.top + window.scrollY;
+        const height = el.offsetHeight;
+        if (checkY_body >= top && checkY_body < top + height) {
+          isLightBody = true;
+          break;
+        }
+      }
+    }
+
+    if (isLightNavbar) {
       navbar.classList.add('light-nav');
-      document.body.style.backgroundColor = 'var(--light)';
     } else {
       navbar.classList.remove('light-nav');
+    }
+
+    if (isLightBody) {
+      document.body.style.backgroundColor = 'var(--light)';
+    } else {
       document.body.style.backgroundColor = 'var(--dark-bg)';
     }
   }
