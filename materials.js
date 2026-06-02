@@ -669,7 +669,6 @@
           </div>
           <p class="gcard__cat">Piece</p>
           <h3 class="gcard__name">${p.title}</h3>
-          <p class="gcard__price">${formatCurrency(priceVal)}</p>
         `;
         pCard.querySelector('.gcard__add').addEventListener('click', (e) => {
           e.preventDefault();
