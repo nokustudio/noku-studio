@@ -307,6 +307,21 @@
                 name
                 values
               }
+              variants(first: 100) {
+                edges {
+                  node {
+                    id
+                    title
+                    image {
+                      url
+                    }
+                    selectedOptions {
+                      name
+                      value
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -467,6 +482,82 @@
     return matchedProducts;
   }
 
+  // Finds variant image that matches selected material finish or upholstery combinations
+  function getVariantImage(product, category, materialId, materialName) {
+    if (!product.variants || !product.variants.edges || product.variants.edges.length === 0) {
+      return product.featuredImage?.url || 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7724c1a8d27260d62288_Noku_ofStillness_Lounge_chair_02.jpeg';
+    }
+
+    const normId = materialId.toLowerCase();
+    const normName = materialName.toLowerCase();
+
+    let bestMatchImage = null;
+    let fallbackImage = null;
+
+    for (let i = 0; i < product.variants.edges.length; i++) {
+      const v = product.variants.edges[i].node;
+      if (!v.image || !v.image.url) continue;
+
+      if (!fallbackImage) {
+        fallbackImage = v.image.url;
+      }
+
+      let matchesWood = false;
+      let matchesUpholstery = false;
+      let isTeakWood = false;
+
+      if (v.selectedOptions) {
+        v.selectedOptions.forEach(opt => {
+          const optName = opt.name.toLowerCase();
+          const optVal = opt.value.toLowerCase();
+
+          // Check if option is Wood or Finish
+          if (optName === 'wood' || optName === 'finish') {
+            const mappedWood = getMatchedId(opt.value);
+            if (mappedWood === normId || optVal.includes(normId) || normId.includes(optVal)) {
+              matchesWood = true;
+            }
+            if (optVal.includes('teak')) {
+              isTeakWood = true;
+            }
+          }
+
+          // Check if option is Upholstery or Cushion
+          if (optName === 'upholstery' || optName === 'cushion') {
+            const mappedUph = getMatchedId(opt.value);
+            if (mappedUph === normId || optVal.includes(normId) || normId.includes(optVal)) {
+              matchesUpholstery = true;
+            }
+          }
+        });
+      }
+
+      // Match rules
+      if (category === 'wood') {
+        if (matchesWood) {
+          return v.image.url;
+        }
+      } else if (category === 'leather' || category === 'fabric') {
+        if (matchesUpholstery) {
+          // If Upholstery matches and Wood is Teak, return immediately
+          if (isTeakWood) {
+            return v.image.url;
+          }
+          // Otherwise, save as best match Upholstery variant
+          bestMatchImage = v.image.url;
+        }
+      } else {
+        const titleMatch = v.title.toLowerCase().includes(normName) || v.title.toLowerCase().includes(normId);
+        if (titleMatch) {
+          return v.image.url;
+        }
+      }
+    }
+
+    if (bestMatchImage) return bestMatchImage;
+    return product.featuredImage?.url || fallbackImage || 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7724c1a8d27260d62288_Noku_ofStillness_Lounge_chair_02.jpeg';
+  }
+
   // ─── DOM RENDER CONTROLLER ───
 
   function renderSwatchesGrid(category) {
@@ -564,7 +655,7 @@
 
       displayProducts.forEach(p => {
         const priceVal = p.priceRange?.minVariantPrice?.amount ? parseFloat(p.priceRange.minVariantPrice.amount) : SHOPIFY_CONFIG.defaultPrice;
-        const imgUrl = p.featuredImage?.url || 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7724c1a8d27260d62288_Noku_ofStillness_Lounge_chair_02.jpeg';
+        const imgUrl = getVariantImage(p, category, item.id, item.name);
         
         const pCard = document.createElement('a');
         pCard.href = `product.html?handle=${p.handle}`;
