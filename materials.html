@@ -72,15 +72,15 @@
       padding-bottom: 12px;
     }
 
-    .materials-browser-grid {
+    .materials-browser-3col-grid {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 80px;
+      grid-template-columns: 1.2fr 1fr 1.3fr;
+      gap: 40px;
       align-items: start;
     }
 
-    /* Left Side: Filter and Grid */
-    .browser-left-col {
+    /* Column 1: Swatches */
+    .swatches-grid-col {
       display: flex;
       flex-direction: column;
       gap: 32px;
@@ -90,8 +90,8 @@
       margin-top: 16px;
     }
 
-    /* Right Side: Details View Card */
-    .browser-right-col {
+    /* Column 2: Details Card */
+    .detail-card-col {
       position: sticky;
       top: 110px;
     }
@@ -164,36 +164,13 @@
       color: var(--muted);
     }
 
-    /* Refined 2-column grid inside details view card */
-    .material-details-card .gallery-grid {
-      grid-template-columns: repeat(2, 1fr) !important;
-      column-gap: 16px !important;
-      row-gap: 24px !important;
+    /* Column 3: Used Pieces Section (Standalone Column) */
+    .used-pieces-col {
+      position: sticky;
+      top: 110px;
     }
 
-    .material-details-card .gcard__media {
-      margin-bottom: 8px !important;
-    }
-
-    .material-details-card .gcard__cat {
-      font-size: 8px !important;
-      margin-bottom: 4px !important;
-      letter-spacing: 2px !important;
-    }
-
-    .material-details-card .gcard__name {
-      font-size: 15px !important;
-    }
-
-    .material-details-card .gcard__price {
-      font-size: 12px !important;
-      margin-top: 4px !important;
-    }
-
-    /* Used In Pieces section */
     .used-pieces-block {
-      border-top: 1px solid var(--border-soft);
-      padding-top: 24px;
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -201,69 +178,43 @@
 
     .used-pieces-title {
       font-family: var(--font-display);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--ink);
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 14px;
+      margin: 0 0 12px 0;
     }
 
-    .used-pieces-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 16px;
+    /* Refined 2-column grid inside used-pieces-block */
+    .used-pieces-block .gallery-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      column-gap: 16px !important;
+      row-gap: 24px !important;
     }
 
-    .used-product-card {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background-color: rgba(237, 230, 218, 0.25);
-      border: 1px solid var(--border-soft);
-      border-radius: 8px;
-      padding: 10px;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    .used-pieces-block .gcard__media {
+      margin-bottom: 8px !important;
     }
 
-    .used-product-card:hover {
-      border-color: var(--chamoisee);
-      background-color: var(--cream);
-      transform: translateY(-2px);
+    .used-pieces-block .gcard__cat {
+      font-size: 8px !important;
+      margin-bottom: 4px !important;
+      letter-spacing: 2px !important;
     }
 
-    .used-product-img-wrap {
-      width: 48px;
-      height: 48px;
-      border-radius: 6px;
-      overflow: hidden;
-      flex-shrink: 0;
-      background-color: var(--paper);
+    .used-pieces-block .gcard__name {
+      font-size: 15px !important;
     }
 
-    .used-product-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .used-pieces-block .gcard__price {
+      font-size: 12px !important;
+      margin-top: 4px !important;
     }
 
-    .used-product-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
 
-    .used-product-name {
-      font-family: var(--font-display);
-      font-size: 12.5px;
-      font-weight: 500;
-      color: var(--ink);
-    }
-
-    .used-product-price {
-      font-family: var(--font-body);
-      font-size: 11px;
-      color: var(--chamoisee);
-    }
 
     .discover-more-link {
       display: inline-flex;
@@ -372,12 +323,13 @@
 
     /* Responsive adjustments */
     @media (max-width: 1024px) {
-      .materials-browser-grid {
+      .materials-browser-3col-grid {
         grid-template-columns: 1fr;
-        gap: 60px;
+        gap: 48px;
       }
 
-      .browser-right-col {
+      .detail-card-col,
+      .used-pieces-col {
         position: static;
       }
 
@@ -457,226 +409,226 @@
 
     <!-- Wood Section -->
     <section class="materials-browser-section" id="wood-section">
-      <div class="container materials-browser-grid">
-        
-        <!-- Left Column: Swatches -->
-        <div class="browser-left-col">
-          <h2 class="materials-section-title reveal-el">Wood Finishes</h2>
-          <div class="swatches-grid-container reveal-el delay-1">
-            <div class="swatches-block" id="wood-swatches-grid">
-              <!-- Swatches dynamically loaded from Registry -->
+      <div class="container">
+        <h2 class="materials-section-title reveal-el">Wood Finishes</h2>
+        <div class="materials-browser-3col-grid">
+          
+          <!-- Column 1: Swatches -->
+          <div class="swatches-grid-col reveal-el delay-1">
+            <div class="swatches-grid-container">
+              <div class="swatches-block" id="wood-swatches-grid">
+                <!-- Swatches dynamically loaded from Registry -->
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Right Column: Detail View Card -->
-        <div class="browser-right-col reveal-el">
-          <div class="material-details-card" id="wood-detail-card">
-            
-            <div class="details-img-viewport">
-              <img id="wood-detail-img" src="" alt="Selected Material Preview">
+          <!-- Column 2: Detail View Card -->
+          <div class="detail-card-col reveal-el delay-2">
+            <div class="material-details-card" id="wood-detail-card">
+              <div class="details-img-viewport">
+                <img id="wood-detail-img" src="" alt="Selected Material Preview">
+              </div>
+              <div class="details-header-block">
+                <h2 class="details-title" id="wood-detail-title">Loading...</h2>
+                <span class="details-subtitle" id="wood-detail-subtitle">Scientific name</span>
+              </div>
+              <div class="details-desc" id="wood-detail-desc">
+                Select a material swatch from the list to explore its detailed texture, sourcing origins, and performance characteristics.
+              </div>
             </div>
+          </div>
 
-            <div class="details-header-block">
-              <h2 class="details-title" id="wood-detail-title">Loading...</h2>
-              <span class="details-subtitle" id="wood-detail-subtitle">Scientific name</span>
-            </div>
-
-            <div class="details-desc" id="wood-detail-desc">
-              Select a material swatch from the list to explore its detailed texture, sourcing origins, and performance characteristics.
-            </div>
-
-            <!-- Dynamic products mapping -->
+          <!-- Column 3: Used In Pieces -->
+          <div class="used-pieces-col reveal-el delay-3">
             <div class="used-pieces-block" id="wood-used-pieces-block" style="display: none;">
               <h3 class="used-pieces-title">Used In Pieces</h3>
               <div class="gallery-grid" id="wood-used-products">
                 <!-- Related product cards dynamically loaded here -->
               </div>
             </div>
-
           </div>
-        </div>
 
+        </div>
       </div>
     </section>
 
     <!-- Leather Section -->
     <section class="materials-browser-section" id="leather-section">
-      <div class="container materials-browser-grid">
-        
-        <!-- Left Column: Swatches -->
-        <div class="browser-left-col">
-          <h2 class="materials-section-title reveal-el">Premium Leathers</h2>
-          <div class="swatches-grid-container reveal-el delay-1">
-            <div class="swatches-block" id="leather-swatches-grid">
-              <!-- Swatches dynamically loaded from Registry -->
+      <div class="container">
+        <h2 class="materials-section-title reveal-el">Premium Leathers</h2>
+        <div class="materials-browser-3col-grid">
+          
+          <!-- Column 1: Swatches -->
+          <div class="swatches-grid-col reveal-el delay-1">
+            <div class="swatches-grid-container">
+              <div class="swatches-block" id="leather-swatches-grid">
+                <!-- Swatches dynamically loaded from Registry -->
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Right Column: Detail View Card -->
-        <div class="browser-right-col reveal-el">
-          <div class="material-details-card" id="leather-detail-card">
-            
-            <div class="details-img-viewport">
-              <img id="leather-detail-img" src="" alt="Selected Material Preview">
+          <!-- Column 2: Detail View Card -->
+          <div class="detail-card-col reveal-el delay-2">
+            <div class="material-details-card" id="leather-detail-card">
+              <div class="details-img-viewport">
+                <img id="leather-detail-img" src="" alt="Selected Material Preview">
+              </div>
+              <div class="details-header-block">
+                <h2 class="details-title" id="leather-detail-title">Loading...</h2>
+                <span class="details-subtitle" id="leather-detail-subtitle">Scientific name</span>
+              </div>
+              <div class="details-desc" id="leather-detail-desc">
+                Select a material swatch from the list to explore its detailed texture, sourcing origins, and performance characteristics.
+              </div>
             </div>
+          </div>
 
-            <div class="details-header-block">
-              <h2 class="details-title" id="leather-detail-title">Loading...</h2>
-              <span class="details-subtitle" id="leather-detail-subtitle">Scientific name</span>
-            </div>
-
-            <div class="details-desc" id="leather-detail-desc">
-              Select a material swatch from the list to explore its detailed texture, sourcing origins, and performance characteristics.
-            </div>
-
-            <!-- Dynamic products mapping -->
+          <!-- Column 3: Used In Pieces -->
+          <div class="used-pieces-col reveal-el delay-3">
             <div class="used-pieces-block" id="leather-used-pieces-block" style="display: none;">
               <h3 class="used-pieces-title">Used In Pieces</h3>
               <div class="gallery-grid" id="leather-used-products">
                 <!-- Related product cards dynamically loaded here -->
               </div>
             </div>
-
           </div>
-        </div>
 
+        </div>
       </div>
     </section>
 
     <!-- Fabric Section -->
     <section class="materials-browser-section" id="fabric-section">
-      <div class="container materials-browser-grid">
-        
-        <!-- Left Column: Swatches -->
-        <div class="browser-left-col">
-          <h2 class="materials-section-title reveal-el">Natural Fabrics</h2>
-          <div class="swatches-grid-container reveal-el delay-1">
-            <div class="swatches-block" id="fabric-swatches-grid">
-              <!-- Swatches dynamically loaded from Registry -->
+      <div class="container">
+        <h2 class="materials-section-title reveal-el">Natural Fabrics</h2>
+        <div class="materials-browser-3col-grid">
+          
+          <!-- Column 1: Swatches -->
+          <div class="swatches-grid-col reveal-el delay-1">
+            <div class="swatches-grid-container">
+              <div class="swatches-block" id="fabric-swatches-grid">
+                <!-- Swatches dynamically loaded from Registry -->
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Right Column: Detail View Card -->
-        <div class="browser-right-col reveal-el">
-          <div class="material-details-card" id="fabric-detail-card">
-            
-            <div class="details-img-viewport">
-              <img id="fabric-detail-img" src="" alt="Selected Material Preview">
+          <!-- Column 2: Detail View Card -->
+          <div class="detail-card-col reveal-el delay-2">
+            <div class="material-details-card" id="fabric-detail-card">
+              <div class="details-img-viewport">
+                <img id="fabric-detail-img" src="" alt="Selected Material Preview">
+              </div>
+              <div class="details-header-block">
+                <h2 class="details-title" id="fabric-detail-title">Loading...</h2>
+                <span class="details-subtitle" id="fabric-detail-subtitle">Scientific name</span>
+              </div>
+              <div class="details-desc" id="fabric-detail-desc">
+                Select a material swatch from the list to explore its detailed texture, sourcing origins, and performance characteristics.
+              </div>
             </div>
+          </div>
 
-            <div class="details-header-block">
-              <h2 class="details-title" id="fabric-detail-title">Loading...</h2>
-              <span class="details-subtitle" id="fabric-detail-subtitle">Scientific name</span>
-            </div>
-
-            <div class="details-desc" id="fabric-detail-desc">
-              Select a material swatch from the list to explore its detailed texture, sourcing origins, and performance characteristics.
-            </div>
-
-            <!-- Dynamic products mapping -->
+          <!-- Column 3: Used In Pieces -->
+          <div class="used-pieces-col reveal-el delay-3">
             <div class="used-pieces-block" id="fabric-used-pieces-block" style="display: none;">
               <h3 class="used-pieces-title">Used In Pieces</h3>
               <div class="gallery-grid" id="fabric-used-products">
                 <!-- Related product cards dynamically loaded here -->
               </div>
             </div>
-
           </div>
-        </div>
 
+        </div>
       </div>
     </section>
 
     <!-- Cane Section -->
     <section class="materials-browser-section" id="cane-section">
-      <div class="container materials-browser-grid">
-        
-        <!-- Left Column: Swatches -->
-        <div class="browser-left-col">
-          <h2 class="materials-section-title reveal-el">Woven Cane</h2>
-          <div class="swatches-grid-container reveal-el delay-1">
-            <div class="swatches-block" id="cane-swatches-grid">
-              <!-- Swatches dynamically loaded from Registry -->
+      <div class="container">
+        <h2 class="materials-section-title reveal-el">Woven Cane</h2>
+        <div class="materials-browser-3col-grid">
+          
+          <!-- Column 1: Swatches -->
+          <div class="swatches-grid-col reveal-el delay-1">
+            <div class="swatches-grid-container">
+              <div class="swatches-block" id="cane-swatches-grid">
+                <!-- Swatches dynamically loaded from Registry -->
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Right Column: Detail View Card -->
-        <div class="browser-right-col reveal-el">
-          <div class="material-details-card" id="cane-detail-card">
-            
-            <div class="details-img-viewport">
-              <img id="cane-detail-img" src="" alt="Selected Material Preview">
+          <!-- Column 2: Detail View Card -->
+          <div class="detail-card-col reveal-el delay-2">
+            <div class="material-details-card" id="cane-detail-card">
+              <div class="details-img-viewport">
+                <img id="cane-detail-img" src="" alt="Selected Material Preview">
+              </div>
+              <div class="details-header-block">
+                <h2 class="details-title" id="cane-detail-title">Loading...</h2>
+                <span class="details-subtitle" id="cane-detail-subtitle">Scientific name</span>
+              </div>
+              <div class="details-desc" id="cane-detail-desc">
+                Select a material swatch from the list to explore its detailed texture, sourcing origins, and performance characteristics.
+              </div>
             </div>
+          </div>
 
-            <div class="details-header-block">
-              <h2 class="details-title" id="cane-detail-title">Loading...</h2>
-              <span class="details-subtitle" id="cane-detail-subtitle">Scientific name</span>
-            </div>
-
-            <div class="details-desc" id="cane-detail-desc">
-              Select a material swatch from the list to explore its detailed texture, sourcing origins, and performance characteristics.
-            </div>
-
-            <!-- Dynamic products mapping -->
+          <!-- Column 3: Used In Pieces -->
+          <div class="used-pieces-col reveal-el delay-3">
             <div class="used-pieces-block" id="cane-used-pieces-block" style="display: none;">
               <h3 class="used-pieces-title">Used In Pieces</h3>
               <div class="gallery-grid" id="cane-used-products">
                 <!-- Related product cards dynamically loaded here -->
               </div>
             </div>
-
           </div>
-        </div>
 
+        </div>
       </div>
     </section>
 
     <!-- Metals Section -->
     <section class="materials-browser-section" id="metals-section">
-      <div class="container materials-browser-grid">
-        
-        <!-- Left Column: Swatches -->
-        <div class="browser-left-col">
-          <h2 class="materials-section-title reveal-el">Crafted Metals</h2>
-          <div class="swatches-grid-container reveal-el delay-1">
-            <div class="swatches-block" id="metals-swatches-grid">
-              <!-- Swatches dynamically loaded from Registry -->
+      <div class="container">
+        <h2 class="materials-section-title reveal-el">Crafted Metals</h2>
+        <div class="materials-browser-3col-grid">
+          
+          <!-- Column 1: Swatches -->
+          <div class="swatches-grid-col reveal-el delay-1">
+            <div class="swatches-grid-container">
+              <div class="swatches-block" id="metals-swatches-grid">
+                <!-- Swatches dynamically loaded from Registry -->
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Right Column: Detail View Card -->
-        <div class="browser-right-col reveal-el">
-          <div class="material-details-card" id="metals-detail-card">
-            
-            <div class="details-img-viewport">
-              <img id="metals-detail-img" src="" alt="Selected Material Preview">
+          <!-- Column 2: Detail View Card -->
+          <div class="detail-card-col reveal-el delay-2">
+            <div class="material-details-card" id="metals-detail-card">
+              <div class="details-img-viewport">
+                <img id="metals-detail-img" src="" alt="Selected Material Preview">
+              </div>
+              <div class="details-header-block">
+                <h2 class="details-title" id="metals-detail-title">Loading...</h2>
+                <span class="details-subtitle" id="metals-detail-subtitle">Scientific name</span>
+              </div>
+              <div class="details-desc" id="metals-detail-desc">
+                Select a material swatch from the list to explore its detailed texture, sourcing origins, and performance characteristics.
+              </div>
             </div>
+          </div>
 
-            <div class="details-header-block">
-              <h2 class="details-title" id="metals-detail-title">Loading...</h2>
-              <span class="details-subtitle" id="metals-detail-subtitle">Scientific name</span>
-            </div>
-
-            <div class="details-desc" id="metals-detail-desc">
-              Select a material swatch from the list to explore its detailed texture, sourcing origins, and performance characteristics.
-            </div>
-
-            <!-- Dynamic products mapping -->
+          <!-- Column 3: Used In Pieces -->
+          <div class="used-pieces-col reveal-el delay-3">
             <div class="used-pieces-block" id="metals-used-pieces-block" style="display: none;">
               <h3 class="used-pieces-title">Used In Pieces</h3>
               <div class="gallery-grid" id="metals-used-products">
                 <!-- Related product cards dynamically loaded here -->
               </div>
             </div>
-
           </div>
-        </div>
 
+        </div>
       </div>
     </section>
 
