@@ -518,7 +518,7 @@
             if (mappedWood === normId || optVal.includes(normId) || normId.includes(optVal)) {
               matchesWood = true;
             }
-            if (optVal.includes('teak')) {
+            if (mappedWood === 'teak') {
               isTeakWood = true;
             }
           }
