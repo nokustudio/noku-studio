@@ -572,6 +572,7 @@
       { selector: '.materials-section' },
       { selector: '.products-section' },
       { selector: '.collections-section' },
+      { selector: '.ticker-container' },
       { selector: 'footer' }
     ];
 

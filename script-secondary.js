@@ -726,6 +726,7 @@
       { selector: '.materials-section' },
       { selector: '.products-section' },
       { selector: '.collections-section' },
+      { selector: '.ticker-container' },
       { selector: 'footer' }
     ];
 
@@ -733,8 +734,7 @@
     // so the navbar stays light-nav there too — we include the hero/narrative zone.
     const darkSections = [
       { selector: '.video-section' },
-      { selector: '.quote_wrap' },
-      { selector: '.ticker-container' }
+      { selector: '.quote_wrap' }
     ];
 
     // Check if currently over a dark section (remove light-nav)
