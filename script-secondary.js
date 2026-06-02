@@ -725,13 +725,16 @@
       { selector: '#configurator' },
       { selector: '.materials-section' },
       { selector: '.products-section' },
-      { selector: '.collections-section' }
+      { selector: '.collections-section' },
+      { selector: 'footer' }
     ];
 
     // The 3D narrative scroll zone uses the secondary page's light body background,
     // so the navbar stays light-nav there too — we include the hero/narrative zone.
     const darkSections = [
-      { selector: '.video-section' }
+      { selector: '.video-section' },
+      { selector: '.quote_wrap' },
+      { selector: '.ticker-container' }
     ];
 
     // Check if currently over a dark section (remove light-nav)
@@ -750,6 +753,7 @@
 
     if (isDark) {
       navbar.classList.remove('light-nav');
+      document.body.classList.add('scrolled-dark-bg');
       return;
     }
 
@@ -771,8 +775,10 @@
     // so default to light-nav unless explicitly over the dark video section
     if (isLight || !isDark) {
       navbar.classList.add('light-nav');
+      document.body.classList.remove('scrolled-dark-bg');
     } else {
       navbar.classList.remove('light-nav');
+      document.body.classList.add('scrolled-dark-bg');
     }
   }
 

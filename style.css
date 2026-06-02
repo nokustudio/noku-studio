@@ -3761,7 +3761,7 @@ body.secondary-landing-page.scrolled-dark-bg {
 }
 
 .secondary-landing-page.scrolled-dark-bg {
-  background-color: var(--light) !important;
+  background-color: var(--dark-bg) !important;
 }
 
 .secondary-landing-page .narrative-panel {

@@ -571,7 +571,8 @@
       { selector: '#configurator' },
       { selector: '.materials-section' },
       { selector: '.products-section' },
-      { selector: '.collections-section' }
+      { selector: '.collections-section' },
+      { selector: 'footer' }
     ];
 
     let isLight = false;
@@ -591,8 +592,10 @@
 
     if (isLight) {
       navbar.classList.add('light-nav');
+      document.body.style.backgroundColor = 'var(--light)';
     } else {
       navbar.classList.remove('light-nav');
+      document.body.style.backgroundColor = 'var(--dark-bg)';
     }
   }
 
