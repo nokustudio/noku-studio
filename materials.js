@@ -425,7 +425,18 @@
           if (category === 'wood' && isWood) {
             opt.values.forEach(val => {
               const mappedVal = getMatchedId(val);
-              if (mappedVal === normId || val.toLowerCase().includes(normId) || normId.includes(val.toLowerCase())) {
+              const valNorm = val.toLowerCase().replace(/[^a-z0-9]/g, '');
+              const targetNorm = materialId.toLowerCase().replace(/[^a-z0-9]/g, '');
+              
+              let matches = false;
+              if (targetNorm === 'reclaimedteak') {
+                matches = (mappedVal === 'reclaimed-teak' || valNorm === 'reclaimedteak' || valNorm.includes('reclaimedteak'));
+              } else if (targetNorm === 'teak') {
+                matches = (mappedVal === 'teak' || valNorm === 'teak' || valNorm === 'solidteak' || valNorm.includes('teak')) && !valNorm.includes('reclaimed');
+              } else {
+                matches = (mappedVal === normId || valNorm === targetNorm || valNorm.includes(targetNorm) || targetNorm.includes(valNorm));
+              }
+              if (matches) {
                 uses = true;
               }
             });
@@ -515,8 +526,15 @@
           // Check if option is Wood or Finish
           if (optName === 'wood' || optName === 'finish') {
             const mappedWood = getMatchedId(opt.value);
-            if (mappedWood === normId || optVal.includes(normId) || normId.includes(optVal)) {
-              matchesWood = true;
+            const valNorm = opt.value.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const targetNorm = materialId.toLowerCase().replace(/[^a-z0-9]/g, '');
+            
+            if (targetNorm === 'reclaimedteak') {
+              matchesWood = (mappedWood === 'reclaimed-teak' || valNorm === 'reclaimedteak' || valNorm.includes('reclaimedteak'));
+            } else if (targetNorm === 'teak') {
+              matchesWood = (mappedWood === 'teak' || valNorm === 'teak' || valNorm === 'solidteak' || valNorm.includes('teak')) && !valNorm.includes('reclaimed');
+            } else {
+              matchesWood = (mappedWood === normId || valNorm === targetNorm || valNorm.includes(targetNorm) || targetNorm.includes(valNorm));
             }
             if (mappedWood === 'teak') {
               isTeakWood = true;

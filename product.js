@@ -1036,7 +1036,7 @@ function renderProductPage() {
               alt="${currentProduct.title} Interactive 3D Model" 
               auto-rotate 
               camera-controls 
-              camera-orbit="auto auto 120%"
+              camera-orbit="auto auto 160%"
               ar 
               shadow-intensity="1"
               touch-action="pan-y">
@@ -1150,7 +1150,16 @@ function findMatchingVariant() {
   const matchedEdge = currentProduct.variants.edges.find(edge => {
     const v = edge.node;
     return v.selectedOptions.every(opt => {
-      return selectedOptions[opt.name] === opt.value;
+      // Find the selected value corresponding to this option name (normalize option names to be safe)
+      const optNameNorm = opt.name.toLowerCase().trim().replace(/[^a-z0-9]/g, '');
+      const matchedKey = Object.keys(selectedOptions).find(key => {
+        return key.toLowerCase().trim().replace(/[^a-z0-9]/g, '') === optNameNorm;
+      });
+      const selectedVal = matchedKey ? selectedOptions[matchedKey] : null;
+      
+      const normSelectedVal = selectedVal ? selectedVal.toLowerCase().trim().replace(/[^a-z0-9]/g, '') : '';
+      const normVariantVal = opt.value ? opt.value.toLowerCase().trim().replace(/[^a-z0-9]/g, '') : '';
+      return normSelectedVal === normVariantVal;
     });
   });
 
