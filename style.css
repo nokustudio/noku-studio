@@ -679,7 +679,7 @@ body:not(.secondary-landing-page) .hero-title {
   overflow: hidden;
   padding: 20px 0;
   position: relative;
-  z-index: 3;
+  z-index: 13;
 }
 
 .ticker-track {
@@ -721,7 +721,7 @@ body:not(.secondary-landing-page) .hero-title {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 3;
+  z-index: 13;
 }
 
 .video-background {
@@ -789,7 +789,7 @@ body:not(.secondary-landing-page) .hero-title {
 /* ════════ STUDIO INTRODUCTION ════════ */
 .studio-intro {
   background-color: var(--paper);
-  z-index: 3;
+  z-index: 13;
   position: relative;
 }
 
@@ -837,7 +837,7 @@ body:not(.secondary-landing-page) .hero-title {
   padding-top: 180px;
   background-color: var(--light);
   position: relative;
-  z-index: 3;
+  z-index: 13;
   border-top: none;
   border-bottom: 1px solid var(--line);
 }
@@ -1221,7 +1221,7 @@ body:not(.secondary-landing-page) .hero-title {
 /* ════════ COLLECTIONS SECTION ════════ */
 .collections-section {
   background-color: var(--light);
-  z-index: 3;
+  z-index: 13;
   position: relative;
 }
 
@@ -1354,7 +1354,7 @@ body:not(.secondary-landing-page) .hero-title {
 /* ════════ MATERIALS PALETTE ════════ */
 .materials-section {
   background-color: var(--light);
-  z-index: 3;
+  z-index: 13;
   position: relative;
   border-top: 1px solid var(--line);
 }
@@ -1830,7 +1830,7 @@ footer {
   border-top: none;
   padding: 80px 0 40px;
   position: relative;
-  z-index: 3;
+  z-index: 13;
 }
 
 .footer-cta-line {
