@@ -1036,6 +1036,7 @@ function renderProductPage() {
               alt="${currentProduct.title} Interactive 3D Model" 
               auto-rotate 
               camera-controls 
+              camera-orbit="auto auto 120%"
               ar 
               shadow-intensity="1"
               touch-action="pan-y">

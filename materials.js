@@ -378,6 +378,7 @@
     if (norm.includes('olive')) return 'eternity-olive';
     if (norm.includes('whiteash')) return 'white-ash';
     if (norm.includes('reclaimedteak')) return 'reclaimed-teak';
+    if (norm.includes('rubiklinen')) return 'rubik-linen';
     
     return norm;
   }
