@@ -425,7 +425,7 @@ const LOCAL_MATERIALS_REGISTRY = {
     { id: "woven-cane", name: "Woven Cane", subtitle: "Natural Rattan Vine", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7b453b55e1b9a21c03_6684d13aa6725a68337cc74f_66784e83c198b5a75b916393_Cane%252520Weave.png", desc: "Crafted from rattan vine, woven cane brings light and airy beauty with warm tones and surprising durability." }
   ],
   metals: [
-    { id: "brass", name: "Brass", subtitle: "Copper-Zinc Alloy", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7c4efe0f82a1ee7847_67c94a5ccae97b8acf9ee4bd_brass-rod-port.jpeg", desc: "A versatile copper-zinc alloy known for its golden-yellow color and luster. Develops a natural patina over time." }
+    { id: "brass", name: "Brass", subtitle: "Copper-Zinc Alloy", preview: "Resources/material images/Metals/Brass.jpg", desc: "A versatile copper-zinc alloy known for its golden-yellow color and luster. Develops a natural patina over time." }
   ]
 };
 

@@ -1721,7 +1721,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 /* Metals Category */
 .swatch-metals-brass {
-  background-image: url('https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7c4efe0f82a1ee7847_67c94a5ccae97b8acf9ee4bd_brass-rod-port.jpeg'), linear-gradient(135deg, #e3b856 0%, #cfa138 50%, #ad821f 100%);
+  background-image: url('Resources/material%20images/Metals/Brass.jpg'), linear-gradient(135deg, #e3b856 0%, #cfa138 50%, #ad821f 100%);
 }
 
 .swatch-label {

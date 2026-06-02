@@ -208,7 +208,7 @@
         subtitle: "Copper-Zinc Alloy",
         desc: "Brass is a versatile metal alloy primarily composed of copper and zinc, known for its golden-yellow color and attractive luster. It has a smooth texture and can develop a natural patina over time. With its moderate density, brass is both strong and malleable, making it ideal for intricate designs.",
         class: "swatch-metals-brass",
-        preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7c4efe0f82a1ee7847_67c94a5ccae97b8acf9ee4bd_brass-rod-port.jpeg"
+        preview: "Resources/material images/Metals/Brass.jpg"
       }
     ]
   };
@@ -272,8 +272,13 @@
 
   // ─── STATE VARIABLES ───
   let productsList = [];
-  let currentCategory = 'wood';
-  let selectedMaterial = null;
+  const categoryStates = {
+    wood: { selected: null },
+    leather: { selected: null },
+    fabric: { selected: null },
+    cane: { selected: null },
+    metals: { selected: null }
+  };
 
   // ─── SHOPIFY GRAPHQL API client ───
   async function fetchProductsFromShopify() {
@@ -464,18 +469,20 @@
 
   // ─── DOM RENDER CONTROLLER ───
 
-  function renderSwatchesGrid() {
-    const grid = document.getElementById('materials-swatches-grid');
+  function renderSwatchesGrid(category) {
+    const grid = document.getElementById(`${category}-swatches-grid`);
     if (!grid) return;
     
     grid.innerHTML = '';
     
-    const categoryItems = MATERIALS_REGISTRY[currentCategory];
+    const categoryItems = MATERIALS_REGISTRY[category];
     if (!categoryItems || categoryItems.length === 0) return;
+
+    const selectedItem = categoryStates[category].selected;
 
     categoryItems.forEach((item, index) => {
       const card = document.createElement('div');
-      card.className = `swatch-card${selectedMaterial && selectedMaterial.id === item.id ? ' active' : ''}`;
+      card.className = `swatch-card${selectedItem && selectedItem.id === item.id ? ' active' : ''}`;
       card.setAttribute('data-id', item.id);
 
       const bg = document.createElement('div');
@@ -500,36 +507,27 @@
         activeCards.forEach(c => c.classList.remove('active'));
         card.classList.add('active');
         
-        selectedMaterial = item;
-        renderMaterialDetails(item);
+        categoryStates[category].selected = item;
+        renderMaterialDetails(category, item);
       });
 
       grid.appendChild(card);
     });
   }
 
-  function renderMaterialDetails(item) {
-    const titleEl = document.getElementById('material-detail-title');
-    const categoryEl = document.getElementById('material-detail-category');
-    const subtitleEl = document.getElementById('material-detail-subtitle');
-    const descEl = document.getElementById('material-detail-desc');
-    const imgEl = document.getElementById('material-detail-img');
+  function renderMaterialDetails(category, item) {
+    const titleEl = document.getElementById(`${category}-detail-title`);
+    const subtitleEl = document.getElementById(`${category}-detail-subtitle`);
+    const descEl = document.getElementById(`${category}-detail-desc`);
+    const imgEl = document.getElementById(`${category}-detail-img`);
     
-    const usedPiecesBlock = document.getElementById('material-used-pieces-block');
-    const usedProductsGrid = document.getElementById('material-used-products');
+    const usedPiecesBlock = document.getElementById(`${category}-used-pieces-block`);
+    const usedProductsGrid = document.getElementById(`${category}-used-products`);
 
     if (!item) return;
 
     // Detail contents update
     if (titleEl) titleEl.textContent = item.name;
-    if (categoryEl) {
-      let catLabel = 'Wood Finish';
-      if (currentCategory === 'leather') catLabel = 'Premium Leather';
-      else if (currentCategory === 'fabric') catLabel = 'Natural Fabric';
-      else if (currentCategory === 'cane') catLabel = 'Natural Rattan / Cane';
-      else if (currentCategory === 'metals') catLabel = 'Sourcing Metal / Details';
-      categoryEl.textContent = catLabel;
-    }
     if (subtitleEl) {
       subtitleEl.textContent = item.subtitle || '';
       subtitleEl.style.display = item.subtitle ? 'block' : 'none';
@@ -549,7 +547,7 @@
     }
 
     // Render Used In Pieces dynamic block
-    const relatedProducts = getProductsUsingMaterial(currentCategory, item.id, item.name);
+    const relatedProducts = getProductsUsingMaterial(category, item.id, item.name);
     
     // Clear any existing Discover More links
     if (usedPiecesBlock) {
@@ -594,7 +592,7 @@
       if (relatedProducts.length > 0) {
         const moreLink = document.createElement('a');
         moreLink.className = 'discover-more-link';
-        moreLink.href = getFilterUrl(currentCategory, item);
+        moreLink.href = getFilterUrl(category, item);
         if (relatedProducts.length > 4) {
           moreLink.innerHTML = `Discover More Pieces (+${relatedProducts.length - 4}) <span>→</span>`;
         } else {
@@ -621,24 +619,6 @@
   // ─── BOOTSTRAP INITIALIZATION ───
 
   async function init() {
-    // Bind category pills click events
-    const categoryPills = document.querySelectorAll('.materials-pill');
-    categoryPills.forEach(pill => {
-      pill.addEventListener('click', () => {
-        categoryPills.forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        
-        currentCategory = pill.getAttribute('data-category');
-        
-        // Default select first item in new category
-        const firstItem = MATERIALS_REGISTRY[currentCategory][0];
-        selectedMaterial = firstItem;
-        
-        renderSwatchesGrid();
-        renderMaterialDetails(firstItem);
-      });
-    });
-
     // 1. Fetch live product data from Shopify
     const liveSuccess = await fetchProductsFromShopify();
     if (!liveSuccess) {
@@ -646,14 +626,14 @@
       productsList = [...FALLBACK_PRODUCTS];
     }
 
-    // 2. Set default active selections and render
-    const defaultCategory = 'wood';
-    const defaultItem = MATERIALS_REGISTRY[defaultCategory][0];
-    currentCategory = defaultCategory;
-    selectedMaterial = defaultItem;
-
-    renderSwatchesGrid();
-    renderMaterialDetails(defaultItem);
+    // 2. Initialize and render each category section
+    const categories = ['wood', 'leather', 'fabric', 'cane', 'metals'];
+    categories.forEach(category => {
+      const defaultItem = MATERIALS_REGISTRY[category][0];
+      categoryStates[category].selected = defaultItem;
+      renderSwatchesGrid(category);
+      renderMaterialDetails(category, defaultItem);
+    });
 
     // Sync Cart badge on load
     syncCartBadge();

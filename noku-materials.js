@@ -29,7 +29,7 @@
       { id: "woven-cane", name: "Woven Cane", subtitle: "Natural Rattan Vine", cls: "swatch-cane-woven-cane", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7b453b55e1b9a21c03_6684d13aa6725a68337cc74f_66784e83c198b5a75b916393_Cane%252520Weave.png", desc: "Crafted from rattan vine, woven cane brings light and airy beauty with warm tones and surprising durability. Lightweight, breathable, and low-maintenance." }
     ],
     metals: [
-      { id: "brass", name: "Brass", subtitle: "Copper-Zinc Alloy", cls: "swatch-metals-brass", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7c4efe0f82a1ee7847_67c94a5ccae97b8acf9ee4bd_brass-rod-port.jpeg", desc: "A versatile copper-zinc alloy known for its golden-yellow color and luster. Smooth-textured, it develops a natural patina over time and is strong yet malleable for intricate designs." }
+      { id: "brass", name: "Brass", subtitle: "Copper-Zinc Alloy", cls: "swatch-metals-brass", preview: "Resources/material images/Metals/Brass.jpg", desc: "A versatile copper-zinc alloy known for its golden-yellow color and luster. Smooth-textured, it develops a natural patina over time and is strong yet malleable for intricate designs." }
     ]
   };
 
