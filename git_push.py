@@ -40,9 +40,41 @@ def main():
     print("----------------------------------------")
 
     # 2. Get Commit Message
-    default_msg = "style: update 3D model config variables"
+    default_msg = "refactor: optimize layout and compress video loop"
     msg = input(f"\nEnter commit message [{default_msg}]: ").strip()
     commit_msg = msg if msg else default_msg
+
+    # Safety Check: Scan for heavy files or original backups
+    print("\n[INFO] Scanning for heavy files/original backups...")
+    heavy_files = []
+    original_backups = []
+    for root, dirs, files in os.walk('.'):
+        if '.git' in root or 'node_modules' in root or '.claude' in root or 'backup' in root or 'scratch' in root:
+            continue
+        for f in files:
+            filepath = os.path.join(root, f)
+            try:
+                size_mb = os.path.getsize(filepath) / (1024 * 1024)
+                if f.endswith('_original.mp4'):
+                    original_backups.append((filepath, size_mb))
+                elif (f.endswith('.mp4') or f.endswith('.zip') or f.endswith('.glb')) and size_mb > 15:
+                    heavy_files.append((filepath, size_mb))
+            except OSError:
+                pass
+
+    if original_backups:
+        print("Found original video backups (ignored via .gitignore):")
+        for path, size in original_backups:
+            print(f"  - {path} ({size:.1f} MB)")
+            
+    if heavy_files:
+        print("\n[WARNING] Found heavy files (>15MB) in the worktree:")
+        for path, size in heavy_files:
+            print(f"  - {path} ({size:.1f} MB)")
+        confirm = input("Are you sure you want to proceed with staging? [y/N]: ").strip().lower()
+        if confirm != 'y':
+            print("[INFO] Aborted by user.")
+            sys.exit(0)
 
     # 3. Stage All Changes
     print("\n[INFO] Staging all changes (git add -A)...")

@@ -16,3 +16,7 @@ scratch/
 
 # Local cache / audit outputs (optional)
 product_cache.json
+
+# Original video backups
+*_original.mp4
+
