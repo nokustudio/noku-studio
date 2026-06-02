@@ -780,6 +780,33 @@
   window.addEventListener('resize', updateNavbarTheme, { passive: true });
   updateNavbarTheme();
 
+  // ─── INSTANT SCROLL TO COLLECTIONS SECTION ───
+  const handleCollectionsScroll = (e) => {
+    const href = e.currentTarget.getAttribute('href');
+    const isCurrentPageAnchor = href === '#collections' || href.endsWith('/landing-secondary.html#collections') || (window.location.pathname.endsWith('landing-secondary.html') && href === 'landing-secondary.html#collections');
+    
+    if (isCurrentPageAnchor) {
+      const target = document.getElementById('collections');
+      if (target) {
+        e.preventDefault();
+        const htmlEl = document.documentElement;
+        const originalScrollBehavior = htmlEl.style.scrollBehavior;
+        htmlEl.style.scrollBehavior = 'auto';
+        
+        target.scrollIntoView({ behavior: 'auto' });
+        
+        requestAnimationFrame(() => {
+          htmlEl.style.scrollBehavior = originalScrollBehavior;
+        });
+        history.pushState(null, null, '#collections');
+      }
+    }
+  };
+
+  document.querySelectorAll('a[href*="#collections"]').forEach(link => {
+    link.addEventListener('click', handleCollectionsScroll);
+  });
+
   // ─── OPTIMIZED CRAFTSMANSHIP VIDEO PLAYER CONTROLS ───
   const video = document.getElementById('workshop-video');
   const videoBtn = document.getElementById('video-toggle');
