@@ -1058,6 +1058,9 @@
     let scatterCurrentX = 0;
     let scatterCurrentY = 0;
 
+    let isQuoteInViewport = false;
+    let isLoopRunning = false;
+
     let quoteContainerTopDoc = 0;
     let quoteContainerHeight = 0;
     let quoteStageWidth = 0;
@@ -1207,6 +1210,13 @@
     }
 
     function renderScatter() {
+      if (!isQuoteInViewport) {
+        isLoopRunning = false;
+        return;
+      }
+
+      isLoopRunning = true;
+
       if (!isIntroComplete) {
         requestAnimationFrame(renderScatter);
         return;
@@ -1282,15 +1292,8 @@
             }
             item.style.opacity = itemOpacity.toFixed(3);
 
-            if (p > 0 && p < 1) {
-              item.style.position = "fixed";
-            } else {
-              item.style.position = "absolute";
-            }
-
-            const currentStageTopDoc = Math.max(quoteContainerTopDoc, window.scrollY);
-            const stageCenterYDoc = currentStageTopDoc + quoteStageHeight / 2;
-            const liveCardDiffY = activeCardCenterYDoc - stageCenterYDoc;
+            // Avoid fixed positioning toggling during scroll to prevent GPU paint flushes
+            item.style.position = "absolute";
 
             const dx = 0;
             const dy = 0;
@@ -1367,7 +1370,18 @@
     quoteStage.addEventListener("mousemove", onScatterMove);
     quoteStage.addEventListener("mouseleave", onScatterLeave);
 
-    requestAnimationFrame(renderScatter);
+    // Start renderScatter loop only when quote section is in view
+    const quoteObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isQuoteInViewport = entry.isIntersecting;
+        if (isQuoteInViewport && !isLoopRunning) {
+          requestAnimationFrame(renderScatter);
+        }
+      });
+    }, {
+      rootMargin: "200px 0px 200px 0px"
+    });
+    quoteObserver.observe(quoteContainer);
   })();
 
   // Track whether loader has been shown this session

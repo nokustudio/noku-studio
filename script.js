@@ -878,6 +878,9 @@
     let scatterCurrentX = 0;
     let scatterCurrentY = 0;
 
+    let isQuoteInViewport = false;
+    let isLoopRunning = false;
+
     // Document-relative layout metrics cached to avoid forced reflows in the render loop
     let quoteContainerTopDoc = 0;
     let quoteContainerHeight = 0;
@@ -934,6 +937,7 @@
       return Math.min(Math.max(value, min), max);
     }
 
+    // Easing equations mapping scroll progress
     function easeOutCubicVal(t) {
       return 1 - Math.pow(1 - t, 3);
     }
@@ -1015,7 +1019,7 @@
         subY = 0;
       } else if (s <= 0.3) {
         const t = (s - 0.2) / 0.1;
-        subOpacity = 1 - t * t * (3 - 2 * t); // smoothstep fade out — fully gone before scatter begins at s=0.3
+        subOpacity = 1 - t * t * (3 - 2 * t); // smoothstep fade out
         subY = -15 * t;
       } else {
         subOpacity = 0;
@@ -1058,6 +1062,13 @@
     }
 
     function renderScatter() {
+      if (!isQuoteInViewport) {
+        isLoopRunning = false;
+        return;
+      }
+
+      isLoopRunning = true;
+
       const rectTop = quoteContainerTopDoc - window.scrollY;
       const viewportH = window.innerHeight;
 
@@ -1138,17 +1149,8 @@
             }
             item.style.opacity = itemOpacity.toFixed(3);
 
-            // Use fixed positioning during transition to bypass compositor scroll lag
-            if (p > 0 && p < 1) {
-              item.style.position = "fixed";
-            } else {
-              item.style.position = "absolute";
-            }
-
-            // Compute diff live — account for whether the stage is sticky or still scrolling in
-            const currentStageTopDoc = Math.max(quoteContainerTopDoc, window.scrollY);
-            const stageCenterYDoc = currentStageTopDoc + quoteStageHeight / 2;
-            const liveCardDiffY = activeCardCenterYDoc - stageCenterYDoc;
+            // Avoid fixed positioning toggling during scroll to prevent GPU paint flushes
+            item.style.position = "absolute";
 
             // dx is 0 to center the variant image horizontally
             const dx = 0;
@@ -1234,7 +1236,18 @@
     quoteStage.addEventListener("mousemove", onScatterMove);
     quoteStage.addEventListener("mouseleave", onScatterLeave);
 
-    requestAnimationFrame(renderScatter);
+    // Start renderScatter loop only when quote section is in view
+    const quoteObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isQuoteInViewport = entry.isIntersecting;
+        if (isQuoteInViewport && !isLoopRunning) {
+          requestAnimationFrame(renderScatter);
+        }
+      });
+    }, {
+      rootMargin: "200px 0px 200px 0px"
+    });
+    quoteObserver.observe(quoteContainer);
 
     // CORS warning banner for file:// protocol
     if (window.location.protocol === 'file:') {

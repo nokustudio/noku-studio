@@ -840,6 +840,7 @@ body:not(.secondary-landing-page) .hero-title {
   z-index: 13;
   border-top: none;
   border-bottom: 1px solid var(--line);
+  transform: translate3d(0, 0, 0); /* Promote to compositor layer to prevent repaint flashing on scroll */
 }
 
 .products-header {
@@ -1083,6 +1084,8 @@ body:not(.secondary-landing-page) .hero-title {
   height: 420vh;
   background-color: var(--dark-bg);
   z-index: 12;
+  transform: translate3d(0, 0, 0); /* Promote to GPU compositor layer to prevent compositor scroll delay */
+  will-change: transform;
 }
 
 .quote_wrap .quote_contain {
@@ -1094,6 +1097,8 @@ body:not(.secondary-landing-page) .hero-title {
   display: flex;
   align-items: center;
   justify-content: center;
+  transform: translate3d(0, 0, 0); /* Promote to GPU compositor layer */
+  will-change: transform;
 }
 
 .quote_wrap .quote_text_wrap {
