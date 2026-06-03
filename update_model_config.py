@@ -5,23 +5,17 @@ import sys
 def get_config_paths():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     js_path = os.path.join(script_dir, 'script.js')
-    css_path = os.path.join(script_dir, 'style.css')
-    return js_path, css_path
+    return js_path
 
-def parse_current_config(js_path, css_path):
+def parse_current_config(js_path):
     config = {
         'js_y_keyframe': None,
         'js_target_y': None,
-        'js_angle_deg': None,
-        'css_translate_vh': None,
-        'css_aligned_y': None
+        'js_angle_deg': None
     }
     
     if not os.path.exists(js_path):
         print(f"Error: Could not find script.js at {js_path}")
-        sys.exit(1)
-    if not os.path.exists(css_path):
-        print(f"Error: Could not find style.css at {css_path}")
         sys.exit(1)
 
     with open(js_path, 'r', encoding='utf-8') as f:
@@ -42,20 +36,11 @@ def parse_current_config(js_path, css_path):
     if angle_match:
         config['js_angle_deg'] = int(angle_match.group(1))
 
-    with open(css_path, 'r', encoding='utf-8') as f:
-        css_content = f.read()
-
-    # Find CSS translation
-    css_match = re.search(r'transform:\s*translateY\((-?\d+\.?\d*)vh\);\s*/\*\s*Align perfectly with Three\.js Y\s*=\s*(-?\d+\.?\d*)\s*\*/', css_content)
-    if css_match:
-        config['css_translate_vh'] = float(css_match.group(1))
-        config['css_aligned_y'] = float(css_match.group(2))
-
-    return config, js_content, css_content
+    return config, js_content
 
 def main():
-    js_path, css_path = get_config_paths()
-    config, js_content, css_content = parse_current_config(js_path, css_path)
+    js_path = get_config_paths()
+    config, js_content = parse_current_config(js_path)
 
     print("=" * 60)
     print("         Current 3D Model Configuration Tracker")
@@ -63,8 +48,6 @@ def main():
     print(f"1. Model Landing Y Keyframe (script.js):   {config['js_y_keyframe'] if config['js_y_keyframe'] is not None else 'Not Found'}")
     print(f"2. Model Phase 2 targetY (script.js):       {config['js_target_y'] if config['js_target_y'] is not None else 'Not Found'}")
     print(f"3. Model Relative Rotation Angle (deg):     {config['js_angle_deg'] if config['js_angle_deg'] is not None else 'Not Found'} degrees")
-    print(f"4. CSS Card translateY (style.css):        {config['css_translate_vh'] if config['css_translate_vh'] is not None else 'Not Found'} vh")
-    print(f"5. CSS Card Aligned Y Ref (style.css):      {config['css_aligned_y'] if config['css_aligned_y'] is not None else 'Not Found'}")
     print("=" * 60)
 
     try:
@@ -127,27 +110,14 @@ def main():
             new_js_content
         )
 
-    # 2. Update CSS content (Calculate translateY)
-    # translateY = round((new_y / -0.15) * 5.28, 1)
-    new_translate_vh = round((new_y / -0.15) * 5.28, 1)
-    
-    new_css_content = re.sub(
-        r'transform:\s*translateY\(-?\d+\.?\d*vh\);\s*/\*\s*Align perfectly with Three\.js Y\s*=\s*-?\d+\.?\d*\s*\*/',
-        f'transform: translateY({new_translate_vh}vh); /* Align perfectly with Three.js Y = {new_y} */',
-        css_content
-    )
-
     # Write changes
     with open(js_path, 'w', encoding='utf-8') as f:
         f.write(new_js_content)
-    with open(css_path, 'w', encoding='utf-8') as f:
-        f.write(new_css_content)
 
     print("\n" + "=" * 60)
     print("Configuration updated successfully!")
     print(f"Updated Y-coordinate to: {new_y}")
     print(f"Updated rotation angle to: {new_angle} degrees")
-    print(f"Recalculated CSS translation: translateY({new_translate_vh}vh)")
     print("=" * 60)
 
 if __name__ == '__main__':
