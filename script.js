@@ -337,12 +337,22 @@
   function evaluateScrollCalculations() {
     const scrollY = window.scrollY;
     const viewportHeight = window.innerHeight;
-    const total3DZoneHeight = threeMetricsCached ? configPanelTopDoc : (viewportHeight * 3); // Extended narrative height for 3 panels
+    
+    // The top of the last narrative panel in document coordinates
+    const start = threeMetricsCached ? configPanelTopDoc : (viewportHeight * 3);
+    const lockPoint = start + viewportHeight;
 
-    // Keep container fixed relative to viewport at all times
-    if (container.style.position !== 'fixed') {
-      container.style.position = 'fixed';
-      container.style.top = '0px';
+    // Lock position to absolute when scrolled past the narrative sections
+    if (scrollY >= lockPoint) {
+      if (container.style.position !== 'absolute') {
+        container.style.position = 'absolute';
+        container.style.top = lockPoint + 'px';
+      }
+    } else {
+      if (container.style.position !== 'fixed') {
+        container.style.position = 'fixed';
+        container.style.top = '0px';
+      }
     }
 
     // Early return if scrolled past the configurator section to avoid unnecessary layout/projection math
@@ -354,91 +364,150 @@
       return;
     }
 
-    scrollProgress = Math.min(Math.max(scrollY / total3DZoneHeight, 0), 1);
+    let staticCardOpacity = 0.0;
 
-    // Position X, Y, Scale, and Y-Rotation keyframe mapping (Desktop vs Mobile layout)
-    if (window.innerWidth > 1024) {
-      const xKeyframes = [
-        [0.0, 0.0],
-        [0.35, 0.95],
-        [0.65, -0.95],
-        [1.0, 0.0]
-      ];
-      const yKeyframes = [
-        [0.0, -0.52],
-        [0.35, 0.05],
-        [0.65, 0.08],
-        [1.0, -0.15]
-      ];
-      const scaleKeyframes = [
-        [0.0, 0.8],
-        [0.35, 0.95],
-        [0.65, 0.95],
-        [1.0, 1.0]
-      ];
-      const rotYKeyframes = [
-        [0.0, 0.0],
-        [0.35, 0.65 * Math.PI],
-        [0.65, 1.35 * Math.PI],
-        [1.0, 2.0 * Math.PI] // Aligns model to face exactly front at merge
-      ];
+    if (scrollY < start) {
+      // ─── PHASE 1: Hero to Specs Panel ───
+      const progress = Math.min(Math.max(scrollY / start, 0), 1);
 
-      targetPosX = interpolate(scrollProgress, xKeyframes);
-      targetPosY = interpolate(scrollProgress, yKeyframes);
-      targetScale = interpolate(scrollProgress, scaleKeyframes);
-      targetRotY = interpolate(scrollProgress, rotYKeyframes);
-    } else {
-      // Mobile responsive placement
-      const yKeyframesMobile = [
-        [0.0, -0.70],
-        [0.35, 0.2],
-        [0.65, -0.2],
-        [1.0, 0.0]
-      ];
-      const rotYKeyframesMobile = [
-        [0.0, 0.0],
-        [0.35, 0.65 * Math.PI],
-        [0.65, 1.35 * Math.PI],
-        [1.0, 2.0 * Math.PI]
-      ];
+      if (window.innerWidth > 1024) {
+        const xKeyframes = [
+          [0.0, 0.0],
+          [0.5, 0.95],
+          [1.0, -0.95]
+        ];
+        const yKeyframes = [
+          [0.0, -0.52],
+          [0.5, 0.05],
+          [1.0, 0.08]
+        ];
+        const scaleKeyframes = [
+          [0.0, 0.8],
+          [0.5, 0.95],
+          [1.0, 0.95]
+        ];
+        const rotYKeyframes = [
+          [0.0, 0.0],
+          [0.5, 0.65 * Math.PI],
+          [1.0, 1.35 * Math.PI]
+        ];
 
-      targetPosX = 0;
-      targetPosY = interpolate(scrollProgress, yKeyframesMobile);
-      targetScale = 0.72;
-      targetRotY = interpolate(scrollProgress, rotYKeyframesMobile);
-    }
+        targetPosX = interpolate(progress, xKeyframes);
+        targetPosY = interpolate(progress, yKeyframes);
+        targetScale = interpolate(progress, scaleKeyframes);
+        targetRotY = interpolate(progress, rotYKeyframes);
+      } else {
+        const yKeyframesMobile = [
+          [0.0, -0.70],
+          [0.5, 0.2],
+          [1.0, -0.2]
+        ];
+        const rotYKeyframesMobile = [
+          [0.0, 0.0],
+          [0.5, 0.65 * Math.PI],
+          [1.0, 1.35 * Math.PI]
+        ];
 
-    // Calculate targetOpacity: pause at the end of the narrative zone, then fade out as configurator enters
-    const fadeStart = total3DZoneHeight + viewportHeight * 0.45;
-    const fadeEnd = total3DZoneHeight + viewportHeight * 0.95;
-
-    if (scrollY <= fadeStart) {
+        targetPosX = 0;
+        targetPosY = interpolate(progress, yKeyframesMobile);
+        targetScale = 0.72;
+        targetRotY = interpolate(progress, rotYKeyframesMobile);
+      }
       targetOpacity = 1.0;
-    } else if (scrollY >= fadeEnd) {
-      targetOpacity = 0.0;
+      staticCardOpacity = 0.0;
     } else {
-      const t = (scrollY - fadeStart) / (fadeEnd - fadeStart);
-      targetOpacity = 1.0 - t * t * (3 - 2 * t); // Smoothstep fade out
+      // ─── PHASE 2: Last Narrative Panel Sticky Phase (Slide, Pause, Fade) ───
+      const localProgress = Math.min(Math.max((scrollY - start) / viewportHeight, 0), 1);
+
+      let targetX = 0.95;
+      let targetY = -0.15;
+      let targetS = 1.0;
+      let targetR = 2.0 * Math.PI;
+
+      if (window.innerWidth <= 1024) {
+        targetX = 0;
+        targetY = 0.0;
+        targetS = 0.72;
+      }
+
+      // Slide Phase (0.0 to 0.3)
+      if (localProgress <= 0.3) {
+        const t = localProgress / 0.3;
+        const easedT = t * t * (3 - 2 * t);
+        
+        const startX = window.innerWidth > 1024 ? -0.95 : 0;
+        const startY = window.innerWidth > 1024 ? 0.08 : -0.2;
+        const startS = window.innerWidth > 1024 ? 0.95 : 0.72;
+        const startR = 1.35 * Math.PI;
+
+        targetPosX = startX + (targetX - startX) * easedT;
+        targetPosY = startY + (targetY - startY) * easedT;
+        targetScale = startS + (targetS - startS) * easedT;
+        targetRotY = startR + (targetR - startR) * easedT;
+        
+        targetOpacity = 1.0;
+        staticCardOpacity = 0.0;
+      }
+      // Pause Phase (0.3 to 0.6)
+      else if (localProgress <= 0.6) {
+        targetPosX = targetX;
+        targetPosY = targetY;
+        targetScale = targetS;
+        targetRotY = targetR;
+        
+        targetOpacity = 1.0;
+        staticCardOpacity = 0.0;
+      }
+      // Fade Phase (0.6 to 0.9)
+      else if (localProgress <= 0.9) {
+        targetPosX = targetX;
+        targetPosY = targetY;
+        targetScale = targetS;
+        targetRotY = targetR;
+
+        const t = (localProgress - 0.6) / 0.3;
+        const easedT = t * t * (3 - 2 * t);
+        
+        targetOpacity = 1.0 - easedT;
+        staticCardOpacity = easedT;
+      }
+      // Final Phase (0.9 to 1.0 and beyond)
+      else {
+        targetPosX = targetX;
+        targetPosY = targetY;
+        targetScale = targetS;
+        targetRotY = targetR;
+        
+        targetOpacity = 0.0;
+        staticCardOpacity = 1.0;
+      }
     }
 
-    // Hide WebGL renderer canvas if configurator scrolled past top
-    // Use visibility instead of display to avoid layout tree destruction mid-scroll
-    if (threeMetricsCached) {
-      const configRectBottom = configBottomDoc - scrollY;
-      if (configRectBottom < 0) {
+    // Apply visibility of WebGL container
+    if (scrollY >= lockPoint + viewportHeight * 0.5) {
+      if (isThreeCanvasVisible) {
         container.style.visibility = 'hidden';
         isThreeCanvasVisible = false;
-      } else {
-        container.style.visibility = 'visible';
-        isThreeCanvasVisible = true;
       }
     } else {
-      if (scrollY > viewportHeight * 3.5) {
-        container.style.visibility = 'hidden';
-        isThreeCanvasVisible = false;
+      if (threeMetricsCached && scrollY > configBottomDoc) {
+        // do nothing
       } else {
-        container.style.visibility = 'visible';
-        isThreeCanvasVisible = true;
+        if (!isThreeCanvasVisible) {
+          container.style.visibility = 'visible';
+          isThreeCanvasVisible = true;
+        }
+      }
+    }
+
+    // Update the static default card opacity and pointer events
+    const staticCardWrap = document.getElementById('narrative-default-card-wrap');
+    if (staticCardWrap) {
+      staticCardWrap.style.opacity = staticCardOpacity.toFixed(3);
+      if (staticCardOpacity > 0.1) {
+        staticCardWrap.style.pointerEvents = 'auto';
+      } else {
+        staticCardWrap.style.pointerEvents = 'none';
       }
     }
   }

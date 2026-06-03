@@ -483,6 +483,39 @@ nav.light-nav .nav-dropdown {
   padding: 100px 60px;
 }
 
+@media (min-width: 1025px) {
+  #config-panel {
+    height: 200vh;
+    min-height: 200vh;
+    display: block;
+    padding: 0;
+  }
+
+  #config-panel .narrative-grid {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0 60px;
+  }
+}
+
+.default-variant-card-wrap {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s linear;
+}
+
+#config-panel .empty-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .narrative-panel * {
   pointer-events: auto;
   /* Re-enable pointer events for contents */

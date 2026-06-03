@@ -1672,6 +1672,21 @@ document.addEventListener('DOMContentLoaded', () => {
       addFeaturedItemToCart(handle);
     });
   }
+
+  // Narrative Default Card Add to Cart: Hook click event
+  const narrativeCard = document.getElementById('narrative-default-card');
+  if (narrativeCard) {
+    const btn = narrativeCard.querySelector('.product-add-to-cart-btn');
+    if (btn) {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const img = narrativeCard.querySelector('img');
+        const imageSrc = img ? img.src : '';
+        addItemToCart('Noku Barstool', 'Teak', 'Linen', imageSrc);
+      });
+    }
+  }
   
   // Set up MutationObserver to update carousel images to Shopify CDN URLs dynamically on render
   if (carouselTrack) {
