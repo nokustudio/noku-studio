@@ -381,7 +381,7 @@
           [0.0, -0.52],
           [0.35, 0.05],
           [0.65, 0.08],
-          [1.0, 0.2] // Slides smoothly to the final centered Y coordinate
+          [1.0, 0.3] // Slides smoothly to the final centered Y coordinate
         ];
         const scaleKeyframes = [
           [0.0, 0.8],
@@ -426,7 +426,7 @@
       const localProgress = Math.min(Math.max((scrollY - start) / viewportHeight, 0), 1);
 
       let targetX = 0.95;
-      let targetY = 0.2;
+      let targetY = 0.3;
       let targetS = 1.0;
       let targetR = 2.0 * Math.PI;
 

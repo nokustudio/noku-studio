@@ -518,7 +518,7 @@ nav.light-nav .nav-dropdown {
 
 @media (min-width: 1025px) {
   .default-variant-card-wrap {
-    transform: translateY(-7.0vh); /* Align perfectly with Three.js Y = 0.2 */
+    transform: translateY(-10.6vh); /* Align perfectly with Three.js Y = 0.3 */
   }
 }
 
