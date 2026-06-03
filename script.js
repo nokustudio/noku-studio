@@ -364,6 +364,29 @@
       return;
     }
 
+    let finalLandingX = 0.95;
+    let finalLandingY = 0.0;
+
+    const frameRect = document.querySelector('.model-frame-rect');
+    if (frameRect && window.innerWidth > 1024 && typeof THREE !== 'undefined' && camera) {
+      const rectViewport = frameRect.getBoundingClientRect();
+      const centerX = rectViewport.left + rectViewport.width / 2;
+      const centerY = window.innerHeight / 2; // Center vertically when sticky
+      
+      const ndcX = (centerX / window.innerWidth) * 2 - 1;
+      const ndcY = -(centerY / window.innerHeight) * 2 + 1;
+      
+      const vec = new THREE.Vector3(ndcX, ndcY, 0.5);
+      vec.unproject(camera);
+      
+      const dir = vec.sub(camera.position).normalize();
+      const distance = -camera.position.z / dir.z;
+      const pos = camera.position.clone().add(dir.multiplyScalar(distance));
+      
+      finalLandingX = pos.x;
+      finalLandingY = pos.y;
+    }
+
     let staticCardOpacity = 0.0;
 
     if (scrollY < start) {
@@ -375,13 +398,13 @@
           [0.0, 0.0],
           [0.35, 0.95],
           [0.65, -0.95],
-          [1.0, 0.95] // Slides smoothly to the right column during specs-to-config scroll
+          [1.0, finalLandingX] // Slides smoothly to the final centered Y coordinate
         ];
         const yKeyframes = [
           [0.0, -0.52],
           [0.35, 0.05],
           [0.65, 0.08],
-          [1.0, 0.0] // Slides smoothly to the final centered Y coordinate
+          [1.0, finalLandingY] // Slides smoothly to the final centered Y coordinate
         ];
         const scaleKeyframes = [
           [0.0, 0.8],
@@ -425,8 +448,8 @@
       // ─── PHASE 2: Last Narrative Panel Sticky Phase (Pause & Fade) ───
       const localProgress = Math.min(Math.max((scrollY - start) / viewportHeight, 0), 1);
 
-      let targetX = 0.95;
-      let targetY = 0.0;
+      let targetX = finalLandingX;
+      let targetY = finalLandingY;
       let targetS = 1.0;
       let targetR = 2.0 * Math.PI;
 
