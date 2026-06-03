@@ -947,6 +947,9 @@ function updateFeaturedProductsUI() {
       }
     }
   });
+  
+  // Dispatch a custom event so script.js can re-center the featured products carousel
+  window.dispatchEvent(new CustomEvent('featuredproductsloaded'));
 }
 
 // Add a featured product item to the cart
@@ -1642,7 +1645,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   // Featured Products Add to Cart: Hook clicks on Add to Cart buttons
-  const productsGrid = document.querySelector('.products-grid');
+  const productsGrid = document.querySelector('.products-grid, .featured-carousel-track');
   if (productsGrid) {
     productsGrid.addEventListener('click', (e) => {
       const btn = e.target.closest('.product-add-to-cart-btn');

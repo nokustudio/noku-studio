@@ -1,4 +1,4 @@
-﻿/* ════════ DESIGN SYSTEM & TOKENS ════════ */
+/* ════════ DESIGN SYSTEM & TOKENS ════════ */
 :root {
   /* Primary Brand Palette */
   --gunmetal: #2c3639;
@@ -3337,4 +3337,105 @@ nav.light-nav .cart-btn:hover {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* ════════ FEATURED PRODUCTS CAROUSEL ════════ */
+.featured-carousel-outer-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.featured-carousel-nav-btn {
+  background-color: var(--paper);
+  border: 1px solid var(--border-soft);
+  color: var(--ink);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 12px rgba(44, 38, 34, 0.05);
+  position: absolute;
+}
+
+.featured-carousel-nav-btn:hover {
+  background-color: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+  transform: scale(1.05);
+}
+
+.featured-carousel-nav-btn.prev-btn {
+  left: -25px;
+}
+
+.featured-carousel-nav-btn.next-btn {
+  right: -25px;
+}
+
+.featured-carousel-track-container {
+  width: 100%;
+  overflow: hidden;
+  padding: 20px 0;
+}
+
+.featured-carousel-track {
+  display: flex;
+  gap: 32px;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.featured-carousel-track .product-card {
+  position: relative;
+  flex: 0 0 320px;
+  width: 320px;
+  opacity: 0.4;
+  transform: scale(0.92);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.featured-carousel-track .product-card.highlighted {
+  opacity: 1.0;
+  transform: scale(1.03);
+  border-color: rgba(44, 38, 34, 0.1);
+  box-shadow: 0 20px 40px rgba(44, 38, 34, 0.06);
+}
+
+.featured-carousel-track .product-card.highlighted:hover {
+  border-color: var(--chamoisee);
+  box-shadow: 0 20px 40px rgba(162, 123, 92, 0.12);
+  transform: scale(1.05);
+}
+
+.featured-carousel-track .product-card.highlighted:hover .product-card-img-wrap img {
+  transform: scale(1.06);
+}
+
+@media (max-width: 767px) {
+  .featured-carousel-track .product-card {
+    flex: 0 0 260px;
+    width: 260px;
+  }
+
+  .featured-carousel-nav-btn.prev-btn {
+    left: 5px;
+  }
+
+  .featured-carousel-nav-btn.next-btn {
+    right: 5px;
+  }
 }

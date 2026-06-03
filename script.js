@@ -1273,5 +1273,121 @@
       document.body.appendChild(banner);
     }
   })();
+
+  // ─── FEATURED PRODUCTS CAROUSEL CODE ───
+  let activeProductIndex = 1; // Start with the second product highlighted/centered (Lounge Chair)
+
+  function centerActiveProduct(animate = true) {
+    const track = document.querySelector('.featured-carousel-track');
+    const container = document.querySelector('.featured-carousel-track-container');
+    if (!track || !container) return;
+
+    const cards = track.querySelectorAll('.product-card');
+    if (cards.length === 0) return;
+
+    // Constrain active index
+    if (activeProductIndex >= cards.length) {
+      activeProductIndex = cards.length - 1;
+    }
+    if (activeProductIndex < 0) {
+      activeProductIndex = 0;
+    }
+
+    cards.forEach((card, idx) => {
+      if (idx === activeProductIndex) {
+        card.classList.add('highlighted');
+      } else {
+        card.classList.remove('highlighted');
+      }
+    });
+
+    const activeCard = cards[activeProductIndex];
+    const containerWidth = container.offsetWidth;
+    const cardWidth = activeCard.offsetWidth || 320;
+    const cardOffsetLeft = activeCard.offsetLeft;
+
+    const translateX = (containerWidth - cardWidth) / 2 - cardOffsetLeft;
+
+    if (animate) {
+      track.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+    } else {
+      track.style.transition = 'none';
+    }
+
+    track.style.transform = `translateX(${translateX}px)`;
+  }
+
+  function initFeaturedProductsCarousel() {
+    const track = document.querySelector('.featured-carousel-track');
+    if (!track) return;
+
+    const cards = track.querySelectorAll('.product-card');
+
+    // Add click listeners to cards
+    cards.forEach((card, idx) => {
+      card.addEventListener('click', (e) => {
+        // If clicking buttons/links inside the card, don't trigger carousel shift or navigation
+        if (e.target.closest('.product-add-to-cart-btn') || e.target.closest('.product-inquire-btn') || e.target.closest('a')) {
+          return;
+        }
+
+        if (card.classList.contains('highlighted')) {
+          const handle = card.getAttribute('data-handle');
+          if (handle) {
+            window.location.href = `product.html?handle=${handle}`;
+          }
+          return;
+        }
+
+        activeProductIndex = idx;
+        centerActiveProduct(true);
+      });
+    });
+
+    // Prev/Next buttons
+    const prevBtn = document.querySelector('.featured-carousel-outer-wrap .prev-btn');
+    const nextBtn = document.querySelector('.featured-carousel-outer-wrap .next-btn');
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        if (activeProductIndex > 0) {
+          activeProductIndex--;
+          centerActiveProduct(true);
+        }
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        if (activeProductIndex < cards.length - 1) {
+          activeProductIndex++;
+          centerActiveProduct(true);
+        }
+      });
+    }
+
+    // Call centering initially
+    centerActiveProduct(false);
+
+    // Safari / loading delays layout shifts
+    setTimeout(() => centerActiveProduct(false), 150);
+    setTimeout(() => centerActiveProduct(false), 600);
+  }
+
+  // Hook into window resize and custom load events
+  window.addEventListener('resize', () => {
+    centerActiveProduct(false);
+  }, { passive: true });
+
+  window.addEventListener('featuredproductsloaded', () => {
+    centerActiveProduct(false);
+  });
+
+  window.addEventListener('load', () => {
+    centerActiveProduct(false);
+  });
+
+  // Initialize
+  initFeaturedProductsCarousel();
 }
 )();
