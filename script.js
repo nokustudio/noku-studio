@@ -566,7 +566,7 @@
   // getBoundingClientRect() forced reflows on every scroll event.
   const lightSectionSelectors = [
     '#configurator', '.materials-section', '.products-section',
-    '.collections-section', '.ticker-container', 'footer'
+    '.collections-section', 'footer'
   ];
   let cachedLightSections = []; // { el, top, height }
   let lastBodyState = null; // track to avoid redundant DOM writes

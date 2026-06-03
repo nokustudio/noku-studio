@@ -720,7 +720,7 @@
   const navbar = document.getElementById('navbar');
   const lightSectionSelectors = [
     '#configurator', '.materials-section', '.products-section',
-    '.collections-section', '.ticker-container', 'footer'
+    '.collections-section', 'footer'
   ];
   const darkSectionSelectors = ['.video-section', '.quote_wrap'];
   let cachedLightSections = [];
