@@ -330,6 +330,22 @@
   // Listen scroll updates
   function evaluateScrollCalculations() {
     const scrollY = window.scrollY;
+    const viewportHeight = window.innerHeight;
+    const total3DZoneHeight = viewportHeight * 3; // Extended narrative height for 3 panels
+
+    // Lock position to absolute when scrolled past the narrative sections
+    const lockPoint = total3DZoneHeight;
+    if (scrollY >= lockPoint) {
+      if (container.style.position !== 'absolute') {
+        container.style.position = 'absolute';
+        container.style.top = lockPoint + 'px';
+      }
+    } else {
+      if (container.style.position !== 'fixed') {
+        container.style.position = 'fixed';
+        container.style.top = '0px';
+      }
+    }
 
     // Early return if scrolled past the configurator section to avoid unnecessary layout/projection math
     if (threeMetricsCached && scrollY > configBottomDoc) {
@@ -339,9 +355,6 @@
       }
       return;
     }
-
-    const viewportHeight = window.innerHeight;
-    const total3DZoneHeight = viewportHeight * 3; // Extended narrative height for 3 panels
 
     scrollProgress = Math.min(Math.max(scrollY / total3DZoneHeight, 0), 1);
 
@@ -398,7 +411,9 @@
     }
 
     // Calculate targetOpacity based on projected model bottom and card top position
-    if (threeMetricsCached && modelGroup && camera) {
+    if (scrollY >= lockPoint) {
+      targetOpacity = 1.0;
+    } else if (threeMetricsCached && modelGroup && camera) {
       // Get the top Y of the variant image card from cached metrics
       const cardTopY = configTopDoc + cardTopOffsetFromConfig - scrollY;
 
