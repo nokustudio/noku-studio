@@ -367,6 +367,26 @@
     let finalLandingX = 0.95;
     let finalLandingY = 0.0;
 
+    const frameRect = document.querySelector('.model-frame-rect');
+    if (frameRect && window.innerWidth > 1024 && typeof THREE !== 'undefined' && camera) {
+      const rectViewport = frameRect.getBoundingClientRect();
+      const centerX = rectViewport.left + rectViewport.width / 2;
+      const centerY = window.innerHeight / 2; // Center vertically when sticky
+      
+      const ndcX = (centerX / window.innerWidth) * 2 - 1;
+      const ndcY = -(centerY / window.innerHeight) * 2 + 1;
+      
+      const vec = new THREE.Vector3(ndcX, ndcY, 0.5);
+      vec.unproject(camera);
+      
+      const dir = vec.sub(camera.position).normalize();
+      const distance = -camera.position.z / dir.z;
+      const pos = camera.position.clone().add(dir.multiplyScalar(distance));
+      
+      finalLandingX = pos.x;
+      finalLandingY = pos.y;
+    }
+
     let staticCardOpacity = 0.0;
 
     if (scrollY < start) {
