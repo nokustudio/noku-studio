@@ -514,6 +514,9 @@ async function loadShopifyProductData() {
       sofa: product(handle: "sofa-2") {
         id
         title
+        featuredImage {
+          url
+        }
         variants(first: 10) {
           edges {
             node {
@@ -533,6 +536,9 @@ async function loadShopifyProductData() {
       loungeChair: product(handle: "lounge-chair") {
         id
         title
+        featuredImage {
+          url
+        }
         variants(first: 10) {
           edges {
             node {
@@ -552,6 +558,9 @@ async function loadShopifyProductData() {
       diningChair: product(handle: "dining-chair") {
         id
         title
+        featuredImage {
+          url
+        }
         variants(first: 10) {
           edges {
             node {
@@ -571,6 +580,9 @@ async function loadShopifyProductData() {
       studyTable: product(handle: "modern-study-table") {
         id
         title
+        featuredImage {
+          url
+        }
         variants(first: 10) {
           edges {
             node {
@@ -805,6 +817,52 @@ function updateCarouselImagesToShopify() {
   }
 }
 
+// Request a downscaled variant from the Shopify CDN so we never load the multi-MP
+// originals (the raw files are ~4000x6000px). cdn.shopify.com honours width/height/crop
+// transform params, returning a properly sized image. Non-Shopify hosts are returned as-is.
+function sizeShopifyImage(url, width, height) {
+  if (!url) return url;
+  try {
+    const u = new URL(url, window.location.href);
+    if (u.hostname.includes('cdn.shopify.com') || u.hostname.includes('cdn.shopifycdn')) {
+      u.searchParams.set('width', String(width));
+      if (height) {
+        u.searchParams.set('height', String(height));
+        u.searchParams.set('crop', 'center');
+      }
+      return u.toString();
+    }
+  } catch (e) { /* malformed URL — fall through */ }
+  return url;
+}
+
+// Inject (or update) the card image inside the placeholder wrap. The <img> is created
+// on demand so the markup ships as an empty placeholder and only renders an image once
+// Shopify data resolves.
+function setFeaturedCardImage(card, imageSrc, altText) {
+  const imgWrap = card.querySelector('.product-card-img-wrap');
+  if (!imgWrap) return;
+
+  if (!imageSrc) {
+    const existing = imgWrap.querySelector('img');
+    if (existing) existing.remove(); // keep clean placeholder when nothing resolves
+    return;
+  }
+
+  const sized = sizeShopifyImage(imageSrc, 800, 1000);
+  let img = imgWrap.querySelector('img');
+  if (!img) {
+    img = document.createElement('img');
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.width = 800;
+    img.height = 1000;
+    imgWrap.appendChild(img);
+  }
+  if (img.getAttribute('src') !== sized) img.src = sized;
+  img.alt = altText || '';
+}
+
 // Update Featured Product Cards pricing and images from Shopify Storefront API
 function updateFeaturedProductsUI() {
   const cards = document.querySelectorAll('.product-card[data-handle]');
@@ -825,10 +883,10 @@ function updateFeaturedProductsUI() {
         price = parseFloat(firstVariant.price.amount);
         variantId = firstVariant.id;
         variantTitle = firstVariant.title;
-        if (firstVariant.image && firstVariant.image.url) {
-          imageSrc = firstVariant.image.url;
-        }
       }
+      // Prefer the curated product hero (featuredImage); fall back to the variant image.
+      imageSrc = liveProduct.featuredImage?.url
+        || (firstVariant && firstVariant.image ? firstVariant.image.url : '');
     } else {
       const fallback = FEATURED_PRODUCTS_FALLBACK[handle];
       if (fallback) {
@@ -836,26 +894,30 @@ function updateFeaturedProductsUI() {
         price = fallback.price;
         variantId = fallback.variantId;
         variantTitle = fallback.variantTitle;
-        imageSrc = fallback.image;
+        // Intentionally NOT using fallback.image here: those are the multi-MP Webflow
+        // originals that caused the scroll re-decode flashing. The featured card image
+        // is sourced only from the live Shopify CDN; offline it stays a clean placeholder.
+        imageSrc = '';
       }
     }
     
+    const nameEl = card.querySelector('.product-name');
+    if (nameEl && title) {
+      nameEl.textContent = title;
+    }
+
     const priceEl = card.querySelector('.product-price');
     if (priceEl) {
       priceEl.textContent = formatCurrency(price);
     }
-    
+
     const materialsEl = card.querySelector('.product-materials');
     if (materialsEl && variantTitle) {
       materialsEl.textContent = variantTitle;
     }
-    
-    if (imageSrc) {
-      const img = card.querySelector('.product-card-img-wrap img');
-      if (img) {
-        img.src = imageSrc;
-      }
-    }
+
+    // Inject the Shopify image into the placeholder container (sized via CDN params)
+    setFeaturedCardImage(card, imageSrc, title);
 
     // Replace Add to Cart button with Inquire link for display-only items
     const buyRow = card.querySelector('.product-buy-row');
@@ -907,8 +969,9 @@ function addFeaturedItemToCart(handle) {
       price = parseFloat(firstVariant.price.amount);
       variantId = firstVariant.id;
       variantTitle = firstVariant.title;
-      imageSrc = firstVariant.image ? firstVariant.image.url : '';
     }
+    imageSrc = liveProduct.featuredImage?.url
+      || (firstVariant && firstVariant.image ? firstVariant.image.url : '');
   } else {
     const fallback = FEATURED_PRODUCTS_FALLBACK[handle];
     if (fallback) {
@@ -943,7 +1006,7 @@ function addFeaturedItemToCart(handle) {
       options: {
         variantTitle: variantTitle
       },
-      image: imageSrc
+      image: sizeShopifyImage(imageSrc, 200, 250)
     });
   }
   
