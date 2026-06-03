@@ -375,25 +375,25 @@
           [0.0, 0.0],
           [0.35, 0.95],
           [0.65, -0.95],
-          [1.0, -0.95]
+          [1.0, 0.95] // Slides smoothly to the right column during specs-to-config scroll
         ];
         const yKeyframes = [
           [0.0, -0.52],
           [0.35, 0.05],
           [0.65, 0.08],
-          [1.0, 0.08]
+          [1.0, -0.15] // Slides smoothly to the final centered Y coordinate
         ];
         const scaleKeyframes = [
           [0.0, 0.8],
           [0.35, 0.95],
           [0.65, 0.95],
-          [1.0, 0.95]
+          [1.0, 1.0]
         ];
         const rotYKeyframes = [
           [0.0, 0.0],
           [0.35, 0.65 * Math.PI],
           [0.65, 1.35 * Math.PI],
-          [1.0, 1.35 * Math.PI]
+          [1.0, 2.0 * Math.PI] // Rotates smoothly to face front
         ];
 
         targetPosX = interpolate(progress, xKeyframes);
@@ -405,13 +405,13 @@
           [0.0, -0.70],
           [0.35, 0.2],
           [0.65, -0.2],
-          [1.0, -0.2]
+          [1.0, 0.0]
         ];
         const rotYKeyframesMobile = [
           [0.0, 0.0],
           [0.35, 0.65 * Math.PI],
           [0.65, 1.35 * Math.PI],
-          [1.0, 1.35 * Math.PI]
+          [1.0, 2.0 * Math.PI]
         ];
 
         targetPosX = 0;
@@ -422,7 +422,7 @@
       targetOpacity = 1.0;
       staticCardOpacity = 0.0;
     } else {
-      // ─── PHASE 2: Last Narrative Panel Sticky Phase (Slide, Pause, Fade) ───
+      // ─── PHASE 2: Last Narrative Panel Sticky Phase (Pause & Fade) ───
       const localProgress = Math.min(Math.max((scrollY - start) / viewportHeight, 0), 1);
 
       let targetX = 0.95;
@@ -436,54 +436,27 @@
         targetS = 0.72;
       }
 
-      // Slide Phase (0.0 to 0.3)
-      if (localProgress <= 0.3) {
-        const t = localProgress / 0.3;
-        const easedT = t * t * (3 - 2 * t);
-        
-        const startX = window.innerWidth > 1024 ? -0.95 : 0;
-        const startY = window.innerWidth > 1024 ? 0.08 : -0.2;
-        const startS = window.innerWidth > 1024 ? 0.95 : 0.72;
-        const startR = 1.35 * Math.PI;
+      // Always remain fixed at target coordinates during Phase 2
+      targetPosX = targetX;
+      targetPosY = targetY;
+      targetScale = targetS;
+      targetRotY = targetR;
 
-        targetPosX = startX + (targetX - startX) * easedT;
-        targetPosY = startY + (targetY - startY) * easedT;
-        targetScale = startS + (targetS - startS) * easedT;
-        targetRotY = startR + (targetR - startR) * easedT;
-        
+      // Pause Phase (0.0 to 0.5 local progress)
+      if (localProgress <= 0.5) {
         targetOpacity = 1.0;
         staticCardOpacity = 0.0;
       }
-      // Pause Phase (0.3 to 0.6)
-      else if (localProgress <= 0.6) {
-        targetPosX = targetX;
-        targetPosY = targetY;
-        targetScale = targetS;
-        targetRotY = targetR;
-        
-        targetOpacity = 1.0;
-        staticCardOpacity = 0.0;
-      }
-      // Fade Phase (0.6 to 0.9)
-      else if (localProgress <= 0.9) {
-        targetPosX = targetX;
-        targetPosY = targetY;
-        targetScale = targetS;
-        targetRotY = targetR;
-
-        const t = (localProgress - 0.6) / 0.3;
+      // Fade Phase (0.5 to 0.8 local progress)
+      else if (localProgress <= 0.8) {
+        const t = (localProgress - 0.5) / 0.3;
         const easedT = t * t * (3 - 2 * t);
         
         targetOpacity = 1.0 - easedT;
         staticCardOpacity = easedT;
       }
-      // Final Phase (0.9 to 1.0 and beyond)
+      // Final Phase (0.8 to 1.0 and beyond)
       else {
-        targetPosX = targetX;
-        targetPosY = targetY;
-        targetScale = targetS;
-        targetRotY = targetR;
-        
         targetOpacity = 0.0;
         staticCardOpacity = 1.0;
       }
