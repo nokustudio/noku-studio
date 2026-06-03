@@ -3346,8 +3346,10 @@ nav.light-nav .cart-btn:hover {
   justify-content: center;
   position: relative;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1360px;
   margin: 0 auto;
+  padding: 0 80px;
+  box-sizing: border-box;
 }
 
 .featured-carousel-nav-btn {
@@ -3375,11 +3377,11 @@ nav.light-nav .cart-btn:hover {
 }
 
 .featured-carousel-nav-btn.prev-btn {
-  left: -25px;
+  left: 15px;
 }
 
 .featured-carousel-nav-btn.next-btn {
-  right: -25px;
+  right: 15px;
 }
 
 .featured-carousel-track-container {
@@ -3398,7 +3400,7 @@ nav.light-nav .cart-btn:hover {
   position: relative;
   flex: 0 0 320px;
   width: 320px;
-  opacity: 0.4;
+  opacity: 1.0;
   transform: scale(0.92);
   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   background-color: transparent;
@@ -3426,6 +3428,10 @@ nav.light-nav .cart-btn:hover {
 }
 
 @media (max-width: 767px) {
+  .featured-carousel-outer-wrap {
+    padding: 0 50px;
+  }
+
   .featured-carousel-track .product-card {
     flex: 0 0 260px;
     width: 260px;
