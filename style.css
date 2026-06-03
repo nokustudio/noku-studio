@@ -510,6 +510,12 @@ nav.light-nav .nav-dropdown {
   transition: opacity 0.1s linear;
 }
 
+@media (min-width: 1025px) {
+  .default-variant-card-wrap {
+    transform: translateY(5.3vh); /* Align perfectly with Three.js Y = -0.15 */
+  }
+}
+
 #config-panel .empty-col {
   display: flex;
   justify-content: center;
