@@ -503,11 +503,17 @@ nav.light-nav .nav-dropdown {
 
 .default-variant-card-wrap {
   width: 100%;
-  max-width: 320px;
+  max-width: 420px;
   margin: 0 auto;
   opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.1s linear;
+  pointer-events: none !important;
+  visibility: hidden;
+  transition: opacity 0.1s linear, visibility 0.1s linear;
+}
+
+.default-variant-card-wrap.active {
+  pointer-events: auto !important;
+  visibility: visible;
 }
 
 @media (min-width: 1025px) {

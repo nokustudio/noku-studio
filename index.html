@@ -177,25 +177,27 @@
             <span class="buy-now-helper">(scroll down)</span>
           </div>
         </div>
-        <!-- Right side holds static barstool card for slide/fade merge -->
+        <!-- Right side holds carousel for slide/fade merge -->
         <div class="narrative-col empty-col">
           <div class="default-variant-card-wrap" id="narrative-default-card-wrap">
-            <div class="product-card" id="narrative-default-card" data-handle="barstool">
-              <div class="product-card-img-wrap">
-                <img src="https://cdn.prod.website-files.com/667fb0113927090bb47059e6/67cfdbb331dba957c997c00e_5d1622c83584a245197f9005889b2b06_Noku_ofStillness_Barstool_03%20copy.webp" alt="Barstool Teak Linen" loading="lazy">
-              </div>
-              <div class="product-card-body">
-                <div class="product-card-header-row">
-                  <h3 class="product-name">Barstool</h3>
-                  <span class="product-price">₹21,000</span>
-                </div>
-                <div class="product-card-footer-row">
-                  <span class="product-materials">Teak / Fabric — Linen</span>
-                  <div class="product-buy-row">
-                    <button class="product-add-to-cart-btn" aria-label="Add Barstool to Cart">Add to Cart</button>
-                  </div>
+            <div class="carousel-outer-wrap narrative-carousel-wrap">
+              <button class="carousel-nav-btn prev-btn narrative-prev-btn" aria-label="Previous Cushion">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+              </button>
+              <div class="carousel-track-container narrative-carousel-track-container">
+                <div class="carousel-track narrative-carousel-track">
+                  <!-- Dynamically populated carousel cards -->
                 </div>
               </div>
+              <button class="carousel-nav-btn next-btn narrative-next-btn" aria-label="Next Cushion">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
             </div>
           </div>
         </div>

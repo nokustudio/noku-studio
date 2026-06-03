@@ -439,24 +439,28 @@
       // Always remain fixed at target coordinates during Phase 2
       targetPosX = targetX;
       targetPosY = targetY;
-      targetScale = targetS;
-      targetRotY = targetR;
 
       // Pause Phase (0.0 to 0.5 local progress)
       if (localProgress <= 0.5) {
+        targetScale = targetS;
+        targetRotY = targetR;
         targetOpacity = 1.0;
         staticCardOpacity = 0.0;
       }
-      // Fade Phase (0.5 to 0.8 local progress)
+      // Fade & Transform Phase (0.5 to 0.8 local progress)
       else if (localProgress <= 0.8) {
         const t = (localProgress - 0.5) / 0.3;
         const easedT = t * t * (3 - 2 * t);
         
+        targetScale = targetS * (1.0 - easedT * 0.4); // Scale down to 0.6 * targetS
+        targetRotY = targetR - easedT * (55 * Math.PI / 180); // Rotate to -55 degrees relatively
         targetOpacity = 1.0 - easedT;
         staticCardOpacity = easedT;
       }
       // Final Phase (0.8 to 1.0 and beyond)
       else {
+        targetScale = targetS * 0.6;
+        targetRotY = targetR - (55 * Math.PI / 180);
         targetOpacity = 0.0;
         staticCardOpacity = 1.0;
       }
@@ -484,9 +488,9 @@
     if (staticCardWrap) {
       staticCardWrap.style.opacity = staticCardOpacity.toFixed(3);
       if (staticCardOpacity > 0.1) {
-        staticCardWrap.style.pointerEvents = 'auto';
+        staticCardWrap.classList.add('active');
       } else {
-        staticCardWrap.style.pointerEvents = 'none';
+        staticCardWrap.classList.remove('active');
       }
     }
   }
@@ -736,53 +740,122 @@
 
   const cushions = ['blush', 'charcoal', 'chestnut', 'cognac', 'linen', 'olive', 'opal', 'vienna'];
 
-  function centerActiveCard(animate = true) {
-    const track = document.querySelector('.carousel-track');
-    const container = document.querySelector('.carousel-track-container');
-    if (!track || !container) return;
+  function createCardElement(cushion, idx, imgPath, isNarrative = false) {
+    const card = document.createElement('div');
+    card.className = 'carousel-card';
+    card.dataset.cushion = cushion;
+    card.dataset.index = idx;
+    if (isNarrative) {
+      card.id = `narrative-card-${idx}`;
+    }
 
-    const cards = document.querySelectorAll('.carousel-card');
-    if (cards.length === 0) return;
+    const imgHTML = imgPath 
+      ? `<img src="${imgPath}" alt="Barstool ${selectedWood} ${cushion}">` 
+      : '';
 
-    cards.forEach((card, idx) => {
-      if (idx === activeCushionIndex) {
-        card.classList.add('highlighted');
-      } else {
-        card.classList.remove('highlighted');
-        card.style.opacity = ''; // Reset opacity style
-        const img = card.querySelector('.carousel-card-img-wrap img');
-        if (img) img.style.opacity = '1';
+    card.innerHTML = `
+      <div class="carousel-card-img-wrap">
+        ${imgHTML}
+      </div>
+      <div class="carousel-card-info">
+        <span class="cushion-name">${cushion.charAt(0).toUpperCase() + cushion.slice(1)}</span>
+        <svg class="add-to-cart-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 20h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"></path>
+          <path d="M8 6a4 4 0 0 1 8 0"></path>
+        </svg>
+      </div>
+    `;
+
+    card.addEventListener('click', (e) => {
+      // If clicking cart icon, let the cart handler handle it
+      if (e.target.closest('.add-to-cart-icon')) {
+        return;
       }
+      
+      if (card.classList.contains('highlighted')) {
+        // Double-click/second-click on active card -> go to detail page with variant selected
+        window.location.href = `product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushion}`;
+        return;
+      }
+      activeCushionIndex = idx;
+      centerActiveCard(true);
     });
 
-    const activeCard = cards[activeCushionIndex];
+    return card;
+  }
 
-    // Sync the scatter stack image with the selected cushion variant
-    const activeCardImg = activeCard.querySelector('.carousel-card-img-wrap img');
-    const scatterImg = document.querySelector('.radial-scatter__item.barstool-item img');
-    if (scatterImg) {
-      if (activeCardImg) {
+  function centerActiveCard(animate = true) {
+    const mainTrack = document.querySelector('.carousel-track');
+    const mainContainer = document.querySelector('.carousel-track-container');
+    
+    const narrativeTrack = document.querySelector('.narrative-carousel-track');
+    const narrativeContainer = document.querySelector('.narrative-carousel-track-container');
+
+    // Update main track highlighted classes
+    if (mainTrack) {
+      const mainCards = mainTrack.querySelectorAll('.carousel-card');
+      mainCards.forEach((card, idx) => {
+        if (idx === activeCushionIndex) {
+          card.classList.add('highlighted');
+        } else {
+          card.classList.remove('highlighted');
+          card.style.opacity = '';
+        }
+      });
+    }
+
+    // Update narrative track highlighted classes
+    if (narrativeTrack) {
+      const narrativeCards = narrativeTrack.querySelectorAll('.carousel-card');
+      narrativeCards.forEach((card, idx) => {
+        if (idx === activeCushionIndex) {
+          card.classList.add('highlighted');
+        } else {
+          card.classList.remove('highlighted');
+          card.style.opacity = '';
+        }
+      });
+    }
+
+    // Find active card to sync scatter stacks
+    const cards = document.querySelectorAll('.carousel-card');
+    const activeCards = Array.from(cards).filter(c => parseInt(c.dataset.index) === activeCushionIndex);
+    if (activeCards.length > 0) {
+      const activeCardImg = activeCards[0].querySelector('.carousel-card-img-wrap img');
+      const scatterImg = document.querySelector('.radial-scatter__item.barstool-item img');
+      if (scatterImg && activeCardImg) {
         scatterImg.src = activeCardImg.src;
         scatterImg.style.display = '';
-      } else {
-        scatterImg.src = '';
-        scatterImg.style.display = 'none';
       }
     }
 
-    const containerWidth = container.offsetWidth;
-    const cardWidth = activeCard.offsetWidth || 350;
-    const cardOffsetLeft = activeCard.offsetLeft;
-
-    const translateX = (containerWidth - cardWidth) / 2 - cardOffsetLeft;
-
-    if (animate) {
-      track.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
-    } else {
-      track.style.transition = 'none';
+    // Translate main track
+    if (mainTrack && mainContainer) {
+      const activeCard = mainTrack.querySelector('.carousel-card.highlighted');
+      if (activeCard) {
+        const containerWidth = mainContainer.offsetWidth;
+        const cardWidth = activeCard.offsetWidth || 320;
+        const cardOffsetLeft = activeCard.offsetLeft;
+        const translateX = (containerWidth - cardWidth) / 2 - cardOffsetLeft;
+        
+        mainTrack.style.transition = animate ? 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)' : 'none';
+        mainTrack.style.transform = `translateX(${translateX}px)`;
+      }
     }
 
-    track.style.transform = `translateX(${translateX}px)`;
+    // Translate narrative track
+    if (narrativeTrack && narrativeContainer) {
+      const activeCard = narrativeTrack.querySelector('.carousel-card.highlighted');
+      if (activeCard) {
+        const containerWidth = narrativeContainer.offsetWidth;
+        const cardWidth = activeCard.offsetWidth || 320;
+        const cardOffsetLeft = activeCard.offsetLeft;
+        const translateX = (containerWidth - cardWidth) / 2 - cardOffsetLeft;
+        
+        narrativeTrack.style.transition = animate ? 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)' : 'none';
+        narrativeTrack.style.transform = `translateX(${translateX}px)`;
+      }
+    }
 
     const selectedWoodLabel = document.querySelector('.selected-wood-label');
     const selectedCushionLabel = document.querySelector('.selected-cushion-label');
@@ -799,11 +872,9 @@
   }
 
   function renderCarousel() {
-    const track = document.querySelector('.carousel-track');
-    if (!track) return;
-
-    track.innerHTML = '';
-
+    const mainTrack = document.querySelector('.carousel-track');
+    const narrativeTrack = document.querySelector('.narrative-carousel-track');
+    
     const woodNameMap = {
       'teak': 'Teak',
       'reclaimed-teak': 'Reclaimed Teak',
@@ -811,10 +882,12 @@
     };
     const currentWoodName = woodNameMap[selectedWood] || 'Teak';
 
+    if (mainTrack) mainTrack.innerHTML = '';
+    if (narrativeTrack) narrativeTrack.innerHTML = '';
+
     cushions.forEach((cushion, idx) => {
       let imgPath = '';
 
-      // Try to pull from Shopify headless store connection if available
       if (
         typeof isShopifyConnected !== 'undefined' && 
         isShopifyConnected && 
@@ -827,39 +900,17 @@
         }
       }
 
-      const card = document.createElement('div');
-      card.className = 'carousel-card';
-      card.dataset.cushion = cushion;
-      card.dataset.index = idx;
+      // Build main carousel card
+      if (mainTrack) {
+        const card = createCardElement(cushion, idx, imgPath);
+        mainTrack.appendChild(card);
+      }
 
-      const imgHTML = imgPath 
-        ? `<img src="${imgPath}" alt="Barstool ${selectedWood} ${cushion}">` 
-        : '';
-
-      card.innerHTML = `
-        <div class="carousel-card-img-wrap">
-          ${imgHTML}
-        </div>
-        <div class="carousel-card-info">
-          <span class="cushion-name">${cushion.charAt(0).toUpperCase() + cushion.slice(1)}</span>
-          <svg class="add-to-cart-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 20h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"></path>
-            <path d="M8 6a4 4 0 0 1 8 0"></path>
-          </svg>
-        </div>
-      `;
-
-      card.addEventListener('click', () => {
-        if (card.classList.contains('highlighted')) {
-          // Double-click/second-click on active card -> go to detail page with variant selected
-          window.location.href = `product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushion}`;
-          return;
-        }
-        activeCushionIndex = idx;
-        centerActiveCard(true);
-      });
-
-      track.appendChild(card);
+      // Build narrative carousel card
+      if (narrativeTrack) {
+        const card = createCardElement(cushion, idx, imgPath, true);
+        narrativeTrack.appendChild(card);
+      }
     });
 
     centerActiveCard(false);
@@ -880,18 +931,34 @@
     });
   });
 
-  const prevBtn = document.querySelector('.prev-btn');
-  const nextBtn = document.querySelector('.next-btn');
-
-  if (prevBtn && nextBtn) {
-    prevBtn.addEventListener('click', () => {
+  // Hook navigation buttons for both carousels
+  const mainPrev = document.querySelector('.variants-section .prev-btn');
+  const mainNext = document.querySelector('.variants-section .next-btn');
+  if (mainPrev && mainNext) {
+    mainPrev.addEventListener('click', () => {
       if (activeCushionIndex > 0) {
         activeCushionIndex--;
         centerActiveCard(true);
       }
     });
+    mainNext.addEventListener('click', () => {
+      if (activeCushionIndex < cushions.length - 1) {
+        activeCushionIndex++;
+        centerActiveCard(true);
+      }
+    });
+  }
 
-    nextBtn.addEventListener('click', () => {
+  const narrativePrev = document.querySelector('.narrative-prev-btn');
+  const narrativeNext = document.querySelector('.narrative-next-btn');
+  if (narrativePrev && narrativeNext) {
+    narrativePrev.addEventListener('click', () => {
+      if (activeCushionIndex > 0) {
+        activeCushionIndex--;
+        centerActiveCard(true);
+      }
+    });
+    narrativeNext.addEventListener('click', () => {
       if (activeCushionIndex < cushions.length - 1) {
         activeCushionIndex++;
         centerActiveCard(true);

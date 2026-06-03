@@ -1629,10 +1629,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   
-  // Configurator Add to Cart: Hook clicks on cart icon inside the carousel cards
-  const carouselTrack = document.querySelector('.carousel-track');
-  if (carouselTrack) {
-    carouselTrack.addEventListener('click', (e) => {
+  // Configurator Add to Cart: Hook clicks on cart icon inside the carousel cards (both tracks)
+  const tracks = document.querySelectorAll('.carousel-track, .narrative-carousel-track');
+  tracks.forEach(track => {
+    track.addEventListener('click', (e) => {
       // Find if an add-to-cart icon or path was clicked
       const cartIcon = e.target.closest('.add-to-cart-icon');
       if (!cartIcon) return;
@@ -1656,7 +1656,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
       addItemToCart('Noku Barstool', wood, formattedCushion, imageSrc);
     });
-  }
+  });
   
   // Featured Products Add to Cart: Hook clicks on Add to Cart buttons
   const productsGrid = document.querySelector('.products-grid, .featured-carousel-track');
@@ -1672,23 +1672,9 @@ document.addEventListener('DOMContentLoaded', () => {
       addFeaturedItemToCart(handle);
     });
   }
-
-  // Narrative Default Card Add to Cart: Hook click event
-  const narrativeCard = document.getElementById('narrative-default-card');
-  if (narrativeCard) {
-    const btn = narrativeCard.querySelector('.product-add-to-cart-btn');
-    if (btn) {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const img = narrativeCard.querySelector('img');
-        const imageSrc = img ? img.src : '';
-        addItemToCart('Noku Barstool', 'Teak', 'Linen', imageSrc);
-      });
-    }
-  }
   
-  // Set up MutationObserver to update carousel images to Shopify CDN URLs dynamically on render
+  // Set up MutationObservers to update carousel images to Shopify CDN URLs dynamically on render
+  const carouselTrack = document.querySelector('.carousel-track');
   if (carouselTrack) {
     const carouselObserver = new MutationObserver(() => {
       carouselObserver.disconnect();
@@ -1696,6 +1682,16 @@ document.addEventListener('DOMContentLoaded', () => {
       carouselObserver.observe(carouselTrack, { childList: true });
     });
     carouselObserver.observe(carouselTrack, { childList: true });
+  }
+
+  const narrativeCarouselTrack = document.querySelector('.narrative-carousel-track');
+  if (narrativeCarouselTrack) {
+    const narrativeObserver = new MutationObserver(() => {
+      narrativeObserver.disconnect();
+      updateCarouselImagesToShopify();
+      narrativeObserver.observe(narrativeCarouselTrack, { childList: true });
+    });
+    narrativeObserver.observe(narrativeCarouselTrack, { childList: true });
   }
   
   // Load Shopify storefront details
