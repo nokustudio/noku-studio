@@ -28,6 +28,10 @@ import re
 import sys
 from datetime import datetime
 
+# Force UTF-8 output on Windows to avoid cp1252 encoding errors
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 # ─── AUTO-INSTALL openpyxl IF MISSING ───────────────────────────────────────
 try:
     import openpyxl
@@ -211,10 +215,10 @@ def update_js_file(filepath, display_handles, display_titles, display_variant_id
     replacement = rf"\g<1>\g<2>{new_handles_str};"
     new_content, n_subs = re.subn(handles_pattern, replacement, content)
     if n_subs > 0:
-        changes.append(f"  ✓ DISPLAY_ONLY_HANDLES updated ({len(display_handles)} handles, {n_subs} location(s))")
+        changes.append(f"  [OK] DISPLAY_ONLY_HANDLES updated ({len(display_handles)} handles, {n_subs} location(s))")
         content = new_content
     else:
-        changes.append("  ⚠ DISPLAY_ONLY_HANDLES pattern not found — skipped")
+        changes.append("  [!!] DISPLAY_ONLY_HANDLES pattern not found - skipped")
 
     # ── 5b. Replace displayTitles inside isDisplayItem() ────────────────────
     new_titles_str = format_titles_array(display_titles)
@@ -224,10 +228,10 @@ def update_js_file(filepath, display_handles, display_titles, display_variant_id
     )
     new_content, n_subs = re.subn(titles_pattern, rf"\g<1>{new_titles_str};", content)
     if n_subs > 0:
-        changes.append(f"  ✓ displayTitles updated ({len(display_titles)} titles, {n_subs} location(s))")
+        changes.append(f"  [OK] displayTitles updated ({len(display_titles)} titles, {n_subs} location(s))")
         content = new_content
     else:
-        changes.append("  ⚠ displayTitles pattern not found — skipped")
+        changes.append("  [!!] displayTitles pattern not found - skipped")
 
     # ── 5c. Replace displayVariantIds (all occurrences) ─────────────────────
     new_vids_str = format_variant_ids_array(display_variant_ids)
@@ -237,10 +241,10 @@ def update_js_file(filepath, display_handles, display_titles, display_variant_id
     )
     new_content, n_subs = re.subn(vids_pattern, rf"\g<1>{new_vids_str};", content)
     if n_subs > 0:
-        changes.append(f"  ✓ displayVariantIds updated ({len(display_variant_ids)} IDs, {n_subs} location(s))")
+        changes.append(f"  [OK] displayVariantIds updated ({len(display_variant_ids)} IDs, {n_subs} location(s))")
         content = new_content
     else:
-        changes.append("  ⚠ displayVariantIds pattern not found — skipped")
+        changes.append("  [!!] displayVariantIds pattern not found - skipped")
 
     # ── 5d. Replace displayHandles inside updateCartUI() ────────────────────
     new_dh_str = format_handles_array(display_handles, indent="    ")
@@ -250,10 +254,10 @@ def update_js_file(filepath, display_handles, display_titles, display_variant_id
     )
     new_content, n_subs = re.subn(dh_pattern, rf"\g<1>{new_dh_str};", content)
     if n_subs > 0:
-        changes.append(f"  ✓ displayHandles (in updateCartUI) updated ({n_subs} location(s))")
+        changes.append(f"  [OK] displayHandles (in updateCartUI) updated ({n_subs} location(s))")
         content = new_content
     else:
-        changes.append("  ⚠ displayHandles pattern not found — skipped")
+        changes.append("  [!!] displayHandles pattern not found - skipped")
 
     changed = content != original_content
     if changed:
@@ -292,8 +296,8 @@ def main():
     excel_products = load_display_products_from_excel(EXCEL_PATH)
     print(f"      Found {len(excel_products)} products in 'Products Summary':")
     for name, mode in sorted(excel_products.items()):
-        icon = "🔒" if mode.lower() == "display" else "🛒"
-        print(f"      {icon} {name} — {mode}")
+        icon = "[DISPLAY]" if mode.lower() == "display" else "[SALE]"
+        print(f"      {icon} {name} - {mode}")
 
     print("\n[2/4] Loading product_cache.json...")
     product_cache = load_product_cache(CACHE_PATH)
@@ -314,16 +318,16 @@ def main():
     print(f"\n      Display variant IDs: {len(display_variant_ids)} total")
 
     if unmatched:
-        print(f"\n      ⚠ {len(unmatched)} product(s) from Excel not found in cache:")
+        print(f"\n      [!] {len(unmatched)} product(s) from Excel not found in cache:")
         for u in unmatched:
             print(f"        - {u}")
-        print("        → These may be new products not yet on Shopify / in product_cache.json.")
-        print("          Run product-checker.js (node product-checker.js) to refresh the cache.")
+        print("        -> These may be new products not yet on Shopify / in product_cache.json.")
+        print("           Run: node product-checker.js  to refresh the cache.")
 
     # Check for new products
     new_products = check_new_products(excel_products, product_cache)
     if new_products:
-        print(f"\n      📦 New products detected (in Excel but not in cache):")
+        print(f"\n      [NEW] New products detected (in Excel but not in cache):")
         for np in new_products:
             print(f"        - {np}")
 
@@ -345,14 +349,14 @@ def main():
         for c in changes:
             print(c)
         if changed:
-            print(f"  💾 File saved.")
+            print(f"  [SAVED] File updated and saved.")
             any_updated = True
         else:
-            print(f"  ✅ No changes needed.")
+            print(f"  [OK] No changes needed.")
 
     print("\n" + "=" * 60)
     if any_updated:
-        print("  ✅ Update complete! JS files have been synced with Excel.")
+        print("  [SUCCESS] Update complete! JS files have been synced with Excel.")
         print("\n  Next steps:")
         print("  1. Test locally: open product.html?handle=<display-handle>")
         print("     and verify the 'Get in Touch' button appears.")
@@ -361,7 +365,7 @@ def main():
         print("     git commit -m \"sync: update display-only product list from Excel\"")
         print("     git push")
     else:
-        print("  ✅ All JS files are already up to date. No changes made.")
+        print("  [OK] All JS files are already up to date. No changes made.")
     print("=" * 60 + "\n")
 
 
