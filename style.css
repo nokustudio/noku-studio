@@ -841,8 +841,6 @@ body:not(.secondary-landing-page) .hero-title {
   z-index: 13;
   border-top: none;
   border-bottom: 1px solid var(--line);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
 }
 
 .products-header {
@@ -1057,7 +1055,8 @@ body:not(.secondary-landing-page) .hero-title {
   color: var(--chamoisee);
 }
 
-.product-add-to-cart-btn {
+.product-add-to-cart-btn,
+.product-inquire-btn {
   background-color: transparent;
   border: 1px solid var(--chamoisee);
   color: var(--chamoisee);
@@ -1070,14 +1069,18 @@ body:not(.secondary-landing-page) .hero-title {
   padding: 8px 16px;
   cursor: pointer;
   transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
 }
 
-.product-add-to-cart-btn:hover {
+.product-add-to-cart-btn:hover,
+.product-inquire-btn:hover {
   background-color: var(--chamoisee);
   color: var(--paper);
 }
 
-.product-add-to-cart-btn:active {
+.product-add-to-cart-btn:active,
+.product-inquire-btn:active {
   transform: translateY(0);
 }
 
@@ -1233,8 +1236,6 @@ body:not(.secondary-landing-page) .hero-title {
   background-color: var(--light);
   z-index: 13;
   position: relative;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
 }
 
 .collections-header {

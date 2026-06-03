@@ -669,6 +669,24 @@
       });
 
       revealElements.forEach(el => revealObserver.observe(el));
+
+      // Prefill inquiry fields from query parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const inquiryProduct = urlParams.get('inquiry');
+      if (inquiryProduct) {
+        const purposeSelect = document.getElementById('contact-purpose');
+        const messageTextarea = document.getElementById('contact-message');
+        
+        if (purposeSelect) {
+          purposeSelect.value = 'consult'; // Set to Bespoke Consultation
+          purposeSelect.dispatchEvent(new Event('change'));
+        }
+        
+        if (messageTextarea) {
+          messageTextarea.value = `I would like to inquire about the display-only piece: ${decodeURIComponent(inquiryProduct)}. Please share more details, customization options, and pricing.`;
+          messageTextarea.dispatchEvent(new Event('input'));
+        }
+      }
     });
 
     // Handle interactive luxury contact form submission

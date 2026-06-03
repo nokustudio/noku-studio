@@ -401,8 +401,6 @@ nav.light-nav .nav-dropdown {
   z-index: 13;
   border-top: none;
   border-bottom: 1px solid var(--line);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
 }
 
 .products-header {
@@ -551,8 +549,6 @@ nav.light-nav .nav-dropdown {
   background-color: var(--light);
   z-index: 13;
   position: relative;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
 }
 
 .collections-header {
