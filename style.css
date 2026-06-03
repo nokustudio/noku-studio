@@ -1050,6 +1050,31 @@ body:not(.secondary-landing-page) .hero-title {
   line-height: 1.4;
 }
 
+.product-card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+}
+
+.product-card-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 16px;
+  margin-top: auto;
+}
+
+.product-card-footer-row .product-materials {
+  margin-bottom: 0;
+}
+
+.product-card-footer-row .product-buy-row {
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
 .product-buy-row {
   display: flex;
   justify-content: space-between;
