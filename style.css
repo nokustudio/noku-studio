@@ -3449,7 +3449,7 @@ nav.light-nav .cart-btn:hover {
 }
 
 .featured-carousel-track .product-card .product-card-body {
-  padding: 0 4px;
+  padding: 0;
   display: flex;
   flex-direction: column;
   flex-grow: 1;

@@ -411,7 +411,7 @@
     }
 
     // Calculate targetOpacity based on projected model bottom and card top position
-    if (scrollY >= lockPoint) {
+    if (scrollY < lockPoint) {
       targetOpacity = 1.0;
     } else if (threeMetricsCached && modelGroup && camera) {
       // Get the top Y of the variant image card from cached metrics
