@@ -16,10 +16,7 @@
   <link rel="stylesheet" href="style.css?v=1.7">
 
   <style>
-    html, body {
-      background-color: var(--light) !important;
-      color: var(--ink) !important;
-    }
+    /* Light background is the site-wide default (style.css) — no per-page override needed. */
 
     /* ════════ MAIN PRODUCT DETAIL PAGE LAYOUT ════════ */
     .product-page-main {
@@ -844,17 +841,8 @@
   <script src="noku-materials.js?v=1.7"></script>
   <script src="product.js?v=1.7"></script>
 
-  <script>
-    // Navbar Scroll Animation
-    window.addEventListener('scroll', () => {
-      const nav = document.getElementById('navbar');
-      if (window.scrollY > 50) {
-        nav.classList.add('scrolled');
-      } else {
-        nav.classList.remove('scrolled');
-      }
-    });
-  </script>
+  <!-- Shared navbar-scroll + reveal-on-scroll behaviour -->
+  <script src="site.js"></script>
 </body>
 
 </html>

@@ -17,9 +17,8 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
+    /* Light background is the site-wide default (style.css) — no bg/color override needed. */
     html, body {
-      background-color: var(--light) !important;
-      color: var(--ink) !important;
       margin: 0;
       padding: 0;
       overflow: visible !important; /* Critical for position: sticky to pin relative to viewport without failing */
@@ -651,16 +650,6 @@
       });
     })();
 
-    // Navbar scroll handler
-    window.addEventListener('scroll', () => {
-      const navbar = document.getElementById('navbar');
-      if (window.scrollY > 40) {
-        navbar.classList.add('scrolled');
-      } else {
-        navbar.classList.remove('scrolled');
-      }
-    }, { passive: true });
-
     // ════════ PAGE TRANSITIONS ENGINE ════════
     document.addEventListener('DOMContentLoaded', () => {
       const projectLinks = document.querySelectorAll('.project_link');
@@ -722,6 +711,8 @@
     });
   </script>
 
+  <!-- Shared navbar-scroll + reveal-on-scroll behaviour -->
+  <script src="site.js"></script>
   <script src="shopify-integration.js"></script>
 
 </body>

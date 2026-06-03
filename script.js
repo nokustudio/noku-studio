@@ -551,38 +551,15 @@
 
   animate();
 
-  // ─── INTERACTION OBSERVER FOR REVEAL TRANSLATIONS ───
-  const revealElements = document.querySelectorAll('.reveal-el');
+  // Reveal-on-scroll (.reveal-el) and the navbar "scrolled" toggle are handled by
+  // the shared site.js, loaded on every page. Only the homepage-specific light/dark
+  // theme observers live here.
 
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-revealed');
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  }, {
-    threshold: 0.1,
-    rootMargin: '0px 0px -40px 0px'
-  });
-
-  revealElements.forEach(el => revealObserver.observe(el));
-
-  // ─── NAV BAR BARGROUND SHIFT THEME CONTROLLER ───
+  // ─── NAV BAR BACKGROUND SHIFT THEME CONTROLLER ───
   const navbar = document.getElementById('navbar');
   const isHomepage = !!document.getElementById('hero-panel');
 
   if (navbar) {
-    // 1. Scroll State Toggle (Only handles visual scroll offset, extremely cheap)
-    let isScrolled = false;
-    window.addEventListener('scroll', () => {
-      const scrolled = window.scrollY > 40;
-      if (scrolled !== isScrolled) {
-        isScrolled = scrolled;
-        navbar.classList.toggle('scrolled', isScrolled);
-      }
-    }, { passive: true });
-
     if (!isHomepage) {
       navbar.classList.add('light-nav');
     } else {
@@ -1040,11 +1017,12 @@
         const t = s / 0.1;
         subOpacity = t * t * (3 - 2 * t); // smoothstep fade in
         subY = 15 * (1 - t);
-      } else if (s <= 0.2) {
+      } else if (s <= 0.5) {
+        // Extended visibility: stays fully visible through 50% of scroll
         subOpacity = 1.0;
         subY = 0;
-      } else if (s <= 0.3) {
-        const t = (s - 0.2) / 0.1;
+      } else if (s <= 0.6) {
+        const t = (s - 0.5) / 0.1;
         subOpacity = 1 - t * t * (3 - 2 * t); // smoothstep fade out
         subY = -15 * t;
       } else {

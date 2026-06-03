@@ -16,10 +16,7 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    html, body {
-      background-color: var(--light) !important;
-      color: var(--ink) !important;
-    }
+    /* Light background is the site-wide default (style.css) — no per-page override needed. */
 
     /* ════════ HERO/HEADER SECTION ════════ */
     .catalog-hero {
@@ -625,17 +622,8 @@
   </div>
 
   <script src="products.js"></script>
-  <script>
-    // Navigation scrolled class
-    window.addEventListener('scroll', () => {
-      const navbar = document.getElementById('navbar');
-      if (window.scrollY > 40) {
-        navbar.classList.add('scrolled');
-      } else {
-        navbar.classList.remove('scrolled');
-      }
-    });
-  </script>
+  <!-- Shared navbar-scroll + reveal-on-scroll behaviour -->
+  <script src="site.js"></script>
 </body>
 
 </html>

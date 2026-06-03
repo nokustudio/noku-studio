@@ -18,10 +18,7 @@
 
   <style>
     /* ════════ DESIGN SYSTEM OVERRIDES & PAGE STYLES ════════ */
-    body {
-      background-color: var(--light) !important;
-      color: var(--ink) !important;
-    }
+    /* Light background is the site-wide default (style.css) — no per-page override needed. */
 
     /* ════════ HERO SECTION ════════ */
     .about-hero {
@@ -844,21 +841,9 @@
 
   <script src="shopify-integration.js"></script>
 
+  <!-- Shared navbar-scroll + reveal-on-scroll behaviour -->
+  <script src="site.js"></script>
   <script>
-
-
-    // Sticky nav class scroll toggler
-    window.addEventListener('scroll', () => {
-      const navbar = document.getElementById('navbar');
-      if (navbar) {
-        if (window.scrollY > 40) {
-          navbar.classList.add('scrolled');
-        } else {
-          navbar.classList.remove('scrolled');
-        }
-      }
-    }, { passive: true });
-
     // Timeline vertical scroll active line animation
     const timelineWrap = document.querySelector('.story-timeline-wrap');
     const scrollIndicator = document.getElementById('timeline-scroll-indicator');
@@ -889,25 +874,6 @@
     window.addEventListener('scroll', updateTimelineProgress, { passive: true });
     window.addEventListener('resize', updateTimelineProgress, { passive: true });
     updateTimelineProgress(); // Initial run
-
-    // Interaction reveal elements observer
-    document.addEventListener('DOMContentLoaded', () => {
-      const revealElements = document.querySelectorAll('.reveal-el');
-      
-      const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-revealed');
-            revealObserver.unobserve(entry.target);
-          }
-        });
-      }, {
-        threshold: 0.05,
-        rootMargin: '0px 0px -30px 0px'
-      });
-
-      revealElements.forEach(el => revealObserver.observe(el));
-    });
   </script>
 </body>
 

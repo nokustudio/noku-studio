@@ -18,10 +18,7 @@
 
   <style>
     /* ════════ DESIGN SYSTEM & TOKENS OVERRIDES ════════ */
-    body {
-      background-color: var(--light) !important;
-      color: var(--ink) !important;
-    }
+    /* Light background is the site-wide default (style.css) — no per-page override needed. */
 
     /* ════════ HERO SECTION ════════ */
     .collection-hero {
@@ -574,39 +571,12 @@
 
   <script src="shopify-integration.js"></script>
 
+  <!-- Shared navbar-scroll + reveal-on-scroll behaviour -->
+  <script src="site.js"></script>
   <script>
-    // Navigation scrolled class toggler
-    window.addEventListener('scroll', () => {
-      const navbar = document.getElementById('navbar');
-      if (navbar) {
-        if (window.scrollY > 40) {
-          navbar.classList.add('scrolled');
-        } else {
-          navbar.classList.remove('scrolled');
-        }
-      }
-    }, { passive: true });
-
-    // Interaction observer for reveal animations on scroll
+    // Dynamic rendering of Of Stillness products from Shopify/fallback
     document.addEventListener('DOMContentLoaded', () => {
-      // Dynamic rendering of Of Stillness products from Shopify/fallback
       renderCollectionProducts('of-stillness', 'stillness-products-grid');
-
-      const revealElements = document.querySelectorAll('.reveal-el');
-      
-      const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-revealed');
-            revealObserver.unobserve(entry.target);
-          }
-        });
-      }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -40px 0px'
-      });
-
-      revealElements.forEach(el => revealObserver.observe(el));
     });
   </script>
 
