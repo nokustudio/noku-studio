@@ -23,3 +23,6 @@ product_cache.json
 
 # Generated Product Excel Spreadsheet
 noku_products.xlsx
+
+# Local test configurations and sandbox pages
+tests/

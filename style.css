@@ -982,13 +982,11 @@ body:not(.secondary-landing-page) .hero-title {
               border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Temporarily disabled animations
 .product-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 20px 40px rgba(44, 38, 34, 0.08);
   border-color: rgba(162, 123, 92, 0.2);
 }
-*/
 
 .product-card-img-wrap {
   overflow: hidden;
@@ -1010,11 +1008,9 @@ body:not(.secondary-landing-page) .hero-title {
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Temporarily disabled animations
 .product-card:hover .product-card-img-wrap img {
   transform: scale(1.05);
 }
-*/
 
 .product-card-body {
   padding: 20px;
@@ -1279,13 +1275,11 @@ body:not(.secondary-landing-page) .hero-title {
   cursor: pointer;
 }
 
-/* Temporarily disabled animations
 .collection-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 20px 40px rgba(44, 38, 34, 0.08);
   border-color: rgba(162, 123, 92, 0.2);
 }
-*/
 
 .coll-card-img-wrap {
   width: 100%;
@@ -1313,11 +1307,9 @@ body:not(.secondary-landing-page) .hero-title {
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Temporarily disabled animations
 .collection-card:hover .coll-card-img-wrap img {
   transform: scale(1.05);
 }
-*/
 
 .coll-card-content {
   padding: 10px 10px 18px 10px;
@@ -1348,11 +1340,9 @@ body:not(.secondary-landing-page) .hero-title {
   transition: color 0.4s ease;
 }
 
-/* Temporarily disabled animations
 .collection-card:hover .coll-card-title {
   color: var(--chamoisee);
 }
-*/
 
 .coll-card-desc {
   font-family: var(--font-body);
