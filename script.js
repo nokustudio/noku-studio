@@ -618,13 +618,13 @@
           if (entry.isIntersecting) {
             const targetId = entry.target.id;
             const targetClass = entry.target.classList;
-            
+
             const isLight = targetId === 'configurator' ||
                             targetClass.contains('products-section') ||
                             targetClass.contains('collections-section') ||
                             targetClass.contains('materials-section') ||
                             entry.target.tagName.toLowerCase() === 'footer';
-            
+
             if (isLight) {
               document.body.style.backgroundColor = 'var(--light)';
             } else {
@@ -633,7 +633,9 @@
           }
         });
       }, {
-        rootMargin: '-50% 0px -50% 0px',
+        // Wider zone (-30% each side) prevents the zero-height center-only trigger
+        // that caused rapid dark/light toggling when fast-scrolling between sections
+        rootMargin: '-30% 0px -30% 0px',
         threshold: 0
       });
 
@@ -1219,10 +1221,11 @@
     }
 
     function onScatterMove(e) {
-      const rectLeft = quoteStageLeftDoc - window.scrollX;
-      const rectTop = quoteStageTopDoc - window.scrollY;
-      const nx = (e.clientX - rectLeft) / quoteStageWidth - 0.5;
-      const ny = (e.clientY - rectTop) / quoteStageHeight - 0.5;
+      // Use live getBoundingClientRect so the coordinates are always correct
+      // even when quoteStage is in sticky mode (cached doc-offsets go stale)
+      const rect = quoteStage.getBoundingClientRect();
+      const nx = (e.clientX - rect.left) / rect.width - 0.5;
+      const ny = (e.clientY - rect.top) / rect.height - 0.5;
 
       scatterTargetX = nx * 24;
       scatterTargetY = ny * 14;
@@ -1263,10 +1266,18 @@
         isQuoteInViewport = entry.isIntersecting;
         if (isQuoteInViewport && !isLoopRunning) {
           requestAnimationFrame(renderScatter);
+        } else if (!isQuoteInViewport) {
+          // Restore configurator controls when quote section leaves viewport.
+          // renderScatter sets inline opacity:0 on these which overrides the
+          // .is-revealed CSS class — clearing the inline style hands control
+          // back to CSS so they reappear correctly.
+          if (carouselOuter) { carouselOuter.style.opacity = ''; carouselOuter.style.pointerEvents = ''; }
+          if (woodSelector)  { woodSelector.style.opacity  = ''; woodSelector.style.pointerEvents  = ''; }
+          if (selectedDetails) { selectedDetails.style.opacity = ''; selectedDetails.style.pointerEvents = ''; }
         }
       });
     }, {
-      rootMargin: "200px 0px 200px 0px"
+      rootMargin: "50px 0px 50px 0px"
     });
     quoteObserver.observe(quoteContainer);
 

@@ -835,7 +835,10 @@ body:not(.secondary-landing-page) .hero-title {
 }
 
 .products-section {
-  padding-top: 180px;
+  /* Reduced from 180px — the 3D canvas is hidden before this section is
+     reached, so the extra top space served no visual purpose and looked
+     like a loading hang after the quote section. */
+  padding-top: clamp(80px, 10vw, 120px);
   background-color: var(--light);
   position: relative;
   z-index: 13;
@@ -1107,6 +1110,9 @@ body:not(.secondary-landing-page) .hero-title {
   justify-content: center;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  /* Isolate paint to this subtree so per-frame JS transforms on scatter
+     items don't trigger full-page repaints / layout recalculations */
+  isolation: isolate;
 }
 
 .quote_wrap .quote_text_wrap {
