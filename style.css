@@ -498,12 +498,13 @@ nav.light-nav .nav-dropdown {
     align-items: center;
     box-sizing: border-box;
     padding: 0 60px;
+    grid-template-columns: 0.82fr 1.18fr; /* Wider right column for carousel peeking */
   }
 }
 
 .default-variant-card-wrap {
   width: 100%;
-  max-width: 420px;
+  max-width: 650px; /* Increased to reveal more adjacent product cards */
   margin: 0 auto;
   opacity: 0;
   pointer-events: none !important;
@@ -522,27 +523,6 @@ nav.light-nav .nav-dropdown {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-}
-
-.model-frame-rect {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 320px;
-  height: 500px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  pointer-events: none;
-  background-color: rgba(255, 255, 255, 0.02);
-  z-index: 1;
-}
-
-@media (max-width: 1024px) {
-  .model-frame-rect {
-    display: none;
-  }
 }
 
 .narrative-panel * {
