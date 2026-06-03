@@ -1230,6 +1230,8 @@ body:not(.secondary-landing-page) .hero-title {
   background-color: var(--light);
   z-index: 13;
   position: relative;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .collections-header {

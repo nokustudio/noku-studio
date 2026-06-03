@@ -330,6 +330,16 @@
   // Listen scroll updates
   function evaluateScrollCalculations() {
     const scrollY = window.scrollY;
+
+    // Early return if scrolled past the configurator section to avoid unnecessary layout/projection math
+    if (threeMetricsCached && scrollY > configBottomDoc) {
+      if (isThreeCanvasVisible) {
+        container.style.visibility = 'hidden';
+        isThreeCanvasVisible = false;
+      }
+      return;
+    }
+
     const viewportHeight = window.innerHeight;
     const total3DZoneHeight = viewportHeight * 3; // Extended narrative height for 3 panels
 

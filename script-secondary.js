@@ -403,8 +403,18 @@
   function evaluateScrollCalculations() {
     if (!isIntroComplete) return;
 
-    const PIN_SCROLL = 450; // Scroll distance in pixels where the image fades and 3D model appears
     const scrollY = window.scrollY;
+
+    // Early return if scrolled past the configurator section to avoid unnecessary layout/projection math
+    if (threeMetricsCached && scrollY > configBottomDoc) {
+      if (isThreeCanvasVisible) {
+        container.style.visibility = 'hidden';
+        isThreeCanvasVisible = false;
+      }
+      return;
+    }
+
+    const PIN_SCROLL = 450; // Scroll distance in pixels where the image fades and 3D model appears
     const viewportHeight = window.innerHeight;
     const total3DZoneHeight = viewportHeight * 3;
 
