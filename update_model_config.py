@@ -1,212 +1,154 @@
 import os
 import re
-import math
+import sys
 
-js_file_path = os.path.join(os.path.dirname(__file__), 'script-secondary.js')
+def get_config_paths():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    js_path = os.path.join(script_dir, 'script.js')
+    css_path = os.path.join(script_dir, 'style.css')
+    return js_path, css_path
 
-def get_current_values():
-    # Fallbacks in case extraction fails
-    defaults = {
-        'scale_factor': 0.6,
-        'x_offset': 0.0,
-        'y_offset': 0.02,
-        'rotation_angle': -30,
-        'camera_x': 0.0,
-        'camera_y': 0.45,
-        'zoom': 4.5
+def parse_current_config(js_path, css_path):
+    config = {
+        'js_y_keyframe': None,
+        'js_target_y': None,
+        'js_angle_deg': None,
+        'css_translate_vh': None,
+        'css_aligned_y': None
     }
     
-    if not os.path.exists(js_file_path):
-        return defaults
+    if not os.path.exists(js_path):
+        print(f"Error: Could not find script.js at {js_path}")
+        sys.exit(1)
+    if not os.path.exists(css_path):
+        print(f"Error: Could not find style.css at {css_path}")
+        sys.exit(1)
 
-    try:
-        with open(js_file_path, 'r', encoding='utf-8') as f:
-            content = f.read()
+    with open(js_path, 'r', encoding='utf-8') as f:
+        js_content = f.read()
 
-        # 1. Extract camera X, Y and zoom (camera Z)
-        camera_match = re.search(r'camera\.position\.set\(([\d\.-]+),\s*([\d\.-]+),\s*([\d\.-]+)\);\s*//\s*CONFIG:\s*camera_position', content)
-        if camera_match:
-            defaults['camera_x'] = float(camera_match.group(1))
-            defaults['camera_y'] = float(camera_match.group(2))
-            defaults['zoom'] = float(camera_match.group(3))
+    # Find landing Y keyframe
+    y_kf_match = re.search(r'\[1\.0,\s*(-?\d+\.?\d*)\]\s*//\s*Slides smoothly to the final centered Y coordinate', js_content)
+    if y_kf_match:
+        config['js_y_keyframe'] = float(y_kf_match.group(1))
 
-        # 2. Extract X-position offset
-        x_match = re.search(r'introModelX\s*=\s*ndcX\s*\*\s*halfFrustumW\s*\+\s*camera\.position\.x\s*\+\s*([\d\.-]+);\s*//\s*CONFIG:\s*x_offset', content)
-        if x_match:
-            defaults['x_offset'] = float(x_match.group(1))
+    # Find targetY in Phase 2
+    target_y_match = re.search(r'let targetY\s*=\s*(-?\d+\.?\d*);', js_content)
+    if target_y_match:
+        config['js_target_y'] = float(target_y_match.group(1))
 
-        # 3. Extract Y-position offset
-        y_match = re.search(r'introModelY\s*=\s*ndcY\s*\*\s*halfFrustumH\s*\+\s*camera\.position\.y\s*\+\s*([\d\.-]+);\s*//\s*CONFIG:\s*y_offset', content)
-        if y_match:
-            defaults['y_offset'] = float(y_match.group(1))
+    # Find angle in degrees
+    angle_match = re.search(r'\((\d+)\s*\*\s*Math\.PI\s*\/\s*180\)', js_content)
+    if angle_match:
+        config['js_angle_deg'] = int(angle_match.group(1))
 
-        # 4. Extract Scale factor
-        scale_match = re.search(r'introModelScale\s*=\s*Math\.max\(0\.25,\s*Math\.min\(1\.1,\s*\(imgHeightWorld\s*/\s*1\.35\)\s*\*\s*([\d\.-]+)\)\);\s*//\s*CONFIG:\s*scale_factor', content)
-        if scale_match:
-            defaults['scale_factor'] = float(scale_match.group(1))
+    with open(css_path, 'r', encoding='utf-8') as f:
+        css_content = f.read()
 
-        # 5. Extract Rotation Angle (read in radians, convert to degrees)
-        rot_match = re.search(r'let\s+introModelRotY\s*=\s*([\d\.-]+);\s*//\s*CONFIG:\s*fallback_rot_y', content)
-        if rot_match:
-            rad_val = float(rot_match.group(1))
-            defaults['rotation_angle'] = int(round(rad_val * 180.0 / math.pi))
+    # Find CSS translation
+    css_match = re.search(r'transform:\s*translateY\((-?\d+\.?\d*)vh\);\s*/\*\s*Align perfectly with Three\.js Y\s*=\s*(-?\d+\.?\d*)\s*\*/', css_content)
+    if css_match:
+        config['css_translate_vh'] = float(css_match.group(1))
+        config['css_aligned_y'] = float(css_match.group(2))
 
-    except Exception as e:
-        print(f"Warning: Failed to extract current settings from JS file: {e}. Using defaults.")
-
-    return defaults
-
-def run_update(scale_factor, x_offset, y_offset, rotation_angle, camera_x, camera_y, zoom):
-    fallback_x = camera_x + x_offset
-    fallback_y = camera_y + y_offset
-    fallback_scale = 0.70 * scale_factor
-    fallback_rot_y = (rotation_angle * math.pi) / 180.0
-
-    try:
-        with open(js_file_path, 'r', encoding='utf-8') as f:
-            content = f.read()
-
-        # 1. Camera position (X, Y and Z)
-        content = re.sub(
-            r'camera\.position\.set\([\d\.-]+,\s*[\d\.-]+,\s*[\d\.-]+\);\s*//\s*CONFIG:\s*camera_position',
-            f'camera.position.set({camera_x}, {camera_y}, {zoom}); // CONFIG: camera_position',
-            content
-        )
-
-        # 2. Fallback X
-        content = re.sub(
-            r'let\s+introModelX\s*=\s*[\d\.-]+;\s*//\s*CONFIG:\s*fallback_x',
-            f'let introModelX = {fallback_x:.4f}; // CONFIG: fallback_x',
-            content
-        )
-
-        # 3. Fallback Y
-        content = re.sub(
-            r'let\s+introModelY\s*=\s*[\d\.-]+;\s*//\s*CONFIG:\s*fallback_y',
-            f'let introModelY = {fallback_y:.4f}; // CONFIG: fallback_y',
-            content
-        )
-
-        # 4. Fallback Scale
-        content = re.sub(
-            r'let\s+introModelScale\s*=\s*[\d\.-]+;\s*//\s*CONFIG:\s*fallback_scale',
-            f'let introModelScale = {fallback_scale:.4f}; // CONFIG: fallback_scale',
-            content
-        )
-
-        # 5. Fallback Rotation Y
-        content = re.sub(
-            r'let\s+introModelRotY\s*=\s*[\d\.\-\s\*/a-zA-Z]+;\s*//\s*CONFIG:\s*fallback_rot_y',
-            f'let introModelRotY = {fallback_rot_y:.6f}; // CONFIG: fallback_rot_y',
-            content
-        )
-
-        # 6. X Offset in dynamic calculation
-        content = re.sub(
-            r'introModelX\s*=\s*ndcX\s*\*\s*halfFrustumW\s*\+\s*camera\.position\.x\s*\+\s*[\d\.-]+;\s*//\s*CONFIG:\s*x_offset',
-            f'introModelX = ndcX * halfFrustumW + camera.position.x + {x_offset}; // CONFIG: x_offset',
-            content
-        )
-
-        # 7. Y Offset in dynamic calculation
-        content = re.sub(
-            r'introModelY\s*=\s*ndcY\s*\*\s*halfFrustumH\s*\+\s*camera\.position\.y\s*\+\s*[\d\.-]+;\s*//\s*CONFIG:\s*y_offset',
-            f'introModelY = ndcY * halfFrustumH + camera.position.y + {y_offset}; // CONFIG: y_offset',
-            content
-        )
-
-        # 8. Scale factor in dynamic calculation
-        content = re.sub(
-            r'introModelScale\s*=\s*Math\.max\(0\.25,\s*Math\.min\(1\.1,\s*\(imgHeightWorld\s*/\s*1\.35\)\s*\*\s*[\d\.-]+\)\);\s*//\s*CONFIG:\s*scale_factor',
-            f'introModelScale = Math.max(0.25, Math.min(1.1, (imgHeightWorld / 1.35) * {scale_factor})); // CONFIG: scale_factor',
-            content
-        )
-
-        # 9. Phase 1 target rotation
-        content = re.sub(
-            r'targetRotY\s*=\s*[\d\.\-\s\*/a-zA-Z]+;\s*//\s*CONFIG:\s*rot_y_phase1',
-            f'targetRotY = {fallback_rot_y:.6f}; // CONFIG: rot_y_phase1',
-            content
-        )
-
-        # 10. Phase 2 Desktop Keyframe 0 Rotation
-        content = re.sub(
-            r'\[0\.0,\s*[\d\.\-\s\*/a-zA-Z]+\],\s*//\s*CONFIG:\s*rot_y_phase2_desktop',
-            f'[0.0, {fallback_rot_y:.6f}], // CONFIG: rot_y_phase2_desktop',
-            content
-        )
-
-        # 11. Phase 2 Mobile Keyframe 0 Rotation
-        content = re.sub(
-            r'\[0\.0,\s*[\d\.\-\s\*/a-zA-Z]+\],\s*//\s*CONFIG:\s*rot_y_phase2_mobile',
-            f'[0.0, {fallback_rot_y:.6f}], // CONFIG: rot_y_phase2_mobile',
-            content
-        )
-
-        # 12. Blend Target Rotation
-        content = re.sub(
-            r'targetRotY\s*=\s*\([\d\.\-\s\*/a-zA-Z]+\)\s*\*\s*\(1\s*-\s*blendEased\)\s*\+\s*baseRotY\s*\*\s*blendEased;\s*//\s*CONFIG:\s*rot_y_blend',
-            f'targetRotY = ({fallback_rot_y:.6f}) * (1 - blendEased) + baseRotY * blendEased; // CONFIG: rot_y_blend',
-            content
-        )
-
-        with open(js_file_path, 'w', encoding='utf-8') as f:
-            f.write(content)
-            
-        print('\n========================================')
-        print('[SUCCESS] CONFIGURATION SUCCESSFULLY UPDATED!')
-        print('========================================')
-        print(f'- Scale Factor:      {scale_factor}')
-        print(f'- X-Position Offset: {x_offset}')
-        print(f'- Y-Position Offset: {y_offset}')
-        print(f'- Rotation Angle:    {rotation_angle} deg ({fallback_rot_y:.4f} rad)')
-        print(f'- Camera X Position: {camera_x}')
-        print(f'- Camera Y Position: {camera_y}')
-        print(f'- Zoom (Camera Z):   {zoom}')
-        print('----------------------------------------')
-        print(f'- Calculated Fallback X:     {fallback_x:.4f}')
-        print(f'- Calculated Fallback Y:     {fallback_y:.4f}')
-        print(f'- Calculated Fallback Scale: {fallback_scale:.4f}')
-        print('========================================\n')
-        
-    except Exception as e:
-        print(f"Error updating config file: {e}")
+    return config, js_content, css_content
 
 def main():
-    current = get_current_values()
-    
-    print('\n--- Noku 3D Model Configuration Script (Python) ---')
-    print('Press ENTER to keep the current values shown in brackets.\n')
-    
-    # 1. Scale Factor
-    ans = input(f"Enter Scale Factor [{current['scale_factor']}]: ").strip()
-    scale_factor = float(ans) if ans else current['scale_factor']
-    
-    # 2. X-Position Offset
-    ans = input(f"Enter X-Position Offset [{current['x_offset']}]: ").strip()
-    x_offset = float(ans) if ans else current['x_offset']
-    
-    # 3. Y-Position Offset
-    ans = input(f"Enter Y-Position Offset [{current['y_offset']}]: ").strip()
-    y_offset = float(ans) if ans else current['y_offset']
-    
-    # 4. Rotation Angle
-    ans = input(f"Enter Rotation Angle in Degrees (e.g. -30 for left, 30 for right) [{current['rotation_angle']}]: ").strip()
-    rotation_angle = float(ans) if ans else current['rotation_angle']
-    
-    # 5. Camera X Position
-    ans = input(f"Enter Camera X Position [{current['camera_x']}]: ").strip()
-    camera_x = float(ans) if ans else current['camera_x']
-    
-    # 6. Camera Y Position
-    ans = input(f"Enter Camera Y Position [{current['camera_y']}]: ").strip()
-    camera_y = float(ans) if ans else current['camera_y']
+    js_path, css_path = get_config_paths()
+    config, js_content, css_content = parse_current_config(js_path, css_path)
 
-    # 7. Zoom (Camera Z)
-    ans = input(f"Enter Zoom / Camera Z Position [{current['zoom']}]: ").strip()
-    zoom = float(ans) if ans else current['zoom']
+    print("=" * 60)
+    print("         Current 3D Model Configuration Tracker")
+    print("=" * 60)
+    print(f"1. Model Landing Y Keyframe (script.js):   {config['js_y_keyframe'] if config['js_y_keyframe'] is not None else 'Not Found'}")
+    print(f"2. Model Phase 2 targetY (script.js):       {config['js_target_y'] if config['js_target_y'] is not None else 'Not Found'}")
+    print(f"3. Model Relative Rotation Angle (deg):     {config['js_angle_deg'] if config['js_angle_deg'] is not None else 'Not Found'} degrees")
+    print(f"4. CSS Card translateY (style.css):        {config['css_translate_vh'] if config['css_translate_vh'] is not None else 'Not Found'} vh")
+    print(f"5. CSS Card Aligned Y Ref (style.css):      {config['css_aligned_y'] if config['css_aligned_y'] is not None else 'Not Found'}")
+    print("=" * 60)
+
+    try:
+        new_y_input = input("Enter new Y-coordinate (press Enter to keep current): ").strip()
+    except (KeyboardInterrupt, EOFError):
+        new_y_input = ""
+        print()
+
+    try:
+        new_angle_input = input("Enter new rotation angle in degrees (press Enter to keep current): ").strip()
+    except (KeyboardInterrupt, EOFError):
+        new_angle_input = ""
+        print()
+
+    updated = False
     
-    run_update(scale_factor, x_offset, y_offset, rotation_angle, camera_x, camera_y, zoom)
+    new_y = config['js_target_y']
+    if new_y_input:
+        try:
+            new_y = float(new_y_input)
+            updated = True
+        except ValueError:
+            print(f"Error: Invalid Y-coordinate '{new_y_input}'. Must be a number.")
+            sys.exit(1)
+
+    new_angle = config['js_angle_deg']
+    if new_angle_input:
+        try:
+            new_angle = int(new_angle_input)
+            updated = True
+        except ValueError:
+            print(f"Error: Invalid angle '{new_angle_input}'. Must be an integer.")
+            sys.exit(1)
+
+    if not updated:
+        print("No updates entered. Exiting.")
+        sys.exit(0)
+
+    # 1. Update JS content
+    new_js_content = js_content
+    if new_y_input:
+        # Update keyframe Y
+        new_js_content = re.sub(
+            r'\[1\.0,\s*-?\d+\.?\d*\]\s*//\s*Slides smoothly to the final centered Y coordinate',
+            f'[1.0, {new_y}] // Slides smoothly to the final centered Y coordinate',
+            new_js_content
+        )
+        # Update let targetY
+        new_js_content = re.sub(
+            r'let targetY\s*=\s*-?\d+\.?\d*;',
+            f'let targetY = {new_y};',
+            new_js_content
+        )
+
+    if new_angle_input:
+        # Update all instances of the relative degree rotation formula
+        new_js_content = re.sub(
+            r'-?\d+\.?\d*\s*\*\s*Math\.PI\s*/\s*180',
+            f'{new_angle} * Math.PI / 180',
+            new_js_content
+        )
+
+    # 2. Update CSS content (Calculate translateY)
+    # translateY = round((new_y / -0.15) * 5.28, 1)
+    new_translate_vh = round((new_y / -0.15) * 5.28, 1)
+    
+    new_css_content = re.sub(
+        r'transform:\s*translateY\(-?\d+\.?\d*vh\);\s*/\*\s*Align perfectly with Three\.js Y\s*=\s*-?\d+\.?\d*\s*\*/',
+        f'transform: translateY({new_translate_vh}vh); /* Align perfectly with Three.js Y = {new_y} */',
+        css_content
+    )
+
+    # Write changes
+    with open(js_path, 'w', encoding='utf-8') as f:
+        f.write(new_js_content)
+    with open(css_path, 'w', encoding='utf-8') as f:
+        f.write(new_css_content)
+
+    print("\n" + "=" * 60)
+    print("Configuration updated successfully!")
+    print(f"Updated Y-coordinate to: {new_y}")
+    print(f"Updated rotation angle to: {new_angle} degrees")
+    print(f"Recalculated CSS translation: translateY({new_translate_vh}vh)")
+    print("=" * 60)
 
 if __name__ == '__main__':
     main()
