@@ -339,18 +339,10 @@
     const viewportHeight = window.innerHeight;
     const total3DZoneHeight = threeMetricsCached ? configPanelTopDoc : (viewportHeight * 3); // Extended narrative height for 3 panels
 
-    // Lock position to absolute when scrolled past the narrative sections
-    const lockPoint = total3DZoneHeight;
-    if (scrollY >= lockPoint) {
-      if (container.style.position !== 'absolute') {
-        container.style.position = 'absolute';
-        container.style.top = lockPoint + 'px';
-      }
-    } else {
-      if (container.style.position !== 'fixed') {
-        container.style.position = 'fixed';
-        container.style.top = '0px';
-      }
+    // Keep container fixed relative to viewport at all times
+    if (container.style.position !== 'fixed') {
+      container.style.position = 'fixed';
+      container.style.top = '0px';
     }
 
     // Early return if scrolled past the configurator section to avoid unnecessary layout/projection math
@@ -416,40 +408,17 @@
       targetRotY = interpolate(scrollProgress, rotYKeyframesMobile);
     }
 
-    // Calculate targetOpacity based on projected model bottom and card top position
-    if (scrollY < lockPoint) {
+    // Calculate targetOpacity: pause at the end of the narrative zone, then fade out as configurator enters
+    const fadeStart = total3DZoneHeight + viewportHeight * 0.45;
+    const fadeEnd = total3DZoneHeight + viewportHeight * 0.95;
+
+    if (scrollY <= fadeStart) {
       targetOpacity = 1.0;
-    } else if (threeMetricsCached && modelGroup && camera) {
-      // Get the top Y of the variant image card from cached metrics
-      const cardTopY = configTopDoc + cardTopOffsetFromConfig - scrollY;
-
-      // Project the bottom of the model to screen space
-      // Using targetPosY and targetPosX gives the precise destination coordinates
-      const modelBottomVec = new THREE.Vector3(targetPosX, targetPosY - 0.55, 0);
-      modelBottomVec.project(camera);
-
-      // Add a 30px safety buffer to ensure complete fade before visual overlap
-      const modelBottomY = (1 - modelBottomVec.y) * (window.innerHeight / 2) + 30;
-
-      const fadeEndDiff = 20; // Model is completely faded 20px before visual touch
-      const fadeStartDiff = 90; // Fade starts 90px before they touch
-
-      if (cardTopY > modelBottomY + fadeStartDiff) {
-        targetOpacity = 1.0;
-      } else if (cardTopY > modelBottomY + fadeEndDiff) {
-        // Smooth fade between 1.0 and 0.0
-        const t = (cardTopY - (modelBottomY + fadeEndDiff)) / (fadeStartDiff - fadeEndDiff);
-        targetOpacity = t * t * (3 - 2 * t); // Smoothstep fade
-      } else {
-        targetOpacity = 0.0;
-      }
+    } else if (scrollY >= fadeEnd) {
+      targetOpacity = 0.0;
     } else {
-      // Fallback: fade out based on scroll progress at the end
-      if (scrollProgress > 0.8) {
-        targetOpacity = Math.max(0, 1 - (scrollProgress - 0.8) * 5.0);
-      } else {
-        targetOpacity = 1.0;
-      }
+      const t = (scrollY - fadeStart) / (fadeEnd - fadeStart);
+      targetOpacity = 1.0 - t * t * (3 - 2 * t); // Smoothstep fade out
     }
 
     // Hide WebGL renderer canvas if configurator scrolled past top
