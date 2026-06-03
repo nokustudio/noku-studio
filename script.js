@@ -420,19 +420,20 @@
       }
     }
 
-    // Disable WebGL renderer canvas display if configurator scrolled past top
+    // Hide WebGL renderer canvas if configurator scrolled past top
+    // Use visibility instead of display to avoid layout tree destruction mid-scroll
     if (threeMetricsCached) {
       const configRectBottom = configBottomDoc - scrollY;
       if (configRectBottom < 0) {
-        container.style.display = 'none';
+        container.style.visibility = 'hidden';
       } else {
-        container.style.display = 'block';
+        container.style.visibility = 'visible';
       }
     } else {
       if (scrollY > viewportHeight * 3.5) {
-        container.style.display = 'none';
+        container.style.visibility = 'hidden';
       } else {
-        container.style.display = 'block';
+        container.style.visibility = 'visible';
       }
     }
   }
@@ -554,6 +555,35 @@
   const navbar = document.getElementById('navbar');
   const isHomepage = !!document.getElementById('hero-panel');
 
+  // Cache section elements and their document-top positions to avoid
+  // getBoundingClientRect() forced reflows on every scroll event.
+  const lightSectionSelectors = [
+    '#configurator', '.materials-section', '.products-section',
+    '.collections-section', '.ticker-container', 'footer'
+  ];
+  let cachedLightSections = []; // { el, top, height }
+  let lastBodyState = null; // track to avoid redundant DOM writes
+  let lastNavState = null;
+
+  function rebuildNavSectionCache() {
+    cachedLightSections = [];
+    for (const sel of lightSectionSelectors) {
+      const el = document.querySelector(sel);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        cachedLightSections.push({
+          el,
+          top: rect.top + window.scrollY,
+          height: el.offsetHeight
+        });
+      }
+    }
+  }
+
+  // Rebuild cache on load and resize (layout only changes on resize, not scroll)
+  rebuildNavSectionCache();
+  window.addEventListener('resize', rebuildNavSectionCache, { passive: true });
+
   function updateNavbarTheme() {
     if (!navbar) return;
     const scrollY = window.scrollY;
@@ -565,58 +595,39 @@
     }
 
     const navHeight = navbar.offsetHeight || 70;
-    const checkY = scrollY + navHeight / 2; // For navbar class toggling near the top
-    const checkY_body = scrollY + window.innerHeight / 2; // For body background transitions at screen center
+    const checkY = scrollY + navHeight / 2;
+    const checkY_body = scrollY + window.innerHeight / 2;
 
-    const lightSections = [
-      { selector: '#configurator' },
-      { selector: '.materials-section' },
-      { selector: '.products-section' },
-      { selector: '.collections-section' },
-      { selector: '.ticker-container' },
-      { selector: 'footer' }
-    ];
-
-    // 1. Check light sections for navbar theme
+    // Use cached section positions — no getBoundingClientRect() calls
     let isLightNavbar = false;
-    for (const sec of lightSections) {
-      const el = document.querySelector(sec.selector);
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        const top = rect.top + window.scrollY;
-        const height = el.offsetHeight;
-        if (checkY >= top && checkY < top + height) {
-          isLightNavbar = true;
-          break;
-        }
-      }
-    }
-
-    // 2. Check light sections for body background theme
     let isLightBody = false;
-    for (const sec of lightSections) {
-      const el = document.querySelector(sec.selector);
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        const top = rect.top + window.scrollY;
-        const height = el.offsetHeight;
-        if (checkY_body >= top && checkY_body < top + height) {
-          isLightBody = true;
-          break;
-        }
+    for (const sec of cachedLightSections) {
+      if (checkY >= sec.top && checkY < sec.top + sec.height) {
+        isLightNavbar = true;
+      }
+      if (checkY_body >= sec.top && checkY_body < sec.top + sec.height) {
+        isLightBody = true;
+      }
+      if (isLightNavbar && isLightBody) break;
+    }
+
+    // Only write to DOM if state actually changed
+    if (lastNavState !== isLightNavbar) {
+      lastNavState = isLightNavbar;
+      if (isLightNavbar) {
+        navbar.classList.add('light-nav');
+      } else {
+        navbar.classList.remove('light-nav');
       }
     }
 
-    if (isLightNavbar) {
-      navbar.classList.add('light-nav');
-    } else {
-      navbar.classList.remove('light-nav');
-    }
-
-    if (isLightBody) {
-      document.body.style.backgroundColor = 'var(--light)';
-    } else {
-      document.body.style.backgroundColor = 'var(--dark-bg)';
+    if (lastBodyState !== isLightBody) {
+      lastBodyState = isLightBody;
+      if (isLightBody) {
+        document.body.style.backgroundColor = 'var(--light)';
+      } else {
+        document.body.style.backgroundColor = 'var(--dark-bg)';
+      }
     }
   }
 
@@ -1077,24 +1088,21 @@
       // p = 1 when quote reaches top of viewport (rectTop <= 0)
       const p = clampVal(1 - (rectTop / viewportH), 0, 1);
 
-      if (quoteStage) {
-        quoteStage.style.overflow = (p < 1) ? "visible" : "hidden";
-      }
+      // Overflow is always 'hidden' in CSS — no dynamic toggling needed
+      // (toggling overflow forces layout recalculation every frame)
 
       const baseProgress = easeOutCubicVal(getScatterProgress());
 
       scatterCurrentX += (scatterTargetX - scatterCurrentX) * 0.08;
       scatterCurrentY += (scatterTargetY - scatterCurrentY) * 0.08;
 
-      // Find the active carousel card and its image container
+      // Use cached highlighted card reference instead of querying DOM every frame
+      // The highlighted card is stable and only changes on user interaction (centerActiveCard)
       const highlightedCard = document.querySelector('.carousel-card.highlighted');
       let cardImg = null;
 
       if (highlightedCard) {
-        const cardImgWrap = highlightedCard.querySelector('.carousel-card-img-wrap');
-        if (cardImgWrap) {
-          cardImg = cardImgWrap.querySelector('img');
-        }
+        cardImg = highlightedCard.querySelector('.carousel-card-img-wrap img');
       }
 
       // Keep the active card image visible so it fades out naturally with the carousel container

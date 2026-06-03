@@ -584,19 +584,20 @@
       }
     }
 
-    // Disable renderer canvas display if configurator scrolled past top
+    // Hide renderer canvas if configurator scrolled past top
+    // Use visibility instead of display to avoid layout tree destruction mid-scroll
     if (threeMetricsCached) {
       const configRectBottom = configBottomDoc - scrollY;
       if (configRectBottom < 0) {
-        container.style.display = 'none';
+        container.style.visibility = 'hidden';
       } else {
-        container.style.display = 'block';
+        container.style.visibility = 'visible';
       }
     } else {
       if (scrollY > viewportHeight * 3.5) {
-        container.style.display = 'none';
+        container.style.visibility = 'hidden';
       } else {
-        container.style.display = 'block';
+        container.style.visibility = 'visible';
       }
     }
   }
@@ -707,10 +708,40 @@
   revealElements.forEach(el => revealObserver.observe(el));
 
   // ─── NAV BAR BACKGROUND SHIFT THEME CONTROLLER ───
-  // Mirrors the same section-aware logic as script.js so the navbar
-  // seamlessly transitions between light and dark states as the user scrolls
-  // through the different sections of the secondary landing page.
+  // Cache section elements and their document-top positions to avoid
+  // getBoundingClientRect() forced reflows on every scroll event.
   const navbar = document.getElementById('navbar');
+  const lightSectionSelectors = [
+    '#configurator', '.materials-section', '.products-section',
+    '.collections-section', '.ticker-container', 'footer'
+  ];
+  const darkSectionSelectors = ['.video-section', '.quote_wrap'];
+  let cachedLightSections = [];
+  let cachedDarkSections = [];
+  let lastBodyState = null;
+  let lastNavState = null;
+
+  function rebuildNavSectionCache() {
+    cachedLightSections = [];
+    cachedDarkSections = [];
+    for (const sel of lightSectionSelectors) {
+      const el = document.querySelector(sel);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        cachedLightSections.push({ top: rect.top + window.scrollY, height: el.offsetHeight });
+      }
+    }
+    for (const sel of darkSectionSelectors) {
+      const el = document.querySelector(sel);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        cachedDarkSections.push({ top: rect.top + window.scrollY, height: el.offsetHeight });
+      }
+    }
+  }
+
+  rebuildNavSectionCache();
+  window.addEventListener('resize', rebuildNavSectionCache, { passive: true });
 
   function updateNavbarTheme() {
     if (!navbar) return;
@@ -718,94 +749,61 @@
     navbar.classList.toggle('scrolled', scrollY > 40);
 
     const navHeight = navbar.offsetHeight || 70;
-    const checkY = scrollY + navHeight / 2; // For navbar class toggling near the top
-    const checkY_body = scrollY + window.innerHeight / 2; // For body background transitions at screen center
+    const checkY = scrollY + navHeight / 2;
+    const checkY_body = scrollY + window.innerHeight / 2;
 
-    // Sections with a light background — navbar should use light-nav state
-    const lightSections = [
-      { selector: '#configurator' },
-      { selector: '.materials-section' },
-      { selector: '.products-section' },
-      { selector: '.collections-section' },
-      { selector: '.ticker-container' },
-      { selector: 'footer' }
-    ];
-
-    // The 3D narrative scroll zone uses the secondary page's light body background,
-    // so the navbar stays light-nav there too — we include the hero/narrative zone.
-    const darkSections = [
-      { selector: '.video-section' },
-      { selector: '.quote_wrap' }
-    ];
-
-    // 1. Check if navbar is currently over a dark section (remove light-nav)
+    // Use cached section positions — no getBoundingClientRect() calls
     let isDarkNavbar = false;
-    for (const sec of darkSections) {
-      const el = document.querySelector(sec.selector);
-      if (el) {
-        const top = el.getBoundingClientRect().top + window.scrollY;
-        const height = el.offsetHeight;
-        if (checkY >= top && checkY < top + height) {
-          isDarkNavbar = true;
-          break;
-        }
+    for (const sec of cachedDarkSections) {
+      if (checkY >= sec.top && checkY < sec.top + sec.height) {
+        isDarkNavbar = true;
+        break;
       }
     }
 
-    // 2. Check explicitly for navbar light sections
     let isLightNavbar = false;
-    for (const sec of lightSections) {
-      const el = document.querySelector(sec.selector);
-      if (el) {
-        const top = el.getBoundingClientRect().top + window.scrollY;
-        const height = el.offsetHeight;
-        if (checkY >= top && checkY < top + height) {
-          isLightNavbar = true;
-          break;
-        }
+    for (const sec of cachedLightSections) {
+      if (checkY >= sec.top && checkY < sec.top + sec.height) {
+        isLightNavbar = true;
+        break;
       }
     }
 
-    if (isLightNavbar || !isDarkNavbar) {
-      navbar.classList.add('light-nav');
-    } else {
-      navbar.classList.remove('light-nav');
+    const newNavState = isLightNavbar || !isDarkNavbar;
+    if (lastNavState !== newNavState) {
+      lastNavState = newNavState;
+      if (newNavState) {
+        navbar.classList.add('light-nav');
+      } else {
+        navbar.classList.remove('light-nav');
+      }
     }
 
-    // 3. Body background: check if body center is over a dark section
+    // Body background: check if body center is over a dark section
     let isDarkBody = false;
-    for (const sec of darkSections) {
-      const el = document.querySelector(sec.selector);
-      if (el) {
-        const top = el.getBoundingClientRect().top + window.scrollY;
-        const height = el.offsetHeight;
-        if (checkY_body >= top && checkY_body < top + height) {
-          isDarkBody = true;
-          break;
-        }
+    for (const sec of cachedDarkSections) {
+      if (checkY_body >= sec.top && checkY_body < sec.top + sec.height) {
+        isDarkBody = true;
+        break;
       }
     }
 
-    // 4. Body background: check explicitly for light sections
     let isLightBody = false;
-    for (const sec of lightSections) {
-      const el = document.querySelector(sec.selector);
-      if (el) {
-        const top = el.getBoundingClientRect().top + window.scrollY;
-        const height = el.offsetHeight;
-        if (checkY_body >= top && checkY_body < top + height) {
-          isLightBody = true;
-          break;
-        }
+    for (const sec of cachedLightSections) {
+      if (checkY_body >= sec.top && checkY_body < sec.top + sec.height) {
+        isLightBody = true;
+        break;
       }
     }
 
-    // Secondary landing page is always light-themed in the 3D narrative + hero zone
-    // so default to light body (remove scrolled-dark-bg) unless center is explicitly over a dark section
-    if (isDarkBody && !isLightBody) {
-      document.body.classList.add('scrolled-dark-bg');
-    } else {
-      document.body.classList.remove('scrolled-dark-bg');
+    const newBodyDark = isDarkBody && !isLightBody;
+    if (lastBodyState !== newBodyDark) {
+      lastBodyState = newBodyDark;
+      if (newBodyDark) {
+        document.body.classList.add('scrolled-dark-bg');
+      } else {
+        document.body.classList.remove('scrolled-dark-bg');
+      }
     }
   }
 
@@ -1226,23 +1224,20 @@
       const viewportH = window.innerHeight;
       const p = clampVal(1 - (rectTop / viewportH), 0, 1);
 
-      if (quoteStage) {
-        quoteStage.style.overflow = (p < 1) ? "visible" : "hidden";
-      }
+      // Overflow is always 'hidden' in CSS — no dynamic toggling needed
+      // (toggling overflow forces layout recalculation every frame)
 
       const baseProgress = easeOutCubicVal(getScatterProgress());
 
       scatterCurrentX += (scatterTargetX - scatterCurrentX) * 0.08;
       scatterCurrentY += (scatterTargetY - scatterCurrentY) * 0.08;
 
+      // Simplified DOM query for highlighted card
       const highlightedCard = document.querySelector('.carousel-card.highlighted');
       let cardImg = null;
 
       if (highlightedCard) {
-        const cardImgWrap = highlightedCard.querySelector('.carousel-card-img-wrap');
-        if (cardImgWrap) {
-          cardImg = cardImgWrap.querySelector('img');
-        }
+        cardImg = highlightedCard.querySelector('.carousel-card-img-wrap img');
       }
 
       if (cardImg) {
