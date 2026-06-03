@@ -245,6 +245,7 @@
 
   // ─── SCROLL INTERACTIVE MATHEMATICS (Oryzo-inspired) ───
   let scrollProgress = 0;
+  let isThreeCanvasVisible = true;
 
   // Interpolation targets
   let targetRotY = 0;
@@ -426,14 +427,18 @@
       const configRectBottom = configBottomDoc - scrollY;
       if (configRectBottom < 0) {
         container.style.visibility = 'hidden';
+        isThreeCanvasVisible = false;
       } else {
         container.style.visibility = 'visible';
+        isThreeCanvasVisible = true;
       }
     } else {
       if (scrollY > viewportHeight * 3.5) {
         container.style.visibility = 'hidden';
+        isThreeCanvasVisible = false;
       } else {
         container.style.visibility = 'visible';
+        isThreeCanvasVisible = true;
       }
     }
   }
@@ -492,6 +497,8 @@
   // ─── RENDERING & SMOOTH INTERPOLATION LOOP ───
   function animate() {
     requestAnimationFrame(animate);
+
+    if (!isThreeCanvasVisible) return;
 
     if (isModelLoaded) {
       // Linear interpolation (lerp) for liquid smooth transitions

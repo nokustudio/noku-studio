@@ -278,6 +278,7 @@
   // ─── SCROLL INTERACTIVE MATHEMATICS ───
   let scrollProgress = 0;
   let modelFadeInRatio = 0.0; // Dynamic 3d model opacity fade-in ratio on scroll
+  let isThreeCanvasVisible = true;
 
   // ─── HERO IMAGE → 3D MODEL INTRO COORDINATES ───
   // These store the world-space position and scale that make the 3D model
@@ -590,14 +591,18 @@
       const configRectBottom = configBottomDoc - scrollY;
       if (configRectBottom < 0) {
         container.style.visibility = 'hidden';
+        isThreeCanvasVisible = false;
       } else {
         container.style.visibility = 'visible';
+        isThreeCanvasVisible = true;
       }
     } else {
       if (scrollY > viewportHeight * 3.5) {
         container.style.visibility = 'hidden';
+        isThreeCanvasVisible = false;
       } else {
         container.style.visibility = 'visible';
+        isThreeCanvasVisible = true;
       }
     }
   }
@@ -651,6 +656,8 @@
   // ─── RENDERING & SMOOTH INTERPOLATION LOOP ───
   function animate() {
     requestAnimationFrame(animate);
+
+    if (!isThreeCanvasVisible) return;
 
     if (isModelLoaded) {
       currentRotY += (targetRotY - currentRotY) * 0.055;
