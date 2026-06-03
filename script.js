@@ -290,6 +290,7 @@
   let configTopDoc = 0;
   let configBottomDoc = 0;
   let cardTopOffsetFromConfig = 0;
+  let configPanelTopDoc = 0;
   let threeMetricsCached = false;
 
   function updateThreeLayoutMetrics() {
@@ -307,8 +308,13 @@
       } else {
         cardTopOffsetFromConfig = 0;
       }
-      threeMetricsCached = true;
     }
+
+    const configPanel = document.getElementById('config-panel');
+    if (configPanel) {
+      configPanelTopDoc = getUnscaledRect(configPanel).top;
+    }
+    threeMetricsCached = true;
   }
 
   // Keyframe interpolation utility with smoothstep easing
@@ -331,7 +337,7 @@
   function evaluateScrollCalculations() {
     const scrollY = window.scrollY;
     const viewportHeight = window.innerHeight;
-    const total3DZoneHeight = viewportHeight * 3; // Extended narrative height for 3 panels
+    const total3DZoneHeight = threeMetricsCached ? configPanelTopDoc : (viewportHeight * 3); // Extended narrative height for 3 panels
 
     // Lock position to absolute when scrolled past the narrative sections
     const lockPoint = total3DZoneHeight;
@@ -370,7 +376,7 @@
         [0.0, -0.52],
         [0.35, 0.05],
         [0.65, 0.08],
-        [1.0, 0.22]
+        [1.0, 0.0]
       ];
       const scaleKeyframes = [
         [0.0, 0.8],
