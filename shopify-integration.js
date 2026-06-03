@@ -799,9 +799,17 @@ function updateCarouselImagesToShopify() {
     
     const variant = getProductVariant(wood, formattedCushion);
     if (variant && variant.image) {
-      const img = card.querySelector('img');
-      if (img && img.src !== variant.image) {
-        img.src = variant.image;
+      const imgWrap = card.querySelector('.carousel-card-img-wrap');
+      if (imgWrap) {
+        let img = imgWrap.querySelector('img');
+        if (!img) {
+          img = document.createElement('img');
+          imgWrap.appendChild(img);
+        }
+        if (img.src !== variant.image) {
+          img.src = variant.image;
+          img.alt = `Barstool ${wood} ${cushion}`;
+        }
       }
     }
   });
@@ -811,8 +819,14 @@ function updateCarouselImagesToShopify() {
   if (activeCard) {
     const activeCardImg = activeCard.querySelector('.carousel-card-img-wrap img');
     const scatterImg = document.querySelector('.radial-scatter__item.barstool-item img');
-    if (activeCardImg && scatterImg && scatterImg.src !== activeCardImg.src) {
-      scatterImg.src = activeCardImg.src;
+    if (scatterImg) {
+      if (activeCardImg) {
+        scatterImg.src = activeCardImg.src;
+        scatterImg.style.display = '';
+      } else {
+        scatterImg.src = '';
+        scatterImg.style.display = 'none';
+      }
     }
   }
 }

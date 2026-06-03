@@ -2325,7 +2325,7 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: transparent;
+  background-color: var(--paper);
   margin-bottom: 16px;
 }
 
@@ -3435,7 +3435,7 @@ nav.light-nav .cart-btn:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: transparent;
+  background-color: var(--paper);
   margin-bottom: 16px;
 }
 

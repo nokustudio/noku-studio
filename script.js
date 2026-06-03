@@ -736,10 +736,14 @@
 
     // Sync the scatter stack image with the selected cushion variant
     const activeCardImg = activeCard.querySelector('.carousel-card-img-wrap img');
-    if (activeCardImg) {
-      const scatterImg = document.querySelector('.radial-scatter__item.barstool-item img');
-      if (scatterImg) {
+    const scatterImg = document.querySelector('.radial-scatter__item.barstool-item img');
+    if (scatterImg) {
+      if (activeCardImg) {
         scatterImg.src = activeCardImg.src;
+        scatterImg.style.display = '';
+      } else {
+        scatterImg.src = '';
+        scatterImg.style.display = 'none';
       }
     }
 
@@ -800,20 +804,18 @@
         }
       }
 
-      // Fallback to local image path
-      if (!imgPath) {
-        const padIdx = String(idx + 1).padStart(2, '0');
-        imgPath = `Resources/Barstool/WebP/shopify webp/Noku_ofStillness_Barstool_${padIdx}.webp`;
-      }
-
       const card = document.createElement('div');
       card.className = 'carousel-card';
       card.dataset.cushion = cushion;
       card.dataset.index = idx;
 
+      const imgHTML = imgPath 
+        ? `<img src="${imgPath}" alt="Barstool ${selectedWood} ${cushion}">` 
+        : '';
+
       card.innerHTML = `
         <div class="carousel-card-img-wrap">
-          <img src="${imgPath}" alt="Barstool ${selectedWood} ${cushion}">
+          ${imgHTML}
         </div>
         <div class="carousel-card-info">
           <span class="cushion-name">${cushion.charAt(0).toUpperCase() + cushion.slice(1)}</span>
