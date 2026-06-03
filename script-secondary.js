@@ -725,108 +725,79 @@
   revealElements.forEach(el => revealObserver.observe(el));
 
   // ─── NAV BAR BACKGROUND SHIFT THEME CONTROLLER ───
-  // Cache section elements and their document-top positions to avoid
-  // getBoundingClientRect() forced reflows on every scroll event.
   const navbar = document.getElementById('navbar');
-  const lightSectionSelectors = [
-    '#configurator', '.materials-section', '.products-section',
-    '.collections-section', 'footer'
-  ];
-  const darkSectionSelectors = ['.video-section', '.quote_wrap'];
-  let cachedLightSections = [];
-  let cachedDarkSections = [];
-  let lastBodyState = null;
-  let lastNavState = null;
 
-  function rebuildNavSectionCache() {
-    cachedLightSections = [];
-    cachedDarkSections = [];
-    for (const sel of lightSectionSelectors) {
-      const el = document.querySelector(sel);
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        cachedLightSections.push({ top: rect.top + window.scrollY, height: el.offsetHeight });
+  if (navbar) {
+    // 1. Scroll State Toggle (Only handles visual scroll offset, extremely cheap)
+    let isScrolled = false;
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY > 40;
+      if (scrolled !== isScrolled) {
+        isScrolled = scrolled;
+        navbar.classList.toggle('scrolled', isScrolled);
       }
-    }
-    for (const sel of darkSectionSelectors) {
-      const el = document.querySelector(sel);
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        cachedDarkSections.push({ top: rect.top + window.scrollY, height: el.offsetHeight });
-      }
-    }
-  }
+    }, { passive: true });
 
-  rebuildNavSectionCache();
-  window.addEventListener('resize', rebuildNavSectionCache, { passive: true });
-
-  function updateNavbarTheme() {
-    if (!navbar) return;
-    const scrollY = window.scrollY;
-    navbar.classList.toggle('scrolled', scrollY > 40);
-
+    // 2. Navbar Theme Observer: detects when sections cross the navbar line
     const navHeight = navbar.offsetHeight || 70;
-    const checkY = scrollY + navHeight / 2;
-    const checkY_body = scrollY + window.innerHeight / 2;
+    const navThemeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const targetId = entry.target.id;
+          const targetClass = entry.target.classList;
+          
+          const isLight = targetId === 'configurator' ||
+                          targetClass.contains('products-section') ||
+                          targetClass.contains('collections-section') ||
+                          targetClass.contains('materials-section') ||
+                          entry.target.tagName.toLowerCase() === 'footer';
+          
+          if (isLight) {
+            navbar.classList.add('light-nav');
+          } else {
+            navbar.classList.remove('light-nav');
+          }
+        }
+      });
+    }, {
+      rootMargin: `-${navHeight}px 0px -90% 0px`,
+      threshold: 0
+    });
 
-    // Use cached section positions — no getBoundingClientRect() calls
-    let isDarkNavbar = false;
-    for (const sec of cachedDarkSections) {
-      if (checkY >= sec.top && checkY < sec.top + sec.height) {
-        isDarkNavbar = true;
-        break;
-      }
-    }
+    // 3. Body Theme Observer: detects when sections occupy the center of the viewport
+    const bodyThemeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const targetId = entry.target.id;
+          const targetClass = entry.target.classList;
+          
+          const isLight = targetId === 'configurator' ||
+                          targetClass.contains('products-section') ||
+                          targetClass.contains('collections-section') ||
+                          targetClass.contains('materials-section') ||
+                          entry.target.tagName.toLowerCase() === 'footer';
+          
+          if (isLight) {
+            document.body.classList.remove('scrolled-dark-bg');
+          } else {
+            document.body.classList.add('scrolled-dark-bg');
+          }
+        }
+      });
+    }, {
+      rootMargin: '-50% 0px -50% 0px',
+      threshold: 0
+    });
 
-    let isLightNavbar = false;
-    for (const sec of cachedLightSections) {
-      if (checkY >= sec.top && checkY < sec.top + sec.height) {
-        isLightNavbar = true;
-        break;
-      }
-    }
-
-    const newNavState = isLightNavbar || !isDarkNavbar;
-    if (lastNavState !== newNavState) {
-      lastNavState = newNavState;
-      if (newNavState) {
-        navbar.classList.add('light-nav');
-      } else {
-        navbar.classList.remove('light-nav');
-      }
-    }
-
-    // Body background: check if body center is over a dark section
-    let isDarkBody = false;
-    for (const sec of cachedDarkSections) {
-      if (checkY_body >= sec.top && checkY_body < sec.top + sec.height) {
-        isDarkBody = true;
-        break;
-      }
-    }
-
-    let isLightBody = false;
-    for (const sec of cachedLightSections) {
-      if (checkY_body >= sec.top && checkY_body < sec.top + sec.height) {
-        isLightBody = true;
-        break;
-      }
-    }
-
-    const newBodyDark = isDarkBody && !isLightBody;
-    if (lastBodyState !== newBodyDark) {
-      lastBodyState = newBodyDark;
-      if (newBodyDark) {
-        document.body.classList.add('scrolled-dark-bg');
-      } else {
-        document.body.classList.remove('scrolled-dark-bg');
-      }
-    }
+    // Observe all page sections and elements that define light/dark zones
+    const targetSections = document.querySelectorAll(
+      '#hero-panel, #story-panel, #specs-panel, #config-panel, #configurator, .quote_wrap, .products-section, .collections-section, .materials-section, .video-section, footer'
+    );
+    targetSections.forEach(sec => {
+      navThemeObserver.observe(sec);
+      bodyThemeObserver.observe(sec);
+    });
   }
-
-  window.addEventListener('scroll', updateNavbarTheme, { passive: true });
-  window.addEventListener('resize', updateNavbarTheme, { passive: true });
-  updateNavbarTheme();
 
   // ─── INSTANT SCROLL TO COLLECTIONS SECTION ───
   const handleCollectionsScroll = (e) => {

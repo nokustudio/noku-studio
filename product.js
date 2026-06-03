@@ -20,6 +20,71 @@ let activeImageIndex = 0;
 let imageUrls = [];
 let cart = JSON.parse(localStorage.getItem('noku_cart')) || [];
 
+// Display-only products list (from noku_products.xlsx)
+const DISPLAY_ONLY_HANDLES = [
+  'dining-table',
+  'sofa-2',
+  'lounge-sofa',
+  'poster-bed',
+  'rod-bed-with-curved-headboard',
+  'round-dining-table'
+];
+
+function isDisplayOnly(handle) {
+  if (!handle) return false;
+  return DISPLAY_ONLY_HANDLES.includes(handle.toLowerCase().trim());
+}
+
+function isDisplayItem(item) {
+  if (!item) return false;
+  const handle = item.handle ? item.handle.toLowerCase().trim() : '';
+  const title = item.title ? item.title.toLowerCase().trim() : '';
+  
+  const displayTitles = [
+    "dining table",
+    "grooved sofa",
+    "lounge sofa",
+    "poster-bed",
+    "poster bed",
+    "rod bed",
+    "round dining table"
+  ];
+  
+  if (handle && DISPLAY_ONLY_HANDLES.includes(handle)) return true;
+  if (title && displayTitles.includes(title)) return true;
+  
+  if (item.id) {
+    const itemIdLower = item.id.toLowerCase();
+    for (const h of DISPLAY_ONLY_HANDLES) {
+      if (itemIdLower.includes(h)) return true;
+    }
+  }
+  
+  const displayVariantIds = [
+    "40589461749818", "41286332940346", "41286333497402",
+    "40593555587130", "40593555619898", "41221041684538", "40593555718202", "41221044699194", "4059355685434", "40589542981690", "40593555521594", "41221044666426", "41221043814458", "41221043847226", "41221043945530", "41221043912762", "41221044961338", "41221043879994", "41221043716154", "41221043748922", "41221044928570", "41221043552314", "41221043585082", "41221043683386", "41221043650618", "41221044895802", "41221043617850", "41221043454010", "41221043486778", "41221044863034",
+    "40573731110970", "40612651040826", "40612651073594", "40612651106362", "40612651139130", "40612651237434", "40612651270202", "41241721045050", "41241721471034", "41241721503802", "41241721536570", "41241721569338", "41241721602106", "41241721667642", "41241721700410", "41241721765946", "41241721143354", "41241721176122", "41241721208890", "41241721241658", "41241721274426", "41241721339962", "41241721372730", "41241721438266",
+    "40589458997306", "40593536712762", "41221039456314", "41221038014522", "41221038080058", "41221039489082", "41221038047290", "41221039521850", "41221038932026", "41221038964794", "41221039849530", "41221039063098", "41221039128634", "41221039882298", "41221039095866", "41221039915066", "41221038637114", "41221038669882", "41221039751226", "41221038768186",
+    "40589542391866", "4124172951354", "41241712918586",
+    "40583460683834", "41241713999930", "41241713967162"
+  ];
+  
+  return false;
+}
+
+function enforceCartDisplayPolicy() {
+  let localCart = JSON.parse(localStorage.getItem('noku_cart')) || [];
+  const initialLen = localCart.length;
+  localCart = localCart.filter(item => !isDisplayItem(item));
+  if (localCart.length !== initialLen) {
+    localStorage.setItem('noku_cart', JSON.stringify(localCart));
+    cart = localCart;
+    if (typeof updateCartUI === 'function') {
+      updateCartUI();
+    }
+  }
+}
+
 // Fallback Product Database (Matches catalog products.js)
 const FALLBACK_PRODUCTS_DB = {
   "sofa-2": {
@@ -829,6 +894,13 @@ function renderProductPage() {
       </div>
 
       <!-- Purchase Controls -->
+      ${isDisplayOnly(currentProduct.handle) ? `
+      <div class="purchase-controls">
+        <div class="action-buttons-wrap" style="width: 100%;">
+          <a href="contact.html?inquiry=${encodeURIComponent(currentProduct.title)}" class="btn-primary-action" style="flex: 1; text-decoration: none; display: block; text-align: center;">Get in Touch</a>
+        </div>
+      </div>
+      ` : `
       <div class="purchase-controls">
         <div class="quantity-selector-wrap">
           <span class="qty-label">Quantity</span>
@@ -844,6 +916,7 @@ function renderProductPage() {
           <button id="btn-buy-now" class="btn-primary-action">Buy Now</button>
         </div>
       </div>
+      `}
     </div>
   `;
 
@@ -1170,6 +1243,12 @@ function findMatchingVariant() {
 function addCurrentItemToCart(variant, quantity = 1, triggerDrawer = true) {
   if (!currentProduct || !variant) return;
 
+  // Prevent display items from being added to cart
+  if (isDisplayOnly(currentProduct.handle)) {
+    alert("This item is for display only and cannot be added to the cart.");
+    return;
+  }
+
   // Create unique cart item key
   const optionsLabel = variant.selectedOptions.map(o => o.value).join(' / ');
   const cartItemId = `prod-${currentProduct.id}-${variant.id}`.replace(/[^a-zA-Z0-9-]/g, '');
@@ -1229,6 +1308,7 @@ function removeItemFromCart(itemId) {
 
 // ─── CHECKOUT LOGIC ───
 async function proceedToCheckout() {
+  enforceCartDisplayPolicy();
   if (cart.length === 0) return;
   
   const checkoutBtn = document.getElementById('checkout-btn');
@@ -1334,8 +1414,60 @@ function updateCartUI() {
   const cartSubtotalEl = document.getElementById('cart-subtotal');
   const checkoutBtn = document.getElementById('checkout-btn');
 
-  // Load from local storage
-  cart = JSON.parse(localStorage.getItem('noku_cart')) || [];
+  // Enforce cart display policy proactively
+  let localCart = JSON.parse(localStorage.getItem('noku_cart')) || [];
+  const displayHandles = [
+    'dining-table',
+    'sofa-2',
+    'lounge-sofa',
+    'poster-bed',
+    'rod-bed-with-curved-headboard',
+    'round-dining-table'
+  ];
+  const displayTitles = [
+    "dining table",
+    "grooved sofa",
+    "lounge sofa",
+    "poster-bed",
+    "poster bed",
+    "rod bed",
+    "round dining table"
+  ];
+  const filteredCart = localCart.filter(item => {
+    if (!item) return false;
+    const handle = item.handle ? item.handle.toLowerCase().trim() : '';
+    const title = item.title ? item.title.toLowerCase().trim() : '';
+    if (handle && displayHandles.includes(handle)) return false;
+    if (title && displayTitles.includes(title)) return false;
+    if (item.id) {
+      const itemIdLower = item.id.toLowerCase();
+      for (const h of displayHandles) {
+        if (itemIdLower.includes(h)) return false;
+      }
+    }
+    if (item.variantId) {
+      const vIdString = String(item.variantId);
+      const displayVariantIds = [
+        "40589461749818", "41286332940346", "41286333497402",
+        "40593555587130", "40593555619898", "41221041684538", "40593555718202", "41221044699194", "4059355685434", "40589542981690", "40593555521594", "41221044666426", "41221043814458", "41221043847226", "41221043945530", "41221043912762", "41221044961338", "41221043879994", "41221043716154", "41221043748922", "41221044928570", "41221043552314", "41221043585082", "41221043683386", "41221043650618", "41221044895802", "41221043617850", "41221043454010", "41221043486778", "41221044863034",
+        "40573731110970", "40612651040826", "40612651073594", "40612651106362", "40612651139130", "40612651237434", "40612651270202", "41241721045050", "41241721471034", "41241721503802", "41241721536570", "41241721569338", "41241721602106", "41241721667642", "41241721700410", "41241721765946", "41241721143354", "41241721176122", "41241721208890", "41241721241658", "41241721274426", "41241721339962", "41241721372730", "41241721438266",
+        "40589458997306", "40593536712762", "41221039456314", "41221038014522", "41221038080058", "41221039489082", "41221038047290", "41221039521850", "41221038932026", "41221038964794", "41221039849530", "41221039063098", "41221039128634", "41221039882298", "41221039095866", "41221039915066", "41221038637114", "41221038669882", "41221039751226", "41221038768186",
+        "40589542391866", "4124172951354", "41241712918586",
+        "40583460683834", "41241713999930", "41241713967162"
+      ];
+      for (const id of displayVariantIds) {
+        if (vIdString.includes(id)) return false;
+      }
+    }
+    return true;
+  });
+
+  if (filteredCart.length !== localCart.length) {
+    localStorage.setItem('noku_cart', JSON.stringify(filteredCart));
+    cart = filteredCart;
+  } else {
+    cart = localCart;
+  }
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   if (cartCountBadge) {

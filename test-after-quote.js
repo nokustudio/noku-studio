@@ -1,102 +1,66 @@
 (function () {
-  // ─── NAV BAR THEME & SCROLL CONTROLLER ───
+  // ─── NAV BAR THEME & SCROLL CONTROLLER (INTERSECTION OBSERVER OPTIMIZED) ───
   const navbar = document.getElementById('navbar');
-  const lightSectionSelectors = [
-    '.products-section',
-    '.collections-section',
-    '.materials-section'
-  ];
-  let cachedLightSections = []; // { el, top, height }
-  let lastBodyState = null;
-  let lastNavState = null;
 
-  function getUnscaledRect(el) {
-    let top = 0;
-    let left = 0;
-    const width = el.offsetWidth || 0;
-    const height = el.offsetHeight || 0;
-    let current = el;
-    while (current) {
-      top += current.offsetTop || 0;
-      left += current.offsetLeft || 0;
-      current = current.offsetParent;
-    }
-    return { top, left, width, height };
-  }
-
-  function rebuildNavSectionCache() {
-    cachedLightSections = [];
-    for (const sel of lightSectionSelectors) {
-      const el = document.querySelector(sel);
-      if (el) {
-        const rect = getUnscaledRect(el);
-        cachedLightSections.push({
-          el,
-          top: rect.top,
-          height: el.offsetHeight
-        });
+  if (navbar) {
+    // 1. Scroll State Toggle (Only handles visual scroll offset, extremely cheap)
+    let isScrolled = false;
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY > 40;
+      if (scrolled !== isScrolled) {
+        isScrolled = scrolled;
+        navbar.classList.toggle('scrolled', isScrolled);
       }
-    }
-  }
+    }, { passive: true });
 
-  function updateNavbarTheme() {
-    if (!navbar) return;
-    const scrollY = window.scrollY;
-    navbar.classList.toggle('scrolled', scrollY > 40);
-
+    // 2. Navbar Theme Observer: detects when sections cross the navbar line
     const navHeight = navbar.offsetHeight || 70;
-    const checkY = scrollY + navHeight / 2;
-    const checkY_body = scrollY + window.innerHeight / 2;
+    const navThemeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const isLight = entry.target.classList.contains('products-section') ||
+                          entry.target.classList.contains('collections-section') ||
+                          entry.target.classList.contains('materials-section');
+          
+          if (isLight) {
+            navbar.classList.add('light-nav');
+          } else {
+            navbar.classList.remove('light-nav');
+          }
+        }
+      });
+    }, {
+      rootMargin: `-${navHeight}px 0px -90% 0px`,
+      threshold: 0
+    });
 
-    let isLightNavbar = false;
-    let isLightBody = false;
+    // 3. Body Theme Observer: detects when sections occupy the center of the viewport
+    const bodyThemeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const isLight = entry.target.classList.contains('products-section') ||
+                          entry.target.classList.contains('collections-section') ||
+                          entry.target.classList.contains('materials-section');
+          
+          if (isLight) {
+            document.body.style.backgroundColor = 'var(--light)';
+          } else {
+            document.body.style.backgroundColor = 'var(--dark-bg)';
+          }
+        }
+      });
+    }, {
+      rootMargin: '-50% 0px -50% 0px',
+      threshold: 0
+    });
 
-    for (const sec of cachedLightSections) {
-      if (checkY >= sec.top && checkY < sec.top + sec.height) {
-        isLightNavbar = true;
-      }
-      if (checkY_body >= sec.top && checkY_body < sec.top + sec.height) {
-        isLightBody = true;
-      }
-      if (isLightNavbar && isLightBody) break;
-    }
-
-    if (lastNavState !== isLightNavbar) {
-      lastNavState = isLightNavbar;
-      if (isLightNavbar) {
-        navbar.classList.add('light-nav');
-      } else {
-        navbar.classList.remove('light-nav');
-      }
-    }
-
-    if (lastBodyState !== isLightBody) {
-      lastBodyState = isLightBody;
-      if (isLightBody) {
-        document.body.style.backgroundColor = 'var(--light)';
-      } else {
-        document.body.style.backgroundColor = 'var(--dark-bg)';
-      }
-    }
+    // Observe all page sections and the footer
+    const targetSections = document.querySelectorAll('.products-section, .collections-section, .materials-section, .video-section, footer');
+    targetSections.forEach(sec => {
+      navThemeObserver.observe(sec);
+      bodyThemeObserver.observe(sec);
+    });
   }
-
-  // Build cache on load & resize
-  window.addEventListener('DOMContentLoaded', () => {
-    rebuildNavSectionCache();
-    updateNavbarTheme();
-    // Delay backups to account for image/layout shifts
-    setTimeout(rebuildNavSectionCache, 100);
-    setTimeout(updateNavbarTheme, 100);
-    setTimeout(rebuildNavSectionCache, 500);
-    setTimeout(updateNavbarTheme, 500);
-  });
-
-  window.addEventListener('resize', () => {
-    rebuildNavSectionCache();
-    updateNavbarTheme();
-  }, { passive: true });
-
-  window.addEventListener('scroll', updateNavbarTheme, { passive: true });
 
   // ─── OPTIMIZED CRAFTSMANSHIP VIDEO PLAYER CONTROLS ───
   const video = document.getElementById('workshop-video');

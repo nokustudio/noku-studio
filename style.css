@@ -146,6 +146,8 @@ video {
   pointer-events: none;
   opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
 }
 
 #loading-screen {
@@ -732,7 +734,6 @@ body:not(.secondary-landing-page) .hero-title {
   height: 100%;
   object-fit: cover;
   opacity: 0.75;
-  filter: saturate(0.9) contrast(1.02);
 }
 
 .video-overlay {
@@ -978,7 +979,9 @@ body:not(.secondary-landing-page) .hero-title {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .product-card:hover {
@@ -1265,7 +1268,9 @@ body:not(.secondary-landing-page) .hero-title {
   background-color: transparent;
   text-decoration: none;
   position: relative;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
 }
 

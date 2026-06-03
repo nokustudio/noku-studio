@@ -20,3 +20,6 @@ product_cache.json
 # Original video backups
 *_original.mp4
 
+
+# Generated Product Excel Spreadsheet
+noku_products.xlsx
