@@ -676,8 +676,11 @@
         const priceVal = p.priceRange?.minVariantPrice?.amount ? parseFloat(p.priceRange.minVariantPrice.amount) : SHOPIFY_CONFIG.defaultPrice;
         const imgUrl = getVariantImage(p, category, item.id, item.name);
         
+        const isDisplay = ['dining-table', 'sofa-2', 'lounge-sofa', 'poster-bed', 'rod-bed-with-curved-headboard', 'round-dining-table'].includes(p.handle.toLowerCase().trim());
+        const productUrl = `product.html?handle=${p.handle}${isDisplay ? '&inquire=true' : ''}`;
+
         const pCard = document.createElement('a');
-        pCard.href = `product.html?handle=${p.handle}`;
+        pCard.href = productUrl;
         pCard.className = 'gcard';
         pCard.innerHTML = `
           <div class="gcard__media">
@@ -692,7 +695,7 @@
         pCard.querySelector('.gcard__add').addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          window.location.href = `product.html?handle=${p.handle}`;
+          window.location.href = productUrl;
         });
         usedProductsGrid.appendChild(pCard);
       });

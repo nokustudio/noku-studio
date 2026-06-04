@@ -692,7 +692,7 @@ function renderProductsGrid() {
       e.preventDefault(); // Prevent navigating to product.html when clicking Add to Cart
       
       if (isDisplay) {
-        window.location.href = `product.html?handle=${p.handle}`;
+        window.location.href = `product.html?handle=${p.handle}&inquire=true`;
         return;
       }
       

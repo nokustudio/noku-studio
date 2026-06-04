@@ -1260,7 +1260,8 @@
         if (card.classList.contains('highlighted')) {
           const handle = card.getAttribute('data-handle');
           if (handle) {
-            window.location.href = `product.html?handle=${handle}`;
+            const isDisplay = ['dining-table', 'sofa-2', 'lounge-sofa', 'poster-bed', 'rod-bed-with-curved-headboard', 'round-dining-table'].includes(handle.toLowerCase().trim());
+            window.location.href = `product.html?handle=${handle}${isDisplay ? '&inquire=true' : ''}`;
           }
           return;
         }

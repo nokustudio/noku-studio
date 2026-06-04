@@ -611,6 +611,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize
   updateCartUI();
+  setupInquiryModal();
   loadProduct(handle);
 });
 
@@ -915,7 +916,7 @@ function renderProductPage() {
       ${isDisplayOnly(currentProduct.handle) ? `
       <div class="purchase-controls">
         <div class="action-buttons-wrap" style="width: 100%;">
-          <a href="contact.html?inquiry=${encodeURIComponent(currentProduct.title)}" class="btn-primary-action" style="flex: 1; text-decoration: none; display: block; text-align: center;">Get in Touch</a>
+          <button id="btn-inquire" class="btn-primary-action" style="flex: 1;">Get in Touch</button>
         </div>
       </div>
       ` : `
@@ -973,6 +974,11 @@ function renderProductPage() {
       addCurrentItemToCart(activeVariant, qty, false); // add to cart without opening drawer
       proceedToCheckout();
     });
+  }
+
+  const inquireBtn = document.getElementById('btn-inquire');
+  if (inquireBtn) {
+    inquireBtn.addEventListener('click', openInquiryModal);
   }
 
   // Bind Gallery image thumbs
@@ -1154,6 +1160,12 @@ function renderProductPage() {
 
   // Initial draw of materials card info
   updateVariantDisplays(true);
+
+  // If the page URL contains inquire=true, trigger the inquiry modal immediately on load
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('inquire') === 'true') {
+    openInquiryModal();
+  }
 }
 
 // ─── UPDATE VARIANT SPECIFICS ───
@@ -1813,4 +1825,120 @@ function formatCurrency(amount) {
     currency: 'INR',
     minimumFractionDigits: 0
   }).format(amount);
+}
+
+// ─── INQUIRY MODAL FUNCTIONS ───
+function openInquiryModal() {
+  const inquiryModalOverlay = document.getElementById('inquiry-modal-overlay');
+  const inquiryForm = document.getElementById('modal-inquiry-form');
+  const inquirySuccessMsg = document.getElementById('modal-success-message');
+
+  if (!inquiryModalOverlay) return;
+
+  // Pre-populate inquiry message field with product title & current variant details
+  const inquiryMessageTextarea = document.getElementById('inquiry-message');
+  if (inquiryMessageTextarea && currentProduct) {
+    const activeVariant = findMatchingVariant();
+    let optionsList = [];
+    if (activeVariant && activeVariant.selectedOptions) {
+      optionsList = activeVariant.selectedOptions.map(opt => `${opt.name}: ${opt.value}`);
+    } else {
+      optionsList = Object.entries(selectedOptions).map(([key, val]) => `${key}: ${val}`);
+    }
+    
+    const optionsText = optionsList.length > 0 ? ` (${optionsList.join(', ')})` : '';
+    inquiryMessageTextarea.value = `I would like to inquire about the display-only piece: ${currentProduct.title}${optionsText}. Please share more details, customization options, and pricing.`;
+  }
+  
+  // Reset form states
+  if (inquiryForm) {
+    inquiryForm.reset();
+    inquiryForm.style.display = 'flex';
+    inquiryForm.style.opacity = '1';
+  }
+  if (inquirySuccessMsg) {
+    inquirySuccessMsg.style.display = 'none';
+  }
+
+  inquiryModalOverlay.classList.add('active');
+  document.body.style.overflow = 'hidden'; // Lock background scrolling
+}
+
+function closeInquiryModal() {
+  const inquiryModalOverlay = document.getElementById('inquiry-modal-overlay');
+  if (!inquiryModalOverlay) return;
+  inquiryModalOverlay.classList.remove('active');
+  document.body.style.overflow = ''; // Restore background scrolling
+}
+
+function setupInquiryModal() {
+  const inquiryModalOverlay = document.getElementById('inquiry-modal-overlay');
+  const inquiryModalClose = document.getElementById('inquiry-modal-close');
+  const inquiryForm = document.getElementById('modal-inquiry-form');
+  const inquirySuccessMsg = document.getElementById('modal-success-message');
+
+  if (inquiryModalClose) {
+    inquiryModalClose.addEventListener('click', closeInquiryModal);
+  }
+  if (inquiryModalOverlay) {
+    inquiryModalOverlay.addEventListener('click', (e) => {
+      if (e.target === inquiryModalOverlay) {
+        closeInquiryModal();
+      }
+    });
+  }
+
+  // Handle Zoho form submission from modal
+  if (inquiryForm && inquirySuccessMsg) {
+    inquiryForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const fullName = document.getElementById('inquiry-name').value.trim();
+      const email = document.getElementById('inquiry-email').value.trim();
+      const message = document.getElementById('inquiry-message').value.trim();
+      
+      // Programmatically split Full Name into First Name & Last Name (mandatory in Zoho Forms)
+      const spaceIndex = fullName.indexOf(' ');
+      let firstName = '';
+      let lastName = '';
+      if (spaceIndex === -1) {
+        firstName = fullName;
+        lastName = '.'; // Fallback dot for Zoho's mandatory Name_Last field
+      } else {
+        firstName = fullName.substring(0, spaceIndex).trim();
+        lastName = fullName.substring(spaceIndex + 1).trim();
+      }
+
+      // Format Message with product inquiry details
+      const formattedMessage = `Purpose of Inquiry: Product Page Modal Inquiry\n\nProduct: ${currentProduct ? currentProduct.title : 'Noku Piece'}\n\nMessage:\n${message}`;
+
+      // Populate hidden Zoho Form fields
+      const zohoForm = document.getElementById('zoho-modal-hidden-form');
+      if (zohoForm) {
+        zohoForm.querySelector('input[name="Name_First"]').value = firstName;
+        zohoForm.querySelector('input[name="Name_Last"]').value = lastName;
+        zohoForm.querySelector('input[name="Email"]').value = email;
+        zohoForm.querySelector('input[name="MultiLine"]').value = formattedMessage;
+        
+        console.log('Submitting inquiry to Zoho via modal:', {
+          firstName,
+          lastName,
+          email,
+          formattedMessage
+        });
+        
+        // Submit hidden form targeting hidden iframe
+        zohoForm.submit();
+      }
+      
+      // Transition states
+      inquiryForm.style.transition = 'opacity 0.4s ease';
+      inquiryForm.style.opacity = '0';
+      
+      setTimeout(() => {
+        inquiryForm.style.display = 'none';
+        inquirySuccessMsg.style.display = 'block';
+      }, 400);
+    });
+  }
 }

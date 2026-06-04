@@ -1019,7 +1019,7 @@ function updateFeaturedProductsUI() {
         if (!inquireBtn) {
           const newInquireBtn = document.createElement('a');
           newInquireBtn.className = 'product-inquire-btn';
-          newInquireBtn.href = `product.html?handle=${handle}`;
+          newInquireBtn.href = `product.html?handle=${handle}&inquire=true`;
           newInquireBtn.textContent = 'Inquire';
           buyRow.appendChild(newInquireBtn);
         }
@@ -1283,7 +1283,7 @@ async function renderCollectionProducts(collectionHandle, gridId) {
       e.preventDefault();
       
       if (isDisplay) {
-        window.location.href = `product.html?handle=${p.handle}`;
+        window.location.href = `product.html?handle=${p.handle}&inquire=true`;
         return;
       }
       
