@@ -900,8 +900,8 @@
   }
 
   function centerActiveCard(animate = true) {
-    const mainTrack = document.querySelector('.carousel-track');
-    const mainContainer = document.querySelector('.carousel-track-container');
+    const mainTrack = document.querySelector('#configurator .carousel-track');
+    const mainContainer = document.querySelector('#configurator .carousel-track-container');
     
     const narrativeTrack = document.querySelector('.narrative-carousel-track');
     const narrativeContainer = document.querySelector('.narrative-carousel-track-container');
@@ -991,7 +991,7 @@
   }
 
   function renderCarousel() {
-    const mainTrack = document.querySelector('.carousel-track');
+    const mainTrack = document.querySelector('#configurator .carousel-track');
     const narrativeTrack = document.querySelector('.narrative-carousel-track');
 
     updateCushionsList();

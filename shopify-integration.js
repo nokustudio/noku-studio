@@ -786,7 +786,7 @@ async function loadShopifyProductData() {
 function updateCarouselImagesToShopify() {
   if (!isShopifyConnected || shopifyProductVariants.length === 0) return;
   
-  const carouselTrack = document.querySelector('.carousel-track');
+  const carouselTrack = document.querySelector('#configurator .carousel-track, .narrative-carousel-track');
   if (!carouselTrack) return;
   
   const cards = document.querySelectorAll('.carousel-card');
@@ -1764,7 +1764,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   // Set up MutationObservers to update carousel images to Shopify CDN URLs dynamically on render
-  const carouselTrack = document.querySelector('.carousel-track');
+  const carouselTrack = document.querySelector('#configurator .carousel-track');
   if (carouselTrack) {
     const carouselObserver = new MutationObserver(() => {
       carouselObserver.disconnect();
