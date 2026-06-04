@@ -30,6 +30,11 @@
   --radius-pill: 9999px;
   --border-width: 1px;
 
+  /* Motion — standardized hover-lift scale for content cards/tiles.
+     (Buttons keep their own subtle lifts.) */
+  --lift-card: -6px;   /* default lift for content cards on hover */
+  --lift-active: -4px; /* nudge for selected/active tiles */
+
   /* Spacing & Padding Variables */
   --padding-vertical-none: 0px;
   --padding-vertical-small: 80px;
@@ -1054,7 +1059,7 @@ body:not(.secondary-landing-page) .hero-title {
 }
 
 .product-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(var(--lift-card));
   box-shadow: 0 20px 40px rgba(44, 38, 34, 0.08);
   border-color: rgba(162, 123, 92, 0.2);
 }
@@ -1375,7 +1380,7 @@ body:not(.secondary-landing-page) .hero-title {
 }
 
 .collection-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(var(--lift-card));
   box-shadow: 0 20px 40px rgba(44, 38, 34, 0.08);
   border-color: rgba(162, 123, 92, 0.2);
 }
@@ -1577,7 +1582,7 @@ body:not(.secondary-landing-page) .hero-title {
 /* Hover effects */
 .moodboard-item:hover {
   z-index: 10 !important;
-  transform: translateY(-8px) scale(1.02);
+  transform: translateY(var(--lift-card)) scale(1.02);
   box-shadow: 0 20px 40px rgba(162, 123, 92, 0.15);
 }
 
@@ -1739,7 +1744,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .swatch-card:hover,
 .swatch-card.active {
-  transform: translateY(-4px);
+  transform: translateY(var(--lift-active));
 }
 
 .swatch-card.active {
