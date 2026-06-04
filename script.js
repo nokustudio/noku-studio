@@ -768,7 +768,7 @@
         currentPositionIndex++;
         centerActiveCard(true);
       }
-    }, 3500);
+    }, 2000);
   }
 
   function stopAutoRotate() {
