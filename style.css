@@ -995,7 +995,11 @@ body:not(.secondary-landing-page) .hero-title {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 80px;
+  /* #products was widened for the 4-card carousel; keep the header at its
+     original content width (old 1320 container − 80 padding = 1240) so the
+     title and "View All" link don't drift apart. */
+  max-width: 1240px;
+  margin: 0 auto 80px;
 }
 
 .products-header-left {
@@ -1541,16 +1545,13 @@ body:not(.secondary-landing-page) .hero-title {
   transform: translateY(0);
 }
 
-/* Grid placement */
-.moodboard-item.item-large {
-  grid-column: span 2;
-  aspect-ratio: 2.4;
-}
-
+/* Grid placement — 2×2 quadrant grid, every image an equal square */
+.moodboard-item.item-large,
 .moodboard-item.item-square-1,
 .moodboard-item.item-square-2,
 .moodboard-item.item-medium {
-  aspect-ratio: 1.15;
+  grid-column: auto;
+  aspect-ratio: 1;
 }
 
 @media (max-width: 1200px) {
@@ -1572,9 +1573,9 @@ body:not(.secondary-landing-page) .hero-title {
   }
 
   .moodboard-item.item-large {
-    aspect-ratio: 1.6;
+    aspect-ratio: 1; /* stay square in the 2×2 quadrant grid */
   }
-  
+
   .moodboard-caption {
     opacity: 1;
     transform: translateY(0);
@@ -3374,14 +3375,14 @@ nav.light-nav .cart-btn:hover {
 
 .featured-carousel-track {
   display: flex;
-  gap: 32px;
+  gap: 28px;
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .featured-carousel-track .product-card {
   position: relative;
-  flex: 0 0 320px;
-  width: 320px;
+  flex: 0 0 300px;
+  width: 300px;
   opacity: 1.0;
   transform: scale(0.92);
   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
