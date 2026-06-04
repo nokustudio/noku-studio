@@ -911,6 +911,20 @@
     card.addEventListener('click', (e) => {
       // If clicking cart icon, let the cart handler handle it
       if (e.target.closest('.add-to-cart-icon')) {
+        const woodNameMap = {
+          'teak': 'Teak',
+          'reclaimed-teak': 'Reclaimed Teak',
+          'white-ash': 'White Ash'
+        };
+        const currentWoodName = woodNameMap[selectedWood] || 'Teak';
+        if (typeof window.addItemToCart === 'function') {
+          window.addItemToCart('Barstool', currentWoodName, cushionObj.name, cushionObj.image || imgPath);
+        }
+        return;
+      }
+      
+      if (isNarrative) {
+        window.location.href = `product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushionObj.normalizedName}`;
         return;
       }
       
