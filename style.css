@@ -516,17 +516,17 @@ nav.light-nav .nav-dropdown {
 }
 
 .default-variant-card-wrap {
+  position: relative;
+  z-index: 5;
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
   opacity: 0;
-  pointer-events: none !important;
   visibility: hidden;
   transition: opacity 0.1s linear, visibility 0.1s linear;
 }
 
 .default-variant-card-wrap.active {
-  pointer-events: auto !important;
   visibility: visible;
 }
 
@@ -1564,14 +1564,16 @@ body:not(.secondary-landing-page) .hero-title {
   }
 }
 
-@media (max-width: 991px) {
+/* Folded 991 (Webflow default) into the canonical 1024 tier so the materials
+   story grid collapses to one column at the same breakpoint as everything else. */
+@media (max-width: 1024px) {
   .materials-story-grid {
     grid-template-columns: 1fr;
     gap: 60px;
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .moodboard-item {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
@@ -2065,7 +2067,11 @@ footer {
     /* Simplify on tablets */
   }
 
-  .narrative-col.empty-col {
+  /* Must carry the #config-panel id to outrank the base
+     `#config-panel .empty-col { display: flex }` rule — without it this hide
+     never applies, leaving the ~800px cushion-carousel column to overflow the
+     viewport on tablets (horizontal scroll). */
+  #config-panel .narrative-col.empty-col {
     display: none;
   }
 
@@ -2372,7 +2378,7 @@ footer {
   font-weight: 600;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .carousel-card {
     flex: 0 0 260px;
     width: 260px;
@@ -3450,7 +3456,7 @@ nav.light-nav .cart-btn:hover {
   transform: scale(1.06);
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .featured-carousel-outer-wrap {
     padding: 0 50px;
   }
@@ -3510,7 +3516,7 @@ nav.light-nav .cart-btn:hover {
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .featured-carousel-outer-wrap .there-is-more-text {
     font-size: clamp(20px, 5vw, 26px);
     top: -10px;

@@ -928,15 +928,8 @@
         return;
       }
       
-      if (isNarrative) {
-        const destUrl = `product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushionObj.normalizedName}`;
-        console.log('Redirecting in narrative mode to:', destUrl);
-        window.location.href = destUrl;
-        return;
-      }
-      
+
       if (card.classList.contains('highlighted')) {
-        // Double-click/second-click on active card -> go to detail page with variant selected
         const destUrl = `product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushionObj.normalizedName}`;
         console.log('Redirecting in highlighted mode to:', destUrl);
         window.location.href = destUrl;
