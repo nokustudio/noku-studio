@@ -973,7 +973,9 @@ body:not(.secondary-landing-page) .hero-title {
 
 /* ════════ FEATURED PRODUCTS GRID ════════ */
 #products {
-  max-width: 1320px;
+  /* Widened so the featured carousel can show four 320px cards at rest
+     (4×320 + 3×32 gap = 1376px of track + nav-button padding). */
+  max-width: 1680px;
   scroll-margin-top: 80px; /* offset for sticky nav */
 }
 
@@ -1477,13 +1479,15 @@ body:not(.secondary-landing-page) .hero-title {
 
 /* Moodboard Collage */
 .materials-moodboard {
-  position: relative;
-  height: 620px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto auto;
+  gap: 16px;
   width: 100%;
 }
 
 .moodboard-item {
-  position: absolute;
+  position: relative;
   overflow: hidden;
   border-radius: 6px;
   box-shadow: 0 16px 36px rgba(36, 31, 27, 0.08);
@@ -1537,45 +1541,21 @@ body:not(.secondary-landing-page) .hero-title {
   transform: translateY(0);
 }
 
-/* Absolute Positioning for Editorial Collage */
+/* Grid placement */
 .moodboard-item.item-large {
-  width: 58%;
-  height: 60%;
-  top: 0;
-  left: 0;
-  z-index: 1;
+  grid-column: span 2;
+  aspect-ratio: 2.4;
 }
 
+.moodboard-item.item-square-1,
+.moodboard-item.item-square-2,
 .moodboard-item.item-medium {
-  width: 46%;
-  height: 50%;
-  bottom: 0;
-  right: 4%;
-  z-index: 3;
-}
-
-.moodboard-item.item-square-1 {
-  width: 36%;
-  height: 36%;
-  top: 8%;
-  right: 10%;
-  z-index: 2;
-}
-
-.moodboard-item.item-square-2 {
-  width: 34%;
-  height: 34%;
-  bottom: 12%;
-  left: 14%;
-  z-index: 4;
+  aspect-ratio: 1.15;
 }
 
 @media (max-width: 1200px) {
   .materials-story-grid {
     gap: 50px;
-  }
-  .materials-moodboard {
-    height: 520px;
   }
 }
 
@@ -1584,34 +1564,14 @@ body:not(.secondary-landing-page) .hero-title {
     grid-template-columns: 1fr;
     gap: 60px;
   }
-  .materials-moodboard {
-    height: 480px;
-  }
 }
 
 @media (max-width: 767px) {
-  .materials-moodboard {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    height: auto;
-    position: static;
-  }
-  
   .moodboard-item {
-    position: relative !important;
-    width: 100% !important;
-    height: auto !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    aspect-ratio: 1.15;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
-  
+
   .moodboard-item.item-large {
-    grid-column: span 2;
     aspect-ratio: 1.6;
   }
   
@@ -3366,7 +3326,9 @@ nav.light-nav .cart-btn:hover {
   justify-content: center;
   position: relative;
   width: 100%;
-  max-width: 1360px;
+  /* 1600 − 160 padding = 1440px visible track → fits four 320px cards
+     (1376px) with comfortable peek room on either side. */
+  max-width: 1600px;
   margin: 0 auto;
   padding: 0 80px;
   box-sizing: border-box;
