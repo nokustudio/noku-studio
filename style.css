@@ -3501,3 +3501,52 @@ nav.light-nav .cart-btn:hover {
     right: 5px;
   }
 }
+
+/* Featured Section Animation Styles */
+.products-sticky-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding-top: clamp(80px, 10vw, 120px);
+  padding-bottom: clamp(60px, 8vw, 100px);
+}
+
+.featured-carousel-outer-wrap .there-is-more-text {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 42px);
+  font-weight: 300;
+  color: var(--chamoisee);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  letter-spacing: -0.02em;
+  z-index: 15;
+}
+
+@media (min-width: 1025px) {
+  .products-section {
+    height: auto;
+  }
+  
+  .products-sticky-wrapper {
+    position: relative;
+    height: auto;
+    justify-content: flex-start;
+    overflow: visible;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .featured-carousel-outer-wrap .there-is-more-text {
+    font-size: clamp(20px, 5vw, 26px);
+    top: -10px;
+    transform: none;
+  }
+}

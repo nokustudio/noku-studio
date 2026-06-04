@@ -291,7 +291,11 @@
   let configBottomDoc = 0;
   let cardTopOffsetFromConfig = 0;
   let configPanelTopDoc = 0;
+  let productsTopDoc = 0;
+  let productsHeight = 0;
   let threeMetricsCached = false;
+  let activeProductIndex = 1; // Start with the second product highlighted/centered (Lounge Chair)
+  let isProductsAnimActive = false;
 
   function updateThreeLayoutMetrics() {
     const configPanel = document.getElementById('config-panel');
@@ -319,6 +323,14 @@
       configBottomDoc = configTopDoc + window.innerHeight * 2;
       cardTopOffsetFromConfig = 0;
     }
+
+    const productsSec = document.querySelector('.products-section');
+    if (productsSec) {
+      const productsRect = getUnscaledRect(productsSec);
+      productsTopDoc = productsRect.top;
+      productsHeight = productsRect.height;
+    }
+
     threeMetricsCached = true;
   }
 
@@ -366,6 +378,7 @@
         container.style.visibility = 'hidden';
         isThreeCanvasVisible = false;
       }
+
       return;
     }
 
@@ -521,6 +534,8 @@
         staticCardWrap.classList.remove('active');
       }
     }
+
+
   }
 
   window.addEventListener('scroll', evaluateScrollCalculations, { passive: true });
@@ -1187,7 +1202,6 @@
   }
 
   // ─── FEATURED PRODUCTS CAROUSEL CODE ───
-  let activeProductIndex = 1; // Start with the second product highlighted/centered (Lounge Chair)
 
   function centerActiveProduct(animate = true) {
     const track = document.querySelector('.featured-carousel-track');
@@ -1262,19 +1276,15 @@
 
     if (prevBtn) {
       prevBtn.addEventListener('click', () => {
-        if (activeProductIndex > 0) {
-          activeProductIndex--;
-          centerActiveProduct(true);
-        }
+        activeProductIndex = (activeProductIndex - 1 + cards.length) % cards.length;
+        centerActiveProduct(true);
       });
     }
 
     if (nextBtn) {
       nextBtn.addEventListener('click', () => {
-        if (activeProductIndex < cards.length - 1) {
-          activeProductIndex++;
-          centerActiveProduct(true);
-        }
+        activeProductIndex = (activeProductIndex + 1) % cards.length;
+        centerActiveProduct(true);
       });
     }
 
@@ -1293,13 +1303,280 @@
 
   window.addEventListener('featuredproductsloaded', () => {
     centerActiveProduct(false);
+    syncFeaturedBarstoolCard();
   });
 
   window.addEventListener('load', () => {
     centerActiveProduct(false);
+    syncFeaturedBarstoolCard();
   });
 
-  // Initialize
+  // ─── FEATURED PIECES DYNAMIC CAROUSEL ANIMATION SYSTEM ───
+
+
+  function syncFeaturedBarstoolCard() {
+    // Stop syncing once the entrance animation has fully completed
+    if (featuredAnimTriggered && !isProductsAnimActive) return;
+
+    const barstoolCard = document.querySelector('.product-card[data-handle="barstool"]');
+    if (!barstoolCard) return;
+
+    const selectedWoodText = document.querySelector('.narrative-wood-swatches .wood-swatch.active')?.textContent.trim() || 'Teak';
+    const selectedCushionText = document.querySelector('.narrative-carousel-track .carousel-card.highlighted .cushion-name')?.textContent.trim() || 'Linen';
+    
+    // Format materials label
+    const materialsEl = barstoolCard.querySelector('.product-materials');
+    if (materialsEl) {
+      materialsEl.textContent = `${selectedWoodText} / Fabric — ${selectedCushionText}`;
+    }
+
+    // Get image URL from active narrative cushion card
+    const activeNarrativeCardImg = document.querySelector('.narrative-carousel-track .carousel-card.highlighted .carousel-card-img-wrap img');
+    if (activeNarrativeCardImg && activeNarrativeCardImg.src) {
+      const imgWrap = barstoolCard.querySelector('.product-card-img-wrap');
+      if (imgWrap) {
+        let img = imgWrap.querySelector('img');
+        if (!img) {
+          img = document.createElement('img');
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          img.width = 800;
+          img.height = 1000;
+          imgWrap.appendChild(img);
+        }
+        img.src = activeNarrativeCardImg.src;
+        img.alt = `Barstool ${selectedWoodText} ${selectedCushionText}`;
+      }
+    }
+
+    // Get pricing and variant ID if Shopify is connected
+    if (typeof getProductVariant === 'function') {
+      const variant = getProductVariant(selectedWoodText, selectedCushionText);
+      if (variant) {
+        barstoolCard.setAttribute('data-variant-id', variant.id);
+        barstoolCard.setAttribute('data-variant-price', variant.price.toString());
+        barstoolCard.setAttribute('data-variant-title', `${selectedWoodText} / Fabric — ${selectedCushionText}`);
+        barstoolCard.setAttribute('data-variant-image', variant.image || (activeNarrativeCardImg ? activeNarrativeCardImg.src : ''));
+        
+        const priceEl = barstoolCard.querySelector('.product-price');
+        if (priceEl && typeof formatCurrency === 'function') {
+          priceEl.textContent = formatCurrency(variant.price);
+        }
+      }
+    }
+  }
+
+  // ─── VIEWPORT-TRIGGERED FEATURED SECTION ENTRANCE ANIMATION ───
+  let featuredAnimTriggered = false;
+
+  function initFeaturedEntranceAnimation() {
+    const productsSec = document.querySelector('.products-section');
+    if (!productsSec) return;
+
+    const track = document.querySelector('.featured-carousel-track');
+    const container = document.querySelector('.featured-carousel-track-container');
+    if (!track || !container) return;
+
+    const cards = track.querySelectorAll('.product-card');
+    const barstoolCard = track.querySelector('.product-card[data-handle="barstool"]');
+    const moreText = document.querySelector('.there-is-more-text');
+    const prevBtn = document.querySelector('.featured-carousel-outer-wrap .prev-btn');
+    const nextBtn = document.querySelector('.featured-carousel-outer-wrap .next-btn');
+    const header = document.querySelector('.products-header');
+
+    if (!barstoolCard || cards.length === 0) return;
+
+    // ── Set initial hidden state ──
+    // Hide all cards, buttons, header
+    cards.forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.88)';
+      card.style.transition = 'none';
+    });
+    if (moreText) {
+      moreText.style.opacity = '0';
+      moreText.style.transition = 'none';
+    }
+    if (prevBtn) {
+      prevBtn.style.opacity = '0';
+      prevBtn.style.pointerEvents = 'none';
+      prevBtn.style.transition = 'none';
+    }
+    if (nextBtn) {
+      nextBtn.style.opacity = '0';
+      nextBtn.style.pointerEvents = 'none';
+      nextBtn.style.transition = 'none';
+    }
+    if (header) {
+      header.style.opacity = '0';
+      header.style.transform = 'translateY(20px)';
+      header.style.transition = 'none';
+    }
+
+    // Center track on barstool card (index 0)
+    const containerWidth = container.offsetWidth;
+    const cardWidth = barstoolCard.offsetWidth || 320;
+    const barstoolOffset = barstoolCard.offsetLeft;
+    const translateX_centered = (containerWidth - cardWidth) / 2 - barstoolOffset;
+    track.style.transition = 'none';
+    track.style.transform = `translateX(${translateX_centered}px)`;
+
+    isProductsAnimActive = true;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !featuredAnimTriggered) {
+          featuredAnimTriggered = true;
+          observer.unobserve(productsSec);
+          runFeaturedEntranceTimeline(track, container, cards, barstoolCard, moreText, prevBtn, nextBtn, header);
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+
+    observer.observe(productsSec);
+  }
+
+  function runFeaturedEntranceTimeline(track, container, cards, barstoolCard, moreText, prevBtn, nextBtn, header) {
+    // Re-calculate translations in case layout shifted
+    const containerWidth = container.offsetWidth;
+    const cardWidth = barstoolCard.offsetWidth || 320;
+    const barstoolOffset = barstoolCard.offsetLeft;
+    const translateX_centered = (containerWidth - cardWidth) / 2 - barstoolOffset;
+
+    // Normal position: center on activeProductIndex (default 1, the second card)
+    const activeCard = cards[activeProductIndex] || cards[1];
+    const activeCardWidth = activeCard.offsetWidth || 320;
+    const activeOffset = activeCard.offsetLeft;
+    const translateX_normal = (containerWidth - activeCardWidth) / 2 - activeOffset;
+
+    // Ensure centered position is set
+    track.style.transition = 'none';
+    track.style.transform = `translateX(${translateX_centered}px)`;
+
+    // Position the "There's more" text to the left of the centered Barstool card
+    if (moreText) {
+      const outerWrap = document.querySelector('.featured-carousel-outer-wrap');
+      if (outerWrap) {
+        const outerRect = outerWrap.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        // Barstool card visual left edge = container left + card position in track + track translation
+        const barstoolVisualLeft = containerRect.left + barstoolOffset + translateX_centered;
+        // Position text to the left of the card, with a gap
+        const textRight = barstoolVisualLeft - outerRect.left - 60; // 60px gap from card edge
+        moreText.style.right = `calc(100% - ${textRight}px)`;
+      }
+    }
+
+    // ── Phase 0: Fade in header (200ms) ──
+    requestAnimationFrame(() => {
+      if (header) {
+        header.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        header.style.opacity = '1';
+        header.style.transform = 'translateY(0)';
+      }
+
+      // ── Phase 1: Fade in Barstool card + "There's more" text (after 200ms) ──
+      setTimeout(() => {
+        barstoolCard.style.transition = 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)';
+        barstoolCard.style.opacity = '1';
+        barstoolCard.style.transform = 'scale(1.03)';
+
+        if (moreText) {
+          moreText.style.transition = 'opacity 0.7s ease 0.15s';
+          moreText.style.opacity = '1';
+        }
+
+        // ── Phase 2: Translate track left + reveal other cards (after 1.2s) ──
+        setTimeout(() => {
+          // Fade out "There's more" text
+          if (moreText) {
+            moreText.style.transition = 'opacity 0.5s ease';
+            moreText.style.opacity = '0';
+          }
+
+          // Slide track to normal position
+          track.style.transition = 'transform 1.0s cubic-bezier(0.16, 1, 0.3, 1)';
+          track.style.transform = `translateX(${translateX_normal}px)`;
+
+          // Fade in other cards with staggered delay
+          cards.forEach((card, idx) => {
+            if (card === barstoolCard) {
+              // Scale the barstool back to its resting scale
+              const isActiveCard = (idx === activeProductIndex);
+              const restScale = isActiveCard ? 1.03 : 0.92;
+              card.style.transition = 'opacity 0.6s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+              card.style.transform = `scale(${restScale})`;
+            } else {
+              const staggerDelay = 0.08 * Math.abs(idx - 0); // Stagger from barstool position
+              card.style.transition = `opacity 0.6s ease ${staggerDelay}s, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${staggerDelay}s`;
+              card.style.opacity = '1';
+              const isHighlighted = (idx === activeProductIndex);
+              card.style.transform = `scale(${isHighlighted ? 1.03 : 0.92})`;
+            }
+          });
+
+          // Fade in nav buttons
+          if (prevBtn) {
+            prevBtn.style.transition = 'opacity 0.5s ease 0.3s';
+            prevBtn.style.opacity = '1';
+            prevBtn.style.pointerEvents = 'auto';
+          }
+          if (nextBtn) {
+            nextBtn.style.transition = 'opacity 0.5s ease 0.3s';
+            nextBtn.style.opacity = '1';
+            nextBtn.style.pointerEvents = 'auto';
+          }
+
+          // ── Phase 3: Clean up all inline styles after transitions finish ──
+          setTimeout(() => {
+            isProductsAnimActive = false;
+
+            // Clear all inline overrides to restore native CSS hover/transitions
+            cards.forEach(card => {
+              card.style.opacity = '';
+              card.style.transform = '';
+              card.style.transition = '';
+            });
+            if (moreText) {
+              moreText.style.opacity = '0';
+              moreText.style.transform = '';
+              moreText.style.transition = '';
+              moreText.style.right = '';
+            }
+            if (prevBtn) {
+              prevBtn.style.opacity = '';
+              prevBtn.style.pointerEvents = '';
+              prevBtn.style.transition = '';
+            }
+            if (nextBtn) {
+              nextBtn.style.opacity = '';
+              nextBtn.style.pointerEvents = '';
+              nextBtn.style.transition = '';
+            }
+            if (header) {
+              header.style.opacity = '';
+              header.style.transform = '';
+              header.style.transition = '';
+            }
+            track.style.transition = '';
+
+            // Ensure the carousel is properly centered on the active card
+            centerActiveProduct(true);
+          }, 1200); // Wait for the longest transition to finish
+
+        }, 1200); // Delay before Phase 2 starts
+
+      }, 200); // Delay before Phase 1 starts
+    });
+  }
+
+  // Hook sync events and initialize
+  window.addEventListener('activecardchange', syncFeaturedBarstoolCard);
+  window.addEventListener('shopifyloaded', syncFeaturedBarstoolCard);
+
   initFeaturedProductsCarousel();
+  initFeaturedEntranceAnimation();
 }
 )();
