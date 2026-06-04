@@ -877,6 +877,50 @@ function setFeaturedCardImage(card, imageSrc, altText) {
   img.alt = altText || '';
 }
 
+// Helper to find the best matching variant from a list of Shopify variants based on text description
+function findBestMatchingVariant(variants, originalMaterials) {
+  if (!variants || variants.length === 0 || !originalMaterials) return null;
+
+  // Clean and split the query into lowercase alphanumeric words
+  const cleanQuery = originalMaterials.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
+  const queryTokens = cleanQuery.split(/\s+/).filter(t => t.length > 0);
+  
+  // Ignore common helper words
+  const stopWords = new Set(['and', 'or', 'with', 'a', 'of', 'solid', 'the', '/']);
+  const queryKeywords = queryTokens.filter(t => !stopWords.has(t));
+
+  if (queryKeywords.length === 0) return variants[0];
+
+  let bestVariant = null;
+  let maxMatchCount = -1;
+
+  for (const variant of variants) {
+    const variantTitleClean = variant.title.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
+    const variantTokens = variantTitleClean.split(/\s+/).filter(t => t.length > 0 && !stopWords.has(t));
+    
+    // Count matches
+    let matchCount = 0;
+    for (const kw of queryKeywords) {
+      if (variantTokens.includes(kw)) {
+        matchCount++;
+      }
+    }
+
+    if (matchCount > maxMatchCount) {
+      maxMatchCount = matchCount;
+      bestVariant = variant;
+    } else if (matchCount === maxMatchCount && bestVariant) {
+      // Tie breaker: prefer the one where variant title has shorter length (more concise match)
+      const currentTokens = bestVariant.title.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(t => t.length > 0 && !stopWords.has(t));
+      if (variantTokens.length < currentTokens.length) {
+        bestVariant = variant;
+      }
+    }
+  }
+
+  return maxMatchCount > 0 ? bestVariant : variants[0];
+}
+
 // Update Featured Product Cards pricing and images from Shopify Storefront API
 function updateFeaturedProductsUI() {
   const cards = document.querySelectorAll('.product-card[data-handle]');
@@ -889,18 +933,42 @@ function updateFeaturedProductsUI() {
     let variantId = '';
     let variantTitle = '';
     
+    // Store original materials text to ensure we don't lose it upon repeated calls
+    const materialsEl = card.querySelector('.product-materials');
+    let originalMaterials = card.getAttribute('data-original-materials');
+    if (!originalMaterials && materialsEl) {
+      originalMaterials = materialsEl.textContent.trim();
+      card.setAttribute('data-original-materials', originalMaterials);
+    }
+    
     const liveProduct = featuredProductsData[handle];
     if (isShopifyConnected && liveProduct) {
       title = liveProduct.title;
-      const firstVariant = liveProduct.variants?.edges[0]?.node;
-      if (firstVariant) {
-        price = parseFloat(firstVariant.price.amount);
-        variantId = firstVariant.id;
-        variantTitle = firstVariant.title;
+      
+      const variants = liveProduct.variants?.edges.map(edge => edge.node) || [];
+      const bestVariant = findBestMatchingVariant(variants, originalMaterials);
+      
+      if (bestVariant) {
+        price = parseFloat(bestVariant.price.amount);
+        variantId = bestVariant.id;
+        variantTitle = bestVariant.title;
+        imageSrc = bestVariant.image ? bestVariant.image.url : (liveProduct.featuredImage?.url || '');
+      } else {
+        const firstVariant = liveProduct.variants?.edges[0]?.node;
+        if (firstVariant) {
+          price = parseFloat(firstVariant.price.amount);
+          variantId = firstVariant.id;
+          variantTitle = firstVariant.title;
+        }
+        imageSrc = liveProduct.featuredImage?.url
+          || (firstVariant && firstVariant.image ? firstVariant.image.url : '');
       }
-      // Prefer the curated product hero (featuredImage); fall back to the variant image.
-      imageSrc = liveProduct.featuredImage?.url
-        || (firstVariant && firstVariant.image ? firstVariant.image.url : '');
+      
+      // Save matched variant credentials to DOM
+      card.setAttribute('data-variant-id', variantId);
+      card.setAttribute('data-variant-price', price.toString());
+      card.setAttribute('data-variant-title', variantTitle);
+      card.setAttribute('data-variant-image', imageSrc);
     } else {
       const fallback = FEATURED_PRODUCTS_FALLBACK[handle];
       if (fallback) {
@@ -912,6 +980,12 @@ function updateFeaturedProductsUI() {
         // originals that caused the scroll re-decode flashing. The featured card image
         // is sourced only from the live Shopify CDN; offline it stays a clean placeholder.
         imageSrc = '';
+        
+        // Save fallback credentials to DOM
+        card.setAttribute('data-variant-id', variantId);
+        card.setAttribute('data-variant-price', price.toString());
+        card.setAttribute('data-variant-title', variantTitle);
+        card.setAttribute('data-variant-image', fallback.image || '');
       }
     }
     
@@ -925,9 +999,9 @@ function updateFeaturedProductsUI() {
       priceEl.textContent = formatCurrency(price);
     }
 
-    const materialsEl = card.querySelector('.product-materials');
-    if (materialsEl && variantTitle) {
-      materialsEl.textContent = variantTitle;
+    const materialsElAfter = card.querySelector('.product-materials');
+    if (materialsElAfter && variantTitle) {
+      materialsElAfter.textContent = variantTitle;
     }
 
     // Inject the Shopify image into the placeholder container (sized via CDN params)
@@ -972,6 +1046,8 @@ function addFeaturedItemToCart(handle) {
     alert("This item is for display only and cannot be added to the cart.");
     return;
   }
+  
+  const card = document.querySelector(`.product-card[data-handle="${handle}"]`);
   let title = '';
   let price = 0;
   let variantId = '';
@@ -981,15 +1057,29 @@ function addFeaturedItemToCart(handle) {
   const liveProduct = featuredProductsData[handle];
   if (isShopifyConnected && liveProduct) {
     title = liveProduct.title;
-    const firstVariant = liveProduct.variants?.edges[0]?.node;
-    if (firstVariant) {
-      price = parseFloat(firstVariant.price.amount);
-      variantId = firstVariant.id;
-      variantTitle = firstVariant.title;
+    
+    // Attempt to read matched variant details from card's data attributes
+    if (card && card.getAttribute('data-variant-id')) {
+      variantId = card.getAttribute('data-variant-id');
+      price = parseFloat(card.getAttribute('data-variant-price') || '0');
+      variantTitle = card.getAttribute('data-variant-title') || '';
+      imageSrc = card.getAttribute('data-variant-image') || '';
+    } else {
+      // Fallback matching if data attributes aren't present yet
+      const materialsEl = card ? card.querySelector('.product-materials') : null;
+      const originalMaterials = card ? (card.getAttribute('data-original-materials') || (materialsEl ? materialsEl.textContent.trim() : '')) : '';
+      const variants = liveProduct.variants?.edges.map(e => e.node) || [];
+      const bestVariant = findBestMatchingVariant(variants, originalMaterials);
+      
+      if (bestVariant) {
+        price = parseFloat(bestVariant.price.amount);
+        variantId = bestVariant.id;
+        variantTitle = bestVariant.title;
+        imageSrc = bestVariant.image ? bestVariant.image.url : (liveProduct.featuredImage?.url || '');
+      }
     }
-    imageSrc = liveProduct.featuredImage?.url
-      || (firstVariant && firstVariant.image ? firstVariant.image.url : '');
   } else {
+    // Offline simulation mode
     const fallback = FEATURED_PRODUCTS_FALLBACK[handle];
     if (fallback) {
       title = fallback.title;
@@ -1009,7 +1099,6 @@ function addFeaturedItemToCart(handle) {
     cart[existingItemIndex].quantity += 1;
   } else {
     if (!imageSrc) {
-      const card = document.querySelector(`.product-card[data-handle="${handle}"]`);
       const img = card ? card.querySelector('.product-card-img-wrap img') : null;
       if (img) imageSrc = img.src;
     }
@@ -1030,6 +1119,7 @@ function addFeaturedItemToCart(handle) {
   saveCart();
   openCartDrawer();
 }
+
 
 /**
  * Dynamic Collection Products Renderer

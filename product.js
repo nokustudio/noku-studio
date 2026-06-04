@@ -765,10 +765,7 @@ function renderProductPage() {
   const initialPrice = initialVariant ? parseFloat(initialVariant.price.amount) : SHOPIFY_CONFIG.defaultPrice;
 
   // Get image URLs list
-  imageUrls = currentProduct.images.edges.map(e => e.node.url);
-  if (imageUrls.length === 0) {
-    imageUrls.push('https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7724c1a8d27260d62288_Noku_ofStillness_Lounge_chair_02.jpeg');
-  }
+  imageUrls = getGalleryImagesForVariant(initialVariant);
 
   // Determine initial variant image to load first
   let defaultImageUrl = imageUrls[0];
@@ -1157,24 +1154,68 @@ function updateVariantDisplays(isInitial = false) {
     priceDisplay.textContent = formatCurrency(parseFloat(matched.price.amount));
   }
 
+  // Filter gallery images for the selected variant
+  imageUrls = getGalleryImagesForVariant(matched);
+
   // Sync Featured image if variant has an image
-  if (matched.image && matched.image.url) {
-    const mainImage = document.getElementById('main-product-image');
-    if (mainImage && mainImage.src !== matched.image.url) {
+  const mainImage = document.getElementById('main-product-image');
+  if (mainImage && matched.image && matched.image.url) {
+    if (mainImage.src !== matched.image.url) {
       mainImage.style.opacity = '0.3';
       setTimeout(() => {
         mainImage.src = matched.image.url;
         mainImage.style.opacity = '1';
       }, 150);
-      
-      // Update activeImageIndex to match the index of this variant image in imageUrls
-      const matchIdx = imageUrls.indexOf(matched.image.url);
-      if (matchIdx > -1) {
-        activeImageIndex = matchIdx;
-      }
-      
-      // De-activate current thumbs
-      document.querySelectorAll('.thumbnail-item').forEach(t => t.classList.remove('active'));
+    }
+  }
+
+  // Update activeImageIndex
+  const matchIdx = imageUrls.indexOf(matched.image ? matched.image.url : '');
+  activeImageIndex = matchIdx > -1 ? matchIdx : 0;
+
+  // Update thumbnails HTML
+  const thumbsContainer = document.getElementById('thumbnails-container');
+  if (thumbsContainer) {
+    let thumbnailsHtml = '';
+    imageUrls.forEach((url, idx) => {
+      thumbnailsHtml += `
+        <div class="thumbnail-item ${idx === activeImageIndex ? 'active' : ''}" data-index="${idx}">
+          <img src="${url}" alt="Thumbnail ${idx + 1}">
+        </div>
+      `;
+    });
+    thumbsContainer.innerHTML = thumbnailsHtml;
+    
+    // Re-bind thumbnail click events
+    const thumbs = thumbsContainer.querySelectorAll('.thumbnail-item');
+    thumbs.forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        thumbs.forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
+        const idx = parseInt(thumb.dataset.index);
+        activeImageIndex = idx;
+        
+        if (mainImage) {
+          mainImage.style.opacity = '0.3';
+          setTimeout(() => {
+            mainImage.src = imageUrls[idx];
+            mainImage.style.opacity = '1';
+          }, 150);
+        }
+      });
+    });
+  }
+
+  // Update slider arrows visibility
+  const prevBtn = document.getElementById('prev-image-btn');
+  const nextBtn = document.getElementById('next-image-btn');
+  if (prevBtn && nextBtn) {
+    if (imageUrls.length <= 1) {
+      prevBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
+    } else {
+      prevBtn.style.display = 'flex';
+      nextBtn.style.display = 'flex';
     }
   }
 
@@ -1245,6 +1286,77 @@ function findMatchingVariant() {
   });
 
   return matchedEdge ? matchedEdge.node : currentProduct.variants.edges[0]?.node;
+}
+
+// Helper to filter product images by variant options/keywords with no duplicates
+function getGalleryImagesForVariant(variant) {
+  let urls = [];
+  
+  // 1. Always include the variant's own featured image first if it exists
+  if (variant && variant.image && variant.image.url) {
+    urls.push(variant.image.url);
+  }
+  
+  // 2. Find other images from the product list that match this variant's options/keywords
+  if (currentProduct && currentProduct.images && currentProduct.images.edges) {
+    const allImages = currentProduct.images.edges.map(e => e.node);
+    
+    let woodVal = '';
+    let uphVal = '';
+    
+    if (variant && variant.selectedOptions) {
+      const woodOpt = variant.selectedOptions.find(o => o.name.toLowerCase().includes('wood') || o.name.toLowerCase().includes('finish'));
+      const uphOpt = variant.selectedOptions.find(o => o.name.toLowerCase().includes('upholstery') || o.name.toLowerCase().includes('cushion'));
+      
+      woodVal = woodOpt ? woodOpt.value.toLowerCase() : '';
+      uphVal = uphOpt ? uphOpt.value.toLowerCase() : '';
+    } else {
+      // Fallback to selectedOptions state
+      woodVal = (selectedOptions['Wood'] || selectedOptions['Finish'] || '').toLowerCase();
+      uphVal = (selectedOptions['Upholstery'] || selectedOptions['Cushion'] || '').toLowerCase();
+    }
+    
+    // Clean and normalize options for keyword matching
+    const cleanWood = woodVal.replace(/^solid\s+/, '').replace(/[^a-z0-9]/g, '');
+    const cleanUph = uphVal.replace(/^fabric\s*-\s*/, '').replace(/^leather\s*-\s*/, '').replace(/[^a-z0-9]/g, '');
+    
+    allImages.forEach(img => {
+      if (!img.url) return;
+      const altText = (img.altText || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      
+      let isMatch = false;
+      if (cleanWood && cleanUph) {
+        if (altText.includes(cleanWood) && altText.includes(cleanUph)) {
+          isMatch = true;
+        }
+      } else if (cleanWood) {
+        if (altText.includes(cleanWood)) {
+          isMatch = true;
+        }
+      } else if (cleanUph) {
+        if (altText.includes(cleanUph)) {
+          isMatch = true;
+        }
+      }
+      
+      if (isMatch) {
+        urls.push(img.url);
+      }
+    });
+  }
+  
+  // 3. Fallback to all product images if empty
+  if (urls.length === 0 && currentProduct && currentProduct.images && currentProduct.images.edges) {
+    urls = currentProduct.images.edges.map(e => e.node.url);
+  }
+  
+  // 4. Default fallback image if still empty
+  if (urls.length === 0) {
+    urls.push('https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7724c1a8d27260d62288_Noku_ofStillness_Lounge_chair_02.jpeg');
+  }
+  
+  // 5. Remove duplicates
+  return Array.from(new Set(urls));
 }
 
 // ─── ADD TO STORAGE CART DRAWERS ───

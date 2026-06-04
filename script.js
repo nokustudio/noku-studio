@@ -759,29 +759,120 @@
   let selectedWood = 'teak';
   let selectedPrefix = 't';
   let selectedFolder = 'Teak';
-  let activeCushionIndex = 4; // linen
+  let activeCushionIndex = 4; // default linen index (updated dynamically)
+  let activeCushionName = 'linen';
+  let currentCushionsList = [];
 
-  const cushions = ['blush', 'charcoal', 'chestnut', 'cognac', 'linen', 'olive', 'opal', 'vienna'];
+  function cleanCushionDisplayName(name) {
+    return name
+      .replace(/^fabric\s*-\s*/i, '')
+      .replace(/^leather\s*-\s*/i, '')
+      .trim();
+  }
 
-  function createCardElement(cushion, idx, imgPath, isNarrative = false) {
+  function updateCushionsList() {
+    const woodNameMap = {
+      'teak': 'Teak',
+      'reclaimed-teak': 'Reclaimed Teak',
+      'white-ash': 'White Ash'
+    };
+    const currentWoodName = woodNameMap[selectedWood] || 'Teak';
+    const list = [];
+    const seen = new Set();
+
+    if (
+      typeof isShopifyConnected !== 'undefined' &&
+      isShopifyConnected &&
+      typeof shopifyProductVariants !== 'undefined' &&
+      shopifyProductVariants.length > 0
+    ) {
+      const normWood = currentWoodName.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+      shopifyProductVariants.forEach(variant => {
+        let matchesWood = false;
+        let cushionVal = '';
+
+        variant.selectedOptions.forEach(opt => {
+          const name = opt.name.toLowerCase();
+          const val = opt.value.toLowerCase().replace(/[^a-z0-9]/g, '');
+          if (name.includes('wood') || name.includes('finish')) {
+            if (normWood === 'reclaimedteak') {
+              matchesWood = val === 'reclaimedteak' || val.includes('reclaimedteak');
+            } else if (normWood === 'teak') {
+              matchesWood = (val === 'teak' || val === 'solidteak' || val.includes('teak')) && !val.includes('reclaimed');
+            } else {
+              matchesWood = val.includes(normWood) || normWood.includes(val);
+            }
+          } else {
+            cushionVal = opt.value;
+          }
+        });
+
+        if (matchesWood && cushionVal) {
+          const normCushion = cushionVal.toLowerCase()
+            .replace(/^fabric\s*-\s*/, '')
+            .replace(/^leather\s*-\s*/, '')
+            .replace(/[^a-z0-9]/g, '');
+
+          if (!seen.has(normCushion)) {
+            seen.add(normCushion);
+            list.push({
+              name: cushionVal,
+              normalizedName: normCushion,
+              image: variant.image ? variant.image.url : null,
+              variantId: variant.id
+            });
+          }
+        }
+      });
+    }
+
+    // Fallback if list is empty (Shopify not connected yet or empty response)
+    if (list.length === 0) {
+      const fallbackCushions = ['blush', 'charcoal', 'chestnut', 'cognac', 'linen', 'olive', 'opal', 'vienna'];
+      fallbackCushions.forEach(cushion => {
+        list.push({
+          name: cushion.charAt(0).toUpperCase() + cushion.slice(1),
+          normalizedName: cushion,
+          image: null,
+          variantId: `gid://shopify/ProductVariant/mock-barstool-${selectedWood}-${cushion}`
+        });
+      });
+    }
+
+    currentCushionsList = list;
+
+    // Keep activeCushionIndex in sync with activeCushionName
+    let activeIdx = currentCushionsList.findIndex(c => c.normalizedName === activeCushionName);
+    if (activeIdx === -1) {
+      activeIdx = 0;
+      activeCushionName = currentCushionsList[0].normalizedName;
+    }
+    activeCushionIndex = activeIdx;
+  }
+
+  function createCardElement(cushionObj, idx, isNarrative = false) {
     const card = document.createElement('div');
     card.className = 'carousel-card';
-    card.dataset.cushion = cushion;
+    card.dataset.cushion = cushionObj.normalizedName;
     card.dataset.index = idx;
     if (isNarrative) {
       card.id = `narrative-card-${idx}`;
     }
 
+    const imgPath = cushionObj.image || '';
     const imgHTML = imgPath 
-      ? `<img src="${imgPath}" alt="Barstool ${selectedWood} ${cushion}">` 
+      ? `<img src="${imgPath}" alt="Barstool ${selectedWood} ${cushionObj.normalizedName}">` 
       : '';
+
+    const displayName = cleanCushionDisplayName(cushionObj.name);
 
     card.innerHTML = `
       <div class="carousel-card-img-wrap">
         ${imgHTML}
       </div>
       <div class="carousel-card-info">
-        <span class="cushion-name">${cushion.charAt(0).toUpperCase() + cushion.slice(1)}</span>
+        <span class="cushion-name">${displayName.charAt(0).toUpperCase() + displayName.slice(1)}</span>
         <svg class="add-to-cart-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
           <path d="M6 20h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"></path>
           <path d="M8 6a4 4 0 0 1 8 0"></path>
@@ -797,9 +888,10 @@
       
       if (card.classList.contains('highlighted')) {
         // Double-click/second-click on active card -> go to detail page with variant selected
-        window.location.href = `product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushion}`;
+        window.location.href = `product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushionObj.normalizedName}`;
         return;
       }
+      activeCushionName = cushionObj.normalizedName;
       activeCushionIndex = idx;
       centerActiveCard(true);
     });
@@ -889,7 +981,11 @@
         'white-ash': 'White Ash'
       };
       selectedWoodLabel.textContent = woodNameMap[selectedWood] || 'Teak';
-      selectedCushionLabel.textContent = cushions[activeCushionIndex].charAt(0).toUpperCase() + cushions[activeCushionIndex].slice(1) + ' Cushion';
+      if (currentCushionsList[activeCushionIndex]) {
+        const rawName = currentCushionsList[activeCushionIndex].name;
+        const cleanedName = cleanCushionDisplayName(rawName);
+        selectedCushionLabel.textContent = cleanedName.charAt(0).toUpperCase() + cleanedName.slice(1) + ' Cushion';
+      }
     }
     window.dispatchEvent(new CustomEvent('activecardchange'));
   }
@@ -897,41 +993,22 @@
   function renderCarousel() {
     const mainTrack = document.querySelector('.carousel-track');
     const narrativeTrack = document.querySelector('.narrative-carousel-track');
-    
-    const woodNameMap = {
-      'teak': 'Teak',
-      'reclaimed-teak': 'Reclaimed Teak',
-      'white-ash': 'White Ash'
-    };
-    const currentWoodName = woodNameMap[selectedWood] || 'Teak';
+
+    updateCushionsList();
 
     if (mainTrack) mainTrack.innerHTML = '';
     if (narrativeTrack) narrativeTrack.innerHTML = '';
 
-    cushions.forEach((cushion, idx) => {
-      let imgPath = '';
-
-      if (
-        typeof isShopifyConnected !== 'undefined' && 
-        isShopifyConnected && 
-        typeof getProductVariant === 'function'
-      ) {
-        const formattedCushion = cushion.charAt(0).toUpperCase() + cushion.slice(1);
-        const variant = getProductVariant(currentWoodName, formattedCushion);
-        if (variant && variant.image) {
-          imgPath = variant.image;
-        }
-      }
-
+    currentCushionsList.forEach((cushionObj, idx) => {
       // Build main carousel card
       if (mainTrack) {
-        const card = createCardElement(cushion, idx, imgPath);
+        const card = createCardElement(cushionObj, idx);
         mainTrack.appendChild(card);
       }
 
       // Build narrative carousel card
       if (narrativeTrack) {
-        const card = createCardElement(cushion, idx, imgPath, true);
+        const card = createCardElement(cushionObj, idx, true);
         narrativeTrack.appendChild(card);
       }
     });
@@ -961,12 +1038,14 @@
     mainPrev.addEventListener('click', () => {
       if (activeCushionIndex > 0) {
         activeCushionIndex--;
+        activeCushionName = currentCushionsList[activeCushionIndex].normalizedName;
         centerActiveCard(true);
       }
     });
     mainNext.addEventListener('click', () => {
-      if (activeCushionIndex < cushions.length - 1) {
+      if (activeCushionIndex < currentCushionsList.length - 1) {
         activeCushionIndex++;
+        activeCushionName = currentCushionsList[activeCushionIndex].normalizedName;
         centerActiveCard(true);
       }
     });
@@ -978,16 +1057,24 @@
     narrativePrev.addEventListener('click', () => {
       if (activeCushionIndex > 0) {
         activeCushionIndex--;
+        activeCushionName = currentCushionsList[activeCushionIndex].normalizedName;
         centerActiveCard(true);
       }
     });
     narrativeNext.addEventListener('click', () => {
-      if (activeCushionIndex < cushions.length - 1) {
+      if (activeCushionIndex < currentCushionsList.length - 1) {
         activeCushionIndex++;
+        activeCushionName = currentCushionsList[activeCushionIndex].normalizedName;
         centerActiveCard(true);
       }
     });
   }
+
+  // Listen to shopifyloaded to pull variant-specific images once Shopify is ready
+  window.addEventListener('shopifyloaded', () => {
+    console.log('Shopify loaded event received in script.js. Re-rendering configurator carousels.');
+    renderCarousel();
+  });
 
   // Initial carousel render
   renderCarousel();
