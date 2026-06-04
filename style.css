@@ -42,6 +42,21 @@
   --padding-vertical-small: 80px;
   --padding-vertical-main: 112px;
   --padding-vertical-large: 160px;
+
+  /* Spacing scale (rem-based, 8px grid) — canonical step values for gaps,
+     padding and margins. Adopt incrementally: new/edited rules should use
+     these instead of arbitrary px so spacing stays on a consistent rhythm.
+     (Existing values were intentionally left unsnapped to avoid churn.) */
+  --space-3xs: 0.25rem; /*  4px */
+  --space-2xs: 0.5rem;  /*  8px */
+  --space-xs:  0.75rem; /* 12px */
+  --space-sm:  1rem;    /* 16px */
+  --space-md:  1.5rem;  /* 24px */
+  --space-lg:  2rem;    /* 32px */
+  --space-xl:  2.5rem;  /* 40px */
+  --space-2xl: 3rem;    /* 48px */
+  --space-3xl: 4rem;    /* 64px */
+  --space-4xl: 5rem;    /* 80px */
 }
 
 /* Padding Utilities */
@@ -777,7 +792,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .panel-number {
   font-family: var(--font-display);
-  font-size: 7.5rem;
+  font-size: clamp(3.5rem, 10vw, 7.5rem);
   font-weight: 200;
   line-height: 1;
   color: rgba(162, 123, 92, 0.08);
@@ -1111,7 +1126,7 @@ body:not(.secondary-landing-page) .hero-title {
 .gcard__name {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 1.3125rem;
+  font-size: clamp(1.125rem, 2vw, 1.3125rem);
   letter-spacing: -0.02em;
   line-height: 1.15;
   color: var(--ink);
@@ -1374,7 +1389,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .coll-card-title {
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 2.4vw, 1.5rem);
   font-weight: 600;
   color: var(--ink);
   margin: 0;
@@ -1904,7 +1919,7 @@ footer {
 
 .footer-wordmark {
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: clamp(1.375rem, 3vw, 1.75rem);
   font-weight: 400;
   letter-spacing: -0.02em;
   color: var(--chamoisee);
