@@ -800,6 +800,11 @@
       const previewImg = document.getElementById("material-detail-img");
       const categoryPills = document.querySelectorAll(".materials-pill");
 
+      // The interactive materials swatch widget was replaced by the static
+      // moodboard collage on the homepage. Bail out cleanly if its markup
+      // isn't present so renderCategory() doesn't touch null elements.
+      if (!swatchesGrid) return;
+
       function updatePreviewImage(item) {
         if (!previewImg) return;
         if (item.preview) {
