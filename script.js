@@ -886,9 +886,6 @@
         return;
       }
       
-      isUserInteracted = true;
-      stopAutoplay();
-      
       if (card.classList.contains('highlighted')) {
         // Double-click/second-click on active card -> go to detail page with variant selected
         window.location.href = `product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushionObj.normalizedName}`;
@@ -1017,53 +1014,12 @@
     });
 
     centerActiveCard(false);
-    if (!isUserInteracted) {
-      startAutoplay();
-    }
-  }
-
-  // Autoplay functionality for interactive variants configurator
-  let autoplayInterval = null;
-  let isUserInteracted = false;
-
-  function startAutoplay() {
-    if (isUserInteracted) return;
-    if (autoplayInterval) clearInterval(autoplayInterval);
-    autoplayInterval = setInterval(() => {
-      if (currentCushionsList.length === 0) return;
-      activeCushionIndex = (activeCushionIndex + 1) % currentCushionsList.length;
-      activeCushionName = currentCushionsList[activeCushionIndex].normalizedName;
-      centerActiveCard(true);
-    }, 3000);
-  }
-
-  function stopAutoplay() {
-    if (autoplayInterval) {
-      clearInterval(autoplayInterval);
-      autoplayInterval = null;
-    }
-  }
-
-  // Hook hover events to pause/resume autoplay
-  const configuratorCarousel = document.querySelector('#configurator .carousel-outer-wrap');
-  if (configuratorCarousel) {
-    configuratorCarousel.addEventListener('mouseenter', () => {
-      stopAutoplay();
-    });
-    configuratorCarousel.addEventListener('mouseleave', () => {
-      if (!isUserInteracted) {
-        startAutoplay();
-      }
-    });
   }
 
   // Hook wood selectors
   const woodSwatches = document.querySelectorAll('.wood-swatch');
   woodSwatches.forEach(swatch => {
     swatch.addEventListener('click', () => {
-      isUserInteracted = true;
-      stopAutoplay();
-      
       woodSwatches.forEach(s => s.classList.remove('active'));
       swatch.classList.add('active');
 
@@ -1080,8 +1036,6 @@
   const mainNext = document.querySelector('.variants-section .next-btn');
   if (mainPrev && mainNext) {
     mainPrev.addEventListener('click', () => {
-      isUserInteracted = true;
-      stopAutoplay();
       if (activeCushionIndex > 0) {
         activeCushionIndex--;
         activeCushionName = currentCushionsList[activeCushionIndex].normalizedName;
@@ -1089,8 +1043,6 @@
       }
     });
     mainNext.addEventListener('click', () => {
-      isUserInteracted = true;
-      stopAutoplay();
       if (activeCushionIndex < currentCushionsList.length - 1) {
         activeCushionIndex++;
         activeCushionName = currentCushionsList[activeCushionIndex].normalizedName;
