@@ -1425,14 +1425,22 @@
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting && !featuredAnimTriggered) {
-          featuredAnimTriggered = true;
-          observer.unobserve(productsSec);
-          runFeaturedEntranceTimeline(track, container, cards, barstoolCard, moreText, prevBtn, nextBtn, header);
+        if (!featuredAnimTriggered && entry.isIntersecting) {
+          // Check if the section is fully in the viewport
+          const rect = entry.target.getBoundingClientRect();
+          const isFullyVisible = rect.top >= -10 && rect.bottom <= window.innerHeight + 10;
+          // Fallback: if section is taller than viewport, trigger at 50%
+          const isMostlyVisible = entry.intersectionRatio >= 0.5;
+
+          if (isFullyVisible || isMostlyVisible) {
+            featuredAnimTriggered = true;
+            observer.unobserve(productsSec);
+            runFeaturedEntranceTimeline(track, container, cards, barstoolCard, moreText, prevBtn, nextBtn, header);
+          }
         }
       });
     }, {
-      threshold: 0.85
+      threshold: [0.1, 0.3, 0.5, 0.7, 0.85, 1.0]
     });
 
     observer.observe(productsSec);
