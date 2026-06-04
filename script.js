@@ -294,6 +294,11 @@
   let threeMetricsCached = false;
 
   function updateThreeLayoutMetrics() {
+    const configPanel = document.getElementById('config-panel');
+    if (configPanel) {
+      configPanelTopDoc = getUnscaledRect(configPanel).top;
+    }
+
     const configuratorSection = document.getElementById('configurator');
     if (configuratorSection) {
       const configRect = getUnscaledRect(configuratorSection);
@@ -308,11 +313,11 @@
       } else {
         cardTopOffsetFromConfig = 0;
       }
-    }
-
-    const configPanel = document.getElementById('config-panel');
-    if (configPanel) {
-      configPanelTopDoc = getUnscaledRect(configPanel).top;
+    } else {
+      // Fallback if configurator section is not on the page (e.g. removed from index.html)
+      configTopDoc = configPanelTopDoc + window.innerHeight;
+      configBottomDoc = configTopDoc + window.innerHeight * 2;
+      cardTopOffsetFromConfig = 0;
     }
     threeMetricsCached = true;
   }

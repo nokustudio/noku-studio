@@ -50,7 +50,27 @@
       rootMargin: '0px 0px -40px 0px'
     });
 
-    els.forEach(function (el) { observer.observe(el); });
+    // Auto-stagger: grid/list siblings tend to cross the threshold on the same
+    // frame, which makes a uniform fade look flat. Give each .reveal-el a small
+    // delay based on its position among its direct-child .reveal-el siblings so
+    // groups cascade in. Skipped when the author already set a delay-N class or
+    // an inline transition-delay, and capped so long lists don't drag.
+    var STAGGER_STEP = 0.06; // seconds between siblings
+    var STAGGER_CAP = 6;     // max steps (~0.36s) before delay plateaus
+    els.forEach(function (el) {
+      var hasManualDelay = /\bdelay-\d\b/.test(el.className) ||
+        (el.style && el.style.transitionDelay);
+      if (!hasManualDelay && el.parentElement) {
+        var sibs = el.parentElement.querySelectorAll(':scope > .reveal-el');
+        if (sibs.length > 1) {
+          var idx = Array.prototype.indexOf.call(sibs, el);
+          if (idx > 0) {
+            el.style.transitionDelay = (Math.min(idx, STAGGER_CAP) * STAGGER_STEP) + 's';
+          }
+        }
+      }
+      observer.observe(el);
+    });
   }
 
   if (document.readyState === 'loading') {

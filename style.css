@@ -1,15 +1,17 @@
 /* ════════ DESIGN SYSTEM & TOKENS ════════ */
 :root {
   /* Primary Brand Palette */
-  --gunmetal: #2c3639;
   --chamoisee: #a27b5c;
-  --outerspace: #3f4e4f;
   --bone: #dcd7c9;
 
   /* Secondary Luxury Palette (From Screenshot) */
-  --paper: #F4F1EC;
+  /* Off-white surfaces collapsed to three real values: --light (primary
+     surface), --cream (warm raised surface), --bone (on-dark). --paper and
+     --light-secondary were near-identical to --light and drifted warm/cool
+     against it, so they now alias --light to keep every surface in register. */
+  --paper: var(--light);
   --light: #f4f5f1;
-  --light-secondary: #fafaf8;
+  --light-secondary: var(--light);
   --ink: #2C2622;
   --muted: #6B6258;
   --deep-muted: #3A342E;
@@ -141,7 +143,7 @@ video {
 
 .body-p {
   font-size: 17px;
-  line-height: 1.85;
+  line-height: 1.65;
   color: var(--muted);
   margin-bottom: 32px;
 }
@@ -538,13 +540,29 @@ nav.light-nav .nav-dropdown {
 /* Narrative Panel Wood Selector and Selected Details Styles */
 .narrative-wood-selector {
   margin-top: 32px;
-  margin-bottom: 16px;
-  justify-content: flex-start;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
 }
 
 .narrative-wood-selector .selector-label {
   color: var(--bone);
-  opacity: 0.8;
+  opacity: 0.85;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+}
+
+.narrative-wood-selector .selected-wood-label {
+  color: var(--chamoisee);
+  font-weight: 600;
+  margin-left: 8px;
+  font-size: 14px;
 }
 
 .narrative-wood-swatches .wood-swatch {
@@ -560,10 +578,14 @@ nav.light-nav .nav-dropdown {
 }
 
 .narrative-selected-details {
-  margin-top: 0;
-  margin-bottom: 36px;
+  margin-top: 16px;
+  margin-bottom: 0;
   text-align: left;
-  font-size: 16px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-style: italic;
+  color: var(--muted);
+  opacity: 0.85;
 }
 
 .narrative-selected-details .selected-wood-label {
@@ -1097,9 +1119,9 @@ body:not(.secondary-landing-page) .hero-title {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .product-card:hover {
@@ -1417,9 +1439,9 @@ body:not(.secondary-landing-page) .hero-title {
   background-color: transparent;
   text-decoration: none;
   position: relative;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
 }
 
@@ -1506,8 +1528,10 @@ body:not(.secondary-landing-page) .hero-title {
   font-weight: 700;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: var(--chamoisee);
-  border: 1px solid var(--chamoisee);
+  /* Demoted off the accent — a tag is structural, not interactive. Quiet
+     neutral chip lets chamoisee read as genuine emphasis elsewhere. */
+  color: var(--muted);
+  border: 1px solid var(--line);
   padding: 4px 10px;
   border-radius: 4px;
   display: inline-block;
