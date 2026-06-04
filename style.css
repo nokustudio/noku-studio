@@ -549,20 +549,34 @@ nav.light-nav .nav-dropdown {
 
 .narrative-wood-selector .selector-label {
   color: var(--bone);
-  opacity: 0.85;
   font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 14px;
   letter-spacing: 1px;
   display: flex;
   align-items: center;
 }
 
 .narrative-wood-selector .selected-wood-label {
+  color: var(--bone);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.narrative-wood-selector .selected-cushion-label {
   color: var(--chamoisee);
   font-weight: 600;
-  margin-left: 8px;
+  text-transform: uppercase;
   font-size: 14px;
+}
+
+.narrative-wood-selector .label-separator {
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  margin: 0 6px;
+  font-size: 16px;
 }
 
 .narrative-wood-swatches .wood-swatch {
@@ -575,25 +589,6 @@ nav.light-nav .nav-dropdown {
   background-color: var(--bone);
   color: var(--dark-bg);
   border-color: var(--bone);
-}
-
-.narrative-selected-details {
-  margin-top: 16px;
-  margin-bottom: 0;
-  text-align: left;
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-style: italic;
-  color: var(--muted);
-  opacity: 0.85;
-}
-
-.narrative-selected-details .selected-wood-label {
-  color: var(--bone);
-}
-
-.narrative-selected-details .selected-cushion-label {
-  color: var(--chamoisee);
 }
 
 .model-frame-rect {
@@ -2935,13 +2930,12 @@ nav.light-nav .cart-btn:hover {
     min-height: 240vh;
   }
   #config-panel .buy-now-wrapper {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 50px;
-    margin: 0;
+    position: static;
+    transform: none;
+    margin: 32px 0 0 0;
     width: auto;
-    z-index: 15;
+    align-items: flex-start;
+    text-align: left;
   }
 }
 

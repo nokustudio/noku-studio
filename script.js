@@ -770,14 +770,15 @@
   let autoRotateInterval = null;
   let isUserInteracted = false;
   let isHovered = false;
+  let currentPositionIndex = 4; // default position in the track (will be initialized in renderCarousel)
 
   function startAutoRotate() {
     if (autoRotateInterval) clearInterval(autoRotateInterval);
     autoRotateInterval = setInterval(() => {
       if (isUserInteracted || isHovered) return;
-      if (currentCushionsList.length > 0) {
-        activeCushionIndex = (activeCushionIndex + 1) % currentCushionsList.length;
-        activeCushionName = currentCushionsList[activeCushionIndex].normalizedName;
+      const N = currentCushionsList.length;
+      if (N > 0) {
+        currentPositionIndex++;
         centerActiveCard(true);
       }
     }, 3500);
@@ -787,6 +788,19 @@
     if (autoRotateInterval) {
       clearInterval(autoRotateInterval);
       autoRotateInterval = null;
+    }
+  }
+
+  function handleLoopBoundary() {
+    const N = currentCushionsList.length;
+    if (N === 0) return;
+
+    if (currentPositionIndex < N) {
+      currentPositionIndex += N;
+      centerActiveCard(false);
+    } else if (currentPositionIndex >= 2 * N) {
+      currentPositionIndex -= N;
+      centerActiveCard(false);
     }
   }
 
@@ -918,10 +932,25 @@
         window.location.href = `product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushionObj.normalizedName}`;
         return;
       }
-      activeCushionName = cushionObj.normalizedName;
-      activeCushionIndex = idx;
-      isUserInteracted = true;
-      centerActiveCard(true);
+      
+      if (card.parentNode) {
+        const siblings = Array.from(card.parentNode.querySelectorAll('.carousel-card'));
+        const clickedIdx = siblings.indexOf(card);
+        
+        if (card.parentNode.classList.contains('narrative-carousel-track')) {
+          currentPositionIndex = clickedIdx;
+          isUserInteracted = true;
+          centerActiveCard(true);
+        } else {
+          // mainTrack is not cloned
+          activeCushionIndex = idx;
+          activeCushionName = cushionObj.normalizedName;
+          const N = currentCushionsList.length;
+          currentPositionIndex = N + idx;
+          isUserInteracted = true;
+          centerActiveCard(true);
+        }
+      }
     });
 
     return card;
@@ -934,11 +963,16 @@
     const narrativeTrack = document.querySelector('.narrative-carousel-track');
     const narrativeContainer = document.querySelector('.narrative-carousel-track-container');
 
+    const N = currentCushionsList.length;
+    if (N === 0) return;
+
+    const originalIdx = (currentPositionIndex % N + N) % N;
+
     // Update main track highlighted classes
     if (mainTrack) {
       const mainCards = mainTrack.querySelectorAll('.carousel-card');
       mainCards.forEach((card, idx) => {
-        if (idx === activeCushionIndex) {
+        if (idx === originalIdx) {
           card.classList.add('highlighted');
         } else {
           card.classList.remove('highlighted');
@@ -951,7 +985,7 @@
     if (narrativeTrack) {
       const narrativeCards = narrativeTrack.querySelectorAll('.carousel-card');
       narrativeCards.forEach((card, idx) => {
-        if (idx === activeCushionIndex) {
+        if (idx === currentPositionIndex) {
           card.classList.add('highlighted');
         } else {
           card.classList.remove('highlighted');
@@ -962,7 +996,7 @@
 
     // Find active card to sync scatter stacks
     const cards = document.querySelectorAll('.carousel-card');
-    const activeCards = Array.from(cards).filter(c => parseInt(c.dataset.index) === activeCushionIndex);
+    const activeCards = Array.from(cards).filter(c => parseInt(c.dataset.index) === originalIdx);
     if (activeCards.length > 0) {
       const activeCardImg = activeCards[0].querySelector('.carousel-card-img-wrap img');
       const scatterImg = document.querySelector('.radial-scatter__item.barstool-item img');
@@ -988,7 +1022,8 @@
 
     // Translate narrative track
     if (narrativeTrack && narrativeContainer) {
-      const activeCard = narrativeTrack.querySelector('.carousel-card.highlighted');
+      const narrativeCards = narrativeTrack.querySelectorAll('.carousel-card');
+      const activeCard = narrativeCards[currentPositionIndex];
       if (activeCard) {
         const containerWidth = narrativeContainer.offsetWidth;
         const cardWidth = activeCard.offsetWidth || 320;
@@ -1009,12 +1044,17 @@
         'white-ash': 'White Ash'
       };
       selectedWoodLabel.textContent = woodNameMap[selectedWood] || 'Teak';
-      if (currentCushionsList[activeCushionIndex]) {
-        const rawName = currentCushionsList[activeCushionIndex].name;
+      if (currentCushionsList[originalIdx]) {
+        const rawName = currentCushionsList[originalIdx].name;
         const cleanedName = cleanCushionDisplayName(rawName);
         selectedCushionLabel.textContent = cleanedName.charAt(0).toUpperCase() + cleanedName.slice(1) + ' Cushion';
       }
     }
+
+    // Update activeCushionIndex and activeCushionName so the rest of the code is synced
+    activeCushionIndex = originalIdx;
+    activeCushionName = currentCushionsList[originalIdx].normalizedName;
+
     window.dispatchEvent(new CustomEvent('activecardchange'));
   }
 
@@ -1027,19 +1067,41 @@
     if (mainTrack) mainTrack.innerHTML = '';
     if (narrativeTrack) narrativeTrack.innerHTML = '';
 
+    const N = currentCushionsList.length;
+
     currentCushionsList.forEach((cushionObj, idx) => {
       // Build main carousel card
       if (mainTrack) {
         const card = createCardElement(cushionObj, idx);
         mainTrack.appendChild(card);
       }
+    });
 
-      // Build narrative carousel card
-      if (narrativeTrack) {
+    if (narrativeTrack) {
+      // 1. Prepend clones
+      currentCushionsList.forEach((cushionObj, idx) => {
+        const card = createCardElement(cushionObj, idx, true);
+        card.id = `narrative-card-clone-prev-${idx}`;
+        card.classList.add('clone-card');
+        narrativeTrack.appendChild(card);
+      });
+
+      // 2. Add original cards
+      currentCushionsList.forEach((cushionObj, idx) => {
         const card = createCardElement(cushionObj, idx, true);
         narrativeTrack.appendChild(card);
-      }
-    });
+      });
+
+      // 3. Append clones
+      currentCushionsList.forEach((cushionObj, idx) => {
+        const card = createCardElement(cushionObj, idx, true);
+        card.id = `narrative-card-clone-next-${idx}`;
+        card.classList.add('clone-card');
+        narrativeTrack.appendChild(card);
+      });
+
+      currentPositionIndex = N + activeCushionIndex;
+    }
 
     centerActiveCard(false);
   }
@@ -1068,6 +1130,8 @@
       if (activeCushionIndex > 0) {
         activeCushionIndex--;
         activeCushionName = currentCushionsList[activeCushionIndex].normalizedName;
+        const N = currentCushionsList.length;
+        currentPositionIndex = N + activeCushionIndex;
         centerActiveCard(true);
       }
     });
@@ -1075,6 +1139,8 @@
       if (activeCushionIndex < currentCushionsList.length - 1) {
         activeCushionIndex++;
         activeCushionName = currentCushionsList[activeCushionIndex].normalizedName;
+        const N = currentCushionsList.length;
+        currentPositionIndex = N + activeCushionIndex;
         centerActiveCard(true);
       }
     });
@@ -1084,17 +1150,19 @@
   const narrativeNext = document.querySelector('.narrative-next-btn');
   if (narrativePrev && narrativeNext) {
     narrativePrev.addEventListener('click', () => {
-      if (activeCushionIndex > 0) {
-        activeCushionIndex--;
-        activeCushionName = currentCushionsList[activeCushionIndex].normalizedName;
+      const N = currentCushionsList.length;
+      if (N === 0) return;
+      if (currentPositionIndex > 0) {
+        currentPositionIndex--;
         isUserInteracted = true;
         centerActiveCard(true);
       }
     });
     narrativeNext.addEventListener('click', () => {
-      if (activeCushionIndex < currentCushionsList.length - 1) {
-        activeCushionIndex++;
-        activeCushionName = currentCushionsList[activeCushionIndex].normalizedName;
+      const N = currentCushionsList.length;
+      if (N === 0) return;
+      if (currentPositionIndex < 3 * N - 1) {
+        currentPositionIndex++;
         isUserInteracted = true;
         centerActiveCard(true);
       }
@@ -1115,6 +1183,16 @@
     });
     narrativeContainer.addEventListener('mouseleave', () => {
       isHovered = false;
+    });
+  }
+
+  // Transitionend listener for loop repositioning
+  const narrativeTrack = document.querySelector('.narrative-carousel-track');
+  if (narrativeTrack) {
+    narrativeTrack.addEventListener('transitionend', (e) => {
+      if (e.propertyName === 'transform') {
+        handleLoopBoundary();
+      }
     });
   }
 
