@@ -67,7 +67,9 @@ html {
   scroll-behavior: smooth;
   background-color: var(--light);
   color: var(--ink);
-  font-size: 16px;
+  /* 100% (not a fixed 16px) so every rem-based font-size scales with the
+     visitor's browser font-size preference — the accessibility win. */
+  font-size: 100%;
   scrollbar-width: thin;
   scrollbar-color: var(--chamoisee) var(--dark-bg);
 }
@@ -124,7 +126,7 @@ video {
 
 .label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 300;
   letter-spacing: 5px;
   text-transform: uppercase;
@@ -144,7 +146,7 @@ video {
 }
 
 .body-p {
-  font-size: 17px;
+  font-size: 1.0625rem;
   line-height: 1.65;
   color: var(--muted);
   margin-bottom: 32px;
@@ -181,7 +183,7 @@ video {
 
 .loader-logo {
   font-family: var(--font-body);
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: 8px;
   color: var(--bone);
@@ -302,7 +304,7 @@ nav.light-nav .nav-dropdown-wrapper:hover .dropdown-toggle {
 .nav-link,
 .nav-link-sub {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 300;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -355,7 +357,7 @@ nav.light-nav .nav-dropdown-wrapper:hover .dropdown-toggle {
 
 .dropdown-chevron {
   display: inline-block;
-  font-size: 7px;
+  font-size: 0.4375rem;
   margin-left: 6px;
   transition: transform 0.3s ease;
   vertical-align: middle;
@@ -539,6 +541,11 @@ nav.light-nav .nav-dropdown {
   position: relative;
   max-width: 850px;
   width: 100%;
+  /* Grid items default to min-width:auto, so the cushion-carousel's intrinsic
+     width forced this 1fr track to ~800px and overflowed laptops (1025–1400px).
+     min-width:0 lets the track shrink to its fr share; the max-width above still
+     caps it on large screens. */
+  min-width: 0;
 }
 
 /* Narrative Panel Wood Selector and Selected Details Styles */
@@ -559,7 +566,7 @@ nav.light-nav .nav-dropdown {
 #config-panel .narrative-wood-selector .selector-label {
   color: var(--muted);
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-style: italic;
   letter-spacing: 0.5px;
   display: flex !important;
@@ -573,7 +580,7 @@ nav.light-nav .nav-dropdown {
   font-weight: 500;
   font-style: italic;
   text-transform: none;
-  font-size: 18px;
+  font-size: 1.125rem;
 }
 
 #config-panel .narrative-wood-selector .selected-cushion-label {
@@ -581,7 +588,7 @@ nav.light-nav .nav-dropdown {
   font-weight: 500;
   font-style: italic;
   text-transform: none;
-  font-size: 18px;
+  font-size: 1.125rem;
 }
 
 #config-panel .narrative-wood-selector .label-separator {
@@ -590,7 +597,7 @@ nav.light-nav .nav-dropdown {
   font-style: italic;
   font-weight: 400;
   margin: 0 6px;
-  font-size: 18px;
+  font-size: 1.125rem;
 }
 
 .narrative-wood-swatches .wood-swatch {
@@ -664,7 +671,7 @@ nav.light-nav .nav-dropdown {
 
 .hero-eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 300;
   letter-spacing: 8px;
   text-transform: uppercase;
@@ -731,7 +738,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .scroll-indicator span {
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 0.5625rem;
   letter-spacing: 4px;
   text-transform: uppercase;
   color: var(--chamoisee);
@@ -770,7 +777,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .panel-number {
   font-family: var(--font-display);
-  font-size: 120px;
+  font-size: 7.5rem;
   font-weight: 200;
   line-height: 1;
   color: rgba(162, 123, 92, 0.08);
@@ -807,7 +814,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .spec-label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 400;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -816,7 +823,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .spec-val {
   font-family: var(--font-display);
-  font-size: 17px;
+  font-size: 1.0625rem;
   color: var(--paper);
 }
 
@@ -839,7 +846,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .ticker-item {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 400;
   letter-spacing: 5px;
   text-transform: uppercase;
@@ -1017,7 +1024,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .view-collection-link {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -1076,7 +1083,7 @@ body:not(.secondary-landing-page) .hero-title {
   bottom: 14px; right: 14px;
   display: inline-flex; align-items: center; gap: 6px;
   font-family: var(--font-display);
-  font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  font-size: 0.625rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
   color: var(--ink);
   background: rgba(244,245,241,0.9);
   -webkit-backdrop-filter: blur(8px);
@@ -1096,7 +1103,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .gcard__cat {
   font-family: var(--font-display);
-  font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+  font-size: 0.625rem; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
   color: var(--chamoisee);
   margin-bottom: 8px;
 }
@@ -1104,7 +1111,7 @@ body:not(.secondary-landing-page) .hero-title {
 .gcard__name {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 21px;
+  font-size: 1.3125rem;
   letter-spacing: -0.02em;
   line-height: 1.15;
   color: var(--ink);
@@ -1120,7 +1127,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .gcard__price {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--muted);
   margin-top: 9px;
 }
@@ -1186,13 +1193,13 @@ body:not(.secondary-landing-page) .hero-title {
 .product-name {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: 18px;
+  font-size: 1.125rem;
   color: var(--chamoisee);
 }
 
 .product-materials {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--muted);
   line-height: 1.4;
 }
@@ -1231,7 +1238,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .product-price {
   font-family: var(--font-display);
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--chamoisee);
 }
@@ -1242,7 +1249,7 @@ body:not(.secondary-landing-page) .hero-title {
   border: 1px solid var(--chamoisee);
   color: var(--chamoisee);
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -1279,7 +1286,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .collections-subtext {
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.6;
   color: var(--muted);
   max-width: 680px;
@@ -1357,7 +1364,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .coll-card-eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -1367,7 +1374,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .coll-card-title {
   font-family: var(--font-display);
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 600;
   color: var(--ink);
   margin: 0;
@@ -1380,7 +1387,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .coll-card-desc {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.6;
   color: var(--muted);
   margin: 0;
@@ -1388,7 +1395,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .coll-card-tag {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 1.5px;
   text-transform: uppercase;
@@ -1432,7 +1439,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .story-intro {
   font-family: var(--font-display);
-  font-size: 20px;
+  font-size: 1.25rem;
   line-height: 1.6;
   font-weight: 300;
   color: var(--ink);
@@ -1442,7 +1449,7 @@ body:not(.secondary-landing-page) .hero-title {
 .materials-story-content .body-p {
   margin-bottom: 20px;
   color: var(--muted);
-  font-size: 15px;
+  font-size: 0.9375rem;
   line-height: 1.8;
 }
 
@@ -1457,7 +1464,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .materials-cta-btn {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -1534,7 +1541,7 @@ body:not(.secondary-landing-page) .hero-title {
   background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%);
   color: var(--paper);
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -1586,7 +1593,7 @@ body:not(.secondary-landing-page) .hero-title {
     opacity: 1;
     transform: translateY(0);
     background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
-    font-size: 10px;
+    font-size: 0.625rem;
     padding: 8px 12px;
   }
 }
@@ -1736,7 +1743,7 @@ body:not(.secondary-landing-page) .hero-title {
   position: relative;
   z-index: 3;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -1759,7 +1766,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .material-subtitle {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-style: italic;
   color: var(--chamoisee);
   margin-bottom: 24px;
@@ -1778,7 +1785,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .selector-label-small {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -1797,7 +1804,7 @@ body:not(.secondary-landing-page) .hero-title {
 
 .materials-pill {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 400;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -1847,7 +1854,7 @@ footer {
 
 .footer-cta-eyebrow {
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -1897,7 +1904,7 @@ footer {
 
 .footer-wordmark {
   font-family: var(--font-display);
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: 400;
   letter-spacing: -0.02em;
   color: var(--chamoisee);
@@ -1906,7 +1913,7 @@ footer {
 
 .footer-col__heading {
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 1px;
   color: var(--chamoisee);
@@ -1925,7 +1932,7 @@ footer {
 
 .footer-col__links a {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--muted);
   transition: color 0.2s;
   text-decoration: none;
@@ -1940,7 +1947,7 @@ footer {
   padding-top: 20px;
   border-top: var(--border-width, 1px) solid var(--line);
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 0.6875rem;
   color: var(--muted);
   opacity: 0.65;
   display: flex;
@@ -2189,7 +2196,7 @@ footer {
 
 .selector-label {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 500;
   color: var(--muted);
   letter-spacing: 1px;
@@ -2202,7 +2209,7 @@ footer {
 
 .wood-swatch {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -2331,7 +2338,7 @@ footer {
 
 .carousel-card-info {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -2368,7 +2375,7 @@ footer {
   text-align: center;
   margin-top: 40px;
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-style: italic;
   color: var(--chamoisee);
 }
@@ -2438,7 +2445,7 @@ footer {
   background-color: var(--chamoisee);
   color: var(--paper);
   font-family: var(--font-display);
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 700;
   width: 16px;
   height: 16px;
@@ -2513,7 +2520,7 @@ nav.light-nav .cart-btn:hover {
 .cart-title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 24px;
+  font-size: 1.5rem;
   letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--ink);
@@ -2555,7 +2562,7 @@ nav.light-nav .cart-btn:hover {
 
 .cart-empty-message {
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: 0.9375rem;
   color: var(--muted);
   opacity: 0.8;
   text-align: center;
@@ -2600,21 +2607,21 @@ nav.light-nav .cart-btn:hover {
 
 .cart-item-name {
   font-family: var(--font-display);
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 500;
   color: var(--ink);
 }
 
 .cart-item-variants {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--chamoisee);
   font-style: italic;
 }
 
 .cart-item-price {
   font-family: var(--font-display);
-  font-size: 15px;
+  font-size: 0.9375rem;
   color: var(--ink);
   margin-top: 4px;
 }
@@ -2645,7 +2652,7 @@ nav.light-nav .cart-btn:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 0.875rem;
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -2656,7 +2663,7 @@ nav.light-nav .cart-btn:hover {
 
 .qty-val {
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--ink);
   width: 30px;
   text-align: center;
@@ -2667,7 +2674,7 @@ nav.light-nav .cart-btn:hover {
   border: none;
   cursor: pointer;
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 0.6875rem;
   letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--muted);
@@ -2696,7 +2703,7 @@ nav.light-nav .cart-btn:hover {
 
 .subtotal-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 0.75rem;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--chamoisee);
@@ -2704,7 +2711,7 @@ nav.light-nav .cart-btn:hover {
 
 .subtotal-price {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 1.375rem;
   color: var(--ink);
 }
 
@@ -2714,7 +2721,7 @@ nav.light-nav .cart-btn:hover {
   color: var(--light);
   border: none;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -2775,7 +2782,7 @@ nav.light-nav .cart-btn:hover {
   color: var(--paper);
   border: none;
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -2799,7 +2806,7 @@ nav.light-nav .cart-btn:hover {
 
 .buy-now-helper {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 0.6875rem;
   color: var(--bone);
   opacity: 0.6;
   letter-spacing: 1px;
@@ -2807,7 +2814,7 @@ nav.light-nav .cart-btn:hover {
 
 .buy-now-scroll-indicator {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 0.6875rem;
   color: var(--bone);
   opacity: 0.45;
   letter-spacing: 1px;
@@ -2839,7 +2846,7 @@ nav.light-nav .cart-btn:hover {
   text-align: center;
   z-index: 100000;
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.5;
   letter-spacing: 0.5px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
@@ -2872,7 +2879,7 @@ nav.light-nav .cart-btn:hover {
   border: none;
   color: var(--paper);
   cursor: pointer;
-  font-size: 20px;
+  font-size: 1.25rem;
   line-height: 1;
   font-weight: 300;
   padding: 0 4px;
@@ -3069,7 +3076,7 @@ nav.light-nav .cart-btn:hover {
 
 .project_info_title {
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -3078,13 +3085,13 @@ nav.light-nav .cart-btn:hover {
 }
 
 .project_info_text {
-  font-size: 15px;
+  font-size: 0.9375rem;
   color: var(--deep-muted);
   line-height: 1.6;
 }
 
 .project_description {
-  font-size: 15px;
+  font-size: 0.9375rem;
   color: var(--deep-muted);
   line-height: 1.7;
 }
@@ -3109,7 +3116,7 @@ nav.light-nav .cart-btn:hover {
 }
 
 .project_text {
-  font-size: 15px;
+  font-size: 0.9375rem;
   line-height: 1.8;
   color: var(--muted);
 }
@@ -3187,7 +3194,7 @@ nav.light-nav .cart-btn:hover {
 .prev_title,
 .next_title {
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -3200,14 +3207,14 @@ nav.light-nav .cart-btn:hover {
 
 .prev_title::before {
   content: '←';
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 300;
   letter-spacing: 0;
 }
 
 .next_title::after {
   content: '→';
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 300;
   letter-spacing: 0;
 }
@@ -3263,7 +3270,7 @@ nav.light-nav .cart-btn:hover {
 /* Category */
 .card_text {
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 3px;
   text-transform: uppercase;
