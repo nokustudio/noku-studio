@@ -909,28 +909,37 @@
     `;
 
     card.addEventListener('click', (e) => {
+      console.log('Card click event triggered. isNarrative:', isNarrative, 'cushionObj:', cushionObj, 'selectedWood:', selectedWood);
       // If clicking cart icon, let the cart handler handle it
       if (e.target.closest('.add-to-cart-icon')) {
+        console.log('Cart icon clicked inside card.');
         const woodNameMap = {
           'teak': 'Teak',
           'reclaimed-teak': 'Reclaimed Teak',
           'white-ash': 'White Ash'
         };
         const currentWoodName = woodNameMap[selectedWood] || 'Teak';
+        console.log('Calling addItemToCart with:', 'Barstool', currentWoodName, cushionObj.name);
         if (typeof window.addItemToCart === 'function') {
           window.addItemToCart('Barstool', currentWoodName, cushionObj.name, cushionObj.image || imgPath);
+        } else {
+          console.warn('window.addItemToCart is not a function.');
         }
         return;
       }
       
       if (isNarrative) {
-        window.location.href = `product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushionObj.normalizedName}`;
+        const destUrl = `product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushionObj.normalizedName}`;
+        console.log('Redirecting in narrative mode to:', destUrl);
+        window.location.href = destUrl;
         return;
       }
       
       if (card.classList.contains('highlighted')) {
         // Double-click/second-click on active card -> go to detail page with variant selected
-        window.location.href = `product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushionObj.normalizedName}`;
+        const destUrl = `product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushionObj.normalizedName}`;
+        console.log('Redirecting in highlighted mode to:', destUrl);
+        window.location.href = destUrl;
         return;
       }
       

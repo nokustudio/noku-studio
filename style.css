@@ -111,7 +111,9 @@ video {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 40px;
+  /* Fluid gutter: 40px on desktop, easing to 20px on small phones so content
+     isn't squeezed by a fixed 80px of side padding on a 320–375px screen. */
+  padding: 0 clamp(20px, 5vw, 40px);
   position: relative;
   width: 100%;
 }
@@ -487,7 +489,9 @@ nav.light-nav .nav-dropdown {
   min-height: 100vh;
   display: flex;
   align-items: center;
-  padding: 100px 60px;
+  /* Horizontal padding eases down on narrow screens so hero/story copy keeps
+     usable width on mobile; vertical rhythm unchanged. */
+  padding: 100px clamp(24px, 5vw, 60px);
 }
 
 @media (min-width: 1025px) {
