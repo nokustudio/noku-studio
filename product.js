@@ -468,12 +468,12 @@ const FALLBACK_PRODUCTS_DB = {
 // Fallback local registry if window.NokuMaterials or global is not active
 const LOCAL_MATERIALS_REGISTRY = {
   wood: [
-    { id: "teak", name: "Teak", subtitle: "Tectona grandis", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7bdd608f15ab8b132e_6684d13be6fded236edf434c_66784913da68c8264ab3b661_Reclaimed%252520Teak.png", desc: "Renowned for its rich golden to medium brown hues that deepen with age, teak's straight grain and coarse texture exude timeless elegance. Naturally resistant to water, rot, and pests." },
+    { id: "teak", name: "Teak", subtitle: "Tectona grandis", preview: "Resources/material images/Wood/Teak.png", desc: "Renowned for its rich golden to medium brown hues that deepen with age, teak's straight grain and coarse texture exude timeless elegance. Naturally resistant to water, rot, and pests." },
     { id: "honne", name: "Honne", subtitle: "Intsia bijuga", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7bd362cf5fcc6f199f_6684d13a007aa9790384b31a_667849249a616f8ae8e17198_Honne.png", desc: "Characterized by rich, golden to reddish-brown color, which deepens over time, adding warmth and character. Notably resistant to decay, termites, and fungal attacks." },
     { id: "matti", name: "Matti", subtitle: "Terminalia elliptica", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7bfe70716c8309c5ce_6684d13a9c12b76d06f85c52_667849369e20be0b462e46bc_Bhilwara.png", desc: "Also known as Indian Laurel, this hardwood ranges in colour from deep brown to almost black, with a grain reminiscent of walnut. Dense and heavy, offering exceptional strength." },
     { id: "pinewood", name: "Pinewood", subtitle: "Pinus spp", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7b5e5a5bcc3b3b458a_67c94441373cbaa21b613a32_Pine%2520wood%2520texture.jpeg", desc: "A pale yellow to light brown softwood with a straight to slightly wavy grain and medium-to-coarse texture. Easy to work with and sturdy, ideal for fine joinery." },
     { id: "white-ash", name: "White Ash", subtitle: "Fraxinus americana", preview: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/White_Ash_Crown.jpg", desc: "A strong, durable hardwood with a prominent open grain and light cream color. Offers modern aesthetics with organic grain texture." },
-    { id: "reclaimed-teak", name: "Reclaimed Teak", subtitle: "Recycled Tectona grandis", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7bdd608f15ab8b132e_6684d13be6fded236edf434c_66784913da68c8264ab3b661_Reclaimed%252520Teak.png", desc: "Beautiful aged teak salvaged from vintage structures. Offers deep patina, character marks, and exceptional stability." }
+    { id: "reclaimed-teak", name: "Reclaimed Teak", subtitle: "Recycled Tectona grandis", preview: "Resources/material images/Wood/Reclaimed teak.jpg", desc: "Beautiful aged teak salvaged from vintage structures. Offers deep patina, character marks, and exceptional stability." }
   ],
   leather: [
     { id: "glory-honey", name: "Glory Honey", subtitle: "Premium Hide", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/66cec28e6c0a94cedbd36d0a_Glory%20Honey.jpeg", desc: "A celebration of nature's glorious irregularities. This naked hide becomes your lifelong canvas, absorbing every encounter and moulding by each touch." },
@@ -513,13 +513,26 @@ function findMaterialDetails(optValue) {
     .replace(/^leather\s*-\s*/, '')
     .replace(/[^a-z0-9]/g, '');
 
-  for (const cat of ['wood', 'leather', 'fabric', 'cane', 'metals']) {
-    const list = LOCAL_MATERIALS_REGISTRY[cat];
-    for (const item of list) {
+  const cats = ['wood', 'leather', 'fabric', 'cane', 'metals'];
+
+  // Pass 1 — exact id/name match. Runs first so a specific value like
+  // "Reclaimed Teak" resolves to its own entry instead of being swallowed by a
+  // shorter substring match ("teak"), which used to show the wrong swatch image.
+  for (const cat of cats) {
+    for (const item of LOCAL_MATERIALS_REGISTRY[cat]) {
       const normId = item.id.toLowerCase().replace(/[^a-z0-9]/g, '');
       const normName = item.name.toLowerCase().replace(/[^a-z0-9]/g, '');
-      
-      if (cleanVal === normId || cleanVal === normName || normName.includes(cleanVal) || cleanVal.includes(normName)) {
+      if (cleanVal === normId || cleanVal === normName) {
+        return { ...item, category: cat };
+      }
+    }
+  }
+
+  // Pass 2 — fuzzy contains fallback for partial / variant labels.
+  for (const cat of cats) {
+    for (const item of LOCAL_MATERIALS_REGISTRY[cat]) {
+      const normName = item.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (normName && (normName.includes(cleanVal) || cleanVal.includes(normName))) {
         return { ...item, category: cat };
       }
     }
