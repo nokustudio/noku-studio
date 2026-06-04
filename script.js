@@ -762,6 +762,28 @@
   let activeCushionIndex = 4; // default linen index (updated dynamically)
   let activeCushionName = 'linen';
   let currentCushionsList = [];
+  let autoRotateInterval = null;
+  let isUserInteracted = false;
+  let isHovered = false;
+
+  function startAutoRotate() {
+    if (autoRotateInterval) clearInterval(autoRotateInterval);
+    autoRotateInterval = setInterval(() => {
+      if (isUserInteracted || isHovered) return;
+      if (currentCushionsList.length > 0) {
+        activeCushionIndex = (activeCushionIndex + 1) % currentCushionsList.length;
+        activeCushionName = currentCushionsList[activeCushionIndex].normalizedName;
+        centerActiveCard(true);
+      }
+    }, 3500);
+  }
+
+  function stopAutoRotate() {
+    if (autoRotateInterval) {
+      clearInterval(autoRotateInterval);
+      autoRotateInterval = null;
+    }
+  }
 
   function cleanCushionDisplayName(name) {
     return name
@@ -893,6 +915,7 @@
       }
       activeCushionName = cushionObj.normalizedName;
       activeCushionIndex = idx;
+      isUserInteracted = true;
       centerActiveCard(true);
     });
 
@@ -1026,6 +1049,7 @@
       selectedWood = swatch.dataset.wood;
       selectedPrefix = swatch.dataset.prefix;
       selectedFolder = swatch.dataset.folder;
+      isUserInteracted = true;
 
       renderCarousel();
     });
@@ -1058,6 +1082,7 @@
       if (activeCushionIndex > 0) {
         activeCushionIndex--;
         activeCushionName = currentCushionsList[activeCushionIndex].normalizedName;
+        isUserInteracted = true;
         centerActiveCard(true);
       }
     });
@@ -1065,6 +1090,7 @@
       if (activeCushionIndex < currentCushionsList.length - 1) {
         activeCushionIndex++;
         activeCushionName = currentCushionsList[activeCushionIndex].normalizedName;
+        isUserInteracted = true;
         centerActiveCard(true);
       }
     });
@@ -1076,8 +1102,20 @@
     renderCarousel();
   });
 
+  // Setup mouse enter / leave for auto-rotation
+  const narrativeContainer = document.querySelector('.narrative-carousel-track-container');
+  if (narrativeContainer) {
+    narrativeContainer.addEventListener('mouseenter', () => {
+      isHovered = true;
+    });
+    narrativeContainer.addEventListener('mouseleave', () => {
+      isHovered = false;
+    });
+  }
+
   // Initial carousel render
   renderCarousel();
+  startAutoRotate();
 
   // ─── PARALLAX MAPPED SCATTER IMAGES IN QUOTE SECTION ───
   (function () {

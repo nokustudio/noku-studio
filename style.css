@@ -503,12 +503,15 @@ nav.light-nav .nav-dropdown {
     align-items: center;
     box-sizing: border-box;
     padding: 0 60px;
+    max-width: 1400px;
+    grid-template-columns: 420px 1fr;
+    gap: 80px;
   }
 }
 
 .default-variant-card-wrap {
   width: 100%;
-  max-width: 420px;
+  max-width: 800px;
   margin: 0 auto;
   opacity: 0;
   pointer-events: none !important;
@@ -528,6 +531,47 @@ nav.light-nav .nav-dropdown {
   justify-content: center;
   align-items: center;
   position: relative;
+  max-width: 850px;
+  width: 100%;
+}
+
+/* Narrative Panel Wood Selector and Selected Details Styles */
+.narrative-wood-selector {
+  margin-top: 32px;
+  margin-bottom: 16px;
+  justify-content: flex-start;
+}
+
+.narrative-wood-selector .selector-label {
+  color: var(--bone);
+  opacity: 0.8;
+}
+
+.narrative-wood-swatches .wood-swatch {
+  color: var(--bone);
+  border-color: rgba(244, 245, 241, 0.25);
+}
+
+.narrative-wood-swatches .wood-swatch:hover,
+.narrative-wood-swatches .wood-swatch.active {
+  background-color: var(--bone);
+  color: var(--dark-bg);
+  border-color: var(--bone);
+}
+
+.narrative-selected-details {
+  margin-top: 0;
+  margin-bottom: 36px;
+  text-align: left;
+  font-size: 16px;
+}
+
+.narrative-selected-details .selected-wood-label {
+  color: var(--bone);
+}
+
+.narrative-selected-details .selected-cushion-label {
+  color: var(--chamoisee);
 }
 
 .model-frame-rect {

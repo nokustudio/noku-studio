@@ -172,6 +172,22 @@
             Select to explore finishes and cushion variants. Tailor the barstool to fit the voice
             of your home.
           </p>
+
+          <!-- Wood Finish Swatch Selector in Narrative Grid -->
+          <div class="wood-selector narrative-wood-selector reveal-el is-revealed">
+            <span class="selector-label">Solid Wood Finish:</span>
+            <div class="wood-swatches narrative-wood-swatches">
+              <button class="wood-swatch active" data-wood="teak" data-prefix="t" data-folder="Teak">Teak</button>
+              <button class="wood-swatch" data-wood="reclaimed-teak" data-prefix="rt" data-folder="Reclaimed teak">Reclaimed Teak</button>
+              <button class="wood-swatch" data-wood="white-ash" data-prefix="wha" data-folder="White ash">White Ash</button>
+            </div>
+          </div>
+
+          <!-- Customization Status Display in Narrative Grid -->
+          <div class="selected-details narrative-selected-details reveal-el is-revealed">
+            <span class="selected-wood-label">Teak</span> + <span class="selected-cushion-label">Linen Cushion</span>
+          </div>
+
           <div class="buy-now-wrapper">
             <button id="buy-now-btn" class="buy-now-btn">Buy Now</button>
             <span class="buy-now-helper">(scroll down)</span>
@@ -205,49 +221,6 @@
       </div>
     </section>
   </div>
-
-  <!-- ════════ INTERACTIVE VARIANTS CONFIGURATOR ════════ -->
-  <section class="variants-section section-pad" id="configurator">
-    <div class="variants-bg"></div>
-    <div class="container">
-      <!-- Horizontal Carousel -->
-      <div class="carousel-outer-wrap reveal-el">
-        <button class="carousel-nav-btn prev-btn" aria-label="Previous Cushion">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
-        </button>
-        <div class="carousel-track-container">
-          <div class="carousel-track">
-            <!-- Dynamically populated carousel cards -->
-          </div>
-        </div>
-        <button class="carousel-nav-btn next-btn" aria-label="Next Cushion">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </button>
-      </div>
-
-      <!-- Wood Finish Swatch Selector -->
-      <div class="wood-selector reveal-el">
-        <span class="selector-label">Solid Wood Finish:</span>
-        <div class="wood-swatches">
-          <button class="wood-swatch active" data-wood="teak" data-prefix="t" data-folder="Teak">Teak</button>
-          <button class="wood-swatch" data-wood="reclaimed-teak" data-prefix="rt" data-folder="Reclaimed teak">Reclaimed
-            Teak</button>
-          <button class="wood-swatch" data-wood="white-ash" data-prefix="wha" data-folder="White ash">White Ash</button>
-        </div>
-      </div>
-
-      <!-- Customization Status Display -->
-      <div class="selected-details reveal-el">
-        <span class="selected-wood-label">Teak</span> + <span class="selected-cushion-label">Linen Cushion</span>
-      </div>
-    </div>
-  </section>
 
   <!-- ════════ PHILOSOPHY QUOTE & SCATTER IMAGES (MIMIC) ════════ -->
   <section class="quote_wrap">
