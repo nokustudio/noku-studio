@@ -423,41 +423,43 @@ nav.light-nav .nav-dropdown {
 
 /* Responsive Dropdown overrides for mobile drawer layout */
 @media (max-width: 768px) {
+  /* Flatten the "Menu" dropdown into the mobile list: drop the group label and
+     surface Materials / Sustainability / About / Contact as plain top-level
+     items, so the drawer is a single flat list of every page. */
+  .nav-dropdown-wrapper .dropdown-toggle {
+    display: none !important;
+  }
+
   .nav-dropdown {
     position: static !important;
     transform: none !important;
     box-shadow: none !important;
     border: none !important;
-    padding: 10px 0 0 16px !important;
+    padding: 0 !important;
+    margin: 0 !important;
     display: flex !important;
     flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 12px !important;
+    align-items: center !important; /* match the centered main drawer items */
+    gap: 20px !important; /* match the .nav-links drawer gap */
     opacity: 1 !important;
     visibility: visible !important;
     pointer-events: auto !important;
     background: transparent !important;
     width: auto !important;
   }
-  
-  .dropdown-toggle {
-    pointer-events: none; /* Acts as static category label on mobile */
-  }
-  
+
   .dropdown-chevron {
     display: none !important;
   }
-  
+
+  /* Sub-links now read identically to the main top-level links in the drawer */
+  .nav-link-sub,
   nav.light-nav .nav-link-sub {
-    color: var(--muted) !important;
-  }
-  
-  .nav-link-sub {
-    color: var(--muted) !important;
+    color: var(--ink) !important;
     display: block !important;
-    padding: 6px 0 !important;
+    padding: 0 !important;
   }
-  
+
   .nav-link-sub:hover {
     color: var(--chamoisee) !important;
   }
@@ -2089,12 +2091,63 @@ footer {
     /* Simplify on tablets */
   }
 
-  /* Must carry the #config-panel id to outrank the base
-     `#config-panel .empty-col { display: flex }` rule — without it this hide
-     never applies, leaving the ~800px cushion-carousel column to overflow the
-     viewport on tablets (horizontal scroll). */
+  /* ── Config panel (mobile): surface the cushion carousel ABOVE the wood
+     selector + Buy Now (instead of hiding it). The two columns are dissolved
+     with display:contents so every piece reflows into one ordered column:
+     03 → eyebrow → title → carousel → wood selector → Buy Now. ── */
+  #config-panel .narrative-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  #config-panel .narrative-col,
   #config-panel .narrative-col.empty-col {
-    display: none;
+    display: contents;
+  }
+  #config-panel .model-frame-rect {
+    display: none !important;
+  }
+  #config-panel .default-variant-card-wrap {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    width: 100%;
+    max-width: 420px;
+    min-width: 0;
+    margin: 0 auto;
+  }
+  #config-panel .panel-number              { order: 1; }
+  #config-panel .label                     { order: 2; }
+  #config-panel .title-h2                  { order: 3; }
+  #config-panel .default-variant-card-wrap { order: 4; }
+  #config-panel .narrative-wood-selector   { order: 5; }
+  #config-panel .buy-now-wrapper           { order: 6; margin-top: 8px; }
+  /* carousel fits mobile width, leaving room for the nav arrows */
+  #config-panel .narrative-carousel-wrap {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 0 48px;
+  }
+  #config-panel .narrative-carousel-track-container {
+    min-width: 0;
+  }
+
+  /* Mobile: let the user drag-rotate the hero model. Horizontal drags spin it;
+     touch-action: pan-y keeps vertical swipes scrolling the page. */
+  #three-container {
+    pointer-events: auto;
+    touch-action: pan-y;
+  }
+
+  /* The 3D model now lives only in the hero, so the story/specs/config panels
+     no longer need a full-viewport height to make room for it — size them to
+     content for a tighter mobile flow. The hero keeps its 100vh stage. */
+  .narrative-panel:not(.narrative-hero) {
+    min-height: auto;
+    padding-top: 72px;
+    padding-bottom: 72px;
   }
 
   .narrative-grid {

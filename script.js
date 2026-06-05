@@ -272,6 +272,34 @@
     mouseY = (e.clientY / window.innerHeight) - 0.5;
   });
 
+  // ─── Mobile: drag to rotate the model (touch/pointer) ───
+  // On ≤1024 the model is pinned in the hero (no scroll-driven motion); the user
+  // spins it horizontally instead. touch-action: pan-y (set in CSS) lets vertical
+  // swipes scroll the page while horizontal drags rotate the barstool.
+  const MOBILE_BP = 1024;
+  let dragRotY = 0;        // accumulated user rotation (radians)
+  let isDragging = false;
+  let dragStartX = 0;
+  let dragStartRot = 0;
+
+  function onDragStart(clientX) {
+    if (window.innerWidth > MOBILE_BP) return;
+    isDragging = true;
+    dragStartX = clientX;
+    dragStartRot = dragRotY;
+  }
+  function onDragMove(clientX) {
+    if (!isDragging) return;
+    const dx = clientX - dragStartX;
+    dragRotY = dragStartRot + dx * 0.01; // ~ a full turn per ~630px of drag
+  }
+  function onDragEnd() { isDragging = false; }
+
+  container.addEventListener('pointerdown', (e) => onDragStart(e.clientX), { passive: true });
+  window.addEventListener('pointermove', (e) => onDragMove(e.clientX), { passive: true });
+  window.addEventListener('pointerup', onDragEnd, { passive: true });
+  window.addEventListener('pointercancel', onDragEnd, { passive: true });
+
   function getUnscaledRect(el) {
     let top = 0;
     let left = 0;
@@ -370,6 +398,31 @@
         container.style.position = 'fixed';
         container.style.top = '0px';
       }
+    }
+
+    // ── Mobile (≤1024): the model lives in the hero ONLY. Pin it at a fixed
+    //    transform and fade it out as the hero scrolls away, so it never drifts
+    //    over the story / specs / config text. Rotation comes from drag, not
+    //    scroll (see onDragMove). This bypasses all the desktop morph math. ──
+    if (window.innerWidth <= MOBILE_BP) {
+      const fadeStart = viewportHeight * 0.45;
+      const fadeEnd = viewportHeight * 0.85;
+      const op = scrollY <= fadeStart ? 1
+               : scrollY >= fadeEnd ? 0
+               : 1 - (scrollY - fadeStart) / (fadeEnd - fadeStart);
+
+      targetPosX = 0;
+      targetPosY = -0.70;   // hero resting position
+      targetScale = 0.72;
+      targetRotY = 0;       // base orientation; drag adds on top in animate()
+      targetOpacity = op;
+
+      const visible = scrollY < fadeEnd;
+      if (visible !== isThreeCanvasVisible) {
+        container.style.visibility = visible ? 'visible' : 'hidden';
+        isThreeCanvasVisible = visible;
+      }
+      return;
     }
 
     // Early return if scrolled past the configurator section to avoid unnecessary layout/projection math
@@ -607,8 +660,10 @@
       updateMergeTransition();
 
       // Apply rotation only to the barstool pivot group, leaving shadowPlane horizontal!
-      barstoolPivot.rotation.y = currentRotY + mouseX * 0.2;
-      barstoolPivot.rotation.x = mouseY * 0.1;
+      // Mobile: user drag spins it. Desktop: subtle mouse-parallax tilt.
+      const onMobile = window.innerWidth <= MOBILE_BP;
+      barstoolPivot.rotation.y = currentRotY + (onMobile ? dragRotY : mouseX * 0.2);
+      barstoolPivot.rotation.x = onMobile ? 0 : mouseY * 0.1;
 
       modelGroup.position.x = currentPosX;
 
