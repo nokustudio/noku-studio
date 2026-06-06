@@ -4,14 +4,155 @@ import os
 
 def run_command(cmd):
     try:
-        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
-        return result.stdout.strip(), None
+        result = subprocess.run(
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            text=True, encoding='utf-8', errors='replace', check=True
+        )
+        return (result.stdout or '').strip(), None
     except subprocess.CalledProcessError as e:
-        return None, e.stderr.strip() or e.stdout.strip() or str(e)
+        stderr = (e.stderr or '').strip()
+        stdout = (e.stdout or '').strip()
+        return None, stderr or stdout or str(e)
+    except Exception as e:
+        return None, str(e)
 
 def get_current_branch():
     out, err = run_command(['git', 'rev-parse', '--abbrev-ref', 'HEAD'])
     return out if out else 'main'
+
+def generate_commit_message():
+    import re
+    # 1. Run git status to see what's changed
+    status_out, _ = run_command(['git', 'status', '--short'])
+    if not status_out:
+        return "chore: clean working tree"
+
+    modified = []
+    added = []
+    deleted = []
+    all_files = []
+
+    for line in status_out.splitlines():
+        if not line.strip():
+            continue
+        # Format of git status --short: XY path
+        status_code = line[:2]
+        filepath = line[2:].strip().strip('"\'')
+        
+        all_files.append(filepath)
+        if 'M' in status_code:
+            modified.append(filepath)
+        elif 'A' in status_code or '??' in status_code:
+            added.append(filepath)
+        elif 'D' in status_code:
+            deleted.append(filepath)
+
+    # 2. Get the diff against HEAD to analyze content changes
+    diff_out, diff_err = run_command(['git', 'diff', 'HEAD'])
+    if not diff_out:
+        # Fallback to unstaged diff if HEAD is identical
+        diff_out, _ = run_command(['git', 'diff'])
+    
+    # Truncate very large diffs to avoid performance issues
+    diff_text = diff_out if diff_out else ""
+    if len(diff_text) > 50000:
+        diff_text = diff_text[:50000]
+    diff_lower = diff_text.lower()
+
+    # 3. Analyze keywords in the diff
+    detected_keywords = []
+    inferred_types = []
+
+    # Map of substring pattern -> (keyword description, commit type)
+    patterns = [
+        (r'mobile-menu-toggle', 'mobile menu toggle', 'refactor'),
+        (r'mobile-filter-toggle', 'mobile catalog filters', 'feat'),
+        (r'catalog-sidebar', 'catalog sidebar dropdown', 'feat'),
+        (r'dimensions-option-group', 'dimensions layout', 'style'),
+        (r'slider-arrow|prev-image-btn|next-image-btn', 'product gallery navigation', 'fix'),
+        (r'inquiry-modal|btn-inquire|inquire', 'inquiry modal popup', 'feat'),
+        (r'zoho', 'zoho form integration', 'feat'),
+        (r'carousel-card|featured-carousel', 'carousel safety margin', 'style'),
+        (r'git_push\.py', 'git push utility commit naming', 'chore'),
+        (r'@media.*768px', 'mobile responsive layout', 'style'),
+        (r'height|padding|margin|gap|aspect-ratio', 'layout spacing overrides', 'style'),
+        (r'box-shadow|border|color', 'style decoration overrides', 'style'),
+        (r'remove|cleanup|duplicate|delete|clean', 'code cleanup', 'refactor'),
+        (r'bug|fix|error|resolve|issue', 'bugfix', 'fix'),
+    ]
+
+    for pattern, desc, c_type in patterns:
+        if re.search(pattern, diff_lower):
+            detected_keywords.append(desc)
+            inferred_types.append(c_type)
+
+    # Map of file path/extensions to commit types & descriptions
+    file_map = {
+        '.css': ('style', 'styles'),
+        '.js': ('feat', 'script logic'),
+        '.html': ('feat', 'page structure'),
+        '.md': ('docs', 'documentation'),
+        '.py': ('chore', 'script utility'),
+    }
+
+    # If no keywords matched in diff, analyze the files themselves
+    file_descs = []
+    file_types = []
+    for filepath in all_files:
+        ext = os.path.splitext(filepath)[1]
+        basename = os.path.basename(filepath)
+        
+        # Specific file matches
+        if basename == 'git_push.py':
+            file_types.append('chore')
+            file_descs.append('git push naming logic')
+        elif basename in ['walkthrough.md', 'task.md', 'implementation_plan.md']:
+            file_types.append('docs')
+            file_descs.append(basename.replace('.md', ''))
+        elif ext in file_map:
+            t, d = file_map[ext]
+            file_types.append(t)
+            file_descs.append(os.path.splitext(basename)[0] + ' ' + d)
+        else:
+            file_types.append('chore')
+            file_descs.append(basename)
+
+    # Determine commit type based on hierarchy:
+    # fix > feat > refactor > style > docs > chore
+    type_priority = ['fix', 'feat', 'refactor', 'style', 'docs', 'chore']
+    
+    resolved_type = 'chore'
+    all_inferred_types = inferred_types + file_types
+    for t in type_priority:
+        if t in all_inferred_types:
+            resolved_type = t
+            break
+
+    # Determine description:
+    # Use keywords if detected, otherwise file descriptions
+    if detected_keywords:
+        # Remove duplicates while preserving order
+        seen = set()
+        unique_kws = [x for x in detected_keywords if not (x in seen or seen.add(x))]
+        description = "update " + ", ".join(unique_kws[:2])
+    elif file_descs:
+        seen = set()
+        unique_files = [x for x in file_descs if not (x in seen or seen.add(x))]
+        description = "modify " + ", ".join(unique_files[:2])
+    else:
+        description = "update changes"
+
+    # If a specific file delete is staged, reflect that
+    if deleted and not modified and not added:
+        resolved_type = 'chore'
+        description = f"remove {os.path.basename(deleted[0])}"
+
+    # Clean description (max length and trim)
+    commit_msg = f"{resolved_type}: {description}"
+    if len(commit_msg) > 65:
+        commit_msg = commit_msg[:62] + "..."
+        
+    return commit_msg
 
 def main():
     print('\n--- Git Push Utility (Python) ---')
@@ -40,7 +181,7 @@ def main():
     print("----------------------------------------")
 
     # 2. Get Commit Message
-    default_msg = "refactor: optimize layout and compress video loop"
+    default_msg = generate_commit_message()
     msg = input(f"\nEnter commit message [{default_msg}]: ").strip()
     commit_msg = msg if msg else default_msg
 
