@@ -1795,7 +1795,7 @@ async function loadRelatedProducts() {
         <div class="gcard__media-inner">
           <img src="${imgUrl}" alt="${p.title}" loading="lazy">
         </div>
-        <button class="gcard__add" data-handle="${p.handle}">Details ↗</button>
+        <button class="gcard__add" data-handle="${p.handle}">Details <svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></button>
       </div>
       <p class="gcard__cat">${materialsStr}</p>
       <h3 class="gcard__name">${p.title}</h3>

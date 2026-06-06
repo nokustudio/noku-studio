@@ -1256,7 +1256,7 @@ async function renderCollectionProducts(collectionHandle, gridId) {
         <button class="gcard__add gcard__inquire" 
                 data-handle="${p.handle}"
                 aria-label="Inquire about ${p.title}">
-          Inquire ↗
+          Inquire <svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg>
         </button>
         ` : `
         <button class="gcard__add" 
@@ -1267,7 +1267,7 @@ async function renderCollectionProducts(collectionHandle, gridId) {
                 data-image="${imageUrl}"
                 data-materials="${displayMaterial}"
                 aria-label="Add ${p.title} to Cart">
-          Add ↗
+          Add <svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg>
         </button>
         `}
       </div>

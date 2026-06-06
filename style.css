@@ -1967,6 +1967,16 @@ footer {
   transform: translate(4px, -4px);
 }
 
+/* Inline SVG arrow used in place of the ↗ glyph (which renders as a colour
+   emoji on mobile). Sizes to the current font so it drops into any button. */
+.ico-arrow {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
 .footer-grid {
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1fr;
@@ -2335,7 +2345,7 @@ footer {
   }
 
   .swatches-block {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .footer-grid {

@@ -86,5 +86,22 @@
     mobileToggle.addEventListener('click', function () {
       navLinks.classList.toggle('active');
     });
+
+    // Close the open drawer when tapping anywhere outside it (but not on the
+    // toggle, which manages its own open/close).
+    document.addEventListener('click', function (e) {
+      if (navLinks.classList.contains('active') &&
+          !navLinks.contains(e.target) &&
+          !mobileToggle.contains(e.target)) {
+        navLinks.classList.remove('active');
+      }
+    });
+
+    // Close after picking a destination from the drawer.
+    navLinks.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        navLinks.classList.remove('active');
+      });
+    });
   }
 })();

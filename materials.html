@@ -379,6 +379,25 @@
         margin-bottom: 4px !important;
       }
     }
+
+    @media (max-width: 480px) {
+      .materials-browser-3col-grid {
+        display: flex !important;
+        flex-direction: column !important;
+      }
+      .detail-card-col {
+        order: 1 !important;
+      }
+      .swatches-grid-col {
+        order: 2 !important;
+      }
+      .used-pieces-col {
+        order: 3 !important;
+      }
+      .swatches-block {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
   </style>
 </head>
 
@@ -694,7 +713,7 @@
     <div class="container">
       <div class="footer-cta-line">
         <p class="footer-cta-eyebrow">Ready to</p>
-        <a href="contact.html" class="btn-cta-arrow">Craft your furniture?<span class="arrow">↗</span></a>
+        <a href="contact.html" class="btn-cta-arrow">Craft your furniture?<span class="arrow"><svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span></a>
       </div>
       <div class="footer-grid">
         <div>
