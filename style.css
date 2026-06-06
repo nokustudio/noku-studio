@@ -1356,7 +1356,8 @@ body:not(.secondary-landing-page) .hero-title {
 
 @media (max-width: 768px) {
   .coll-card-img-wrap {
-    height: 280px;
+    height: auto;
+    aspect-ratio: 2 / 2.5; /* portrait, matching the product cards */
   }
 }
 
@@ -2137,6 +2138,12 @@ footer {
     justify-content: center !important;
     text-align: center !important;
   }
+  #config-panel .narrative-wood-swatches .wood-swatch {
+    padding: 6px 12px;
+    font-size: 0.5625rem;
+    letter-spacing: 1.5px;
+    border-radius: 4px;
+  }
   #config-panel .buy-now-wrapper {
     order: 6;
     margin: 8px auto 0 auto;
@@ -2148,7 +2155,7 @@ footer {
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    padding: 0 36px;
+    padding: 0 58px;
   }
   #config-panel .narrative-carousel-wrap .carousel-nav-btn {
     width: 38px;
@@ -2203,8 +2210,14 @@ footer {
     width: 16px;
     height: 16px;
   }
+  .featured-carousel-nav-btn.prev-btn {
+    left: 16px;
+  }
+  .featured-carousel-nav-btn.next-btn {
+    right: 16px;
+  }
   .featured-carousel-outer-wrap {
-    padding: 0 48px;
+    padding: 0 70px;
   }
 }
 
@@ -2271,7 +2284,8 @@ footer {
   }
 
   .footer-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr; /* keep two columns on the smallest phones */
+    gap: 28px 24px;
   }
 
   .section-pad {
@@ -2392,11 +2406,11 @@ footer {
 }
 
 .prev-btn {
-  left: -25px;
+  left: -60px;
 }
 
 .next-btn {
-  right: -25px;
+  right: -60px;
 }
 
 .carousel-track-container {
@@ -3593,7 +3607,7 @@ nav.light-nav .cart-btn:hover {
 
 @media (max-width: 768px) {
   .featured-carousel-outer-wrap {
-    padding: 0 36px;
+    padding: 0 56px;
   }
 
   .featured-carousel-track .product-card {
@@ -3602,11 +3616,11 @@ nav.light-nav .cart-btn:hover {
   }
 
   .featured-carousel-nav-btn.prev-btn {
-    left: 5px;
+    left: 6px;
   }
 
   .featured-carousel-nav-btn.next-btn {
-    right: 5px;
+    right: 6px;
   }
 }
 
