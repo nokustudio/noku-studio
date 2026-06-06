@@ -693,6 +693,11 @@ nav.light-nav .nav-dropdown {
   letter-spacing: 8px;
   text-transform: uppercase;
   color: var(--chamoisee);
+  /* Two stacked rows ("Collection 01" / "Of Stillness") with token spacing. */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
   margin-bottom: clamp(12px, 2vh, 20px);
   opacity: 0;
   transform: translateY(20px);
@@ -2113,7 +2118,7 @@ footer {
     visibility: visible !important;
     pointer-events: auto !important;
     width: 100%;
-    max-width: 420px;
+    max-width: 500px;
     min-width: 0;
     margin: 0 auto;
   }
@@ -2143,7 +2148,7 @@ footer {
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    padding: 0 48px;
+    padding: 0 36px;
   }
   #config-panel .narrative-carousel-wrap .carousel-nav-btn {
     width: 38px;
@@ -2163,24 +2168,43 @@ footer {
     min-width: 0;
   }
 
-  /* Mobile: let the user drag-rotate the hero model. Horizontal drags spin it;
-     touch-action: pan-y keeps vertical swipes scrolling the page. */
+  /* Mobile: the model sits in a top-anchored container that scrolls away with
+     the hero (absolute, not fixed) and never overlaps the narrative grid.
+     Horizontal drags spin it; touch-action: pan-y keeps vertical swipes
+     scrolling the page. */
   #three-container {
+    position: absolute;
+    overflow: hidden; /* clip the canvas (sized to window incl. scrollbar) so it
+                         doesn't add horizontal scroll now that it's absolute */
     pointer-events: auto;
     touch-action: pan-y;
   }
 
   /* The 3D model now lives only in the hero, so the story/specs/config panels
      no longer need a full-viewport height to make room for it — size them to
-     content for a tighter mobile flow. The hero keeps its 100vh stage. */
+     content with a tight gap between the 01 / 02 / 03 sections. The hero keeps
+     its 100vh stage. */
   .narrative-panel:not(.narrative-hero) {
     min-height: auto;
-    padding-top: 72px;
-    padding-bottom: 72px;
+    padding-top: 40px;
+    padding-bottom: 40px;
   }
 
   .narrative-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* Sized down featured products carousel navigation buttons on mobile/tablet */
+  .featured-carousel-nav-btn {
+    width: 38px;
+    height: 38px;
+  }
+  .featured-carousel-nav-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+  .featured-carousel-outer-wrap {
+    padding: 0 48px;
   }
 }
 
@@ -3569,7 +3593,7 @@ nav.light-nav .cart-btn:hover {
 
 @media (max-width: 768px) {
   .featured-carousel-outer-wrap {
-    padding: 0 50px;
+    padding: 0 36px;
   }
 
   .featured-carousel-track .product-card {
