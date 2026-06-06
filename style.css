@@ -455,8 +455,12 @@ nav.light-nav .nav-dropdown {
 @media (max-width: 768px) {
   /* Flatten the "Menu" dropdown into the mobile list: drop the group label and
      surface Materials / Sustainability / About / Contact as plain top-level
-     items, so the drawer is a single flat list of every page. */
-  .nav-dropdown-wrapper .dropdown-toggle {
+     items, so the drawer is a single flat list of every page.
+     The light-nav selector is needed to outrank `nav.light-nav .nav-link
+     { display:block !important }`, which otherwise re-shows the toggle on
+     light-themed pages/sections. */
+  .nav-dropdown-wrapper .dropdown-toggle,
+  nav.light-nav .nav-dropdown-wrapper .dropdown-toggle {
     display: none !important;
   }
 
