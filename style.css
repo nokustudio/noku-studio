@@ -2337,6 +2337,10 @@ footer {
     gap: 20px;
     text-align: center;
   }
+
+  .swatches-block {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 480px) {
