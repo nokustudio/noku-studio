@@ -376,7 +376,43 @@
 
     /* Cart drawer styles are defined globally in style.css */
 
+    /* Mobile Filter Toggle */
+    .mobile-filter-toggle {
+      display: none; /* Hidden on desktop */
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--chamoisee);
+      cursor: pointer;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+    }
 
+    .mobile-filter-toggle .toggle-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      color: var(--muted);
+    }
+
+    .catalog-filters-content {
+      display: block; /* Normal block on desktop */
+    }
+
+    .catalog-filters-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
 
     /* ════════ RESPONSIVE LAYOUTS ════════ */
     @media (max-width: 1024px) {
@@ -390,8 +426,49 @@
         width: 100%;
         border: 1px solid var(--line);
         border-radius: 12px;
-        padding: 24px;
+        padding: 20px;
         background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .search-filter-group {
+        border-bottom: 1px solid rgba(44, 38, 34, 0.06);
+        padding-bottom: 16px;
+      }
+
+      .mobile-filter-toggle {
+        display: flex; /* Show on mobile/tablet */
+      }
+
+      .catalog-filters-content {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        overflow: hidden;
+      }
+
+      .catalog-sidebar.active .catalog-filters-content {
+        grid-template-rows: 1fr;
+      }
+
+      .catalog-filters-inner {
+        min-height: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding-top: 0;
+        transition: padding-top 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .catalog-sidebar.active .catalog-filters-inner {
+        padding-top: 16px;
+      }
+
+      .catalog-sidebar.active .mobile-filter-toggle .toggle-icon {
+        transform: rotate(180deg);
       }
 
       .products-grid {
@@ -469,9 +546,9 @@
     <div class="catalog-layout">
 
       <!-- LEFT COLUMN: SIDEBAR FILTERS -->
-      <aside class="catalog-sidebar">
-        <!-- 1. Search Bar -->
-        <div class="filter-group">
+      <aside class="catalog-sidebar" id="catalog-sidebar">
+        <!-- 1. Search Bar (Always visible) -->
+        <div class="filter-group search-filter-group">
           <label class="filter-title" for="search-catalog">Search</label>
           <div class="search-wrap">
             <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -482,43 +559,58 @@
           </div>
         </div>
 
-        <!-- 2. Collections -->
-        <div class="filter-group">
-          <span class="filter-title">Collections</span>
-          <div class="filter-collection-row">
-            <button class="filter-collection-pill filter-collection-btn active" data-value="all">All</button>
-            <button class="filter-collection-pill filter-collection-btn" data-value="stillness">Stillness</button>
-            <button class="filter-collection-pill filter-collection-btn" data-value="memories">Memories</button>
+        <!-- Mobile Filter Toggle Button -->
+        <button class="mobile-filter-toggle" id="mobile-filter-toggle" aria-expanded="false">
+          <span>Filter Options</span>
+          <span class="toggle-icon">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </span>
+        </button>
+
+        <!-- Collapsible Filter Options -->
+        <div class="catalog-filters-content">
+          <div class="catalog-filters-inner">
+            <!-- 2. Collections -->
+            <div class="filter-group">
+              <span class="filter-title">Collections</span>
+              <div class="filter-collection-row">
+                <button class="filter-collection-pill filter-collection-btn active" data-value="all">All</button>
+                <button class="filter-collection-pill filter-collection-btn" data-value="stillness">Stillness</button>
+                <button class="filter-collection-pill filter-collection-btn" data-value="memories">Memories</button>
+              </div>
+            </div>
+
+            <!-- 3. Space (Room) -->
+            <div class="filter-group">
+              <label class="filter-title" for="filter-space-select">Space</label>
+              <select id="filter-space-select" class="filter-select">
+                <option value="all">All Spaces</option>
+                <option value="living room">Living Room</option>
+                <option value="dining room">Dining Room</option>
+                <option value="bedroom">Bedroom</option>
+                <option value="study">Study</option>
+              </select>
+            </div>
+
+            <!-- 4. Type of Furniture -->
+            <div class="filter-group">
+              <label class="filter-title" for="filter-type-select">Furniture Type</label>
+              <select id="filter-type-select" class="filter-select">
+                <option value="all">All Types</option>
+                <option value="chairs">Chairs</option>
+                <option value="barstools">Barstools</option>
+                <option value="tables">Tables</option>
+                <option value="sofas">Sofas</option>
+                <option value="beds">Beds</option>
+                <option value="benches">Benches</option>
+              </select>
+            </div>
+
+            <button class="btn-reset-sidebar" onclick="resetAllFilters()">Clear All Filters</button>
           </div>
         </div>
-
-        <!-- 3. Space (Room) -->
-        <div class="filter-group">
-          <label class="filter-title" for="filter-space-select">Space</label>
-          <select id="filter-space-select" class="filter-select">
-            <option value="all">All Spaces</option>
-            <option value="living room">Living Room</option>
-            <option value="dining room">Dining Room</option>
-            <option value="bedroom">Bedroom</option>
-            <option value="study">Study</option>
-          </select>
-        </div>
-
-        <!-- 4. Type of Furniture -->
-        <div class="filter-group">
-          <label class="filter-title" for="filter-type-select">Furniture Type</label>
-          <select id="filter-type-select" class="filter-select">
-            <option value="all">All Types</option>
-            <option value="chairs">Chairs</option>
-            <option value="barstools">Barstools</option>
-            <option value="tables">Tables</option>
-            <option value="sofas">Sofas</option>
-            <option value="beds">Beds</option>
-            <option value="benches">Benches</option>
-          </select>
-        </div>
-
-        <button class="btn-reset-sidebar" onclick="resetAllFilters()">Clear All Filters</button>
       </aside>
 
       <!-- RIGHT COLUMN: PRODUCT CATALOG GRID -->

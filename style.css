@@ -301,9 +301,39 @@ nav.light-nav .nav-dropdown-wrapper:hover .dropdown-toggle {
   align-items: center;
 }
 
+/* Logo lockup: full NOKU wordmark at the top of the page. On scroll, the O-K-U
+   letters slide left and fade while the lockup clips down to just the N mark.
+   The wordmark's N is the same letterform as the standalone mark, so no swap is
+   needed — what remains IS the mark. */
+.nav-logo-wrap a {
+  display: inline-block;
+  overflow: hidden;
+  width: 84px;          /* full wordmark width */
+  height: 21px;
+  transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .logo-svg {
   fill: var(--paper);
+  width: 84px;
+  height: 21px;
+  flex-shrink: 0;
+  display: block;
   transition: fill 0.2s ease;
+}
+
+/* O, K, U are the 2nd–4th glyphs in the SVG (N is first) */
+.logo-svg > :nth-child(n + 2) {
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+nav.scrolled .nav-logo-wrap a {
+  width: 18px;          /* collapse to the N mark */
+}
+
+nav.scrolled .logo-svg > :nth-child(n + 2) {
+  transform: translateX(-280px);
+  opacity: 0;
 }
 
 .nav-links {
@@ -2068,6 +2098,10 @@ footer {
     gap: 60px;
   }
 
+  .narrative-col.empty-col:empty {
+    display: none;
+  }
+
   .intro-img-wrap {
     order: -1;
     aspect-ratio: 1.5;
@@ -2260,25 +2294,6 @@ footer {
   #cart-toggle {
     margin-left: auto;
     margin-right: 16px;
-  }
-
-  /* Swap the full NOKU wordmark for the compact N mark. Rendered as a CSS mask
-     so it stays theme-aware (background-color drives the colour, switching
-     paper↔chamoisee with the nav just like the wordmark). */
-  .nav-logo-wrap .logo-svg {
-    display: none;
-  }
-  .nav-logo-wrap a {
-    display: inline-block;
-    width: 26px;
-    height: 31px;
-    background-color: var(--paper);
-    -webkit-mask: url("Resources/Logo/noku-favicon.svg") center / contain no-repeat;
-    mask: url("Resources/Logo/noku-favicon.svg") center / contain no-repeat;
-    transition: background-color 0.2s ease;
-  }
-  nav.light-nav .nav-logo-wrap a {
-    background-color: var(--chamoisee);
   }
 
   .footer-grid {

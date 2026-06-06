@@ -1185,6 +1185,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Mobile catalog filter dropdown toggle
+  const filterToggle = document.getElementById('mobile-filter-toggle');
+  const catalogSidebar = document.getElementById('catalog-sidebar');
+  if (filterToggle && catalogSidebar) {
+    filterToggle.addEventListener('click', () => {
+      const isExpanded = catalogSidebar.classList.toggle('active');
+      filterToggle.setAttribute('aria-expanded', isExpanded);
+    });
+  }
+
   // Parse URL search parameters on load
   const urlParams = new URLSearchParams(window.location.search);
   const materialParam = urlParams.get('material');
