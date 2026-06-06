@@ -2569,18 +2569,30 @@ footer {
   }
 
   .carousel-card {
-    flex: 0 0 100%;
-    width: 100%;
+    flex: 0 0 calc(100% - 24px);
+    width: calc(100% - 24px);
   }
 
   .prev-btn {
     left: 8px;
     z-index: 20;
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .prev-btn svg {
+    width: 12px !important;
+    height: 12px !important;
   }
 
   .next-btn {
     right: 8px;
     z-index: 20;
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .next-btn svg {
+    width: 12px !important;
+    height: 12px !important;
   }
 
   nav {
@@ -3661,18 +3673,30 @@ nav.light-nav .cart-btn:hover {
   }
 
   .featured-carousel-track .product-card {
-    flex: 0 0 100%;
-    width: 100%;
+    flex: 0 0 calc(100% - 24px);
+    width: calc(100% - 24px);
   }
 
   .featured-carousel-nav-btn.prev-btn {
     left: 8px;
     z-index: 20;
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .featured-carousel-nav-btn.prev-btn svg {
+    width: 12px !important;
+    height: 12px !important;
   }
 
   .featured-carousel-nav-btn.next-btn {
     right: 8px;
     z-index: 20;
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .featured-carousel-nav-btn.next-btn svg {
+    width: 12px !important;
+    height: 12px !important;
   }
 }
 
