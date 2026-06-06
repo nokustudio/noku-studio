@@ -2262,6 +2262,25 @@ footer {
     margin-right: 16px;
   }
 
+  /* Swap the full NOKU wordmark for the compact N mark. Rendered as a CSS mask
+     so it stays theme-aware (background-color drives the colour, switching
+     paper↔chamoisee with the nav just like the wordmark). */
+  .nav-logo-wrap .logo-svg {
+    display: none;
+  }
+  .nav-logo-wrap a {
+    display: inline-block;
+    width: 26px;
+    height: 31px;
+    background-color: var(--paper);
+    -webkit-mask: url("Resources/Logo/noku-favicon.svg") center / contain no-repeat;
+    mask: url("Resources/Logo/noku-favicon.svg") center / contain no-repeat;
+    transition: background-color 0.2s ease;
+  }
+  nav.light-nav .nav-logo-wrap a {
+    background-color: var(--chamoisee);
+  }
+
   .footer-grid {
     grid-template-columns: 1fr 1fr;
     gap: 40px;

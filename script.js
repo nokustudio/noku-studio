@@ -1459,6 +1459,18 @@
 
     if (!barstoolCard || cards.length === 0) return;
 
+    // Disable entrance animation and "There's more" text on mobile breakpoint (width <= 768px)
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      featuredAnimTriggered = true;
+      isProductsAnimActive = false;
+      if (moreText) {
+        moreText.style.display = 'none';
+      }
+      // Center the active card initially on mobile
+      centerActiveProduct(false);
+      return;
+    }
+
     // ── Set initial hidden state ──
     // Hide all cards, buttons, header
     cards.forEach(card => {
