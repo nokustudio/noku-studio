@@ -405,19 +405,25 @@
     //    over the story / specs / config text. Rotation comes from drag, not
     //    scroll (see onDragMove). This bypasses all the desktop morph math. ──
     if (window.innerWidth <= MOBILE_BP) {
-      const fadeStart = viewportHeight * 0.45;
-      const fadeEnd = viewportHeight * 0.85;
-      const op = scrollY <= fadeStart ? 1
-               : scrollY >= fadeEnd ? 0
-               : 1 - (scrollY - fadeStart) / (fadeEnd - fadeStart);
+      // progress through the hero in viewport units
+      const p = scrollY / viewportHeight;
+      // Fade out early (gone by ~0.4vh) so the model never lingers over the
+      // "01 Philosophy" panel as it scrolls up.
+      const fadeStart = 0.08, fadeEnd = 0.40;
+      const op = p <= fadeStart ? 1
+               : p >= fadeEnd ? 0
+               : 1 - (p - fadeStart) / (fadeEnd - fadeStart);
 
       targetPosX = 0;
-      targetPosY = -0.70;   // hero resting position
-      targetScale = 0.72;
+      // Sit fully in view in the lower hero (clear of the tagline above and the
+      // viewport edge below), then lift up with the scroll so it exits with the
+      // hero rather than hovering over the next panel.
+      targetPosY = -0.20 + p * 1.4;
+      targetScale = 0.56;
       targetRotY = 0;       // base orientation; drag adds on top in animate()
       targetOpacity = op;
 
-      const visible = scrollY < fadeEnd;
+      const visible = p < fadeEnd;
       if (visible !== isThreeCanvasVisible) {
         container.style.visibility = visible ? 'visible' : 'hidden';
         isThreeCanvasVisible = visible;
