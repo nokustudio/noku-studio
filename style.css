@@ -2565,20 +2565,22 @@ footer {
 
 @media (max-width: 768px) {
   #config-panel .narrative-carousel-wrap {
-    padding: 0 16px;
+    padding: 0;
   }
 
   .carousel-card {
-    flex: 0 0 260px;
-    width: 260px;
+    flex: 0 0 100%;
+    width: 100%;
   }
 
   .prev-btn {
     left: 8px;
+    z-index: 20;
   }
 
   .next-btn {
     right: 8px;
+    z-index: 20;
   }
 
   nav {
@@ -3519,6 +3521,14 @@ nav.light-nav .cart-btn:hover {
   object-fit: cover;
 }
 
+/* Hide view all products link and inquire buttons in featured section */
+.products-header .view-collection-link {
+  display: none !important;
+}
+.featured-carousel-track .product-card .product-buy-row {
+  display: none !important;
+}
+
 /* ════════ FEATURED PRODUCTS CAROUSEL ════════ */
 .featured-carousel-outer-wrap {
   display: flex;
@@ -3647,20 +3657,22 @@ nav.light-nav .cart-btn:hover {
 
 @media (max-width: 768px) {
   .featured-carousel-outer-wrap {
-    padding: 0 16px;
+    padding: 0;
   }
 
   .featured-carousel-track .product-card {
-    flex: 0 0 260px;
-    width: 260px;
+    flex: 0 0 100%;
+    width: 100%;
   }
 
   .featured-carousel-nav-btn.prev-btn {
     left: 8px;
+    z-index: 20;
   }
 
   .featured-carousel-nav-btn.next-btn {
     right: 8px;
+    z-index: 20;
   }
 }
 
