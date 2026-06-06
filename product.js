@@ -898,7 +898,7 @@ function renderProductPage() {
       </div>
 
       <!-- Dimensions Block -->
-      <div class="option-group">
+      <div class="option-group dimensions-option-group">
         <span class="option-title">Dimensions</span>
         <div class="dimensions-display-row">
           <svg class="dim-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -1370,9 +1370,12 @@ function getGalleryImagesForVariant(variant) {
     });
   }
   
-  // 3. Fallback to all product images if empty
-  if (urls.length === 0 && currentProduct && currentProduct.images && currentProduct.images.edges) {
-    urls = currentProduct.images.edges.map(e => e.node.url);
+  // 3. Fallback to all product images if we found 1 or 0 matching images
+  if (urls.length <= 1 && currentProduct && currentProduct.images && currentProduct.images.edges) {
+    const allUrls = currentProduct.images.edges.map(e => e.node.url).filter(url => !!url);
+    if (allUrls.length > 1) {
+      urls = [...urls, ...allUrls];
+    }
   }
   
   // 4. Default fallback image if still empty

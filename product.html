@@ -695,6 +695,49 @@
       .related-grid {
         grid-template-columns: 1fr;
       }
+
+      /* Reorder children in product info panel for mobile */
+      .product-info-panel {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .product-info-panel .product-header-block {
+        order: 1;
+      }
+
+      .product-info-panel .options-container {
+        order: 2;
+      }
+
+      .product-info-panel .material-details-box {
+        order: 3;
+      }
+
+      .product-info-panel .purchase-controls {
+        order: 4;
+      }
+
+      .product-info-panel .product-desc-text {
+        order: 5;
+      }
+
+      .product-info-panel .dimensions-option-group {
+        order: 6;
+      }
+
+      /* Reorder skeleton elements to match the dynamic layout */
+      .product-info-panel > .skeleton:nth-child(2) {
+        order: 5;
+      }
+
+      .product-info-panel > .skeleton:nth-child(3) {
+        order: 2;
+      }
+
+      .product-info-panel > .skeleton:nth-child(4) {
+        order: 4;
+      }
     }
 
     /* ════════ INQUIRY MODAL OVERLAY ════════ */
