@@ -482,7 +482,9 @@ nav.light-nav .nav-dropdown {
     display: none !important;
   }
 
-  /* Sub-links now read identically to the main top-level links in the drawer */
+  /* Main links and sub-links now read identically in the drawer */
+  .nav-link,
+  nav.light-nav .nav-link,
   .nav-link-sub,
   nav.light-nav .nav-link-sub {
     color: var(--ink) !important;
@@ -2562,17 +2564,21 @@ footer {
 }
 
 @media (max-width: 768px) {
+  #config-panel .narrative-carousel-wrap {
+    padding: 0 16px;
+  }
+
   .carousel-card {
     flex: 0 0 260px;
     width: 260px;
   }
 
   .prev-btn {
-    left: 5px;
+    left: 8px;
   }
 
   .next-btn {
-    right: 5px;
+    right: 8px;
   }
 
   nav {
@@ -3641,7 +3647,7 @@ nav.light-nav .cart-btn:hover {
 
 @media (max-width: 768px) {
   .featured-carousel-outer-wrap {
-    padding: 0 56px;
+    padding: 0 16px;
   }
 
   .featured-carousel-track .product-card {
@@ -3650,11 +3656,11 @@ nav.light-nav .cart-btn:hover {
   }
 
   .featured-carousel-nav-btn.prev-btn {
-    left: 6px;
+    left: 8px;
   }
 
   .featured-carousel-nav-btn.next-btn {
-    right: 6px;
+    right: 8px;
   }
 }
 
