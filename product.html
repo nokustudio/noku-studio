@@ -667,18 +667,25 @@
 
     @media (max-width: 768px) {
       .slider-arrow {
-        z-index: 50 !important;
-        width: 36px;
-        height: 36px;
-        font-size: 1.2rem;
+        position: absolute !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        z-index: 99 !important;
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 1.2rem !important;
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        color: var(--ink) !important;
+        border: 1px solid var(--border-soft) !important;
+        box-shadow: 0 4px 12px rgba(44, 38, 34, 0.15) !important;
       }
 
       .prev-arrow {
-        left: 12px;
+        left: 16px !important;
       }
 
       .next-arrow {
-        right: 12px;
+        right: 16px !important;
       }
 
       .action-buttons-wrap {
