@@ -3355,13 +3355,22 @@ nav.light-nav .cart-btn:hover {
   }
   
   .project_detail_contain {
+    grid-template-columns: 1fr;
     gap: 48px;
+  }
+
+  .project_detail_contain > * {
+    grid-column: auto !important;
   }
   
   /* Top 3-Column Grid Collapse */
   .project_detail_top {
     grid-template-columns: 1fr;
     gap: 40px;
+  }
+
+  .project_detail_top > * {
+    grid-column: auto !important;
   }
   
   /* Metadata Horizontal Layout */
@@ -3374,12 +3383,6 @@ nav.light-nav .cart-btn:hover {
   /* Adjust spacing between metadata block and Brief text on mobile */
   .project_text_wrap.u-gap-large {
     gap: 28px;
-  }
-
-  /* Force grid columns to span full width */
-  .project_detail_top .u-column-4,
-  .project_info.u-column-4 {
-    grid-column: span 12;
   }
 
   /* Left-align third column content (image + text) on mobile */
@@ -3403,9 +3406,8 @@ nav.light-nav .cart-btn:hover {
     align-items: start;
   }
 
-  .project_detail_bottom .u-column-4,
-  .project_detail_bottom .u-column-8 {
-    grid-column: span 12;
+  .project_detail_bottom > * {
+    grid-column: auto !important;
   }
   
   .project_detail_bottom .project_img.u-column-8 {
@@ -3414,6 +3416,7 @@ nav.light-nav .cart-btn:hover {
     object-fit: cover;
   }
 }
+
 
 
 /* Prev/Next nav wrap */
