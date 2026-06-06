@@ -1792,15 +1792,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cart = JSON.parse(localStorage.getItem('noku_cart')) || [];
     updateCartUI();
   });
-  
-  // Mobile navigation menu toggle
-  const mobileToggle = document.querySelector('.mobile-menu-toggle');
-  const navLinks = document.querySelector('.nav-links');
-  if (mobileToggle && navLinks) {
-    mobileToggle.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-    });
-  }
+
 
   // Initial UI Render
   updateCartUI();

@@ -600,15 +600,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Bind storage events
   window.addEventListener('storage', updateCartUI);
 
-  // Mobile navigation menu toggle
-  const mobileToggle = document.querySelector('.mobile-menu-toggle');
-  const navLinks = document.querySelector('.nav-links');
-  if (mobileToggle && navLinks) {
-    mobileToggle.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-    });
-  }
-
   // Initialize
   updateCartUI();
   setupInquiryModal();

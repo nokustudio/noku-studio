@@ -1176,15 +1176,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCartUI();
   });
 
-  // Mobile navigation menu toggle
-  const mobileToggle = document.querySelector('.mobile-menu-toggle');
-  const navLinks = document.querySelector('.nav-links');
-  if (mobileToggle && navLinks) {
-    mobileToggle.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-    });
-  }
-
   // Mobile catalog filter dropdown toggle
   const filterToggle = document.getElementById('mobile-filter-toggle');
   const catalogSidebar = document.getElementById('catalog-sidebar');

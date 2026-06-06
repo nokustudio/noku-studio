@@ -287,7 +287,7 @@ nav.light-nav .nav-link-sub {
 }
 
 nav.light-nav .mobile-menu-toggle svg {
-  stroke: var(--ink) !important;
+  stroke: currentColor;
 }
 
 nav.light-nav .nav-link:hover,
@@ -508,6 +508,21 @@ nav.light-nav .nav-dropdown {
   background: none;
   border: none;
   cursor: pointer;
+  color: var(--bone); /* Default color for dark background (index.html) */
+  transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-menu-toggle:hover {
+  color: var(--chamoisee);
+  transform: scale(1.05);
+}
+
+nav.light-nav .mobile-menu-toggle {
+  color: var(--ink); /* Override color for light background pages */
+}
+
+nav.light-nav .mobile-menu-toggle:hover {
+  color: var(--chamoisee);
 }
 
 /* ════════ 3D SCROLL EXPERIENCE ZONE ════════ */
@@ -3325,6 +3340,81 @@ nav.light-nav .cart-btn:hover {
   align-items: end;
   margin-top: 80px;
 }
+
+/* ════════ MOBILE BREAKPOINT OVERRIDES FOR PROJECT DETAILS ════════ */
+@media (max-width: 768px) {
+  /* Hero Banner height adjustment */
+  .project_hero_wrap {
+    height: 70vh;
+    min-height: 480px;
+  }
+  
+  /* Container Padding & Grid Gap */
+  .project_detail_wrap {
+    padding: 60px 0;
+  }
+  
+  .project_detail_contain {
+    gap: 48px;
+  }
+  
+  /* Top 3-Column Grid Collapse */
+  .project_detail_top {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  /* Metadata Horizontal Layout */
+  .project_text_wrap .project_info_wrap.u-vflex-left-top {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px 36px;
+  }
+  
+  /* Adjust spacing between metadata block and Brief text on mobile */
+  .project_text_wrap.u-gap-large {
+    gap: 28px;
+  }
+
+  /* Force grid columns to span full width */
+  .project_detail_top .u-column-4,
+  .project_info.u-column-4 {
+    grid-column: span 12;
+  }
+
+  /* Left-align third column content (image + text) on mobile */
+  .project_info.u-column-4 {
+    align-items: flex-start;
+  }
+
+  /* Aspect Ratio & object-fit for top middle portrait image */
+  .project_img.u-column-4 {
+    aspect-ratio: 4/5;
+    height: auto;
+    max-height: 500px;
+    object-fit: cover;
+  }
+  
+  /* Bottom 2-Column Grid Collapse */
+  .project_detail_bottom {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-top: 56px;
+    align-items: start;
+  }
+
+  .project_detail_bottom .u-column-4,
+  .project_detail_bottom .u-column-8 {
+    grid-column: span 12;
+  }
+  
+  .project_detail_bottom .project_img.u-column-8 {
+    aspect-ratio: 3/2;
+    height: auto;
+    object-fit: cover;
+  }
+}
+
 
 /* Prev/Next nav wrap */
 /* ════════ PREV / NEXT NAVIGATION — EDITORIAL ════════ */

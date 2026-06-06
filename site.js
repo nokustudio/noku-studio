@@ -78,4 +78,13 @@
   } else {
     initReveal();
   }
+
+  // ─── 3. Mobile navigation menu toggle ───
+  var mobileToggle = document.querySelector('.mobile-menu-toggle');
+  var navLinks = document.querySelector('.nav-links');
+  if (mobileToggle && navLinks) {
+    mobileToggle.addEventListener('click', function () {
+      navLinks.classList.toggle('active');
+    });
+  }
 })();
