@@ -260,7 +260,7 @@ const FALLBACK_PRODUCTS = [
     tags: ["sofa", "lounge", "fabric", "leather"],
     collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
     featuredImage: {
-      url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg", // reusable quality placeholder
+      url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Noku_ofStillness_Sofa_04.webp?v=1769765673", // reusable quality placeholder
       altText: "Lounge Sofa"
     },
     variants: {
@@ -284,7 +284,7 @@ const FALLBACK_PRODUCTS = [
     tags: ["bench", "fabric", "leather"],
     collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
     featuredImage: {
-      url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d41cd825187ac22552f_Chair%2042%20A.png", // fallback visual
+      url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/DSC09382.webp?v=1769766216", // fallback visual
       altText: "Upholstered Bench"
     },
     variants: {

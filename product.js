@@ -370,7 +370,7 @@ const FALLBACK_PRODUCTS_DB = {
     collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
     images: {
       edges: [
-        { node: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg", altText: "Lounge Sofa" } }
+        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Noku_ofStillness_Sofa_04.webp?v=1769765673", altText: "Lounge Sofa" } }
       ]
     },
     variants: {
@@ -380,7 +380,7 @@ const FALLBACK_PRODUCTS_DB = {
             id: "gid://shopify/ProductVariant/40573731110970",
             title: "Teak / Leather - Cognac",
             price: { amount: "119500.0", currencyCode: "INR" },
-            image: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg" },
+            image: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Noku_ofStillness_Sofa_04.webp?v=1769765673" },
             selectedOptions: [
               { name: "Wood", value: "Teak" },
               { name: "Upholstery", value: "Leather - Cognac" }
@@ -405,7 +405,7 @@ const FALLBACK_PRODUCTS_DB = {
     collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
     images: {
       edges: [
-        { node: { url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d41cd825187ac22552f_Chair%2042%20A.png", altText: "Upholstered Bench" } }
+        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/DSC09382.webp?v=1769766216", altText: "Upholstered Bench" } }
       ]
     },
     variants: {
@@ -415,7 +415,7 @@ const FALLBACK_PRODUCTS_DB = {
             id: "gid://shopify/ProductVariant/40583462649914",
             title: "Teak / Leather - Cognac",
             price: { amount: "25500.0", currencyCode: "INR" },
-            image: { url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d41cd825187ac22552f_Chair%2042%20A.png" },
+            image: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/DSC09382.webp?v=1769766216" },
             selectedOptions: [
               { name: "Wood", value: "Teak" },
               { name: "Upholstery", value: "Leather - Cognac" }
@@ -538,6 +538,34 @@ function findMaterialDetails(optValue) {
     }
   }
   return null;
+}
+
+// Check if an option is a wood finish based on name or value resolution
+function isWoodOption(opt) {
+  if (!opt) return false;
+  const name = opt.name.toLowerCase();
+  if (name.includes('wood') || name.includes('finish')) return true;
+  if (name.includes('color') || name.includes('material')) {
+    return opt.values.some(val => {
+      const mat = findMaterialDetails(val);
+      return mat && mat.category === 'wood';
+    });
+  }
+  return false;
+}
+
+// Check if an option is upholstery/cushion based on name or value resolution
+function isUpholsteryOption(opt) {
+  if (!opt) return false;
+  const name = opt.name.toLowerCase();
+  if (name.includes('upholstery') || name.includes('cushion')) return true;
+  if (name.includes('color') || name.includes('material')) {
+    return opt.values.some(val => {
+      const mat = findMaterialDetails(val);
+      return mat && (mat.category === 'leather' || mat.category === 'fabric');
+    });
+  }
+  return false;
 }
 
 // ─── SHOPIFY GRAPHQL API QUERY client ───
@@ -727,8 +755,11 @@ async function loadProduct(handle) {
     // Default to the first available option value
     selectedOptions[opt.name] = opt.values[0];
 
+    const isWoodOpt = isWoodOption(opt);
+    const isUphOpt = isUpholsteryOption(opt);
+
     // Override if 'wood' parameter is passed and matches (case-insensitive & slugified)
-    if (opt.name.toLowerCase() === 'wood' && qWood) {
+    if (isWoodOpt && qWood) {
       const matchedWood = opt.values.find(val => {
         const slug = val.toLowerCase().replace(/\s+/g, '-');
         return slug === qWood.toLowerCase() || val.toLowerCase() === qWood.toLowerCase();
@@ -739,7 +770,7 @@ async function loadProduct(handle) {
     }
 
     // Override if 'upholstery' (or 'cushion') parameter is passed and matches
-    if ((opt.name.toLowerCase() === 'upholstery' || opt.name.toLowerCase() === 'cushion') && qUpholstery) {
+    if (isUphOpt && qUpholstery) {
       const matchedUpholstery = opt.values.find(val => {
         const slug = val.toLowerCase().replace(/\s+/g, '-');
         return slug.includes(qUpholstery.toLowerCase()) || val.toLowerCase().includes(qUpholstery.toLowerCase());
@@ -799,8 +830,8 @@ function renderProductPage() {
   // Create Options selector HTML
   let optionsHtml = '';
   currentProduct.options.forEach(opt => {
-    const isWood = opt.name.toLowerCase() === 'wood' || opt.name.toLowerCase() === 'finish';
-    const isUpholstery = opt.name.toLowerCase() === 'upholstery' || opt.name.toLowerCase() === 'cushion';
+    const isWood = isWoodOption(opt);
+    const isUpholstery = isUpholsteryOption(opt);
 
     optionsHtml += `
       <div class="option-group" data-option-name="${opt.name}">
@@ -1321,15 +1352,43 @@ function getGalleryImagesForVariant(variant) {
     let uphVal = '';
     
     if (variant && variant.selectedOptions) {
-      const woodOpt = variant.selectedOptions.find(o => o.name.toLowerCase().includes('wood') || o.name.toLowerCase().includes('finish'));
-      const uphOpt = variant.selectedOptions.find(o => o.name.toLowerCase().includes('upholstery') || o.name.toLowerCase().includes('cushion'));
+      const woodOpt = variant.selectedOptions.find(o => {
+        const name = o.name.toLowerCase();
+        if (name.includes('wood') || name.includes('finish')) return true;
+        if (name.includes('color') || name.includes('material')) {
+          const mat = findMaterialDetails(o.value);
+          return mat && mat.category === 'wood';
+        }
+        return false;
+      });
+      const uphOpt = variant.selectedOptions.find(o => {
+        const name = o.name.toLowerCase();
+        if (name.includes('upholstery') || name.includes('cushion')) return true;
+        if (name.includes('color') || name.includes('material')) {
+          const mat = findMaterialDetails(o.value);
+          return mat && (mat.category === 'leather' || mat.category === 'fabric');
+        }
+        return false;
+      });
       
       woodVal = woodOpt ? woodOpt.value.toLowerCase() : '';
       uphVal = uphOpt ? uphOpt.value.toLowerCase() : '';
     } else {
       // Fallback to selectedOptions state
-      woodVal = (selectedOptions['Wood'] || selectedOptions['Finish'] || '').toLowerCase();
-      uphVal = (selectedOptions['Upholstery'] || selectedOptions['Cushion'] || '').toLowerCase();
+      let woodValFromState = '';
+      let uphValFromState = '';
+      if (currentProduct && currentProduct.options) {
+        currentProduct.options.forEach(opt => {
+          if (isWoodOption(opt)) {
+            woodValFromState = selectedOptions[opt.name] || '';
+          }
+          if (isUpholsteryOption(opt)) {
+            uphValFromState = selectedOptions[opt.name] || '';
+          }
+        });
+      }
+      woodVal = woodValFromState.toLowerCase();
+      uphVal = uphValFromState.toLowerCase();
     }
     
     // Clean and normalize options for keyword matching

@@ -427,8 +427,9 @@
       // Check Wood and Upholstery options
       if (p.options) {
         p.options.forEach(opt => {
-          const isWood = opt.name.toLowerCase() === 'wood' || opt.name.toLowerCase() === 'finish';
-          const isUpholstery = opt.name.toLowerCase() === 'upholstery' || opt.name.toLowerCase() === 'cushion';
+          const optNameLower = opt.name.toLowerCase();
+          const isWood = optNameLower === 'wood' || optNameLower === 'finish' || optNameLower === 'color' || optNameLower === 'material';
+          const isUpholstery = optNameLower === 'upholstery' || optNameLower === 'cushion' || optNameLower === 'color' || optNameLower === 'material';
 
           if (category === 'wood' && isWood) {
             opt.values.forEach(val => {
