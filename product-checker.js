@@ -34,6 +34,9 @@ const PRODUCTS_QUERY = `
           id
           title
           handle
+          featuredImage {
+            url
+          }
           variants(first: 100) {
             edges {
               node {
@@ -106,8 +109,19 @@ async function runInventoryCheck() {
     // Normalize response data into a registry map
     productsList.forEach(edge => {
       const p = edge.node;
-      const variants = {};
       
+      // Exclude draft/test products (no image, zero-priced variants, or "draft"/"test" in title)
+      const hasNoImage = !p.featuredImage || !p.featuredImage.url;
+      const allVariantsZeroPrice = p.variants?.edges?.length > 0 && 
+        p.variants.edges.every(vEdge => parseFloat(vEdge.node.price?.amount || '0') === 0);
+      const hasDraftTitle = p.title && (p.title.toLowerCase().includes('draft') || p.title.toLowerCase().includes('test'));
+      
+      if (hasNoImage || allVariantsZeroPrice || hasDraftTitle) {
+        console.log(`[SKIP DRAFT] Excluded draft product: ${p.title} (handle: ${p.handle})`);
+        return;
+      }
+      
+      const variants = {};
       p.variants.edges.forEach(vEdge => {
         const v = vEdge.node;
         variants[v.id] = {

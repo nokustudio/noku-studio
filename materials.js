@@ -349,7 +349,15 @@
         return false;
       }
       
-      const fetched = result.data?.products?.edges?.map(edge => edge.node) || [];
+      const fetched = (result.data?.products?.edges?.map(edge => edge.node) || [])
+        .filter(p => {
+          // Exclude draft/test products (no image, zero-priced variants, or "draft"/"test" in title)
+          const hasNoImage = !p.featuredImage || !p.featuredImage.url;
+          const allVariantsZeroPrice = p.variants?.edges?.length > 0 && 
+            p.variants.edges.every(vEdge => parseFloat(vEdge.node.price?.amount || '0') === 0);
+          const hasDraftTitle = p.title && (p.title.toLowerCase().includes('draft') || p.title.toLowerCase().includes('test'));
+          return !(hasNoImage || allVariantsZeroPrice || hasDraftTitle);
+        });
       if (fetched.length > 0) {
         console.log(`Successfully fetched ${fetched.length} live products from Shopify.`);
         productsList = fetched;

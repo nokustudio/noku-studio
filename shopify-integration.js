@@ -1183,8 +1183,18 @@ async function renderCollectionProducts(collectionHandle, gridId) {
     const data = await fetchFromShopify(query);
     if (data && data.data && data.data.products) {
       const fetched = data.data.products.edges.map(edge => edge.node);
-      products = fetched.filter(p => 
-        p.collections?.edges?.some(edge => {
+      products = fetched.filter(p => {
+        // Exclude draft/test products (no image, zero-priced variants, or "draft"/"test" in title)
+        const hasNoImage = !p.featuredImage || !p.featuredImage.url;
+        const allVariantsZeroPrice = p.variants?.edges?.length > 0 && 
+          p.variants.edges.every(vEdge => parseFloat(vEdge.node.price?.amount || '0') === 0);
+        const hasDraftTitle = p.title && (p.title.toLowerCase().includes('draft') || p.title.toLowerCase().includes('test'));
+        
+        if (hasNoImage || allVariantsZeroPrice || hasDraftTitle) {
+          return false;
+        }
+
+        return p.collections?.edges?.some(edge => {
           const h = edge.node.handle.toLowerCase();
           const t = edge.node.title.toLowerCase();
           const target = collectionHandle.toLowerCase();
@@ -1192,8 +1202,8 @@ async function renderCollectionProducts(collectionHandle, gridId) {
                  h.replace(/-/g, '') === target.replace(/-/g, '') ||
                  t.replace(/\s+/g, '-').includes(target) ||
                  t.replace(/\s+/g, '').includes(target.replace(/-/g, ''));
-        })
-      );
+        });
+      });
       console.log(`Resolved ${products.length} live products for collection "${collectionHandle}".`);
     }
   } catch (err) {

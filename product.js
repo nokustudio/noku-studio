@@ -1749,7 +1749,15 @@ async function loadRelatedProducts() {
       if (res && res.data && res.data.collection && res.data.collection.products) {
         productsList = res.data.collection.products.edges
           .map(e => e.node)
-          .filter(p => p.handle !== currentHandle);
+          .filter(p => {
+            if (p.handle === currentHandle) return false;
+            // Exclude draft/test products (no image, zero-priced variants, or "draft"/"test" in title)
+            const hasNoImage = !p.featuredImage || !p.featuredImage.url;
+            const allVariantsZeroPrice = p.variants?.edges?.length > 0 && 
+              p.variants.edges.every(vEdge => parseFloat(vEdge.node.price?.amount || '0') === 0);
+            const hasDraftTitle = p.title && (p.title.toLowerCase().includes('draft') || p.title.toLowerCase().includes('test'));
+            return !(hasNoImage || allVariantsZeroPrice || hasDraftTitle);
+          });
       }
     } catch (err) {
       console.warn("Failed to fetch related products from API:", err);
