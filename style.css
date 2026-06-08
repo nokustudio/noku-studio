@@ -3858,4 +3858,14 @@ nav.light-nav .cart-btn:hover {
     top: -10px;
     transform: none;
   }
+
+  .mobile-see-all-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+  }
+}
+
+.mobile-see-all-wrap {
+  display: none;
 }
