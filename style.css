@@ -3856,6 +3856,31 @@ nav.light-nav .cart-btn:hover {
   display: none;
 }
 
+.see-all-btn {
+  display: inline-block;
+  padding: 14px 36px !important;
+  background-color: var(--chamoisee);
+  color: var(--paper) !important;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none !important;
+  border-bottom: none !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(162, 123, 92, 0.15);
+}
+
+.see-all-btn:hover {
+  background-color: var(--ink);
+  color: var(--paper) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(44, 38, 34, 0.15);
+}
+
 @media (max-width: 768px) {
   .featured-carousel-outer-wrap .there-is-more-text {
     font-size: clamp(20px, 5vw, 26px);
@@ -3866,6 +3891,7 @@ nav.light-nav .cart-btn:hover {
   .mobile-see-all-wrap {
     display: flex;
     justify-content: center;
-    margin-top: 32px;
+    margin-top: 48px;
+    margin-bottom: 48px;
   }
 }
