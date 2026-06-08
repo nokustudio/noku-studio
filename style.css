@@ -3852,6 +3852,10 @@ nav.light-nav .cart-btn:hover {
   }
 }
 
+.mobile-see-all-wrap {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .featured-carousel-outer-wrap .there-is-more-text {
     font-size: clamp(20px, 5vw, 26px);
@@ -3864,8 +3868,4 @@ nav.light-nav .cart-btn:hover {
     justify-content: center;
     margin-top: 32px;
   }
-}
-
-.mobile-see-all-wrap {
-  display: none;
 }
