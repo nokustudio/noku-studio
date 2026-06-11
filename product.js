@@ -304,7 +304,7 @@ const FALLBACK_PRODUCTS_DB = {
     collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
     images: {
       edges: [
-        { node: { url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00e7f4ffc4c910059d042_Study%20Table%2019%20C.png", altText: "Classic Study Table" } }
+        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/T1_DSC09354.jpg?v=1769765035", altText: "Classic Study Table" } }
       ]
     },
     variants: {
@@ -314,7 +314,7 @@ const FALLBACK_PRODUCTS_DB = {
             id: "gid://shopify/ProductVariant/40573722853434",
             title: "Teak",
             price: { amount: "41500.0", currencyCode: "INR" },
-            image: { url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00e7f4ffc4c910059d042_Study%20Table%2019%20C.png" },
+            image: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/T1_DSC09354.jpg?v=1769765035" },
             selectedOptions: [
               { name: "Wood", value: "Teak" }
             ]
@@ -440,7 +440,7 @@ const FALLBACK_PRODUCTS_DB = {
     collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
     images: {
       edges: [
-        { node: { url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00dd8733454553abc99bc_Bed%2042%20A.png", altText: "Rod Bed" } }
+        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Rodbed3.png?v=1774860971", altText: "Rod Bed" } }
       ]
     },
     variants: {
@@ -450,7 +450,7 @@ const FALLBACK_PRODUCTS_DB = {
             id: "gid://shopify/ProductVariant/40583464583290",
             title: "Teak",
             price: { amount: "89500.0", currencyCode: "INR" },
-            image: { url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00dd8733454553abc99bc_Bed%2042%20A.png" },
+            image: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Rodbed3.png?v=1774860971" },
             selectedOptions: [
               { name: "Wood", value: "Teak" }
             ]

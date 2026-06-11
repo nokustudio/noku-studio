@@ -212,7 +212,7 @@ const FALLBACK_PRODUCTS = [
     tags: ["table", "study"],
     collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
     featuredImage: {
-      url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00e7f4ffc4c910059d042_Study%20Table%2019%20C.png",
+      url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/T1_DSC09354.jpg?v=1769765035",
       altText: "Classic Study Table"
     },
     variants: {
@@ -308,7 +308,7 @@ const FALLBACK_PRODUCTS = [
     tags: ["bed"],
     collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
     featuredImage: {
-      url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00dd8733454553abc99bc_Bed%2042%20A.png",
+      url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Rodbed3.png?v=1774860971",
       altText: "Rod Bed"
     },
     variants: {
@@ -332,7 +332,7 @@ const FALLBACK_PRODUCTS = [
     tags: ["bed"],
     collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
     featuredImage: {
-      url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00dd8733454553abc99bc_Bed%2042%20A.png", // fallback visual
+      url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Poster_bed_with_mattress_iso.webp?v=1769772487", // fallback visual
       altText: "Poster Bed"
     },
     variants: {
