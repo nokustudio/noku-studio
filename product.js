@@ -1829,9 +1829,10 @@ async function loadRelatedProducts() {
   grid.innerHTML = '';
 
   displayProducts.forEach(p => {
-    const priceVal = p.variants.edges[0]?.node.price.amount || SHOPIFY_CONFIG.defaultPrice;
+    const allPrices = p.variants.edges.map(e => parseFloat(e.node.price.amount)).filter(n => !isNaN(n) && n > 0);
+    const priceVal = allPrices.length > 0 ? Math.min(...allPrices) : SHOPIFY_CONFIG.defaultPrice;
     const imgUrl = (p.featuredImage && p.featuredImage.url) || p.images?.edges[0]?.node.url || '';
-    
+
     // Extract variant materials string
     let materialsStr = 'Solid Hardwood';
     if (p.variants.edges[0]?.node.selectedOptions) {
@@ -1839,6 +1840,16 @@ async function loadRelatedProducts() {
     } else if (p.variants.edges[0]?.node.title !== 'Default Title') {
       materialsStr = p.variants.edges[0]?.node.title || '';
     }
+
+    const relHasLeather = p.variants.edges.some(e =>
+      e.node.title?.toLowerCase().includes('leather') ||
+      e.node.selectedOptions?.some(o => o.value.toLowerCase().includes('leather'))
+    );
+    const relHasReclaimedTeak = p.variants.edges.some(e =>
+      e.node.title?.toLowerCase().includes('reclaimed') ||
+      e.node.selectedOptions?.some(o => o.value.toLowerCase().includes('reclaimed'))
+    );
+    const relTierTagsHtml = (relHasReclaimedTeak || relHasLeather) ? `<div class="gcard__tags">${relHasReclaimedTeak ? '<span class="gcard__tag gcard__tag--premium">Premium</span>' : ''}${relHasLeather ? '<span class="gcard__tag gcard__tag--leather">+</span>' : ''}</div>` : '';
 
     const card = document.createElement('a');
     card.href = `product.html?handle=${p.handle}`;
@@ -1848,11 +1859,12 @@ async function loadRelatedProducts() {
         <div class="gcard__media-inner">
           <img src="${imgUrl}" alt="${p.title}" loading="lazy">
         </div>
+        ${relTierTagsHtml}
         <button class="gcard__add" data-handle="${p.handle}">Details <svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></button>
       </div>
       <p class="gcard__cat">${materialsStr}</p>
       <h3 class="gcard__name">${p.title}</h3>
-      <p class="gcard__price">${formatCurrency(parseFloat(priceVal))}</p>
+      <p class="gcard__price">From ${formatCurrency(priceVal)}</p>
     `;
 
     card.querySelector('.gcard__add').addEventListener('click', (e) => {

@@ -1210,6 +1210,43 @@ body:not(.secondary-landing-page) .hero-title {
   margin-top: 9px;
 }
 
+.gcard__tags {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  gap: 5px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.gcard__tag {
+  font-family: var(--font-body);
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--muted);
+  border: 1px solid rgba(44, 38, 34, 0.1);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.gcard__tag--leather {
+  background: rgba(162, 123, 92, 0.12);
+  color: var(--chamoisee);
+  border-color: rgba(162, 123, 92, 0.22);
+}
+
+.gcard__tag--premium {
+  background: rgba(44, 38, 34, 0.07);
+  color: var(--ink);
+  border-color: rgba(44, 38, 34, 0.14);
+}
+
 .product-card {
   background-color: transparent;
   border: 1px solid rgba(44, 38, 34, 0.06);
