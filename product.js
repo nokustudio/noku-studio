@@ -22,12 +22,8 @@ let cart = JSON.parse(localStorage.getItem('noku_cart')) || [];
 
 // Display-only products list (from noku_products.xlsx)
 const DISPLAY_ONLY_HANDLES = [
-  'dining-table',
   'sofa-2',
-  'lounge-sofa',
-  'poster-bed',
-  'rod-bed-with-curved-headboard',
-  'round-dining-table'
+  'rod-bed-with-curved-headboard'
 ];
 
 function isDisplayOnly(handle) {
@@ -41,18 +37,10 @@ function isDisplayItem(item) {
   const title = item.title ? item.title.toLowerCase().trim() : '';
   
   const displayTitles = [
-    "dining table",
-    "dining-table",
     "grooved sofa",
     "grooved-sofa",
-    "lounge sofa",
-    "lounge-sofa",
-    "poster bed",
-    "poster-bed",
     "rod bed",
-    "rod-bed",
-    "round dining table",
-    "round-dining-table"
+    "rod-bed"
   ];
   
   if (handle && DISPLAY_ONLY_HANDLES.includes(handle)) return true;
@@ -66,15 +54,9 @@ function isDisplayItem(item) {
   }
   
   const displayVariantIds = [
-    "40589461749818", "41286332940346", "41286333497402", "40593555587130", "40593555619898", "41221041684538", "40593555718202", "41221044699194", "40593555685434", "40589542981690",
-    "40593555521594", "41221044666426", "41221043814458", "41221043847226", "41221043945530", "41221043912762", "41221044961338", "41221043879994", "41221043716154", "41221043748922",
-    "41221044928570", "41221043552314", "41221043585082", "41221043683386", "41221043650618", "41221044895802", "41221043617850", "41221043454010", "41221043486778", "41221044863034",
-    "40573731110970", "40612651040826", "40612651073594", "40612651106362", "40612651139130", "40612651237434", "40612651270202", "41241721045050", "41241721471034", "41241721503802",
-    "41241721536570", "41241721569338", "41241721602106", "41241721667642", "41241721700410", "41241721765946", "41241721143354", "41241721176122", "41241721208890", "41241721241658",
-    "41241721274426", "41241721339962", "41241721372730", "41241721438266", "40589458997306", "40593536712762", "41221039456314", "41221038014522", "41221038080058", "41221039489082",
-    "41221038047290", "41221039521850", "41221038932026", "41221038964794", "41221039849530", "41221039063098", "41221039128634", "41221039882298", "41221039095866", "41221039915066",
-    "41221038637114", "41221038669882", "41221039751226", "41221038768186", "41221038833722", "41221039783994", "41221038800954", "41221039816762", "40589542391866", "41241712951354",
-    "41241712918586", "40583460683834", "41241713999930", "41241713967162"
+    "41221043814458", "41221043847226", "41221043945530", "41221043912762", "41221044961338", "41221043879994", "41221043716154", "41221043748922", "41221044928570", "40593555587130",
+    "40593555619898", "41221041684538", "40593555718202", "41221044699194", "40593555685434", "40589542981690", "40593555521594", "41221044666426", "41221043552314", "41221043585082",
+    "41221043683386", "41221043650618", "41221044895802", "41221043617850", "41221043454010", "41221043486778", "41221044863034", "41241712951354", "40589542391866", "41241712918586"
   ];
   
   return false;
@@ -839,39 +821,42 @@ function renderProductPage() {
           <span class="option-title">${opt.name}:</span>
           <span class="option-selected-val" id="selected-val-${opt.name.replace(/\s+/g, '')}">${selectedOptions[opt.name]}</span>
         </div>
-        <div class="swatches-row">
     `;
 
-    opt.values.forEach(val => {
-      const mat = findMaterialDetails(val);
-      const isActive = selectedOptions[opt.name] === val;
-
-      if ((isWood || isUpholstery) && mat && mat.preview) {
-        // Render rich swatch circle
-        optionsHtml += `
-          <div class="swatch-circle ${isActive ? 'active' : ''}" 
-               data-value="${val}" 
-               data-option="${opt.name}"
-               title="${val}" 
-               style="background-image: url('${mat.preview}');">
-          </div>
-        `;
-      } else {
-        // Render text pill button
-        optionsHtml += `
-          <button class="swatch-pill ${isActive ? 'active' : ''}" 
-                  data-value="${val}" 
-                  data-option="${opt.name}">
-            ${val}
-          </button>
-        `;
+    if (isUpholstery) {
+      const fabricVals = opt.values.filter(v => !v.toLowerCase().includes('leather'));
+      const leatherVals = opt.values.filter(v => v.toLowerCase().includes('leather'));
+      const buildSwatchHtml = (val, optName) => {
+        const mat = findMaterialDetails(val);
+        const isActive = selectedOptions[optName] === val;
+        if (mat && mat.preview) {
+          return `<div class="swatch-circle ${isActive ? 'active' : ''}" data-value="${val}" data-option="${optName}" title="${val}" style="background-image: url('${mat.preview}');"></div>`;
+        }
+        return `<button class="swatch-pill ${isActive ? 'active' : ''}" data-value="${val}" data-option="${optName}">${val}</button>`;
+      };
+      if (fabricVals.length > 0) {
+        optionsHtml += `<div class="upholstery-subgroup"><span class="upholstery-subgroup-label">Fabric</span><div class="swatches-row">${fabricVals.map(v => buildSwatchHtml(v, opt.name)).join('')}</div></div>`;
       }
-    });
+      if (leatherVals.length > 0) {
+        const uplift = calculateLeatherUplift(opt.name);
+        const leatherLabel = uplift ? `Leather +${formatCurrency(uplift)}` : 'Leather';
+        optionsHtml += `<div class="upholstery-subgroup"><span class="upholstery-subgroup-label leather-label">${leatherLabel}</span><div class="swatches-row">${leatherVals.map(v => buildSwatchHtml(v, opt.name)).join('')}</div></div>`;
+      }
+    } else {
+      optionsHtml += `<div class="swatches-row">`;
+      opt.values.forEach(val => {
+        const mat = findMaterialDetails(val);
+        const isActive = selectedOptions[opt.name] === val;
+        if (isWood && mat && mat.preview) {
+          optionsHtml += `<div class="swatch-circle ${isActive ? 'active' : ''}" data-value="${val}" data-option="${opt.name}" title="${val}" style="background-image: url('${mat.preview}');"></div>`;
+        } else {
+          optionsHtml += `<button class="swatch-pill ${isActive ? 'active' : ''}" data-value="${val}" data-option="${opt.name}">${val}</button>`;
+        }
+      });
+      optionsHtml += `</div>`;
+    }
 
-    optionsHtml += `
-        </div>
-      </div>
-    `;
+    optionsHtml += `</div>`;
   });
 
   // Load dimension string from metafield or fallback spec
@@ -889,6 +874,7 @@ function renderProductPage() {
       <div class="thumbnail-list" id="thumbnails-container">
         ${thumbnailsHtml}
       </div>
+      <p class="image-reference-note">Images are for reference only. There may be variation in material colour and grain.</p>
     </div>
 
     <!-- Info Column -->
@@ -897,6 +883,7 @@ function renderProductPage() {
         <span class="collection-eyebrow">${collectionTitle}</span>
         <h1 class="product-title-text">${currentProduct.title}</h1>
         <div id="product-price-display" class="product-price-text">${formatCurrency(initialPrice)}</div>
+        <p class="price-gst-note">Price includes GST</p>
       </div>
 
       <div class="product-desc-text">
@@ -1312,6 +1299,23 @@ function updateVariantDisplays(isInitial = false) {
   }
 }
 
+// Computes the minimum price premium of leather over fabric upholstery variants
+function calculateLeatherUplift(optName) {
+  if (!currentProduct || !currentProduct.variants) return null;
+  const variants = currentProduct.variants.edges.map(e => e.node);
+  const fabricPrices = variants
+    .filter(v => v.selectedOptions.some(o => o.name === optName && o.value.toLowerCase().includes('fabric')))
+    .map(v => parseFloat(v.price.amount))
+    .filter(p => !isNaN(p) && p > 0);
+  const leatherPrices = variants
+    .filter(v => v.selectedOptions.some(o => o.name === optName && o.value.toLowerCase().includes('leather')))
+    .map(v => parseFloat(v.price.amount))
+    .filter(p => !isNaN(p) && p > 0);
+  if (!fabricPrices.length || !leatherPrices.length) return null;
+  const uplift = Math.min(...leatherPrices) - Math.min(...fabricPrices);
+  return uplift > 0 ? uplift : null;
+}
+
 // Helper to match active selected options with product variants list
 function findMatchingVariant() {
   if (!currentProduct || !currentProduct.variants) return null;
@@ -1615,26 +1619,14 @@ function updateCartUI() {
   // Enforce cart display policy proactively
   let localCart = JSON.parse(localStorage.getItem('noku_cart')) || [];
   const displayHandles = [
-    'dining-table',
     'sofa-2',
-    'lounge-sofa',
-    'poster-bed',
-    'rod-bed-with-curved-headboard',
-    'round-dining-table'
+    'rod-bed-with-curved-headboard'
 ];
   const displayTitles = [
-    "dining table",
-    "dining-table",
     "grooved sofa",
     "grooved-sofa",
-    "lounge sofa",
-    "lounge-sofa",
-    "poster bed",
-    "poster-bed",
     "rod bed",
-    "rod-bed",
-    "round dining table",
-    "round-dining-table"
+    "rod-bed"
   ];
   const filteredCart = localCart.filter(item => {
     if (!item) return false;
@@ -1651,15 +1643,9 @@ function updateCartUI() {
     if (item.variantId) {
       const vIdString = String(item.variantId);
       const displayVariantIds = [
-    "40589461749818", "41286332940346", "41286333497402", "40593555587130", "40593555619898", "41221041684538", "40593555718202", "41221044699194", "40593555685434", "40589542981690",
-    "40593555521594", "41221044666426", "41221043814458", "41221043847226", "41221043945530", "41221043912762", "41221044961338", "41221043879994", "41221043716154", "41221043748922",
-    "41221044928570", "41221043552314", "41221043585082", "41221043683386", "41221043650618", "41221044895802", "41221043617850", "41221043454010", "41221043486778", "41221044863034",
-    "40573731110970", "40612651040826", "40612651073594", "40612651106362", "40612651139130", "40612651237434", "40612651270202", "41241721045050", "41241721471034", "41241721503802",
-    "41241721536570", "41241721569338", "41241721602106", "41241721667642", "41241721700410", "41241721765946", "41241721143354", "41241721176122", "41241721208890", "41241721241658",
-    "41241721274426", "41241721339962", "41241721372730", "41241721438266", "40589458997306", "40593536712762", "41221039456314", "41221038014522", "41221038080058", "41221039489082",
-    "41221038047290", "41221039521850", "41221038932026", "41221038964794", "41221039849530", "41221039063098", "41221039128634", "41221039882298", "41221039095866", "41221039915066",
-    "41221038637114", "41221038669882", "41221039751226", "41221038768186", "41221038833722", "41221039783994", "41221038800954", "41221039816762", "40589542391866", "41241712951354",
-    "41241712918586", "40583460683834", "41241713999930", "41241713967162"
+    "41221043814458", "41221043847226", "41221043945530", "41221043912762", "41221044961338", "41221043879994", "41221043716154", "41221043748922", "41221044928570", "40593555587130",
+    "40593555619898", "41221041684538", "40593555718202", "41221044699194", "40593555685434", "40589542981690", "40593555521594", "41221044666426", "41221043552314", "41221043585082",
+    "41221043683386", "41221043650618", "41221044895802", "41221043617850", "41221043454010", "41221043486778", "41221044863034", "41241712951354", "40589542391866", "41241712918586"
   ];
       for (const id of displayVariantIds) {
         if (vIdString.includes(id)) return false;
