@@ -602,9 +602,17 @@ function renderProductsGrid() {
   } else if (activeFilters.sort === 'name-desc') {
     filtered.sort((a, b) => b.title.localeCompare(a.title));
   } else if (activeFilters.sort === 'price-asc') {
-    filtered.sort((a, b) => getMinProductPrice(a) - getMinProductPrice(b));
+    filtered.sort((a, b) => {
+      const priceA = a.variants?.edges?.[0]?.node ? parseFloat(a.variants.edges[0].node.price.amount) : SHOPIFY_CONFIG.defaultPrice;
+      const priceB = b.variants?.edges?.[0]?.node ? parseFloat(b.variants.edges[0].node.price.amount) : SHOPIFY_CONFIG.defaultPrice;
+      return priceA - priceB;
+    });
   } else if (activeFilters.sort === 'price-desc') {
-    filtered.sort((a, b) => getMinProductPrice(b) - getMinProductPrice(a));
+    filtered.sort((a, b) => {
+      const priceA = a.variants?.edges?.[0]?.node ? parseFloat(a.variants.edges[0].node.price.amount) : SHOPIFY_CONFIG.defaultPrice;
+      const priceB = b.variants?.edges?.[0]?.node ? parseFloat(b.variants.edges[0].node.price.amount) : SHOPIFY_CONFIG.defaultPrice;
+      return priceB - priceA;
+    });
   }
 
   // Update results count
@@ -631,45 +639,30 @@ function renderProductsGrid() {
     card.style.animationDelay = `${(idx % 4) * 0.1}s`;
     
     const firstVariant = p.variants?.edges?.[0]?.node;
-    const displayPrice = getMinProductPrice(p);
+    const displayPrice = firstVariant ? parseFloat(firstVariant.price.amount) : SHOPIFY_CONFIG.defaultPrice;
     const displayMaterial = firstVariant ? firstVariant.title : 'Solid Wood Finish';
     const defaultImage = p.featuredImage?.url || (firstVariant && firstVariant.image ? firstVariant.image.url : 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg');
     const defaultVariantId = firstVariant ? firstVariant.id : `gid://shopify/ProductVariant/fallback-${p.handle}`;
 
     const isDisplay = isDisplayOnly(p.handle);
 
-    const hasLeather =
-      p.options?.some(o => o.values?.some(v => v.toLowerCase().includes('leather'))) ||
-      p.variants?.edges?.some(e =>
-        e.node.title?.toLowerCase().includes('leather') ||
-        e.node.selectedOptions?.some(o => o.value.toLowerCase().includes('leather'))
-      );
-    const hasReclaimedTeak =
-      p.options?.some(o => o.values?.some(v => v.toLowerCase().includes('reclaimed'))) ||
-      p.variants?.edges?.some(e =>
-        e.node.title?.toLowerCase().includes('reclaimed') ||
-        e.node.selectedOptions?.some(o => o.value.toLowerCase().includes('reclaimed'))
-      );
-    const tierTagsHtml = (hasReclaimedTeak || hasLeather) ? `<div class="gcard__tags">${hasReclaimedTeak ? '<span class="gcard__tag gcard__tag--premium">Premium</span>' : ''}${hasLeather ? '<span class="gcard__tag gcard__tag--leather">+</span>' : ''}</div>` : '';
-
     card.innerHTML = `
       <div class="gcard__media">
         <div class="gcard__media-inner">
           <img src="${defaultImage}" alt="${p.title}" loading="lazy">
         </div>
-        ${tierTagsHtml}
         ${isDisplay ? `
-        <button class="gcard__add gcard__inquire"
+        <button class="gcard__add gcard__inquire" 
                 data-handle="${p.handle}"
                 aria-label="Inquire about ${p.title}">
           Inquire <svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg>
         </button>
         ` : `
-        <button class="gcard__add"
-                data-id="${p.id}"
+        <button class="gcard__add" 
+                data-id="${p.id}" 
                 data-variant-id="${defaultVariantId}"
-                data-title="${p.title}"
-                data-price="${displayPrice}"
+                data-title="${p.title}" 
+                data-price="${displayPrice}" 
                 data-image="${defaultImage}"
                 data-materials="${displayMaterial}"
                 aria-label="Add ${p.title} to Cart">
@@ -679,7 +672,7 @@ function renderProductsGrid() {
       </div>
       <p class="gcard__cat">${displayMaterial}</p>
       <h3 class="gcard__name">${p.title}</h3>
-      <p class="gcard__price">From ${formatCurrency(displayPrice)}</p>
+      <p class="gcard__price">${formatCurrency(displayPrice)}</p>
     `;
     
     // Bind Add to Cart / Inquire action
