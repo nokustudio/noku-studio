@@ -1181,9 +1181,10 @@ body:not(.secondary-landing-page) .hero-title {
 
 .gcard__cat {
   font-family: var(--font-display);
-  font-size: 0.625rem; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+  font-size: 0.625rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  line-height: 1.4;
   color: var(--chamoisee);
-  margin-bottom: 8px;
+  margin-bottom: 11px;
 }
 
 .gcard__name {
@@ -1207,7 +1208,7 @@ body:not(.secondary-landing-page) .hero-title {
   font-family: var(--font-body);
   font-size: 0.875rem;
   color: var(--muted);
-  margin-top: 9px;
+  margin-top: 13px;
 }
 
 .product-card {

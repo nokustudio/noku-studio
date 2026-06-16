@@ -791,11 +791,12 @@ function renderProductPage() {
     defaultImageUrl = initialVariant.image.url;
   }
 
-  // Preload the rest of the images in the background
+  // Preload the rest of the images in the background (the sized hero versions
+  // actually shown, so the preload warms the right CDN cache entries)
   imageUrls.forEach(url => {
     if (url !== defaultImageUrl) {
       const img = new Image();
-      img.src = url;
+      img.src = heroImageSrc(url);
     }
   });
 
@@ -804,7 +805,7 @@ function renderProductPage() {
   imageUrls.forEach((url, idx) => {
     thumbnailsHtml += `
       <div class="thumbnail-item ${idx === 0 ? 'active' : ''}" data-index="${idx}">
-        <img src="${url}" alt="Thumbnail ${idx + 1}">
+        <img src="${thumbImageSrc(url)}" alt="Thumbnail ${idx + 1}">
       </div>
     `;
   });
@@ -838,9 +839,7 @@ function renderProductPage() {
         optionsHtml += `<div class="upholstery-subgroup"><span class="upholstery-subgroup-label">Fabric</span><div class="swatches-row">${fabricVals.map(v => buildSwatchHtml(v, opt.name)).join('')}</div></div>`;
       }
       if (leatherVals.length > 0) {
-        const uplift = calculateLeatherUplift(opt.name);
-        const leatherLabel = uplift ? `Leather +${formatCurrency(uplift)}` : 'Leather';
-        optionsHtml += `<div class="upholstery-subgroup"><span class="upholstery-subgroup-label leather-label">${leatherLabel}</span><div class="swatches-row">${leatherVals.map(v => buildSwatchHtml(v, opt.name)).join('')}</div></div>`;
+        optionsHtml += `<div class="upholstery-subgroup"><span class="upholstery-subgroup-label leather-label">Leather</span><div class="swatches-row">${leatherVals.map(v => buildSwatchHtml(v, opt.name)).join('')}</div></div>`;
       }
     } else {
       optionsHtml += `<div class="swatches-row">`;
@@ -868,7 +867,7 @@ function renderProductPage() {
     <div class="product-gallery">
       <div class="main-image-viewport" id="main-viewport">
         <button id="prev-image-btn" class="slider-arrow prev-arrow" aria-label="Previous Image">‹</button>
-        <img id="main-product-image" src="${defaultImageUrl}" alt="${currentProduct.title}">
+        <img id="main-product-image" src="${heroImageSrc(defaultImageUrl)}" alt="${currentProduct.title}">
         <button id="next-image-btn" class="slider-arrow next-arrow" aria-label="Next Image">›</button>
       </div>
       <div class="thumbnail-list" id="thumbnails-container">
@@ -1003,7 +1002,7 @@ function renderProductPage() {
       // Animate transition smoothly
       mainImage.style.opacity = '0.3';
       setTimeout(() => {
-        mainImage.src = imageUrls[idx];
+        mainImage.src = heroImageSrc(imageUrls[idx]);
         mainImage.style.opacity = '1';
       }, 150);
     });
@@ -1039,7 +1038,7 @@ function renderProductPage() {
   function showImageAtIndex(idx) {
     mainImage.style.opacity = '0.3';
     setTimeout(() => {
-      mainImage.src = imageUrls[idx];
+      mainImage.src = heroImageSrc(imageUrls[idx]);
       mainImage.style.opacity = '1';
     }, 150);
   }
@@ -1194,10 +1193,11 @@ function updateVariantDisplays(isInitial = false) {
   // Sync Featured image if variant has an image
   const mainImage = document.getElementById('main-product-image');
   if (mainImage && matched.image && matched.image.url) {
-    if (mainImage.src !== matched.image.url) {
+    const matchedHeroSrc = heroImageSrc(matched.image.url);
+    if (mainImage.src !== matchedHeroSrc) {
       mainImage.style.opacity = '0.3';
       setTimeout(() => {
-        mainImage.src = matched.image.url;
+        mainImage.src = matchedHeroSrc;
         mainImage.style.opacity = '1';
       }, 150);
     }
@@ -1214,7 +1214,7 @@ function updateVariantDisplays(isInitial = false) {
     imageUrls.forEach((url, idx) => {
       thumbnailsHtml += `
         <div class="thumbnail-item ${idx === activeImageIndex ? 'active' : ''}" data-index="${idx}">
-          <img src="${url}" alt="Thumbnail ${idx + 1}">
+          <img src="${thumbImageSrc(url)}" alt="Thumbnail ${idx + 1}">
         </div>
       `;
     });
@@ -1232,7 +1232,7 @@ function updateVariantDisplays(isInitial = false) {
         if (mainImage) {
           mainImage.style.opacity = '0.3';
           setTimeout(() => {
-            mainImage.src = imageUrls[idx];
+            mainImage.src = heroImageSrc(imageUrls[idx]);
             mainImage.style.opacity = '1';
           }, 150);
         }
@@ -1297,23 +1297,6 @@ function updateVariantDisplays(isInitial = false) {
       console.log('No materials resolved. Hiding box.');
     }
   }
-}
-
-// Computes the minimum price premium of leather over fabric upholstery variants
-function calculateLeatherUplift(optName) {
-  if (!currentProduct || !currentProduct.variants) return null;
-  const variants = currentProduct.variants.edges.map(e => e.node);
-  const fabricPrices = variants
-    .filter(v => v.selectedOptions.some(o => o.name === optName && o.value.toLowerCase().includes('fabric')))
-    .map(v => parseFloat(v.price.amount))
-    .filter(p => !isNaN(p) && p > 0);
-  const leatherPrices = variants
-    .filter(v => v.selectedOptions.some(o => o.name === optName && o.value.toLowerCase().includes('leather')))
-    .map(v => parseFloat(v.price.amount))
-    .filter(p => !isNaN(p) && p > 0);
-  if (!fabricPrices.length || !leatherPrices.length) return null;
-  const uplift = Math.min(...leatherPrices) - Math.min(...fabricPrices);
-  return uplift > 0 ? uplift : null;
 }
 
 // Helper to match active selected options with product variants list
@@ -1830,7 +1813,7 @@ async function loadRelatedProducts() {
 
   displayProducts.forEach(p => {
     const priceVal = p.variants.edges[0]?.node.price.amount || SHOPIFY_CONFIG.defaultPrice;
-    const imgUrl = (p.featuredImage && p.featuredImage.url) || p.images?.edges[0]?.node.url || '';
+    const imgUrl = sizedCardImage((p.featuredImage && p.featuredImage.url) || p.images?.edges[0]?.node.url || '');
     
     // Extract variant materials string
     let materialsStr = 'Solid Hardwood';
@@ -1873,6 +1856,46 @@ function formatCurrency(amount) {
     minimumFractionDigits: 0
   }).format(amount);
 }
+
+// Ask the Shopify CDN to resize related-product card images to roughly their
+// display size. Letting the browser downscale the multi-megapixel originals
+// (~13x) jaggs fine edges; the CDN's high-quality resampling avoids that. The
+// 4:5 crop matches the .gcard__media aspect ratio.
+function sizedCardImage(url, targetCssW = 480, targetCssH = 600) {
+  if (!url) return url;
+  try {
+    const u = new URL(url, window.location.href);
+    if (u.hostname.includes('cdn.shopify.com') || u.hostname.includes('cdn.shopifycdn')) {
+      const dpr = Math.min(window.devicePixelRatio || 1, 3);
+      u.searchParams.set('width', String(Math.round(targetCssW * dpr)));
+      u.searchParams.set('height', String(Math.round(targetCssH * dpr)));
+      u.searchParams.set('crop', 'center');
+      return u.toString();
+    }
+  } catch (e) { /* malformed URL — fall through */ }
+  return url;
+}
+
+// Width-only CDN resize (preserves aspect ratio — no crop) for the detail
+// gallery. The main hero and thumbnails otherwise load the multi-megapixel
+// originals, which the browser then crushes down (jagging edges) and which are
+// needlessly heavy. We size by the display footprint × DPR, capped.
+function sizedGalleryImage(url, targetCssW, maxW) {
+  if (!url) return url;
+  try {
+    const u = new URL(url, window.location.href);
+    if (u.hostname.includes('cdn.shopify.com') || u.hostname.includes('cdn.shopifycdn')) {
+      const dpr = Math.min(window.devicePixelRatio || 1, 3);
+      u.searchParams.set('width', String(Math.min(Math.round(targetCssW * dpr), maxW)));
+      return u.toString();
+    }
+  } catch (e) { /* malformed URL — fall through */ }
+  return url;
+}
+// Main hero is ~574px CSS on desktop, full-width on mobile — size generously, cap 1800.
+function heroImageSrc(url) { return sizedGalleryImage(url, 640, 1800); }
+// Thumbnails are small — a tight size is plenty.
+function thumbImageSrc(url) { return sizedGalleryImage(url, 110, 360); }
 
 // ─── INQUIRY MODAL FUNCTIONS ───
 function openInquiryModal() {

@@ -944,9 +944,15 @@
       card.id = `narrative-card-${idx}`;
     }
 
-    const imgPath = cushionObj.image || '';
-    const imgHTML = imgPath 
-      ? `<img src="${imgPath}" alt="Barstool ${selectedWood} ${cushionObj.normalizedName}">` 
+    const rawImgPath = cushionObj.image || '';
+    // Size to the carousel card via the Shopify CDN (defined in shopify-integration.js)
+    // so we don't ship the multi-megapixel original into a ~263px card. Guarded in
+    // case that helper isn't loaded; non-Shopify URLs pass through untouched.
+    const imgPath = (rawImgPath && typeof sizeShopifyImage === 'function')
+      ? sizeShopifyImage(rawImgPath, Math.round(340 * Math.min(window.devicePixelRatio || 1, 3)))
+      : rawImgPath;
+    const imgHTML = imgPath
+      ? `<img src="${imgPath}" alt="Barstool ${selectedWood} ${cushionObj.normalizedName}">`
       : '';
 
     const displayName = cleanCushionDisplayName(cushionObj.name);
@@ -1332,8 +1338,10 @@
         if (card.classList.contains('highlighted')) {
           const handle = card.getAttribute('data-handle');
           if (handle) {
-            const isDisplay = ['dining-table', 'sofa-2', 'lounge-sofa', 'poster-bed', 'rod-bed-with-curved-headboard', 'round-dining-table'].includes(handle.toLowerCase().trim());
-            window.location.href = `product.html?handle=${handle}${isDisplay ? '&inquire=true' : ''}`;
+            // Open the product page only. The Get-in-touch modal must be opened
+            // explicitly via the Inquire button (an <a> excluded above), never by
+            // clicking the card itself — so no &inquire=true here.
+            window.location.href = `product.html?handle=${handle}`;
           }
           return;
         }

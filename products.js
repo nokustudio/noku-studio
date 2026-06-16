@@ -543,6 +543,26 @@ function getMinProductPrice(p) {
   return SHOPIFY_CONFIG.defaultPrice;
 }
 
+// Ask the Shopify CDN to resize the image to roughly the card's display size
+// instead of shipping the multi-megapixel original. Letting the browser crush a
+// ~25MP file down ~13x produces jagged edges on fine details (e.g. chair legs);
+// the CDN's high-quality resampling avoids that. The 4:5 crop matches the
+// .gcard__media aspect ratio so no further scaling/cropping is needed in-browser.
+function sizedCardImage(url, targetCssW = 480, targetCssH = 600) {
+  if (!url) return url;
+  try {
+    const u = new URL(url, window.location.href);
+    if (u.hostname.includes('cdn.shopify.com') || u.hostname.includes('cdn.shopifycdn')) {
+      const dpr = Math.min(window.devicePixelRatio || 1, 3);
+      u.searchParams.set('width', String(Math.round(targetCssW * dpr)));
+      u.searchParams.set('height', String(Math.round(targetCssH * dpr)));
+      u.searchParams.set('crop', 'center');
+      return u.toString();
+    }
+  } catch (e) { /* malformed URL — fall through */ }
+  return url;
+}
+
 // ─── DOM INJECTION & GRID CONTROLLER ───
 
 function renderProductsGrid() {
@@ -641,7 +661,11 @@ function renderProductsGrid() {
     const firstVariant = p.variants?.edges?.[0]?.node;
     const displayPrice = firstVariant ? parseFloat(firstVariant.price.amount) : SHOPIFY_CONFIG.defaultPrice;
     const displayMaterial = firstVariant ? firstVariant.title : 'Solid Wood Finish';
-    const defaultImage = p.featuredImage?.url || (firstVariant && firstVariant.image ? firstVariant.image.url : 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg');
+    // Eyebrow shows the materials only (wood / upholstery) — drop the colour suffix
+    // (e.g. "White Ash / Leather - Cognac" → "White Ash / Leather").
+    const eyebrowMaterial = displayMaterial.split(' - ')[0].trim();
+    const rawImage = p.featuredImage?.url || (firstVariant && firstVariant.image ? firstVariant.image.url : 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg');
+    const defaultImage = sizedCardImage(rawImage);
     const defaultVariantId = firstVariant ? firstVariant.id : `gid://shopify/ProductVariant/fallback-${p.handle}`;
 
     const isDisplay = isDisplayOnly(p.handle);
@@ -670,7 +694,7 @@ function renderProductsGrid() {
         </button>
         `}
       </div>
-      <p class="gcard__cat">${displayMaterial}</p>
+      <p class="gcard__cat">${eyebrowMaterial}</p>
       <h3 class="gcard__name">${p.title}</h3>
       <p class="gcard__price">${formatCurrency(displayPrice)}</p>
     `;

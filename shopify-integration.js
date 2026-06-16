@@ -788,8 +788,13 @@ function updateCarouselImagesToShopify() {
           img = document.createElement('img');
           imgWrap.appendChild(img);
         }
-        if (img.src !== variant.image) {
-          img.src = variant.image;
+        // Size to the carousel card footprint (~263px CSS) via the CDN rather
+        // than loading the multi-megapixel variant original and downscaling it
+        // in-browser (~6x), which softens/jaggs the edges. Width-only keeps the
+        // barstool's aspect ratio (no crop).
+        const sizedVariantImg = sizeShopifyImage(variant.image, Math.round(340 * Math.min(window.devicePixelRatio || 1, 3)));
+        if (img.src !== sizedVariantImg) {
+          img.src = sizedVariantImg;
           img.alt = `Barstool ${wood} ${cushion}`;
         }
       }
@@ -998,10 +1003,15 @@ function updateFeaturedProductsUI() {
       
       if (isDisplay) {
         if (addBtn) addBtn.remove();
-        if (!inquireBtn) {
+        const inquireHref = `product.html?handle=${handle}&inquire=true`;
+        if (inquireBtn) {
+          // The static markup ships these with href="#" — point them at the
+          // product page so the Get-in-touch modal opens from the button itself.
+          inquireBtn.setAttribute('href', inquireHref);
+        } else {
           const newInquireBtn = document.createElement('a');
           newInquireBtn.className = 'product-inquire-btn';
-          newInquireBtn.href = `product.html?handle=${handle}&inquire=true`;
+          newInquireBtn.href = inquireHref;
           newInquireBtn.textContent = 'Inquire';
           buyRow.appendChild(newInquireBtn);
         }
