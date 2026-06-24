@@ -983,7 +983,17 @@ function updateFeaturedProductsUI() {
 
     const priceEl = card.querySelector('.product-price');
     if (priceEl) {
-      priceEl.textContent = formatCurrency(price);
+      // Show the entry price ("From ₹X") using the lowest variant price, so the
+      // card advertises the cheapest way in rather than the matched variant's
+      // price. The matched `price`/data-variant-price still drives the cart.
+      let displayPrice = price;
+      if (isShopifyConnected && liveProduct) {
+        const allPrices = (liveProduct.variants?.edges || [])
+          .map(e => parseFloat(e.node.price.amount))
+          .filter(n => !isNaN(n) && n > 0);
+        if (allPrices.length) displayPrice = Math.min(...allPrices);
+      }
+      priceEl.textContent = `From ${formatCurrency(displayPrice)}`;
     }
 
     const materialsElAfter = card.querySelector('.product-materials');
@@ -1228,7 +1238,7 @@ async function renderCollectionProducts(collectionHandle, gridId) {
 
   products.forEach((p, idx) => {
     const card = document.createElement('a');
-    card.href = `product.html?handle=${p.handle}`;
+    card.href = `product.html?handle=${encodeURIComponent(p.handle)}`;
     card.className = `gcard reveal-el is-revealed`;
     card.style.animationDelay = `${(idx % 4) * 0.1}s`;
     card.setAttribute('data-handle', p.handle);
@@ -1252,29 +1262,29 @@ async function renderCollectionProducts(collectionHandle, gridId) {
     card.innerHTML = `
       <div class="gcard__media">
         <div class="gcard__media-inner">
-          <img src="${imageUrl}" alt="${p.title}" loading="lazy">
+          <img src="${safeUrl(imageUrl)}" alt="${escHtml(p.title)}" loading="lazy">
         </div>
         ${isDisplay ? `
-        <button class="gcard__add gcard__inquire" 
-                data-handle="${p.handle}"
-                aria-label="Inquire about ${p.title}">
+        <button class="gcard__add gcard__inquire"
+                data-handle="${escHtml(p.handle)}"
+                aria-label="Inquire about ${escHtml(p.title)}">
           Inquire <svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg>
         </button>
         ` : `
-        <button class="gcard__add" 
-                data-id="${p.id}" 
-                data-variant-id="${defaultVariantId}"
-                data-title="${p.title}" 
-                data-price="${price}" 
-                data-image="${imageUrl}"
-                data-materials="${displayMaterial}"
-                aria-label="Add ${p.title} to Cart">
+        <button class="gcard__add"
+                data-id="${escHtml(p.id)}"
+                data-variant-id="${escHtml(defaultVariantId)}"
+                data-title="${escHtml(p.title)}"
+                data-price="${price}"
+                data-image="${safeUrl(imageUrl)}"
+                data-materials="${escHtml(displayMaterial)}"
+                aria-label="Add ${escHtml(p.title)} to Cart">
           Add <svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg>
         </button>
         `}
       </div>
-      <p class="gcard__cat" style="text-transform: none;">${displayMaterial}</p>
-      <h3 class="gcard__name">${p.title}</h3>
+      <p class="gcard__cat" style="text-transform: none;">${escHtml(displayMaterial)}</p>
+      <h3 class="gcard__name">${escHtml(p.title)}</h3>
       <p class="gcard__price">${displayPrice}</p>
     `;
 
@@ -1344,6 +1354,17 @@ function getProductVariant(woodName, cushionName) {
   };
 }
 
+// Lowest price across all barstool (configurator) variants, for "From ₹X" display.
+function getMinBarstoolPrice() {
+  if (isShopifyConnected && shopifyProductVariants.length > 0) {
+    const prices = shopifyProductVariants
+      .map(v => parseFloat(v.price.amount))
+      .filter(n => !isNaN(n) && n > 0);
+    if (prices.length) return Math.min(...prices);
+  }
+  return null;
+}
+
 // ─── CART MANIPULATION ACTIONS ───
 
 // Add item to cart
@@ -1402,6 +1423,46 @@ function formatCurrency(amount) {
     currency: 'INR',
     minimumFractionDigits: 0
   }).format(amount);
+}
+
+// Escape text before it is interpolated into an innerHTML template. Product
+// titles, variant values and cart contents (localStorage) are untrusted from
+// the page's point of view.
+function escHtml(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
+// Only allow http(s) URLs into src / background-image; blocks javascript:,
+// data:text/html etc. and neutralises any attribute-breaking quote.
+function safeUrl(rawUrl) {
+  if (!rawUrl) return '';
+  try {
+    const u = new URL(rawUrl, window.location.href);
+    if (u.protocol === 'http:' || u.protocol === 'https:') {
+      return escHtml(u.href);
+    }
+  } catch (e) { /* malformed — drop it */ }
+  return '';
+}
+
+// Only ever navigate to a checkout URL on one of Shopify's own domains. The URL
+// comes back from the cartCreate API response; validating the host before
+// redirecting prevents a tampered/injected response from sending the buyer to a
+// look-alike phishing payment page.
+function isTrustedCheckoutUrl(rawUrl) {
+  try {
+    const u = new URL(rawUrl, window.location.href);
+    if (u.protocol !== 'https:') return false;
+    const h = u.hostname.toLowerCase();
+    return h === SHOPIFY_CONFIG.shopDomain.toLowerCase() ||
+           h.endsWith('.myshopify.com') ||
+           h.endsWith('.shopify.com') ||
+           h === 'shop.app' || h.endsWith('.shop.app');
+  } catch (e) {
+    return false;
+  }
 }
 
 // ─── CART UI CONTROLLER ───
@@ -1514,19 +1575,19 @@ function updateCartUI() {
     itemEl.className = 'cart-item';
     itemEl.innerHTML = `
       <div class="cart-item-img-wrap">
-        <img src="${item.image}" alt="${item.title}">
+        <img src="${safeUrl(item.image)}" alt="${escHtml(item.title)}">
       </div>
       <div class="cart-item-details">
-        <h4 class="cart-item-name">${item.title}</h4>
-        <span class="cart-item-variants">${item.options.wood && item.options.cushion ? `${item.options.wood} / ${item.options.cushion} Cushion` : (item.options.variantTitle || '')}</span>
+        <h4 class="cart-item-name">${escHtml(item.title)}</h4>
+        <span class="cart-item-variants">${item.options.wood && item.options.cushion ? `${escHtml(item.options.wood)} / ${escHtml(item.options.cushion)} Cushion` : escHtml(item.options.variantTitle || '')}</span>
         <span class="cart-item-price">${formatCurrency(item.price)}</span>
         <div class="cart-item-actions">
           <div class="quantity-control">
-            <button class="qty-btn dec-qty-btn" data-id="${item.id}" aria-label="Decrease quantity">-</button>
+            <button class="qty-btn dec-qty-btn" data-id="${escHtml(item.id)}" aria-label="Decrease quantity">-</button>
             <span class="qty-val">${item.quantity}</span>
-            <button class="qty-btn inc-qty-btn" data-id="${item.id}" aria-label="Increase quantity">+</button>
+            <button class="qty-btn inc-qty-btn" data-id="${escHtml(item.id)}" aria-label="Increase quantity">+</button>
           </div>
-          <button class="cart-item-remove" data-id="${item.id}">Remove</button>
+          <button class="cart-item-remove" data-id="${escHtml(item.id)}">Remove</button>
         </div>
       </div>
     `;
@@ -1581,8 +1642,12 @@ async function proceedToCheckout() {
     
     if (data && data.data && data.data.cartCreate && data.data.cartCreate.cart) {
       const checkoutUrl = data.data.cartCreate.cart.checkoutUrl;
-      console.log('Redirecting to Shopify Checkout:', checkoutUrl);
-      window.location.href = checkoutUrl;
+      if (isTrustedCheckoutUrl(checkoutUrl)) {
+        window.location.href = checkoutUrl;
+        return;
+      }
+      console.error('Refusing to redirect to an untrusted checkout URL:', checkoutUrl);
+      if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = 'Proceed to Checkout'; }
       return;
     } else {
       console.warn('Shopify Cart creation failed. Falling back to local simulation.', data);
@@ -1591,8 +1656,8 @@ async function proceedToCheckout() {
   
   // Fallback simulated checkout message
   setTimeout(() => {
-    const itemsDescription = cart.map(item => 
-      `- ${item.title} (${item.options.wood} / ${item.options.cushion}): Qty ${item.quantity} @ ${formatCurrency(item.price)}`
+    const itemsDescription = cart.map(item =>
+      `- ${escHtml(item.title)} (${escHtml(item.options.wood)} / ${escHtml(item.options.cushion)}): Qty ${item.quantity} @ ${formatCurrency(item.price)}`
     ).join('\n');
     
     const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);

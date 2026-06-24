@@ -451,46 +451,61 @@ const FALLBACK_PRODUCTS_DB = {
 const LOCAL_MATERIALS_REGISTRY = {
   wood: [
     { id: "teak", name: "Teak", subtitle: "Tectona grandis", preview: "Resources/material images/Wood/Teak.png", desc: "Renowned for its rich golden to medium brown hues that deepen with age, teak's straight grain and coarse texture exude timeless elegance. Naturally resistant to water, rot, and pests." },
-    { id: "honne", name: "Honne", subtitle: "Intsia bijuga", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7bd362cf5fcc6f199f_6684d13a007aa9790384b31a_667849249a616f8ae8e17198_Honne.png", desc: "Characterized by rich, golden to reddish-brown color, which deepens over time, adding warmth and character. Notably resistant to decay, termites, and fungal attacks." },
-    { id: "matti", name: "Matti", subtitle: "Terminalia elliptica", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7bfe70716c8309c5ce_6684d13a9c12b76d06f85c52_667849369e20be0b462e46bc_Bhilwara.png", desc: "Also known as Indian Laurel, this hardwood ranges in colour from deep brown to almost black, with a grain reminiscent of walnut. Dense and heavy, offering exceptional strength." },
+    { id: "honne", name: "Honne", subtitle: "Intsia bijuga", preview: "Resources/material images/Wood/Honne.png", desc: "Characterized by rich, golden to reddish-brown color, which deepens over time, adding warmth and character. Notably resistant to decay, termites, and fungal attacks." },
+    { id: "matti", name: "Matti", subtitle: "Terminalia elliptica", preview: "Resources/material images/Wood/Bhilwara.png", desc: "Also known as Indian Laurel, this hardwood ranges in colour from deep brown to almost black, with a grain reminiscent of walnut. Dense and heavy, offering exceptional strength." },
     { id: "pinewood", name: "Pinewood", subtitle: "Pinus spp", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7b5e5a5bcc3b3b458a_67c94441373cbaa21b613a32_Pine%2520wood%2520texture.jpeg", desc: "A pale yellow to light brown softwood with a straight to slightly wavy grain and medium-to-coarse texture. Easy to work with and sturdy, ideal for fine joinery." },
     { id: "white-ash", name: "White Ash", subtitle: "Fraxinus americana", preview: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/White_Ash_Crown.jpg", desc: "A strong, durable hardwood with a prominent open grain and light cream color. Offers modern aesthetics with organic grain texture." },
     { id: "reclaimed-teak", name: "Reclaimed Teak", subtitle: "Recycled Tectona grandis", preview: "Resources/material images/Wood/Reclaimed teak.jpg", desc: "Beautiful aged teak salvaged from vintage structures. Offers deep patina, character marks, and exceptional stability." }
   ],
   leather: [
-    { id: "glory-honey", name: "Glory Honey", subtitle: "Premium Hide", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/66cec28e6c0a94cedbd36d0a_Glory%20Honey.jpeg", desc: "A celebration of nature's glorious irregularities. This naked hide becomes your lifelong canvas, absorbing every encounter and moulding by each touch." },
-    { id: "vagabond-cognac", name: "Vagabond Cognac", subtitle: "Full-Grain Leather", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7b7de43506beb353c0_66cec1611ea4dfc3029cb4d7_Vagabond%2520Cognac.jpeg", desc: "A premium full-grain leather with rich, deep brown color and a luxurious feel. Its natural grain showcases the hide's unique textures with a smooth, supple touch." },
-    { id: "montana-chestnut", name: "Montana Chestnut", subtitle: "Aniline Leather", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/6827205822401f3fb50795e0_66cec2f5d466a439da82b609_Montana%2520Chestnut.jpeg", desc: "Aniline finish that retains natural textures and grain. Soaked in oils and well moisturized for a natural sheen, cushiony appearance, and supple feel." },
-    { id: "emperor-brick", name: "Emperor Brick", subtitle: "Natural Grain Hide", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68272058381cbcd3e131788e_66cec26058701322df701984_Emperor%2520Brick.jpeg", desc: "A thick hide with good body in a completely natural grain. Plush and pleasing to the touch, the grains command attention while forgiving small incidents." },
-    { id: "eternity-olive", name: "Eternity Olive", subtitle: "Soft Pliable Hide", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68272058ea1975a65ccf41a6_66cec1aafc679d086da87306_Eternity%2520Olive.jpeg", desc: "Soft and pliable hides that drape like a dream. A cloudy two-tone effect and deep earthy tones combine with natural sheen." }
+    { id: "glory-honey", name: "Glory Honey", subtitle: "Premium Hide", preview: "Resources/material images/Leather/Glory Honey.jpeg", desc: "A celebration of nature's glorious irregularities. This naked hide becomes your lifelong canvas, absorbing every encounter and moulding by each touch." },
+    { id: "vagabond-cognac", name: "Vagabond Cognac", subtitle: "Full-Grain Leather", preview: "Resources/material images/Leather/Vagabond Cognac.jpeg", desc: "A premium full-grain leather with rich, deep brown color and a luxurious feel. Its natural grain showcases the hide's unique textures with a smooth, supple touch." },
+    { id: "montana-chestnut", name: "Montana Chestnut", subtitle: "Aniline Leather", preview: "Resources/material images/Leather/Montana Chestnut.jpg", desc: "Aniline finish that retains natural textures and grain. Soaked in oils and well moisturized for a natural sheen, cushiony appearance, and supple feel." },
+    { id: "emperor-brick", name: "Emperor Brick", subtitle: "Natural Grain Hide", preview: "Resources/material images/Leather/Emperor Brick.jpeg", desc: "A thick hide with good body in a completely natural grain. Plush and pleasing to the touch, the grains command attention while forgiving small incidents." },
+    { id: "eternity-olive", name: "Eternity Olive", subtitle: "Soft Pliable Hide", preview: "Resources/material images/Leather/Eternity Olive.jpeg", desc: "Soft and pliable hides that drape like a dream. A cloudy two-tone effect and deep earthy tones combine with natural sheen." }
   ],
   fabric: [
-    { id: "butter", name: "Butter", subtitle: "Easy-Clean Coating", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/682720157de43506beb3e391_67c6caa80801b708fdf2e726_DDecor%2520Comfort%25203%2520Rustic%2520Basketry%2520Butter.jpeg", desc: "Soft warm fabric with special easy-clean coating for high endurance, ideal for busy spaces." },
-    { id: "blush", name: "Blush", subtitle: "Herringbone Pattern", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68272015403a98807dabdf75_66d5aca6a935ad183c8e3d5c_Blush.jpeg", desc: "Muted fabric with a subtle Herringbone pattern that adds visual texture to your cushions." },
-    { id: "rosebud", name: "Rosebud", subtitle: "Classic Indoor Fabric", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/682720164dfecc77247f0b23_66cec38e223f22ca60d7f61e_Rosebud.png", desc: "Casual yet classic, Rosebud is versatile as an indoor fabric, great for interiors with a muted colour palette." },
-    { id: "rubik-linen", name: "Rubik Linen", subtitle: "Textured Linen", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/6827201614898a0f1ef8fae8_66cec3b3736f9095d2f47d8a_Rubik%2520Linen.jpeg", desc: "Textured and soft fabric for bright interiors; contrasts beautifully with our dark wood options." },
-    { id: "silver", name: "Silver", subtitle: "Herringbone Velvet Finish", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/6827201675c9ffb28b97be67_67c6c947f251ade2c21f630b_Marion%2520Silver%2520website%2520image.png", desc: "Classy and understated fabric with a subtle Herringbone pattern and velvet-like finish." },
-    { id: "cloud", name: "Cloud", subtitle: "Reserved Grey Linen", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/6827201686cd6c20f65bfebd_66cec3c0b4b431d8064591dc_Cloud.jpeg", desc: "Linen option with a reserved grey finish to match any and every interiors palette." },
-    { id: "opal", name: "Opal", subtitle: "Bold Hue Fabric", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68272016ea1975a65ccf045a_66cec3a0d44c5c37471c6e72_Opal.png", desc: "Bright and bold hue perfect for adding invigorating pops of colour to furniture and cushions." },
-    { id: "vienna", name: "Vienna", subtitle: "Understated Opulence Velvet", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68272016e349c81eb78deae0_67c1868f9234871b00513025_Vienna%2520Army.jpeg", desc: "Soft, velvety touch adding subtle luminosity and understated luxury to living spaces." },
-    { id: "flute", name: "Flute", subtitle: "Deep Navy Striped Fabric", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/682720157c98d145afc53748_66d5acbf57e9afbb44cfa786_Flute.jpeg", desc: "Striking lines in deep navy to add a vibrant texture to the furniture and space." },
-    { id: "charcoal", name: "Charcoal", subtitle: "Plush Chenille Yarn", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/6827201786586d244fb7e451_66cec368f97fa4893227f3a2_Charcoal.png", desc: "Its chenille yarn offers a plush, multi-tonal finish, perfect for premium upholstery." }
+    { id: "butter", name: "Butter", subtitle: "Easy-Clean Coating", preview: "Resources/material images/Fabric/DDecor Comfort 3 Rustic Basketry Butter.jpg", desc: "Soft warm fabric with special easy-clean coating for high endurance, ideal for busy spaces." },
+    { id: "blush", name: "Blush", subtitle: "Herringbone Pattern", preview: "Resources/material images/Fabric/Blush.jpeg", desc: "Muted fabric with a subtle Herringbone pattern that adds visual texture to your cushions." },
+    { id: "rosebud", name: "Rosebud", subtitle: "Classic Indoor Fabric", preview: "Resources/material images/Fabric/Rosebud.png", desc: "Casual yet classic, Rosebud is versatile as an indoor fabric, great for interiors with a muted colour palette." },
+    { id: "rubik-linen", name: "Rubik Linen", subtitle: "Textured Linen", preview: "Resources/material images/Fabric/Rubik Linen.jpg", desc: "Textured and soft fabric for bright interiors; contrasts beautifully with our dark wood options." },
+    { id: "silver", name: "Silver", subtitle: "Herringbone Velvet Finish", preview: "Resources/material images/Fabric/Silver.jpeg", desc: "Classy and understated fabric with a subtle Herringbone pattern and velvet-like finish." },
+    { id: "cloud", name: "Cloud", subtitle: "Reserved Grey Linen", preview: "Resources/material images/Fabric/Cloud.jpg", desc: "Linen option with a reserved grey finish to match any and every interiors palette." },
+    { id: "opal", name: "Opal", subtitle: "Bold Hue Fabric", preview: "Resources/material images/Fabric/Opal.png", desc: "Bright and bold hue perfect for adding invigorating pops of colour to furniture and cushions." },
+    { id: "vienna", name: "Vienna", subtitle: "Understated Opulence Velvet", preview: "Resources/material images/Fabric/Vienna Army.jpg", desc: "Soft, velvety touch adding subtle luminosity and understated luxury to living spaces." },
+    { id: "flute", name: "Flute", subtitle: "Deep Navy Striped Fabric", preview: "Resources/material images/Fabric/Flute.jpeg", desc: "Striking lines in deep navy to add a vibrant texture to the furniture and space." },
+    { id: "charcoal", name: "Charcoal", subtitle: "Plush Chenille Yarn", preview: "Resources/material images/Fabric/Charcoal.png", desc: "Its chenille yarn offers a plush, multi-tonal finish, perfect for premium upholstery." }
   ],
   cane: [
-    { id: "woven-cane", name: "Woven Cane", subtitle: "Natural Rattan Vine", preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7b453b55e1b9a21c03_6684d13aa6725a68337cc74f_66784e83c198b5a75b916393_Cane%252520Weave.png", desc: "Crafted from rattan vine, woven cane brings light and airy beauty with warm tones and surprising durability." }
+    { id: "woven-cane", name: "Woven Cane", subtitle: "Natural Rattan Vine", preview: "Resources/material images/Cane/Woven cane.png", desc: "Crafted from rattan vine, woven cane brings light and airy beauty with warm tones and surprising durability." }
   ],
   metals: [
     { id: "brass", name: "Brass", subtitle: "Copper-Zinc Alloy", preview: "Resources/material images/Metals/Brass.jpg", desc: "A versatile copper-zinc alloy known for its golden-yellow color and luster. Develops a natural patina over time." }
   ]
 };
 
-// Find matching material from local/global registry
+// Shopify-live material cache — populated at page load, falls back to LOCAL_MATERIALS_REGISTRY
+let SHOPIFY_MATERIAL_CACHE = null;
+
+// Find matching material — checks Shopify cache first, falls back to LOCAL_MATERIALS_REGISTRY
 function findMaterialDetails(optValue) {
   if (!optValue) return null;
-  const normValue = optValue.toLowerCase().trim();
-  
+  const normKey = optValue.toLowerCase().trim();
+
+  // Pass 0 — Shopify metaobject cache (exact name match)
+  if (SHOPIFY_MATERIAL_CACHE) {
+    const hit = SHOPIFY_MATERIAL_CACHE[normKey];
+    if (hit) return hit;
+    // Also match when option value differs from metaobject name only by "Fabric - " / "Leather - " prefix
+    const stripped = normKey.replace(/^(fabric|leather)\s*-\s*/, '');
+    const hit2 = Object.values(SHOPIFY_MATERIAL_CACHE).find(m =>
+      m.name.toLowerCase().replace(/^(fabric|leather)\s*-\s*/, '') === stripped
+    );
+    if (hit2) return hit2;
+  }
+
   // Clean up option value (remove "Fabric - ", "Leather - ", etc.)
-  const cleanVal = normValue
+  const cleanVal = normKey
     .replace(/^fabric\s*-\s*/, '')
     .replace(/^leather\s*-\s*/, '')
     .replace(/[^a-z0-9]/g, '');
@@ -571,6 +586,74 @@ async function fetchFromShopify(query, variables = {}) {
     console.error('Failed to fetch from Shopify:', error);
     return null;
   }
+}
+
+// ─── MATERIAL METAOBJECTS FETCH ───
+async function fetchMaterialMetaobjects() {
+  const query = `{
+    woods: metaobjects(type: "wood", first: 20) {
+      edges {
+        node {
+          handle
+          fields {
+            key value type
+            reference { ... on MediaImage { image { url } } }
+          }
+        }
+      }
+    }
+    options: metaobjects(type: "option", first: 30) {
+      edges {
+        node {
+          handle
+          fields {
+            key value type
+            reference { ... on MediaImage { image { url } } }
+          }
+        }
+      }
+    }
+  }`;
+
+  const data = await fetchFromShopify(query);
+  if (!data?.data) { SHOPIFY_MATERIAL_CACHE = {}; return; }
+
+  const cache = {};
+
+  for (const edge of (data.data.woods?.edges || [])) {
+    const fields = edge.node.fields;
+    const get = k => fields.find(f => f.key === k);
+    const name = get('name')?.value;
+    if (!name) continue;
+    const imgField = get('image');
+    cache[name.toLowerCase()] = {
+      name,
+      subtitle: get('scientific_name')?.value || '',
+      preview: imgField?.reference?.image?.url || '',
+      desc: get('description')?.value || '',
+      category: 'wood'
+    };
+  }
+
+  for (const edge of (data.data.options?.edges || [])) {
+    const fields = edge.node.fields;
+    const get = k => fields.find(f => f.key === k);
+    const name = get('name')?.value;
+    if (!name) continue;
+    const imgField = get('image');
+    const nameLower = name.toLowerCase();
+    const category = nameLower.startsWith('leather') ? 'leather' : 'fabric';
+    const bare = name.replace(/^(fabric|leather)\s*-\s*/i, '');
+    cache[nameLower] = {
+      name,
+      subtitle: bare,
+      preview: imgField?.reference?.image?.url || '',
+      desc: get('description')?.value || '',
+      category
+    };
+  }
+
+  SHOPIFY_MATERIAL_CACHE = cache;
 }
 
 // ─── CONTROLLER BOOTSTRAP ───
@@ -705,7 +788,10 @@ async function loadProduct(handle) {
   let productData = null;
 
   try {
-    const res = await fetchFromShopify(query, { handle });
+    const [res] = await Promise.all([
+      fetchFromShopify(query, { handle }),
+      fetchMaterialMetaobjects()
+    ]);
     if (res && res.data && res.data.product) {
       productData = res.data.product;
       console.log('Successfully fetched live Shopify product:', productData.title);
@@ -805,7 +891,7 @@ function renderProductPage() {
   imageUrls.forEach((url, idx) => {
     thumbnailsHtml += `
       <div class="thumbnail-item ${idx === 0 ? 'active' : ''}" data-index="${idx}">
-        <img src="${thumbImageSrc(url)}" alt="Thumbnail ${idx + 1}">
+        <img src="${safeUrl(thumbImageSrc(url))}" alt="Thumbnail ${idx + 1}">
       </div>
     `;
   });
@@ -817,10 +903,10 @@ function renderProductPage() {
     const isUpholstery = isUpholsteryOption(opt);
 
     optionsHtml += `
-      <div class="option-group" data-option-name="${opt.name}">
+      <div class="option-group" data-option-name="${escHtml(opt.name)}">
         <div class="option-label-row">
-          <span class="option-title">${opt.name}:</span>
-          <span class="option-selected-val" id="selected-val-${opt.name.replace(/\s+/g, '')}">${selectedOptions[opt.name]}</span>
+          <span class="option-title">${escHtml(opt.name)}:</span>
+          <span class="option-selected-val" id="selected-val-${opt.name.replace(/\s+/g, '')}">${escHtml(selectedOptions[opt.name])}</span>
         </div>
     `;
 
@@ -831,9 +917,9 @@ function renderProductPage() {
         const mat = findMaterialDetails(val);
         const isActive = selectedOptions[optName] === val;
         if (mat && mat.preview) {
-          return `<div class="swatch-circle ${isActive ? 'active' : ''}" data-value="${val}" data-option="${optName}" title="${val}" style="background-image: url('${mat.preview}');"></div>`;
+          return `<div class="swatch-circle ${isActive ? 'active' : ''}" data-value="${escHtml(val)}" data-option="${escHtml(optName)}" title="${escHtml(val)}" style="background-image: url('${safeUrl(mat.preview)}');"></div>`;
         }
-        return `<button class="swatch-pill ${isActive ? 'active' : ''}" data-value="${val}" data-option="${optName}">${val}</button>`;
+        return `<button class="swatch-pill ${isActive ? 'active' : ''}" data-value="${escHtml(val)}" data-option="${escHtml(optName)}">${escHtml(val)}</button>`;
       };
       if (fabricVals.length > 0) {
         optionsHtml += `<div class="upholstery-subgroup"><span class="upholstery-subgroup-label">Fabric</span><div class="swatches-row">${fabricVals.map(v => buildSwatchHtml(v, opt.name)).join('')}</div></div>`;
@@ -846,10 +932,18 @@ function renderProductPage() {
       opt.values.forEach(val => {
         const mat = findMaterialDetails(val);
         const isActive = selectedOptions[opt.name] === val;
+        // Reclaimed teak is the premium wood tier — flag it in the selector.
+        const isPremium = isWood && val.toLowerCase().includes('reclaimed');
+        let swatchHtml;
         if (isWood && mat && mat.preview) {
-          optionsHtml += `<div class="swatch-circle ${isActive ? 'active' : ''}" data-value="${val}" data-option="${opt.name}" title="${val}" style="background-image: url('${mat.preview}');"></div>`;
+          swatchHtml = `<div class="swatch-circle ${isActive ? 'active' : ''}" data-value="${escHtml(val)}" data-option="${escHtml(opt.name)}" title="${escHtml(val)}" style="background-image: url('${safeUrl(mat.preview)}');"></div>`;
         } else {
-          optionsHtml += `<button class="swatch-pill ${isActive ? 'active' : ''}" data-value="${val}" data-option="${opt.name}">${val}</button>`;
+          swatchHtml = `<button class="swatch-pill ${isActive ? 'active' : ''}" data-value="${escHtml(val)}" data-option="${escHtml(opt.name)}">${escHtml(val)}</button>`;
+        }
+        if (isPremium) {
+          optionsHtml += `<div class="swatch-premium-wrap">${swatchHtml}<span class="swatch-premium-label">Premium</span></div>`;
+        } else {
+          optionsHtml += swatchHtml;
         }
       });
       optionsHtml += `</div>`;
@@ -867,7 +961,7 @@ function renderProductPage() {
     <div class="product-gallery">
       <div class="main-image-viewport" id="main-viewport">
         <button id="prev-image-btn" class="slider-arrow prev-arrow" aria-label="Previous Image">‹</button>
-        <img id="main-product-image" src="${heroImageSrc(defaultImageUrl)}" alt="${currentProduct.title}">
+        <img id="main-product-image" src="${safeUrl(heroImageSrc(defaultImageUrl))}" alt="${escHtml(currentProduct.title)}">
         <button id="next-image-btn" class="slider-arrow next-arrow" aria-label="Next Image">›</button>
       </div>
       <div class="thumbnail-list" id="thumbnails-container">
@@ -879,14 +973,14 @@ function renderProductPage() {
     <!-- Info Column -->
     <div class="product-info-panel">
       <div class="product-header-block">
-        <span class="collection-eyebrow">${collectionTitle}</span>
-        <h1 class="product-title-text">${currentProduct.title}</h1>
+        <span class="collection-eyebrow">${escHtml(collectionTitle)}</span>
+        <h1 class="product-title-text">${escHtml(currentProduct.title)}</h1>
         <div id="product-price-display" class="product-price-text">${formatCurrency(initialPrice)}</div>
         <p class="price-gst-note">Price includes GST</p>
       </div>
 
       <div class="product-desc-text">
-        ${currentProduct.description}
+        ${escHtml(currentProduct.description)}
       </div>
 
       <!-- Selectors group -->
@@ -916,7 +1010,7 @@ function renderProductPage() {
             <line x1="3" y1="9" x2="21" y2="9"></line>
             <line x1="3" y1="15" x2="21" y2="15"></line>
           </svg>
-          <span class="dimensions-val">${dimensionStr}</span>
+          <span class="dimensions-val">${escHtml(dimensionStr)}</span>
         </div>
       </div>
 
@@ -1126,7 +1220,7 @@ function renderProductPage() {
       dimensionUrls.forEach((url, idx) => {
         gridHtml += `
           <div class="dimensions-card">
-            <img src="${url}" alt="${currentProduct.title} Dimensions ${idx + 1}" loading="lazy">
+            <img src="${safeUrl(url)}" alt="${escHtml(currentProduct.title)} Dimensions ${idx + 1}" loading="lazy">
           </div>
         `;
       });
@@ -1135,10 +1229,10 @@ function renderProductPage() {
       if (glbUrl) {
         gridHtml += `
           <div class="dimensions-card model-card">
-            <model-viewer 
-              src="${glbUrl}" 
-              ${usdzUrl ? `ios-src="${usdzUrl}"` : ''} 
-              alt="${currentProduct.title} Interactive 3D Model" 
+            <model-viewer
+              src="${safeUrl(glbUrl)}"
+              ${usdzUrl ? `ios-src="${safeUrl(usdzUrl)}"` : ''}
+              alt="${escHtml(currentProduct.title)} Interactive 3D Model"
               auto-rotate 
               camera-controls 
               camera-orbit="auto auto 160%"
@@ -1270,13 +1364,13 @@ function updateVariantDisplays(isInitial = false) {
         gridHtml += `
           <div class="material-detail-item">
             <div class="material-header">
-              <div class="material-swatch" style="background-image: url('${mat.preview}');"></div>
+              <div class="material-swatch" style="background-image: url('${safeUrl(mat.preview)}');"></div>
               <div>
-                <div class="material-name">${mat.name}</div>
-                <div class="material-sub">${mat.subtitle || ''}</div>
+                <div class="material-name">${escHtml(mat.name)}</div>
+                <div class="material-sub">${escHtml(mat.subtitle || '')}</div>
               </div>
             </div>
-            <p class="material-desc">${mat.desc}</p>
+            <p class="material-desc">${escHtml(mat.desc)}</p>
           </div>
         `;
       }
@@ -1534,8 +1628,13 @@ async function proceedToCheckout() {
     const res = await fetchFromShopify(mutation, { input: { lines } });
     if (res && res.data && res.data.cartCreate && res.data.cartCreate.cart) {
       const checkoutUrl = res.data.cartCreate.cart.checkoutUrl;
-      console.log('Redirecting to Shopify Checkout:', checkoutUrl);
-      window.location.href = checkoutUrl;
+      if (isTrustedCheckoutUrl(checkoutUrl)) {
+        window.location.href = checkoutUrl;
+        return;
+      }
+      console.error('Refusing to redirect to an untrusted checkout URL:', checkoutUrl);
+      const cb = document.getElementById('checkout-btn');
+      if (cb) { cb.disabled = false; cb.textContent = 'Proceed to Checkout'; }
       return;
     }
   } catch (err) {
@@ -1544,12 +1643,12 @@ async function proceedToCheckout() {
 
   // Fallback Simulation Dialog Modal
   setTimeout(() => {
-    const itemsDescription = cart.map(item => 
-      `- ${item.title}: Qty ${item.quantity} @ ${formatCurrency(item.price)}`
+    const itemsDescription = cart.map(item =>
+      `- ${escHtml(item.title)}: Qty ${item.quantity} @ ${formatCurrency(item.price)}`
     ).join('\n');
-    
+
     const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
+
     const alertModal = document.createElement('div');
     alertModal.className = "simulated-modal-overlay";
     alertModal.style.position = 'fixed';
@@ -1672,19 +1771,19 @@ function updateCartUI() {
     itemEl.className = 'cart-item';
     itemEl.innerHTML = `
       <div class="cart-item-img-wrap">
-        <img src="${item.image}" alt="${item.title}">
+        <img src="${safeUrl(item.image)}" alt="${escHtml(item.title)}">
       </div>
       <div class="cart-item-details">
-        <h4 class="cart-item-name">${item.title}</h4>
-        <span class="cart-item-variants">${item.options.wood && item.options.cushion ? `${item.options.wood} / ${item.options.cushion}` : (item.options.variantTitle || '')}</span>
+        <h4 class="cart-item-name">${escHtml(item.title)}</h4>
+        <span class="cart-item-variants">${item.options.wood && item.options.cushion ? `${escHtml(item.options.wood)} / ${escHtml(item.options.cushion)}` : escHtml(item.options.variantTitle || '')}</span>
         <span class="cart-item-price">${formatCurrency(item.price)}</span>
         <div class="cart-item-actions">
           <div class="quantity-control">
-            <button class="qty-btn dec-qty-btn" data-id="${item.id}" aria-label="Decrease quantity">-</button>
+            <button class="qty-btn dec-qty-btn" data-id="${escHtml(item.id)}" aria-label="Decrease quantity">-</button>
             <span class="qty-val">${item.quantity}</span>
-            <button class="qty-btn inc-qty-btn" data-id="${item.id}" aria-label="Increase quantity">+</button>
+            <button class="qty-btn inc-qty-btn" data-id="${escHtml(item.id)}" aria-label="Increase quantity">+</button>
           </div>
-          <button class="cart-item-remove" data-id="${item.id}">Remove</button>
+          <button class="cart-item-remove" data-id="${escHtml(item.id)}">Remove</button>
         </div>
       </div>
     `;
@@ -1824,24 +1923,24 @@ async function loadRelatedProducts() {
     }
 
     const card = document.createElement('a');
-    card.href = `product.html?handle=${p.handle}`;
+    card.href = `product.html?handle=${encodeURIComponent(p.handle)}`;
     card.className = 'gcard';
     card.innerHTML = `
       <div class="gcard__media">
         <div class="gcard__media-inner">
-          <img src="${imgUrl}" alt="${p.title}" loading="lazy">
+          <img src="${safeUrl(imgUrl)}" alt="${escHtml(p.title)}" loading="lazy">
         </div>
-        <button class="gcard__add" data-handle="${p.handle}">Details <svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></button>
+        <button class="gcard__add" data-handle="${escHtml(p.handle)}">Details <svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></button>
       </div>
-      <p class="gcard__cat">${materialsStr}</p>
-      <h3 class="gcard__name">${p.title}</h3>
+      <p class="gcard__cat">${escHtml(materialsStr)}</p>
+      <h3 class="gcard__name">${escHtml(p.title)}</h3>
       <p class="gcard__price">${formatCurrency(parseFloat(priceVal))}</p>
     `;
 
     card.querySelector('.gcard__add').addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      window.location.href = `product.html?handle=${p.handle}`;
+      window.location.href = `product.html?handle=${encodeURIComponent(p.handle)}`;
     });
 
     grid.appendChild(card);
@@ -1849,12 +1948,53 @@ async function loadRelatedProducts() {
 }
 
 // ─── GENERAL HELPERS ───
+// Only ever navigate to a checkout URL on one of Shopify's own domains. The URL
+// comes back from the cartCreate API response; validating the host before
+// redirecting prevents a tampered/injected response from sending the buyer to a
+// look-alike phishing payment page.
+function isTrustedCheckoutUrl(rawUrl) {
+  try {
+    const u = new URL(rawUrl, window.location.href);
+    if (u.protocol !== 'https:') return false;
+    const h = u.hostname.toLowerCase();
+    return h === SHOPIFY_CONFIG.shopDomain.toLowerCase() ||
+           h.endsWith('.myshopify.com') ||
+           h.endsWith('.shopify.com') ||
+           h === 'shop.app' || h.endsWith('.shop.app');
+  } catch (e) {
+    return false;
+  }
+}
+
 function formatCurrency(amount) {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
     minimumFractionDigits: 0
   }).format(amount);
+}
+
+// Escape text before it is interpolated into an innerHTML template. Product
+// titles, descriptions, option/variant values and alt text all originate from
+// the Shopify catalog (or the URL), so they are untrusted from the page's POV.
+function escHtml(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
+// Only allow http(s)/relative URLs into src / background-image. Blocks
+// javascript:, data:text/html and other script-bearing schemes, and neutralises
+// any quote that could break out of the surrounding attribute.
+function safeUrl(rawUrl) {
+  if (!rawUrl) return '';
+  try {
+    const u = new URL(rawUrl, window.location.href);
+    if (u.protocol === 'http:' || u.protocol === 'https:') {
+      return escHtml(u.href);
+    }
+  } catch (e) { /* malformed — drop it */ }
+  return '';
 }
 
 // Ask the Shopify CDN to resize related-product card images to roughly their

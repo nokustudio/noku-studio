@@ -1441,7 +1441,10 @@
         
         const priceEl = barstoolCard.querySelector('.product-price');
         if (priceEl && typeof formatCurrency === 'function') {
-          priceEl.textContent = formatCurrency(variant.price);
+          // Show the entry price ("From ₹X") across all barstool variants, not
+          // the selected one; data-variant-price above still drives the cart.
+          const minPrice = (typeof getMinBarstoolPrice === 'function') ? getMinBarstoolPrice() : null;
+          priceEl.textContent = `From ${formatCurrency(minPrice != null ? minPrice : variant.price)}`;
         }
       }
     }

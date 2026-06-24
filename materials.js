@@ -198,7 +198,7 @@
         subtitle: "Natural Rattan Vine",
         desc: "Woven cane, a natural material crafted from rattan vine, brings light and airy beauty to furniture. Its warm tones, unique textures, and surprising durability make it a versatile choice for any style, from coastal chic to mid-century modern. It's lightweight, breathable for comfort, and requires minimal care - perfect for adding a touch of natural elegance to your home.",
         class: "swatch-cane-woven-cane",
-        preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7b453b55e1b9a21c03_6684d13aa6725a68337cc74f_66784e83c198b5a75b916393_Cane%252520Weave.png"
+        preview: "Resources/material images/Cane/Woven cane.png"
       }
     ],
     metals: [
