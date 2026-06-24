@@ -756,7 +756,12 @@
         const imgUrl = getVariantImage(p, category, item.id, item.name);
         
         const isDisplay = ['dining-table', 'sofa-2', 'lounge-sofa', 'poster-bed', 'rod-bed-with-curved-headboard', 'round-dining-table'].includes(p.handle.toLowerCase().trim());
-        const productUrl = `product.html?handle=${p.handle}${isDisplay ? '&inquire=true' : ''}`;
+        let productUrl = `product.html?handle=${p.handle}${isDisplay ? '&inquire=true' : ''}`;
+        if (category === 'wood') {
+          productUrl += `&wood=${encodeURIComponent(item.id)}`;
+        } else if (category === 'leather' || category === 'fabric') {
+          productUrl += `&upholstery=${encodeURIComponent(item.id)}`;
+        }
 
         const pCard = document.createElement('a');
         pCard.href = productUrl;

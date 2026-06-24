@@ -872,6 +872,8 @@ function updateItemQuantity(itemId, change) {
     cart[index].quantity += change;
     if (cart[index].quantity <= 0) {
       cart.splice(index, 1);
+    } else if (cart[index].quantity > 99) {
+      cart[index].quantity = 99; // clamp to a sane maximum
     }
     saveCart();
   }

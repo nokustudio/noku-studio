@@ -826,9 +826,11 @@ async function loadProduct(handle) {
     const isWoodOpt = isWoodOption(opt);
     const isUphOpt = isUpholsteryOption(opt);
 
-    // Override if 'wood' parameter is passed and matches (case-insensitive & slugified)
+    // Override if 'wood' parameter is passed and matches
     if (isWoodOpt && qWood) {
       const matchedWood = opt.values.find(val => {
+        const mat = findMaterialDetails(val);
+        if (mat && mat.id.toLowerCase() === qWood.toLowerCase()) return true;
         const slug = val.toLowerCase().replace(/\s+/g, '-');
         return slug === qWood.toLowerCase() || val.toLowerCase() === qWood.toLowerCase();
       });
@@ -840,6 +842,8 @@ async function loadProduct(handle) {
     // Override if 'upholstery' (or 'cushion') parameter is passed and matches
     if (isUphOpt && qUpholstery) {
       const matchedUpholstery = opt.values.find(val => {
+        const mat = findMaterialDetails(val);
+        if (mat && mat.id.toLowerCase() === qUpholstery.toLowerCase()) return true;
         const slug = val.toLowerCase().replace(/\s+/g, '-');
         return slug.includes(qUpholstery.toLowerCase()) || val.toLowerCase().includes(qUpholstery.toLowerCase());
       });
@@ -1572,6 +1576,8 @@ function updateItemQuantity(itemId, change) {
     cart[index].quantity += change;
     if (cart[index].quantity <= 0) {
       cart.splice(index, 1);
+    } else if (cart[index].quantity > 99) {
+      cart[index].quantity = 99; // clamp to a sane maximum
     }
     saveCart();
   }
