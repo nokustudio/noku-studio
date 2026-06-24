@@ -1794,9 +1794,6 @@ body:not(.secondary-landing-page) .hero-title {
 }
 
 /* Fabric Category */
-.swatch-fabric-butter {
-  background-image: url('Resources/material%20images/Fabric/DDecor%20Comfort%203%20Rustic%20Basketry%20Butter.jpg'), linear-gradient(135deg, #f7f1e3 0%, #ebdcb9 60%, #ded0a8 100%);
-}
 .swatch-fabric-blush {
   background-image: url('Resources/material%20images/Fabric/Blush.jpeg'), linear-gradient(135deg, #e3c4bc 0%, #cca297 60%, #b58376 100%);
 }

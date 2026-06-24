@@ -14,7 +14,6 @@
       { id: "eternity-olive", name: "Eternity Olive", subtitle: "Soft Pliable Hide", cls: "swatch-leather-eternity-olive", preview: "Resources/material images/Leather/Eternity Olive.jpeg", desc: "Soft and pliable hides that drape like a dream. A cloudy two-tone effect and deep earthy tones combine with natural sheen for shine and sophistication in any sleek setting." }
     ],
     fabric: [
-      { id: "butter", name: "Butter", subtitle: "Easy-Clean Coating", cls: "swatch-fabric-butter", preview: "Resources/material images/Fabric/DDecor Comfort 3 Rustic Basketry Butter.jpg", desc: "Soft warm fabric with special easy-clean coating for high endurance, ideal for parents and pet-owners." },
       { id: "blush", name: "Blush", subtitle: "Herringbone Pattern", cls: "swatch-fabric-blush", preview: "Resources/material images/Fabric/Blush.jpeg", desc: "Muted fabric with a subtle Herringbone pattern that adds visual texture to your cushions." },
       { id: "rosebud", name: "Rosebud", subtitle: "Classic Indoor Fabric", cls: "swatch-fabric-rosebud", preview: "Resources/material images/Fabric/Rosebud.png", desc: "Casual yet classic, Rosebud is versatile as an indoor fabric, great for interiors with a muted colour palette." },
       { id: "rubik-linen", name: "Rubik Linen", subtitle: "Textured Linen", cls: "swatch-fabric-rubik-linen", preview: "Resources/material images/Fabric/Rubik Linen.jpg", desc: "Textured and soft fabric for bright interiors; contrasts well with our wood options." },

@@ -111,14 +111,6 @@
     ],
     fabric: [
       {
-        id: "butter",
-        name: "Butter",
-        subtitle: "Easy-Clean Coating",
-        desc: "Soft warm fabric with special easy-clean coating for high endurance, ideal for parents and pet-owners.",
-        class: "swatch-fabric-butter",
-        preview: "Resources/material images/Fabric/DDecor Comfort 3 Rustic Basketry Butter.jpg"
-      },
-      {
         id: "blush",
         name: "Blush",
         subtitle: "Herringbone Pattern",
@@ -400,43 +392,76 @@
       const result = await response.json();
       if (result.errors || !result.data) return null;
 
-      const byId = {};
-      const ingest = (edges) => {
-        (edges || []).forEach((edge) => {
-          const fields = edge.node.fields;
-          const get = (k) => fields.find((f) => f.key === k);
-          const name = get('name')?.value;
-          if (!name) return;
-          const id = getMatchedId(name);
-          const imgUrl = get('image')?.reference?.image?.url;
-          const entry = byId[id] || {};
-          if (imgUrl) entry.preview = imgUrl;
-          if (get('description')?.value) entry.desc = get('description').value;
-          if (get('scientific_name')?.value) entry.subtitle = get('scientific_name').value;
-          byId[id] = entry;
-        });
+      const liveMaterials = {
+        wood: [],
+        leather: [],
+        fabric: []
       };
-      ingest(result.data.woods?.edges);
-      ingest(result.data.options?.edges);
-      return byId;
+
+      const findLocalMaterial = (id) => {
+        for (const cat of ['wood', 'leather', 'fabric']) {
+          const match = MATERIALS_REGISTRY[cat].find(item => item.id === id);
+          if (match) return { class: match.class, category: cat };
+        }
+        return null;
+      };
+
+      const parseFields = (fields) => {
+        const get = (k) => fields.find((f) => f.key === k);
+        const name = get('name')?.value;
+        if (!name) return null;
+        
+        const id = getMatchedId(name);
+        const imgUrl = get('image')?.reference?.image?.url;
+        const desc = get('description')?.value || '';
+        const subtitle = get('scientific_name')?.value || '';
+        
+        const cleanName = name.replace(/^(fabric|leather)\s*-\s*/i, '');
+        
+        let cssClass = '';
+        const local = findLocalMaterial(id);
+        if (local && local.class) {
+          cssClass = local.class;
+        }
+
+        return {
+          id,
+          name: cleanName,
+          subtitle,
+          desc,
+          class: cssClass,
+          preview: imgUrl || ''
+        };
+      };
+
+      (result.data.woods?.edges || []).forEach(edge => {
+        const item = parseFields(edge.node.fields);
+        if (item) liveMaterials.wood.push(item);
+      });
+
+      (result.data.options?.edges || []).forEach(edge => {
+        const fields = edge.node.fields;
+        const get = (k) => fields.find((f) => f.key === k);
+        const name = get('name')?.value || '';
+        
+        const item = parseFields(fields);
+        if (item) {
+          const local = findLocalMaterial(item.id);
+          const category = local ? local.category : (name.toLowerCase().includes('leather') ? 'leather' : 'fabric');
+          
+          if (category === 'leather') {
+            liveMaterials.leather.push(item);
+          } else if (category === 'fabric') {
+            liveMaterials.fabric.push(item);
+          }
+        }
+      });
+
+      return liveMaterials;
     } catch (err) {
       console.warn('Material metaobject fetch failed; using local registry.', err);
       return null;
     }
-  }
-
-  // Overlays Shopify metaobject data onto the local registry, in place.
-  function applyMaterialOverlay(byId) {
-    if (!byId) return;
-    Object.keys(MATERIALS_REGISTRY).forEach((cat) => {
-      MATERIALS_REGISTRY[cat].forEach((item) => {
-        const live = byId[item.id];
-        if (!live) return;
-        if (live.preview) item.preview = live.preview;
-        if (live.desc) item.desc = live.desc;
-        if (live.subtitle) item.subtitle = live.subtitle;
-      });
-    });
   }
 
   // ─── CROSS-REFERENCE / MATCHING LOGIC ───
@@ -459,6 +484,18 @@
     if (norm.includes('wovencane')) return 'woven-cane';
 
     return norm;
+  }
+
+  function getOptionCategory(val) {
+    const mapped = getMatchedId(val);
+    if (!mapped) return null;
+    
+    for (const cat of ['wood', 'leather', 'fabric', 'cane', 'metals']) {
+      if (MATERIALS_REGISTRY[cat] && MATERIALS_REGISTRY[cat].some(item => item.id === mapped)) {
+        return cat;
+      }
+    }
+    return null;
   }
 
   function getFilterUrl(category, item) {
@@ -601,9 +638,13 @@
         v.selectedOptions.forEach(opt => {
           const optName = opt.name.toLowerCase();
           const optVal = opt.value.toLowerCase();
+          
+          const optCat = getOptionCategory(opt.value);
+          const isWoodOpt = optName === 'wood' || optName === 'finish' || optCat === 'wood';
+          const isUphOpt = optName === 'upholstery' || optName === 'cushion' || optCat === 'leather' || optCat === 'fabric';
 
           // Check if option is Wood or Finish
-          if (optName === 'wood' || optName === 'finish') {
+          if (isWoodOpt) {
             const mappedWood = getMatchedId(opt.value);
             const valNorm = opt.value.toLowerCase().replace(/[^a-z0-9]/g, '');
             const targetNorm = materialId.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -621,7 +662,7 @@
           }
 
           // Check if option is Upholstery or Cushion
-          if (optName === 'upholstery' || optName === 'cushion') {
+          if (isUphOpt) {
             const mappedUph = getMatchedId(opt.value);
             if (mappedUph === normId || optVal.includes(normId) || normId.includes(optVal)) {
               matchesUpholstery = true;
@@ -642,7 +683,9 @@
             return v.image.url;
           }
           // Otherwise, save as best match Upholstery variant
-          bestMatchImage = v.image.url;
+          if (!bestMatchImage) {
+            bestMatchImage = v.image.url;
+          }
         }
       } else {
         const titleMatch = v.title.toLowerCase().includes(normName) || v.title.toLowerCase().includes(normId);
@@ -824,8 +867,12 @@
       // Fallback if shopify storefront is offline
       productsList = [...FALLBACK_PRODUCTS];
     }
-    // Overlay live images / descriptions / scientific names onto the registry
-    applyMaterialOverlay(materialOverlay);
+    // Reconstruct wood, leather, and fabric categories exclusively from Shopify metaobjects if online
+    if (materialOverlay) {
+      MATERIALS_REGISTRY.wood = materialOverlay.wood;
+      MATERIALS_REGISTRY.leather = materialOverlay.leather;
+      MATERIALS_REGISTRY.fabric = materialOverlay.fabric;
+    }
 
     // 2. Initialize and render each category section
     const categories = ['wood', 'leather', 'fabric', 'cane', 'metals'];
