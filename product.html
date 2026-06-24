@@ -190,22 +190,33 @@
       gap: 12px;
     }
 
-    /* Premium-tier wood swatch (reclaimed teak) with its label beneath */
+    /* Premium-tier wood swatch (reclaimed teak). The swatch keeps its normal
+       34px footprint so it stays aligned with the other swatches in the row;
+       the tag floats below as a centered pill instead of widening the wrap. */
     .swatch-premium-wrap {
+      position: relative;
       display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
+      vertical-align: top;
     }
 
     .swatch-premium-label {
+      position: absolute;
+      top: calc(100% + 7px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
       font-family: var(--font-body);
       font-size: 0.5rem;
-      font-weight: 600;
-      letter-spacing: 1px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
-      color: var(--chamoisee);
+      color: var(--paper);
+      background: var(--chamoisee);
+      padding: 3px 8px;
+      border-radius: var(--radius-pill, 9999px);
       white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(44, 38, 34, 0.16);
+      pointer-events: none;
     }
 
     .swatch-circle {
