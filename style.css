@@ -436,6 +436,18 @@ nav.scrolled .logo-svg > :nth-child(n + 2) {
   text-align: center;
 }
 
+/* Invisible bridge to prevent dropdown from closing when moving pointer from toggle to menu options */
+.nav-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: transparent;
+  pointer-events: auto;
+}
+
 /* Light Theme dropdown colors */
 nav.light-nav .nav-dropdown {
   background-color: rgba(244, 245, 241, 0.98);
@@ -480,6 +492,10 @@ nav.light-nav .nav-dropdown {
     pointer-events: auto !important;
     background: transparent !important;
     width: auto !important;
+  }
+
+  .nav-dropdown::before {
+    display: none !important;
   }
 
   .dropdown-chevron {
