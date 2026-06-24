@@ -208,7 +208,7 @@
   // ─── OFFLINE FALLBACK PRODUCTS DATABASE ───
   const FALLBACK_PRODUCTS = [
     {
-      title: "Lounge Chair",
+      title: "Bask Chair",
       handle: "lounge-chair",
       featuredImage: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7724c1a8d27260d62288_Noku_ofStillness_Lounge_chair_02.jpeg" },
       priceRange: { minVariantPrice: { amount: "49500" } },
@@ -219,7 +219,7 @@
       ]
     },
     {
-      title: "Barstool",
+      title: "Stilt Barstool",
       handle: "barstool",
       featuredImage: { url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/67cfdbb331dba957c997c00e_5d1622c83584a245197f9005889b2b06_Noku_ofStillness_Barstool_03%20copy.webp" },
       priceRange: { minVariantPrice: { amount: "21000" } },
@@ -241,7 +241,7 @@
       ]
     },
     {
-      title: "Study Table",
+      title: "Stylus Table",
       handle: "modern-study-table",
       featuredImage: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7d6f73c94da715b34a92_Noku_ofStillness_Study_table_03.jpeg" },
       priceRange: { minVariantPrice: { amount: "35000" } },
@@ -251,7 +251,7 @@
       ]
     },
     {
-      title: "Round Dining Table",
+      title: "Eclipse Dining Table",
       handle: "round-dining-table",
       featuredImage: { url: "https://cdn.mut-images.com/not-found.jpg" }, // generic fallback if empty
       priceRange: { minVariantPrice: { amount: "47000" } },
@@ -304,6 +304,9 @@
                   node {
                     id
                     title
+                    price {
+                      amount
+                    }
                     image {
                       url
                     }

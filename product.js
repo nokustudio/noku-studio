@@ -115,7 +115,7 @@ const FALLBACK_PRODUCTS_DB = {
   },
   "lounge-chair": {
     id: "gid://shopify/Product/7319571562554",
-    title: "Lounge Chair",
+    title: "Bask Chair",
     handle: "lounge-chair",
     description: "Celebrating mid-century restraint and fine craftsmanship. An elegant visual weight with refined lines. Structured for ultimate ergonomic support.",
     productType: "chair",
@@ -124,9 +124,9 @@ const FALLBACK_PRODUCTS_DB = {
     collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
     images: {
       edges: [
-        { node: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7724c1a8d27260d62288_Noku_ofStillness_Lounge_chair_02.jpeg", altText: "Lounge Chair Angle" } },
-        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Lounge_chair_-_teak_frame_-_linen.png?v=1774675403", altText: "Lounge Chair Teak Linen" } },
-        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Lounge_chair_-_whiteash_-_linen.png?v=1774676886", altText: "Lounge Chair Ash Linen" } }
+        { node: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7724c1a8d27260d62288_Noku_ofStillness_Lounge_chair_02.jpeg", altText: "Bask Chair Angle" } },
+        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Lounge_chair_-_teak_frame_-_linen.png?v=1774675403", altText: "Bask Chair Teak Linen" } },
+        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Lounge_chair_-_whiteash_-_linen.png?v=1774676886", altText: "Bask Chair Ash Linen" } }
       ]
     },
     variants: {
@@ -176,7 +176,7 @@ const FALLBACK_PRODUCTS_DB = {
   },
   "dining-chair": {
     id: "gid://shopify/Product/7365013274682",
-    title: "Dining Chair",
+    title: "Ripple Chair",
     handle: "dining-chair",
     description: "Lightweight dining joinery in warm hardwood finishes. Perfect blend of comfort and structural honesty. Reinterpreted Chandigarh style.",
     productType: "chair",
@@ -185,7 +185,7 @@ const FALLBACK_PRODUCTS_DB = {
     collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
     images: {
       edges: [
-        { node: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be7113654a_Noku_ofStillness_Dining_chair_03.jpeg", altText: "Dining Chair Front" } }
+        { node: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be7113654a_Noku_ofStillness_Dining_chair_03.jpeg", altText: "Ripple Chair Front" } }
       ]
     },
     variants: {
@@ -209,7 +209,7 @@ const FALLBACK_PRODUCTS_DB = {
   },
   "modern-study-table": {
     id: "gid://shopify/Product/7320294064186",
-    title: "Study Table",
+    title: "Stylus Table",
     handle: "modern-study-table",
     description: "Premium solid teak workstation with elegant brass detailing. Built to inspire intent and focus.",
     productType: "table",
@@ -218,7 +218,7 @@ const FALLBACK_PRODUCTS_DB = {
     collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
     images: {
       edges: [
-        { node: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7d6f73c94da715b34a92_Noku_ofStillness_Study_table_03.jpeg", altText: "Study Table ISO" } }
+        { node: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7d6f73c94da715b34a92_Noku_ofStillness_Study_table_03.jpeg", altText: "Stylus Table ISO" } }
       ]
     },
     variants: {
@@ -242,7 +242,7 @@ const FALLBACK_PRODUCTS_DB = {
   },
   "barstool": {
     id: "gid://shopify/Product/7320281120826",
-    title: "Barstool",
+    title: "Stilt Barstool",
     handle: "barstool",
     description: "A design statement of quiet elegance, wood, and upholstery. Handmade in India. Ergonomically shaped for dining counters.",
     productType: "barstool",
@@ -251,7 +251,7 @@ const FALLBACK_PRODUCTS_DB = {
     collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
     images: {
       edges: [
-        { node: { url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/67cfdbb331dba957c997c00e_5d1622c83584a245197f9005889b2b06_Noku_ofStillness_Barstool_03%20copy.webp", altText: "Barstool Front" } }
+        { node: { url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/67cfdbb331dba957c997c00e_5d1622c83584a245197f9005889b2b06_Noku_ofStillness_Barstool_03%20copy.webp", altText: "Stilt Barstool Front" } }
       ]
     },
     variants: {
@@ -277,7 +277,7 @@ const FALLBACK_PRODUCTS_DB = {
   },
   "classic-study-table": {
     id: "gid://shopify/Product/7320292196410",
-    title: "Classic Study Table",
+    title: "Quill Study Table",
     handle: "classic-study-table",
     description: "Vernacular lines combined with modern ergonomics. Features solid joinery and drawer space.",
     productType: "table",
@@ -286,7 +286,7 @@ const FALLBACK_PRODUCTS_DB = {
     collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
     images: {
       edges: [
-        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/T1_DSC09354.jpg?v=1769765035", altText: "Classic Study Table" } }
+        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/T1_DSC09354.jpg?v=1769765035", altText: "Quill Study Table" } }
       ]
     },
     variants: {
@@ -310,7 +310,7 @@ const FALLBACK_PRODUCTS_DB = {
   },
   "side-table": {
     id: "gid://shopify/Product/7323011874874",
-    title: "Side Table",
+    title: "Nook Side Table",
     handle: "side-table",
     description: "Compact design block with elegant, clean lines, ideal as a bedside companion or sofa accompaniment.",
     productType: "side table",
@@ -319,7 +319,7 @@ const FALLBACK_PRODUCTS_DB = {
     collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
     images: {
       edges: [
-        { node: { url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d403fa184eebc59c05c_Side%20Table%2042%20B.png", altText: "Side Table" } }
+        { node: { url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d403fa184eebc59c05c_Side%20Table%2042%20B.png", altText: "Nook Side Table" } }
       ]
     },
     variants: {
@@ -343,7 +343,7 @@ const FALLBACK_PRODUCTS_DB = {
   },
   "lounge-sofa": {
     id: "gid://shopify/Product/7325875505978",
-    title: "Lounge Sofa",
+    title: "Dune Sofa",
     handle: "lounge-sofa",
     description: "Deep, comfortable, and beautifully finished sofa. A warm center point for your living room conversations.",
     productType: "sofa",
@@ -352,7 +352,7 @@ const FALLBACK_PRODUCTS_DB = {
     collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
     images: {
       edges: [
-        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Noku_ofStillness_Sofa_04.webp?v=1769765673", altText: "Lounge Sofa" } }
+        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Noku_ofStillness_Sofa_04.webp?v=1769765673", altText: "Dune Sofa" } }
       ]
     },
     variants: {
@@ -378,7 +378,7 @@ const FALLBACK_PRODUCTS_DB = {
   },
   "upholstered-bench": {
     id: "gid://shopify/Product/7323012792378",
-    title: "Upholstered Bench",
+    title: "Float Bench",
     handle: "upholstered-bench",
     description: "Elegant seating block with options for premium fabrics or leather, detailed with fine line stitch work.",
     productType: "bench",
@@ -387,7 +387,7 @@ const FALLBACK_PRODUCTS_DB = {
     collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
     images: {
       edges: [
-        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/DSC09382.webp?v=1769766216", altText: "Upholstered Bench" } }
+        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/DSC09382.webp?v=1769766216", altText: "Float Bench" } }
       ]
     },
     variants: {

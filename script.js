@@ -952,7 +952,7 @@
       ? sizeShopifyImage(rawImgPath, Math.round(340 * Math.min(window.devicePixelRatio || 1, 3)))
       : rawImgPath;
     const imgHTML = imgPath
-      ? `<img src="${imgPath}" alt="Barstool ${selectedWood} ${cushionObj.normalizedName}">`
+      ? `<img src="${imgPath}" alt="Stilt Barstool ${selectedWood} ${cushionObj.normalizedName}">`
       : '';
 
     const displayName = cleanCushionDisplayName(cushionObj.name);
@@ -981,9 +981,9 @@
           'white-ash': 'White Ash'
         };
         const currentWoodName = woodNameMap[selectedWood] || 'Teak';
-        console.log('Calling addItemToCart with:', 'Barstool', currentWoodName, cushionObj.name);
+        console.log('Calling addItemToCart with:', 'Stilt Barstool', currentWoodName, cushionObj.name);
         if (typeof window.addItemToCart === 'function') {
-          window.addItemToCart('Barstool', currentWoodName, cushionObj.name, cushionObj.image || imgPath);
+          window.addItemToCart('Stilt Barstool', currentWoodName, cushionObj.name, cushionObj.image || imgPath);
         } else {
           console.warn('window.addItemToCart is not a function.');
         }
@@ -1426,7 +1426,7 @@
           imgWrap.appendChild(img);
         }
         img.src = activeNarrativeCardImg.src;
-        img.alt = `Barstool ${selectedWoodText} ${selectedCushionText}`;
+        img.alt = `Stilt Barstool ${selectedWoodText} ${selectedCushionText}`;
       }
     }
 
