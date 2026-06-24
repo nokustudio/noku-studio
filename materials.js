@@ -370,6 +370,75 @@
     }
   }
 
+  // ─── LIVE MATERIAL METADATA (Shopify metaobjects) ───
+  // Pulls images, descriptions and scientific names from the "wood" and "option"
+  // metaobject definitions, then overlays them onto MATERIALS_REGISTRY by id so
+  // every swatch/description on the page reflects the Shopify source of truth.
+  // Local registry values survive only where Shopify has none (e.g. Matti has no
+  // image, Brass has no metaobject, Woven Cane has no description/scientific name).
+  async function fetchMaterialMetaobjects() {
+    const { storefrontAccessToken, shopDomain, apiVersion } = SHOPIFY_CONFIG;
+    const url = `https://${shopDomain}/api/${apiVersion}/graphql.json`;
+    const query = `{
+      woods: metaobjects(type: "wood", first: 20) {
+        edges { node { fields { key value reference { ... on MediaImage { image { url } } } } } }
+      }
+      options: metaobjects(type: "option", first: 30) {
+        edges { node { fields { key value reference { ... on MediaImage { image { url } } } } } }
+      }
+    }`;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Storefront-Access-Token': storefrontAccessToken
+        },
+        body: JSON.stringify({ query })
+      });
+      if (!response.ok) return null;
+      const result = await response.json();
+      if (result.errors || !result.data) return null;
+
+      const byId = {};
+      const ingest = (edges) => {
+        (edges || []).forEach((edge) => {
+          const fields = edge.node.fields;
+          const get = (k) => fields.find((f) => f.key === k);
+          const name = get('name')?.value;
+          if (!name) return;
+          const id = getMatchedId(name);
+          const imgUrl = get('image')?.reference?.image?.url;
+          const entry = byId[id] || {};
+          if (imgUrl) entry.preview = imgUrl;
+          if (get('description')?.value) entry.desc = get('description').value;
+          if (get('scientific_name')?.value) entry.subtitle = get('scientific_name').value;
+          byId[id] = entry;
+        });
+      };
+      ingest(result.data.woods?.edges);
+      ingest(result.data.options?.edges);
+      return byId;
+    } catch (err) {
+      console.warn('Material metaobject fetch failed; using local registry.', err);
+      return null;
+    }
+  }
+
+  // Overlays Shopify metaobject data onto the local registry, in place.
+  function applyMaterialOverlay(byId) {
+    if (!byId) return;
+    Object.keys(MATERIALS_REGISTRY).forEach((cat) => {
+      MATERIALS_REGISTRY[cat].forEach((item) => {
+        const live = byId[item.id];
+        if (!live) return;
+        if (live.preview) item.preview = live.preview;
+        if (live.desc) item.desc = live.desc;
+        if (live.subtitle) item.subtitle = live.subtitle;
+      });
+    });
+  }
+
   // ─── CROSS-REFERENCE / MATCHING LOGIC ───
   // Converts a Shopify option value (e.g. "Fabric - Cloud", "Leather - Cognac") into a registry ID key match.
   function getMatchedId(value) {
@@ -387,7 +456,8 @@
     if (norm.includes('whiteash')) return 'white-ash';
     if (norm.includes('reclaimedteak')) return 'reclaimed-teak';
     if (norm.includes('rubiklinen')) return 'rubik-linen';
-    
+    if (norm.includes('wovencane')) return 'woven-cane';
+
     return norm;
   }
 
@@ -740,12 +810,17 @@
   // ─── BOOTSTRAP INITIALIZATION ───
 
   async function init() {
-    // 1. Fetch live product data from Shopify
-    const liveSuccess = await fetchProductsFromShopify();
+    // 1. Fetch live product data and material metaobjects from Shopify in parallel
+    const [liveSuccess, materialOverlay] = await Promise.all([
+      fetchProductsFromShopify(),
+      fetchMaterialMetaobjects()
+    ]);
     if (!liveSuccess) {
       // Fallback if shopify storefront is offline
       productsList = [...FALLBACK_PRODUCTS];
     }
+    // Overlay live images / descriptions / scientific names onto the registry
+    applyMaterialOverlay(materialOverlay);
 
     // 2. Initialize and render each category section
     const categories = ['wood', 'leather', 'fabric', 'cane', 'metals'];

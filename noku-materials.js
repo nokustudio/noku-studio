@@ -33,6 +33,95 @@
     ]
   };
 
+  // ─── LIVE MATERIAL DATA (Shopify metaobjects) ───
+  var SHOPIFY = {
+    storefrontAccessToken: "7b62ad5d7d665bebe383ff2d3c36c0b0",
+    shopDomain: "6b5390-f8.myshopify.com",
+    apiVersion: "2024-04"
+  };
+
+  // Maps a Shopify metaobject name (e.g. "Leather - Cognac", "Reclaimed teak")
+  // onto the local registry id so live data can be overlaid by id.
+  function matchId(value) {
+    if (!value) return "";
+    var norm = value.toLowerCase().trim()
+      .replace(/^fabric\s*-\s*/, "")
+      .replace(/^leather\s*-\s*/, "")
+      .replace(/[^a-z0-9-]/g, "");
+    if (norm.indexOf("cognac") > -1) return "vagabond-cognac";
+    if (norm.indexOf("honey") > -1) return "glory-honey";
+    if (norm.indexOf("chestnut") > -1) return "montana-chestnut";
+    if (norm.indexOf("brick") > -1) return "emperor-brick";
+    if (norm.indexOf("olive") > -1) return "eternity-olive";
+    if (norm.indexOf("whiteash") > -1) return "white-ash";
+    if (norm.indexOf("reclaimedteak") > -1) return "reclaimed-teak";
+    if (norm.indexOf("rubiklinen") > -1) return "rubik-linen";
+    if (norm.indexOf("wovencane") > -1) return "woven-cane";
+    return norm;
+  }
+
+  // Pulls images / descriptions / scientific names from the wood + option
+  // metaobjects, returns a map keyed by registry id. Null on any failure.
+  function fetchOverlay() {
+    var url = "https://" + SHOPIFY.shopDomain + "/api/" + SHOPIFY.apiVersion + "/graphql.json";
+    var query = "{ woods: metaobjects(type: \"wood\", first: 20) { edges { node { fields { key value reference { ... on MediaImage { image { url } } } } } } } options: metaobjects(type: \"option\", first: 30) { edges { node { fields { key value reference { ... on MediaImage { image { url } } } } } } } }";
+    return fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Storefront-Access-Token": SHOPIFY.storefrontAccessToken
+      },
+      body: JSON.stringify({ query: query })
+    }).then(function (r) {
+      if (!r.ok) return null;
+      return r.json();
+    }).then(function (result) {
+      if (!result || result.errors || !result.data) return null;
+      var byId = {};
+      var ingest = function (edges) {
+        (edges || []).forEach(function (edge) {
+          var fields = edge.node.fields;
+          var get = function (k) {
+            for (var i = 0; i < fields.length; i++) if (fields[i].key === k) return fields[i];
+            return null;
+          };
+          var nameF = get("name");
+          if (!nameF || !nameF.value) return;
+          var id = matchId(nameF.value);
+          var entry = byId[id] || {};
+          var imgF = get("image");
+          var imgUrl = imgF && imgF.reference && imgF.reference.image ? imgF.reference.image.url : null;
+          if (imgUrl) entry.preview = imgUrl;
+          var descF = get("description");
+          if (descF && descF.value) entry.desc = descF.value;
+          var sciF = get("scientific_name");
+          if (sciF && sciF.value) entry.subtitle = sciF.value;
+          byId[id] = entry;
+        });
+      };
+      ingest(result.data.woods && result.data.woods.edges);
+      ingest(result.data.options && result.data.options.edges);
+      return byId;
+    }).catch(function (err) {
+      console.warn("Material metaobject fetch failed; using local registry.", err);
+      return null;
+    });
+  }
+
+  // Overlays live data onto the local registry M, in place.
+  function applyOverlay(byId) {
+    if (!byId) return;
+    Object.keys(M).forEach(function (cat) {
+      M[cat].forEach(function (item) {
+        var live = byId[item.id];
+        if (!live) return;
+        if (live.preview) item.preview = live.preview;
+        if (live.desc) item.desc = live.desc;
+        if (live.subtitle) item.subtitle = live.subtitle;
+      });
+    });
+  }
+
   function init() {
     var grid = document.getElementById("materials-swatches-grid");
     if (!grid) return;
@@ -96,17 +185,27 @@
       }
     }
 
+    // Track the active category so a late-arriving Shopify overlay can re-render it.
+    var activeCat = "wood";
+
     if (pills) {
       pills.forEach(function (p) {
         p.addEventListener("click", function () {
           pills.forEach(function (x) { x.classList.remove("active"); });
           p.classList.add("active");
-          render(p.getAttribute("data-category"));
+          activeCat = p.getAttribute("data-category");
+          render(activeCat);
         });
       });
     }
 
+    // Paint immediately with local data, then overlay live Shopify data and re-render.
     render("wood");
+    fetchOverlay().then(function (byId) {
+      if (!byId) return;
+      applyOverlay(byId);
+      render(activeCat);
+    });
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
