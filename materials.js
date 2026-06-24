@@ -453,17 +453,6 @@
     return norm;
   }
 
-  function getOptionCategory(val) {
-    const mapped = getMatchedId(val);
-    if (!mapped) return null;
-    
-    for (const cat of ['wood', 'leather', 'fabric', 'cane', 'metals']) {
-      if (MATERIALS_REGISTRY[cat] && MATERIALS_REGISTRY[cat].some(item => item.id === mapped)) {
-        return cat;
-      }
-    }
-    return null;
-  }
 
   function getFilterUrl(category, item) {
     const baseUrl = 'products.html';
@@ -606,9 +595,8 @@
           const optName = opt.name.toLowerCase();
           const optVal = opt.value.toLowerCase();
           
-          const optCat = getOptionCategory(opt.value);
-          const isWoodOpt = optName === 'wood' || optName === 'finish' || optCat === 'wood';
-          const isUphOpt = optName === 'upholstery' || optName === 'cushion' || optCat === 'leather' || optCat === 'fabric';
+          const isWoodOpt = optName.includes('wood') || optName.includes('finish') || optName.includes('color') || optName.includes('material');
+          const isUphOpt = optName.includes('upholstery') || optName.includes('cushion') || optName.includes('color') || optName.includes('material');
 
           // Check if option is Wood or Finish
           if (isWoodOpt) {
