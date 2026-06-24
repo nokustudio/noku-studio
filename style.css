@@ -21,6 +21,7 @@
   --border-soft: #E0DBD3;
   --dark-bg: #241F1B;
   --dark-border: #5A5148;
+  --espresso: #2A231E;  /* warm near-black (hue ~25°), brand's deepest value */
 
   /* Typography */
   --font-display: 'Josefin Sans', sans-serif;

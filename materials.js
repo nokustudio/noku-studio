@@ -478,6 +478,32 @@
     return baseUrl;
   }
 
+  function isWoodOption(optName, optValue) {
+    const nameLower = optName.toLowerCase();
+    if (nameLower.includes('wood') || nameLower.includes('finish')) return true;
+    
+    const mapped = getMatchedId(optValue);
+    if (mapped && MATERIALS_REGISTRY.wood.some(item => item.id === mapped)) {
+      return true;
+    }
+    return false;
+  }
+
+  function isUpholsteryOption(optName, optValue) {
+    const nameLower = optName.toLowerCase();
+    if (nameLower.includes('upholstery') || nameLower.includes('cushion')) return true;
+    
+    const mapped = getMatchedId(optValue);
+    if (mapped) {
+      if (MATERIALS_REGISTRY.leather.some(item => item.id === mapped) || 
+          MATERIALS_REGISTRY.fabric.some(item => item.id === mapped) ||
+          MATERIALS_REGISTRY.cane.some(item => item.id === mapped)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   // Finds list of products that use a specific material item
   function getProductsUsingMaterial(category, materialId, materialName) {
     const matchedProducts = [];
@@ -491,8 +517,22 @@
       if (p.options) {
         p.options.forEach(opt => {
           const optNameLower = opt.name.toLowerCase();
-          const isWood = optNameLower === 'wood' || optNameLower === 'finish' || optNameLower === 'color' || optNameLower === 'material';
-          const isUpholstery = optNameLower === 'upholstery' || optNameLower === 'cushion' || optNameLower === 'color' || optNameLower === 'material';
+          
+          let hasWoodValue = opt.values.some(val => {
+            const mapped = getMatchedId(val);
+            return mapped && MATERIALS_REGISTRY.wood.some(item => item.id === mapped);
+          });
+          let hasUphValue = opt.values.some(val => {
+            const mapped = getMatchedId(val);
+            return mapped && (
+              MATERIALS_REGISTRY.leather.some(item => item.id === mapped) ||
+              MATERIALS_REGISTRY.fabric.some(item => item.id === mapped) ||
+              MATERIALS_REGISTRY.cane.some(item => item.id === mapped)
+            );
+          });
+
+          const isWood = optNameLower.includes('wood') || optNameLower.includes('finish') || optNameLower.includes('color') || optNameLower.includes('material') || hasWoodValue;
+          const isUpholstery = optNameLower.includes('upholstery') || optNameLower.includes('cushion') || optNameLower.includes('color') || optNameLower.includes('material') || hasUphValue;
 
           if (category === 'wood' && isWood) {
             opt.values.forEach(val => {
@@ -516,22 +556,18 @@
 
           if (category === 'leather' && isUpholstery) {
             opt.values.forEach(val => {
-              if (val.toLowerCase().includes('leather')) {
-                const mappedVal = getMatchedId(val);
-                if (mappedVal === normId) {
-                  uses = true;
-                }
+              const mappedVal = getMatchedId(val);
+              if (mappedVal === normId) {
+                uses = true;
               }
             });
           }
 
           if (category === 'fabric' && isUpholstery) {
             opt.values.forEach(val => {
-              if (val.toLowerCase().includes('fabric') || val.toLowerCase().includes('linen') || val.toLowerCase().includes('velvet') || val.toLowerCase().includes('striped')) {
-                const mappedVal = getMatchedId(val);
-                if (mappedVal === normId) {
-                  uses = true;
-                }
+              const mappedVal = getMatchedId(val);
+              if (mappedVal === normId) {
+                uses = true;
               }
             });
           }
@@ -595,8 +631,8 @@
           const optName = opt.name.toLowerCase();
           const optVal = opt.value.toLowerCase();
           
-          const isWoodOpt = optName.includes('wood') || optName.includes('finish') || optName.includes('color') || optName.includes('material');
-          const isUphOpt = optName.includes('upholstery') || optName.includes('cushion') || optName.includes('color') || optName.includes('material');
+          const isWoodOpt = isWoodOption(opt.name, opt.value);
+          const isUphOpt = isUpholsteryOption(opt.name, opt.value);
 
           // Check if option is Wood or Finish
           if (isWoodOpt) {
