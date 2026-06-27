@@ -237,7 +237,6 @@
 
     const cards = track.querySelectorAll('.product-card');
     const barstoolCard = track.querySelector('.product-card[data-handle="barstool"]');
-    const moreText = document.querySelector('.there-is-more-text');
     const prevBtn = document.querySelector('.featured-carousel-outer-wrap .prev-btn');
     const nextBtn = document.querySelector('.featured-carousel-outer-wrap .next-btn');
     const header = document.querySelector('.products-header');
@@ -247,9 +246,6 @@
     if (window.matchMedia('(max-width: 768px)').matches) {
       featuredAnimTriggered = true;
       isProductsAnimActive = false;
-      if (moreText) {
-        moreText.style.display = 'none';
-      }
       centerActiveProduct(false);
       return;
     }
@@ -259,10 +255,6 @@
       card.style.transform = 'scale(0.88)';
       card.style.transition = 'none';
     });
-    if (moreText) {
-      moreText.style.opacity = '0';
-      moreText.style.transition = 'none';
-    }
     if (prevBtn) {
       prevBtn.style.opacity = '0';
       prevBtn.style.pointerEvents = 'none';
@@ -298,7 +290,7 @@
           if (isFullyVisible || isMostlyVisible) {
             featuredAnimTriggered = true;
             observer.unobserve(productsSec);
-            runFeaturedEntranceTimeline(track, container, cards, barstoolCard, moreText, prevBtn, nextBtn, header);
+            runFeaturedEntranceTimeline(track, container, cards, barstoolCard, prevBtn, nextBtn, header);
           }
         }
       });
@@ -309,7 +301,7 @@
     observer.observe(productsSec);
   }
 
-  function runFeaturedEntranceTimeline(track, container, cards, barstoolCard, moreText, prevBtn, nextBtn, header) {
+  function runFeaturedEntranceTimeline(track, container, cards, barstoolCard, prevBtn, nextBtn, header) {
     const containerWidth = container.offsetWidth;
     const cardWidth = barstoolCard.offsetWidth || 320;
     const barstoolOffset = barstoolCard.offsetLeft;
@@ -323,17 +315,6 @@
     track.style.transition = 'none';
     track.style.transform = `translateX(${translateX_centered}px)`;
 
-    if (moreText) {
-      const outerWrap = document.querySelector('.featured-carousel-outer-wrap');
-      if (outerWrap) {
-        const outerRect = outerWrap.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        const barstoolVisualLeft = containerRect.left + barstoolOffset + translateX_centered;
-        const textRight = barstoolVisualLeft - outerRect.left - 60;
-        moreText.style.right = `calc(100% - ${textRight}px)`;
-      }
-    }
-
     requestAnimationFrame(() => {
       if (header) {
         header.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
@@ -346,17 +327,7 @@
         barstoolCard.style.opacity = '1';
         barstoolCard.style.transform = 'scale(1.03)';
 
-        if (moreText) {
-          moreText.style.transition = 'opacity 0.7s ease 0.15s';
-          moreText.style.opacity = '1';
-        }
-
         setTimeout(() => {
-          if (moreText) {
-            moreText.style.transition = 'opacity 0.5s ease';
-            moreText.style.opacity = '0';
-          }
-
           track.style.transition = 'transform 1.0s cubic-bezier(0.16, 1, 0.3, 1)';
           track.style.transform = `translateX(${translateX_normal}px)`;
 
@@ -394,12 +365,6 @@
               card.style.transform = '';
               card.style.transition = '';
             });
-            if (moreText) {
-              moreText.style.opacity = '0';
-              moreText.style.transform = '';
-              moreText.style.transition = '';
-              moreText.style.right = '';
-            }
             if (prevBtn) {
               prevBtn.style.opacity = '';
               prevBtn.style.pointerEvents = '';

@@ -15,6 +15,123 @@
 
   <link rel="icon" type="image/svg+xml" href="../../Resources/Logo/noku-favicon.svg">
   <link rel="stylesheet" href="../../style.css">
+  <style>
+    /* Hero video section styles */
+    .video-section.hero-video-section {
+      height: 100vh;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding-left: clamp(24px, 8vw, 120px);
+      padding-right: 24px;
+      z-index: 10;
+    }
+
+    .video-section.hero-video-section .video-background {
+      opacity: 0.9;
+    }
+
+    .video-section.hero-video-section .video-overlay {
+      background: linear-gradient(to right, rgba(20, 18, 16, 0.8) 0%, rgba(20, 18, 16, 0.4) 60%, rgba(20, 18, 16, 0.2) 100%);
+    }
+
+    .video-section.hero-video-section .video-content {
+      text-align: left;
+      padding: 0;
+      max-width: 800px;
+      margin-top: 60px; /* Offset for navbar overlay */
+    }
+
+    .hero-brand-title {
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: 700;
+      font-size: clamp(64px, 12vw, 130px);
+      line-height: 0.9;
+      color: var(--paper);
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+
+    .hero-brand-subtitle {
+      font-family: 'Quattrocento', serif;
+      font-size: clamp(18px, 2.5vw, 24px);
+      line-height: 1.4;
+      color: var(--paper);
+      opacity: 0.9;
+      margin-bottom: 40px;
+      max-width: 650px;
+    }
+
+    .hero-tag-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .hero-tag-pill {
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: 300;
+      font-size: clamp(14px, 1.8vw, 16px);
+      color: var(--paper);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      padding: 12px 28px;
+      border-radius: 50px;
+      background: transparent;
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .hero-tag-pill:hover {
+      border-color: var(--paper);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .hero-explore-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background-color: var(--paper);
+      color: var(--chamoisee);
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: 400;
+      font-size: 16px;
+      padding: 16px 36px;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .hero-explore-btn:hover {
+      background-color: var(--chamoisee);
+      color: var(--paper);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    .hero-explore-btn .arrow-right {
+      font-size: 18px;
+      transition: transform 0.3s ease;
+    }
+
+    .hero-explore-btn:hover .arrow-right {
+      transform: translateX(4px);
+    }
+
+    .video-section.hero-video-section .video-control-btn {
+      position: absolute;
+      bottom: 40px;
+      right: 40px;
+      margin-top: 0;
+      width: 52px;
+      height: 52px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(0, 0, 0, 0.3);
+    }
+  </style>
 </head>
 
 <body style="background-color: var(--dark-bg);">
@@ -86,6 +203,41 @@
     </button>
   </nav>
 
+  <!-- ════════ CINEMATIC WORKSHOP VIDEO HERO SECTION ════════ -->
+  <section class="video-section hero-video-section">
+    <!-- Local high-quality workshop video looping silently -->
+    <video class="video-background" id="workshop-video" autoplay muted loop playsinline preload="auto">
+      <source src="../../Resources/Video Project 2.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="video-overlay"></div>
+
+    <div class="video-content reveal-el">
+      <h1 class="hero-brand-title">NOKU</h1>
+      <p class="hero-brand-subtitle">A studio of designers, creatives, and craftsmen creating the future of Indian furniture</p>
+      
+      <div class="hero-tag-pills">
+        <span class="hero-tag-pill">Designed with Intent</span>
+        <span class="hero-tag-pill">Crafted with care</span>
+        <span class="hero-tag-pill">Pieces for Living</span>
+      </div>
+
+      <div class="hero-cta-wrap">
+        <a href="#products" class="hero-explore-btn">Explore now <span class="arrow-right">→</span></a>
+      </div>
+
+      <button class="video-control-btn" id="video-toggle" aria-label="Pause Video">
+        <svg id="pause-icon" width="20" height="20" viewBox="0 0 24 24">
+          <rect x="4" y="4" width="4" height="16" fill="var(--paper)"></rect>
+          <rect x="16" y="4" width="4" height="16" fill="var(--paper)"></rect>
+        </svg>
+        <svg id="play-icon" width="20" height="20" viewBox="0 0 24 24" style="display: none;">
+          <path d="M8 5v14l11-7z" fill="var(--paper)"></path>
+        </svg>
+      </button>
+    </div>
+  </section>
+
   <!-- ════════ FEATURED PRODUCTS GRID ════════ -->
   <section class="products-section section-pad">
     <div class="products-sticky-wrapper">
@@ -101,7 +253,6 @@
 
         <!-- Horizontal Carousel for Featured Products -->
         <div class="featured-carousel-outer-wrap reveal-el">
-          <div class="there-is-more-text">There's more</div>
           <button class="featured-carousel-nav-btn prev-btn" aria-label="Previous Product">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -372,33 +523,7 @@
     </div>
   </section>
 
-  <!-- ════════ CINEMATIC WORKSHOP VIDEO SECTION ════════ -->
-  <section class="video-section">
-    <!-- Local high-quality workshop video looping silently -->
-    <video class="video-background" id="workshop-video" autoplay muted loop playsinline preload="auto">
-      <source src="../../Resources/Video Project 2.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <div class="video-overlay"></div>
 
-    <div class="video-content reveal-el">
-      <span class="label" style="color: var(--chamoisee);">The Workshop</span>
-      <h2 class="title-h2" style="font-weight: 300;">A document of patience, wood joints, and handcraft</h2>
-      <p class="body-p" style="color: var(--bone); opacity: 0.8; font-size: 1rem;">
-        Inside our Bengaluru atelier, we work with seasoned hardwoods—teak, honne, walnut—shaping, sanding, and
-        assembling each furniture piece with absolute precision.
-      </p>
-      <button class="video-control-btn" id="video-toggle" aria-label="Pause Video">
-        <svg id="pause-icon" width="20" height="20" viewBox="0 0 24 24">
-          <rect x="4" y="4" width="4" height="16" fill="var(--paper)"></rect>
-          <rect x="16" y="4" width="4" height="16" fill="var(--paper)"></rect>
-        </svg>
-        <svg id="play-icon" width="20" height="20" viewBox="0 0 24 24" style="display: none;">
-          <path d="M8 5v14l11-7z" fill="var(--paper)"></path>
-        </svg>
-      </button>
-    </div>
-  </section>
 
   <!-- ════════ COLLECTIONS CARDS ════════ -->
 
