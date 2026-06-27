@@ -1604,6 +1604,8 @@ body:not(.secondary-landing-page) .hero-title {
   grid-template-rows: auto auto;
   gap: 16px;
   width: 100%;
+  max-width: 480px;
+  justify-self: center;
 }
 
 .moodboard-item {

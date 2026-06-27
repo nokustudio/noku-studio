@@ -55,6 +55,41 @@
     return { top, left, width, height };
   }
 
+  // ─── NAVBAR THEME OBSERVER ───
+  const navbar = document.getElementById('navbar');
+  if (navbar) {
+    const navHeight = navbar.offsetHeight || 70;
+    const navThemeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const targetId = entry.target.id;
+          const targetClass = entry.target.classList;
+          
+          const isLight = targetClass.contains('products-section') ||
+                          targetClass.contains('collections-section') ||
+                          targetClass.contains('materials-section') ||
+                          entry.target.tagName.toLowerCase() === 'footer';
+          
+          if (isLight) {
+            navbar.classList.add('light-nav');
+          } else {
+            navbar.classList.remove('light-nav');
+          }
+        }
+      });
+    }, {
+      rootMargin: `-${navHeight}px 0px -90% 0px`,
+      threshold: 0
+    });
+
+    const targetSections = document.querySelectorAll(
+      '.hero-video-section, .products-section, .collections-section, .materials-section, footer'
+    );
+    targetSections.forEach(sec => {
+      navThemeObserver.observe(sec);
+    });
+  }
+
   // ─── OPTIMIZED CRAFTSMANSHIP VIDEO PLAYER ───
   const video = document.getElementById('workshop-video');
 
