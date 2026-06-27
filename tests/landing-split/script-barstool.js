@@ -122,16 +122,72 @@
   loader.setDRACOLoader(dracoLoader);
 
   function runFallback() {
-    console.warn('GLB failed to load; using static background placeholder.');
+    console.warn('Setting up procedural furniture placeholder.');
+    const stoolGroup = new THREE.Group();
+    const woodMat = new THREE.MeshStandardMaterial({ color: 0x4A2E1B, roughness: 0.6 });
+    const cushionMat = new THREE.MeshStandardMaterial({ color: 0xA7B09F, roughness: 0.85 });
+    const caneMat = new THREE.MeshStandardMaterial({ color: 0xD5BD8D, roughness: 0.75 });
+
+    // Seat cushion
+    const seat = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.25, 0.08, 32), cushionMat);
+    seat.position.y = 0.15;
+    seat.castShadow = true;
+    stoolGroup.add(seat);
+
+    // Seat Rim Ring
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(0.255, 0.015, 8, 32), woodMat);
+    rim.rotation.x = Math.PI / 2;
+    rim.position.y = 0.11;
+    stoolGroup.add(rim);
+
+    // Legs
+    const legsAngle = [0.15, -0.15];
+    legsAngle.forEach(lx => {
+      legsAngle.forEach(lz => {
+        const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.01, 0.85, 8), woodMat);
+        leg.position.set(lx, -0.3, lz);
+        leg.rotation.x = lz * 0.15;
+        leg.rotation.z = -lx * 0.15;
+        leg.castShadow = true;
+        stoolGroup.add(leg);
+      });
+    });
+
+    // Horizontal stretchers
+    const stretcher = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.01, 8, 4), woodMat);
+    stretcher.rotation.x = Math.PI / 2;
+    stretcher.rotation.z = Math.PI / 4;
+    stretcher.position.y = -0.45;
+    stoolGroup.add(stretcher);
+
+    // Backrest columns
+    const postL = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.35, 8), woodMat);
+    postL.position.set(-0.13, 0.34, -0.16);
+    postL.rotation.x = -0.06;
+    stoolGroup.add(postL);
+
+    const postR = postL.clone();
+    postR.position.x = 0.13;
+    stoolGroup.add(postR);
+
+    // Backrest top arc
+    const backGeo = new THREE.TorusGeometry(0.16, 0.015, 8, 24, Math.PI);
+    const back = new THREE.Mesh(backGeo, woodMat);
+    back.position.set(0, 0.52, -0.17);
+    back.rotation.y = Math.PI;
+    stoolGroup.add(back);
+
+    stoolGroup.position.y = 0.05;
+    barstoolPivot.add(stoolGroup);
     isModelLoaded = true;
+
     clearInterval(loaderInterval);
     updateLoader(100);
   }
 
-
   // Load local GLB file directly instead of parsing a massive inlined Base64 string
   loader.load(
-    'Resources/Barstool 01 R2.glb',
+    '../../Resources/Barstool 01 R2.glb',
     function (gltf) {
       barstoolMesh = gltf.scene;
 
@@ -938,7 +994,7 @@
       
 
       if (card.classList.contains('highlighted')) {
-        const destUrl = `product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushionObj.normalizedName}`;
+        const destUrl = `../../product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushionObj.normalizedName}`;
         console.log('Redirecting in highlighted mode to:', destUrl);
         window.location.href = destUrl;
         return;
@@ -1287,7 +1343,7 @@
             // Open the product page only. The Get-in-touch modal must be opened
             // explicitly via the Inquire button (an <a> excluded above), never by
             // clicking the card itself — so no &inquire=true here.
-            window.location.href = `product.html?handle=${handle}`;
+            window.location.href = `../../product.html?handle=${handle}`;
           }
           return;
         }

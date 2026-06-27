@@ -1375,6 +1375,10 @@ body:not(.secondary-landing-page) .hero-title {
   position: relative;
 }
 
+.collections-section.section-pad {
+  padding: clamp(40px, 6vw, 80px) 0;
+}
+
 .collections-header {
   text-align: center;
   margin-bottom: 80px;
@@ -1514,6 +1518,10 @@ body:not(.secondary-landing-page) .hero-title {
   border-top: 1px solid var(--line);
 }
 
+.materials-section.section-pad {
+  padding: clamp(40px, 6vw, 80px) 0;
+}
+
 /* ─── Storytelling & Moodboard Collage Styles ─── */
 .materials-story-grid {
   display: grid;
@@ -1596,6 +1604,8 @@ body:not(.secondary-landing-page) .hero-title {
   grid-template-rows: auto auto;
   gap: 16px;
   width: 100%;
+  max-width: 480px;
+  justify-self: center;
 }
 
 .moodboard-item {

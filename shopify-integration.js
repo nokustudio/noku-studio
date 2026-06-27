@@ -13,6 +13,8 @@ const SHOPIFY_CONFIG = {
   currencySymbol: '₹',
   defaultPrice: 24500
 };
+window.SHOPIFY_CONFIG = SHOPIFY_CONFIG;
+
 
 // Display-only products list (from noku_products.xlsx)
 const DISPLAY_ONLY_HANDLES = [
