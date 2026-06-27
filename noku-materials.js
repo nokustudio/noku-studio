@@ -31,6 +31,8 @@
       { id: "brass", name: "Brass", subtitle: "Copper-Zinc Alloy", cls: "swatch-metals-brass", preview: "Resources/material images/Metals/Brass.jpg", desc: "A versatile copper-zinc alloy known for its golden-yellow color and luster. Smooth-textured, it develops a natural patina over time and is strong yet malleable for intricate designs." }
     ]
   };
+  window.NokuMaterials = M;
+
 
   // ─── LIVE MATERIAL DATA (Shopify metaobjects) ───
   var SHOPIFY = {

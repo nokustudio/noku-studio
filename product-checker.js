@@ -7,12 +7,13 @@ const fs = require('fs');
 const path = require('path');
 
 // Storefront API Configuration
-const SHOPIFY_CONFIG = {
+const SHOPIFY_CONFIG = (typeof window !== 'undefined' && window.SHOPIFY_CONFIG) ? window.SHOPIFY_CONFIG : {
   storefrontAccessToken: '7b62ad5d7d665bebe383ff2d3c36c0b0',
   shopDomain: '6b5390-f8.myshopify.com',
   apiVersion: '2024-04',
   cacheFilename: 'product_cache.json'
 };
+
 
 const cachePath = path.join(__dirname, SHOPIFY_CONFIG.cacheFilename);
 
