@@ -55,33 +55,14 @@
     return { top, left, width, height };
   }
 
-  // ─── OPTIMIZED CRAFTSMANSHIP VIDEO PLAYER CONTROLS ───
+  // ─── OPTIMIZED CRAFTSMANSHIP VIDEO PLAYER ───
   const video = document.getElementById('workshop-video');
-  const videoBtn = document.getElementById('video-toggle');
-  const pauseIcon = document.getElementById('pause-icon');
-  const playIcon = document.getElementById('play-icon');
-
-  if (videoBtn) {
-    videoBtn.addEventListener('click', () => {
-      if (video.paused) {
-        video.play();
-        playIcon.style.display = 'none';
-        pauseIcon.style.display = 'block';
-      } else {
-        video.pause();
-        pauseIcon.style.display = 'none';
-        playIcon.style.display = 'block';
-      }
-    });
-  }
 
   if (video) {
     const videoObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          if (videoBtn && !videoBtn.classList.contains('manually-paused')) {
-            video.play().catch(err => console.log('Autoplay blocked', err));
-          }
+          video.play().catch(err => console.log('Autoplay blocked', err));
         } else {
           video.pause();
         }
@@ -92,7 +73,6 @@
 
   // ─── FEATURED PRODUCTS CAROUSEL CODE ───
   let activeProductIndex = 1; // default to the second card (grooved sofa)
-  let isProductsAnimActive = false;
 
   function centerActiveProduct(animate = true) {
     const track = document.querySelector('.featured-carousel-track');
@@ -195,8 +175,6 @@
   });
 
   function syncFeaturedBarstoolCard() {
-    if (featuredAnimTriggered && !isProductsAnimActive) return;
-
     const barstoolCard = document.querySelector('.product-card[data-handle="barstool"]');
     if (!barstoolCard) return;
 
@@ -225,174 +203,7 @@
     }
   }
 
-  let featuredAnimTriggered = false;
-
-  function initFeaturedEntranceAnimation() {
-    const productsSec = document.querySelector('.products-section');
-    if (!productsSec) return;
-
-    const track = document.querySelector('.featured-carousel-track');
-    const container = document.querySelector('.featured-carousel-track-container');
-    if (!track || !container) return;
-
-    const cards = track.querySelectorAll('.product-card');
-    const barstoolCard = track.querySelector('.product-card[data-handle="barstool"]');
-    const prevBtn = document.querySelector('.featured-carousel-outer-wrap .prev-btn');
-    const nextBtn = document.querySelector('.featured-carousel-outer-wrap .next-btn');
-    const header = document.querySelector('.products-header');
-
-    if (!barstoolCard || cards.length === 0) return;
-
-    if (window.matchMedia('(max-width: 768px)').matches) {
-      featuredAnimTriggered = true;
-      isProductsAnimActive = false;
-      centerActiveProduct(false);
-      return;
-    }
-
-    cards.forEach(card => {
-      card.style.opacity = '0';
-      card.style.transform = 'scale(0.88)';
-      card.style.transition = 'none';
-    });
-    if (prevBtn) {
-      prevBtn.style.opacity = '0';
-      prevBtn.style.pointerEvents = 'none';
-      prevBtn.style.transition = 'none';
-    }
-    if (nextBtn) {
-      nextBtn.style.opacity = '0';
-      nextBtn.style.pointerEvents = 'none';
-      nextBtn.style.transition = 'none';
-    }
-    if (header) {
-      header.style.opacity = '0';
-      header.style.transform = 'translateY(20px)';
-      header.style.transition = 'none';
-    }
-
-    const containerWidth = container.offsetWidth;
-    const cardWidth = barstoolCard.offsetWidth || 320;
-    const barstoolOffset = barstoolCard.offsetLeft;
-    const translateX_centered = (containerWidth - cardWidth) / 2 - barstoolOffset;
-    track.style.transition = 'none';
-    track.style.transform = `translateX(${translateX_centered}px)`;
-
-    isProductsAnimActive = true;
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (!featuredAnimTriggered && entry.isIntersecting) {
-          const rect = entry.target.getBoundingClientRect();
-          const isFullyVisible = rect.top >= -10 && rect.bottom <= window.innerHeight + 10;
-          const isMostlyVisible = entry.intersectionRatio >= 0.5;
-
-          if (isFullyVisible || isMostlyVisible) {
-            featuredAnimTriggered = true;
-            observer.unobserve(productsSec);
-            runFeaturedEntranceTimeline(track, container, cards, barstoolCard, prevBtn, nextBtn, header);
-          }
-        }
-      });
-    }, {
-      threshold: [0.1, 0.3, 0.5, 0.7, 0.85, 1.0]
-    });
-
-    observer.observe(productsSec);
-  }
-
-  function runFeaturedEntranceTimeline(track, container, cards, barstoolCard, prevBtn, nextBtn, header) {
-    const containerWidth = container.offsetWidth;
-    const cardWidth = barstoolCard.offsetWidth || 320;
-    const barstoolOffset = barstoolCard.offsetLeft;
-    const translateX_centered = (containerWidth - cardWidth) / 2 - barstoolOffset;
-
-    const activeCard = cards[activeProductIndex] || cards[1];
-    const activeCardWidth = activeCard.offsetWidth || 320;
-    const activeOffset = activeCard.offsetLeft;
-    const translateX_normal = (containerWidth - activeCardWidth) / 2 - activeOffset;
-
-    track.style.transition = 'none';
-    track.style.transform = `translateX(${translateX_centered}px)`;
-
-    requestAnimationFrame(() => {
-      if (header) {
-        header.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        header.style.opacity = '1';
-        header.style.transform = 'translateY(0)';
-      }
-
-      setTimeout(() => {
-        barstoolCard.style.transition = 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)';
-        barstoolCard.style.opacity = '1';
-        barstoolCard.style.transform = 'scale(1.03)';
-
-        setTimeout(() => {
-          track.style.transition = 'transform 1.0s cubic-bezier(0.16, 1, 0.3, 1)';
-          track.style.transform = `translateX(${translateX_normal}px)`;
-
-          cards.forEach((card, idx) => {
-            if (card === barstoolCard) {
-              const isActiveCard = (idx === activeProductIndex);
-              const restScale = isActiveCard ? 1.03 : 0.92;
-              card.style.transition = 'opacity 0.6s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
-              card.style.transform = `scale(${restScale})`;
-            } else {
-              const staggerDelay = 0.08 * Math.abs(idx - 0);
-              card.style.transition = `opacity 0.6s ease ${staggerDelay}s, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${staggerDelay}s`;
-              card.style.opacity = '1';
-              const isHighlighted = (idx === activeProductIndex);
-              card.style.transform = `scale(${isHighlighted ? 1.03 : 0.92})`;
-            }
-          });
-
-          if (prevBtn) {
-            prevBtn.style.transition = 'opacity 0.5s ease 0.3s';
-            prevBtn.style.opacity = '1';
-            prevBtn.style.pointerEvents = 'auto';
-          }
-          if (nextBtn) {
-            nextBtn.style.transition = 'opacity 0.5s ease 0.3s';
-            nextBtn.style.opacity = '1';
-            nextBtn.style.pointerEvents = 'auto';
-          }
-
-          setTimeout(() => {
-            isProductsAnimActive = false;
-
-            cards.forEach(card => {
-              card.style.opacity = '';
-              card.style.transform = '';
-              card.style.transition = '';
-            });
-            if (prevBtn) {
-              prevBtn.style.opacity = '';
-              prevBtn.style.pointerEvents = '';
-              prevBtn.style.transition = '';
-            }
-            if (nextBtn) {
-              nextBtn.style.opacity = '';
-              nextBtn.style.pointerEvents = '';
-              nextBtn.style.transition = '';
-            }
-            if (header) {
-              header.style.opacity = '';
-              header.style.transform = '';
-              header.style.transition = '';
-            }
-            track.style.transition = '';
-
-            centerActiveProduct(true);
-          }, 1200);
-
-        }, 1200);
-
-      }, 200);
-    });
-  }
-
   window.addEventListener('shopifyloaded', syncFeaturedBarstoolCard);
 
   initFeaturedProductsCarousel();
-  initFeaturedEntranceAnimation();
 })();

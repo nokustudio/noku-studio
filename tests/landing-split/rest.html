@@ -43,26 +43,7 @@
       margin-top: 60px; /* Offset for navbar overlay */
     }
 
-    .hero-brand-title {
-      font-family: 'Josefin Sans', sans-serif;
-      font-weight: 700;
-      font-size: clamp(64px, 12vw, 130px);
-      line-height: 0.9;
-      color: var(--paper);
-      letter-spacing: -2px;
-      margin-bottom: 24px;
-      text-transform: uppercase;
-    }
 
-    .hero-brand-subtitle {
-      font-family: 'Quattrocento', serif;
-      font-size: clamp(18px, 2.5vw, 24px);
-      line-height: 1.4;
-      color: var(--paper);
-      opacity: 0.9;
-      margin-bottom: 40px;
-      max-width: 650px;
-    }
 
     .hero-tag-pills {
       display: flex;
@@ -121,16 +102,7 @@
       transform: translateX(4px);
     }
 
-    .video-section.hero-video-section .video-control-btn {
-      position: absolute;
-      bottom: 40px;
-      right: 40px;
-      margin-top: 0;
-      width: 52px;
-      height: 52px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      background: rgba(0, 0, 0, 0.3);
-    }
+
   </style>
 </head>
 
@@ -213,8 +185,8 @@
     <div class="video-overlay"></div>
 
     <div class="video-content reveal-el">
-      <h1 class="hero-brand-title">NOKU</h1>
-      <p class="hero-brand-subtitle">A studio of designers, creatives, and craftsmen creating the future of Indian furniture</p>
+      <h1 class="title-h2" style="color: var(--paper); text-transform: uppercase;">NOKU</h1>
+      <p class="body-p" style="color: var(--paper); opacity: 0.9; max-width: 650px; margin-bottom: 40px;">A studio of designers, creatives, and craftsmen creating the future of Indian furniture</p>
       
       <div class="hero-tag-pills">
         <span class="hero-tag-pill">Designed with Intent</span>
@@ -226,15 +198,7 @@
         <a href="#products" class="hero-explore-btn">Explore now <span class="arrow-right">→</span></a>
       </div>
 
-      <button class="video-control-btn" id="video-toggle" aria-label="Pause Video">
-        <svg id="pause-icon" width="20" height="20" viewBox="0 0 24 24">
-          <rect x="4" y="4" width="4" height="16" fill="var(--paper)"></rect>
-          <rect x="16" y="4" width="4" height="16" fill="var(--paper)"></rect>
-        </svg>
-        <svg id="play-icon" width="20" height="20" viewBox="0 0 24 24" style="display: none;">
-          <path d="M8 5v14l11-7z" fill="var(--paper)"></path>
-        </svg>
-      </button>
+
     </div>
   </section>
 
