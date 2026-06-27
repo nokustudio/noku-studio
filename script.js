@@ -743,7 +743,9 @@
   // ─── INSTANT SCROLL TO COLLECTIONS SECTION ───
   const handleCollectionsScroll = (e) => {
     const href = e.currentTarget.getAttribute('href');
-    const isCurrentPageAnchor = href === '#collections' || href.endsWith('/index.html#collections') || (window.location.pathname.endsWith('index.html') && href === 'index.html#collections');
+    const isHomepage = window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname === '';
+    const isCollectionsAnchor = href === '#collections' || href.endsWith('/#collections') || href.endsWith('/index.html#collections');
+    const isCurrentPageAnchor = (isHomepage && isCollectionsAnchor) || href === '#collections';
     
     if (isCurrentPageAnchor) {
       const target = document.getElementById('collections');
