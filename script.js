@@ -1628,5 +1628,26 @@
 
   initFeaturedProductsCarousel();
   initFeaturedEntranceAnimation();
+
+  // ─── LAZY LOAD CINEMATIC WORKSHOP VIDEO ───
+  const workshopVideo = document.getElementById('workshop-video');
+  if (workshopVideo) {
+    const videoObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const sources = entry.target.querySelectorAll('source');
+          sources.forEach(source => {
+            if (source.dataset.src) {
+              source.src = source.dataset.src;
+            }
+          });
+          entry.target.load();
+          entry.target.play().catch(e => console.log("Autoplay blocked or interrupted: ", e));
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '200px' });
+    videoObserver.observe(workshopVideo);
+  }
 }
 )();
