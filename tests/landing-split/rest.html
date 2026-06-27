@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noku Studio — Designed with Intent. Crafted with Care.</title>
+  <meta name="description"
+    content="Contemporary Indian furniture studio based in Bengaluru. Celebrating mid-century restraint, material honesty, and fine craftsmanship.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Quattrocento:wght@400;700&display=swap"
+    rel="stylesheet">
+
+  <link rel="icon" type="image/svg+xml" href="../../Resources/Logo/noku-favicon.svg">
+  <link rel="stylesheet" href="../../style.css">
+</head>
+
+<body style="background-color: var(--dark-bg);">
+
+  <!-- Loading Screen Overlay -->
+  <div id="loading-screen">
+    <div class="loader-logo">
+      <svg width="40" height="48" viewBox="0 0 181.76 218.04" xmlns="http://www.w3.org/2000/svg"
+        style="fill: currentColor;">
+        <polygon
+          points="181.76 5.61 181.76 218.04 145.86 218.04 145.86 144.74 35.91 71.06 35.91 218.04 0 218.04 0 0 145.86 101.35 145.86 5.61 181.76 5.61" />
+      </svg>
+    </div>
+    <div class="loader-bar-wrap">
+      <div class="loader-bar" id="loader-progress"></div>
+    </div>
+  </div>
+
+  <!-- Grain Layer overlay -->
+  <div class="grain-overlay"></div>
+
+  <!-- STICKY HEADER NAVIGATION -->
+  <nav id="navbar">
+    <div class="nav-logo-wrap">
+      <a href="../../index.html" aria-label="Noku Home">
+        <svg class="logo-svg" width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg">
+          <polygon
+            points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09" />
+          <path
+            d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44" />
+          <polygon
+            points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28" />
+          <path
+            d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55" />
+        </svg>
+      </a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="../../products.html" class="nav-link">Products</a></li>
+      <li><a href="#collections" class="nav-link">Collections</a></li>
+      <li><a href="../../projects.html" class="nav-link">Work</a></li>
+      <li class="nav-dropdown-wrapper">
+        <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+          Menu <span class="dropdown-chevron">▼</span>
+        </button>
+        <ul class="nav-dropdown">
+          <li><a href="../../materials.html" class="nav-link-sub">Materials</a></li>
+          <li><a href="../../sustainability.html" class="nav-link-sub">Sustainability</a></li>
+          <li><a href="../../about.html" class="nav-link-sub">About</a></li>
+          <li><a href="../../contact.html" class="nav-link-sub">Contact</a></li>
+        </ul>
+      </li>
+    </ul>
+    <button id="cart-toggle" class="cart-btn" aria-label="Open Shopping Cart">
+      <svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--bone)"
+        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span id="cart-count-badge" class="cart-count">0</span>
+    </button>
+    <button class="mobile-menu-toggle" aria-label="Toggle Mobile Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- ════════ FEATURED PRODUCTS GRID ════════ -->
+  <section class="products-section section-pad">
+    <div class="products-sticky-wrapper">
+      <div class="container" id="products">
+        <div class="products-header">
+          <div class="products-header-left">
+            <span class="label">Portfolio</span>
+            <h2 class="title-h2">Featured Pieces</h2>
+          </div>
+          <a href="../../products.html" class="view-collection-link">View All
+            Products</a>
+        </div>
+
+        <!-- Horizontal Carousel for Featured Products -->
+        <div class="featured-carousel-outer-wrap reveal-el">
+          <div class="there-is-more-text">There's more</div>
+          <button class="featured-carousel-nav-btn prev-btn" aria-label="Previous Product">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <div class="featured-carousel-track-container">
+            <div class="featured-carousel-track">
+              <!-- 1. Stilt Barstool -->
+              <div class="product-card" data-handle="barstool">
+
+                <div class="product-card-img-wrap"></div>
+                <div class="product-card-body">
+                  <div class="product-card-header-row">
+                    <h3 class="product-name">Stilt Barstool</h3>
+                    <span class="product-price">₹21,000</span>
+                  </div>
+                  <div class="product-card-footer-row">
+                    <span class="product-materials">Teak / Leather - Cognac</span>
+                    <div class="product-buy-row">
+                      <a href="../../index.html" class="product-inquire-btn">Inquire</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. Grooved Sofa -->
+              <div class="product-card" data-handle="sofa-2">
+                <div class="product-card-img-wrap"></div>
+                <div class="product-card-body">
+                  <div class="product-card-header-row">
+                    <h3 class="product-name">Grooved Sofa</h3>
+                    <span class="product-price">₹81,000</span>
+                  </div>
+                  <div class="product-card-footer-row">
+                    <span class="product-materials">Teak / Fabric — Charcoal</span>
+                    <div class="product-buy-row">
+                      <a href="../../index.html" class="product-inquire-btn">Inquire</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 3. Bask Chair -->
+              <div class="product-card" data-handle="lounge-chair">
+                <div class="product-card-img-wrap"></div>
+                <div class="product-card-body">
+                  <div class="product-card-header-row">
+                    <h3 class="product-name">Bask Chair</h3>
+                    <span class="product-price">₹49,500</span>
+                  </div>
+                  <div class="product-card-footer-row">
+                    <span class="product-materials">Teak / Fabric — Cloud</span>
+                    <div class="product-buy-row">
+                      <a href="../../index.html" class="product-inquire-btn">Inquire</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 4. Ripple Chair -->
+              <div class="product-card" data-handle="dining-chair">
+                <div class="product-card-img-wrap"></div>
+                <div class="product-card-body">
+                  <div class="product-card-header-row">
+                    <h3 class="product-name">Ripple Chair</h3>
+                    <span class="product-price">₹11,500</span>
+                  </div>
+                  <div class="product-card-footer-row">
+                    <span class="product-materials">Teak</span>
+                    <div class="product-buy-row">
+                      <a href="../../index.html" class="product-inquire-btn">Inquire</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 5. Stylus Table -->
+              <div class="product-card" data-handle="modern-study-table">
+                <div class="product-card-img-wrap"></div>
+                <div class="product-card-body">
+                  <div class="product-card-header-row">
+                    <h3 class="product-name">Stylus Table</h3>
+                    <span class="product-price">₹35,000</span>
+                  </div>
+                  <div class="product-card-footer-row">
+                    <span class="product-materials">Teak</span>
+                    <div class="product-buy-row">
+                      <a href="../../index.html" class="product-inquire-btn">Inquire</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- 6. Quill Study Table -->
+              <div class="product-card" data-handle="classic-study-table">
+                <div class="product-card-img-wrap"></div>
+                <div class="product-card-body">
+                  <div class="product-card-header-row">
+                    <h3 class="product-name">Quill Study Table</h3>
+                    <span class="product-price">₹41,500</span>
+                  </div>
+                  <div class="product-card-footer-row">
+                    <span class="product-materials">Solid Teak</span>
+                    <div class="product-buy-row">
+                      <a href="../../index.html" class="product-inquire-btn">Inquire</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 7. Nook Side Table -->
+              <div class="product-card" data-handle="side-table">
+                <div class="product-card-img-wrap"></div>
+                <div class="product-card-body">
+                  <div class="product-card-header-row">
+                    <h3 class="product-name">Nook Side Table</h3>
+                    <span class="product-price">₹21,000</span>
+                  </div>
+                  <div class="product-card-footer-row">
+                    <span class="product-materials">Solid Teak</span>
+                    <div class="product-buy-row">
+                      <a href="../../index.html" class="product-inquire-btn">Inquire</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 8. Rod Bed -->
+              <div class="product-card" data-handle="rod-bed-with-curved-headboard">
+                <div class="product-card-img-wrap"></div>
+                <div class="product-card-body">
+                  <div class="product-card-header-row">
+                    <h3 class="product-name">Rod Bed</h3>
+                    <span class="product-price">₹81,000</span>
+                  </div>
+                  <div class="product-card-footer-row">
+                    <span class="product-materials">Solid Teak</span>
+                    <div class="product-buy-row">
+                      <a href="../../index.html" class="product-inquire-btn">Inquire</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="featured-carousel-nav-btn next-btn" aria-label="Next Product">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Mobile See All Products Link -->
+        <div class="mobile-see-all-wrap">
+          <a href="../../products.html" class="view-collection-link see-all-btn">See All Products</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════ COLLECTIONS CARDS ════════ -->
+  <section class="collections-section section-pad" id="collections">
+    <div class="container">
+      <div class="collections-header">
+        <span class="label">Themes</span>
+        <h2 class="title-h2" style="color: var(--ink);">Our Collections</h2>
+        <p class="collections-subtext">Collections is where you get to experience the studio's diversity. We explore
+          themes from across the country and from different eras to create furniture that fit into your home.</p>
+      </div>
+
+      <div class="collections-grid">
+        <!-- Card 1: Of Stillness -->
+        <a href="../../stillness.html" class="collection-card">
+          <div class="coll-card-img-wrap">
+            <img src="../../Resources/Collection/of_stillness.webp" alt="Of Stillness Collection" width="800" height="1200"
+              loading="lazy" decoding="async">
+          </div>
+          <div class="coll-card-content">
+            <span class="coll-card-eyebrow">Collection 01</span>
+            <h3 class="coll-card-title">Of Stillness</h3>
+            <p class="coll-card-desc">
+              Mid-Century Modern forms rooted in simplicity and material honesty
+            </p>
+          </div>
+        </a>
+
+        <!-- Card 2: Of Memories -->
+        <a href="../../memories.html" class="collection-card">
+          <div class="coll-card-img-wrap">
+            <img src="../../Resources/Collection/of_memories.webp" alt="Of Memories Collection" width="800" height="1104"
+              loading="lazy" decoding="async">
+          </div>
+          <div class="coll-card-content">
+            <span class="coll-card-eyebrow">Collection 02</span>
+            <h3 class="coll-card-title">Of Memories</h3>
+            <p class="coll-card-desc">
+              The warmth of familiar spaces through timeless material and detail.
+            </p>
+          </div>
+        </a>
+
+        <!-- Card 3: Of Exploration -->
+        <a href="#exploration" class="collection-card">
+          <div class="coll-card-img-wrap">
+            <img src="../../Resources/Collection/of_exploration.webp" alt="Of Exploration Collection" width="2048"
+              height="1365" loading="lazy" decoding="async">
+          </div>
+          <div class="coll-card-content">
+            <span class="coll-card-eyebrow">Collection 03</span>
+            <h3 class="coll-card-title">Of Exploration</h3>
+            <p class="coll-card-desc">
+              More diverse works from the studio that exist beyond a specific theme
+            </p>
+            <div class="tag-wrap">
+              <span class="coll-card-tag">Arriving Soon!</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ MATERIALS STORYTELLING & MOODBOARD ════════ -->
+  <section class="materials-section section-pad">
+    <div class="container">
+      <div class="materials-story-grid">
+        <div class="materials-story-content reveal-el">
+          <span class="label">Materiality</span>
+          <h2 class="title-h2">The Soul of the Object</h2>
+          <div class="story-divider"></div>
+          <p class="story-intro">We believe a piece of furniture is only as honest as the materials from which it is
+            born. At Noku Studio, we do not mask the organic. We celebrate it.</p>
+          <p class="body-p">Our <strong>reclaimed teak</strong> is rescued from decades-old structures in Southern
+            India—seasoned naturally by sun and monsoon, carrying a warm history and unparalleled stability.</p>
+          <p class="body-p">Each strand of <strong>natural rattan cane</strong> is meticulously hand-woven by local
+            master artisans, marrying breathing mid-century forms with India's living heritage.</p>
+          <p class="body-p">Our <strong>certified hides</strong> are left aniline-finished, preserving the natural
+            grain, scars, and creases, designed to acquire a unique, rich patina with every touch.</p>
+          <div class="story-cta-wrap">
+            <a href="../../materials.html" class="materials-cta-btn">Explore Our Materials <span class="arrow">→</span></a>
+          </div>
+        </div>
+
+        <div class="materials-moodboard reveal-el delay-1">
+          <div class="moodboard-item item-large">
+            <img src="../../Resources/material%20images/Wood/Reclaimed%20teak.jpg" alt="Reclaimed Teak" decoding="async">
+            <span class="moodboard-caption">Reclaimed Teak</span>
+          </div>
+          <div class="moodboard-item item-square-1">
+            <img src="https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Woven_cane.png?v=1782297952" alt="Woven Cane" decoding="async">
+            <span class="moodboard-caption">Woven Cane</span>
+          </div>
+          <div class="moodboard-item item-square-2">
+            <img src="../../Resources/material%20images/Wood/Bhilwara.png" alt="Matti Wood" decoding="async">
+            <span class="moodboard-caption">Matti Wood</span>
+          </div>
+          <div class="moodboard-item item-medium">
+            <img src="../../Resources/material%20images/Leather/Montana%20Chestnut.jpg" alt="Montana Chestnut Leather"
+              decoding="async">
+            <span class="moodboard-caption">Montana Chestnut Leather</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ CINEMATIC WORKSHOP VIDEO SECTION ════════ -->
+  <section class="video-section">
+    <!-- Local high-quality workshop video looping silently -->
+    <video class="video-background" id="workshop-video" autoplay muted loop playsinline preload="auto">
+      <source src="../../Resources/Video Project 2.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="video-overlay"></div>
+
+    <div class="video-content reveal-el">
+      <span class="label" style="color: var(--chamoisee);">The Workshop</span>
+      <h2 class="title-h2" style="font-weight: 300;">A document of patience, wood joints, and handcraft</h2>
+      <p class="body-p" style="color: var(--bone); opacity: 0.8; font-size: 1rem;">
+        Inside our Bengaluru atelier, we work with seasoned hardwoods—teak, honne, walnut—shaping, sanding, and
+        assembling each furniture piece with absolute precision.
+      </p>
+      <button class="video-control-btn" id="video-toggle" aria-label="Pause Video">
+        <svg id="pause-icon" width="20" height="20" viewBox="0 0 24 24">
+          <rect x="4" y="4" width="4" height="16" fill="var(--paper)"></rect>
+          <rect x="16" y="4" width="4" height="16" fill="var(--paper)"></rect>
+        </svg>
+        <svg id="play-icon" width="20" height="20" viewBox="0 0 24 24" style="display: none;">
+          <path d="M8 5v14l11-7z" fill="var(--paper)"></path>
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ════════ COLLECTIONS CARDS ════════ -->
+
+
+
+
+
+  <!-- ════════ FOOTER ════════ -->
+  <footer id="footer">
+    <div class="container">
+      <div class="footer-cta-line">
+        <p class="footer-cta-eyebrow">Ready to</p>
+        <a href="../../contact.html" class="btn-cta-arrow">Craft your furniture?<span class="arrow"><svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span></a>
+      </div>
+      <div class="footer-grid">
+        <div>
+          <p class="footer-wordmark">NOKU</p>
+        </div>
+        <div>
+          <p class="footer-col__heading">About</p>
+          <ul class="footer-col__links">
+            <li><a href="../../about.html">About Us</a></li>
+            <li><a href="../../contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col__heading">Work</p>
+          <ul class="footer-col__links">
+            <li><a href="../../products.html">Furniture Shop</a></li>
+            <li><a href="../../projects.html">Our Projects</a></li>
+            <li><a href="../../products.html">Collections</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col__heading">Knowledge</p>
+          <ul class="footer-col__links">
+            <li><a href="../../materials.html">Materials Guide</a></li>
+            <li><a href="../../sustainability.html">Sustainability</a></li>
+            <li><a href="mailto:hello@nokustudio.in">hello@nokustudio.in</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Noku Studio. All rights reserved.</span>
+        <span>Privacy Policy · Terms &amp; Conditions</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ════════ SHOPPING CART SIDE-DRAWER ════════ -->
+  <div id="cart-overlay" class="cart-overlay"></div>
+  <div id="cart-drawer" class="cart-drawer">
+    <div class="cart-header">
+      <h3 class="cart-title">Your Cart</h3>
+      <button id="cart-close" class="cart-close-btn" aria-label="Close Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="cart-items-container" id="cart-items-container">
+      <!-- Cart items will be dynamically injected here -->
+      <div class="cart-empty-message">Your cart is currently empty.</div>
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-subtotal-row">
+        <span class="subtotal-label">Subtotal</span>
+        <span class="subtotal-price" id="cart-subtotal">₹0.00</span>
+      </div>
+      <button id="checkout-btn" class="checkout-btn" disabled>Proceed to Checkout</button>
+    </div>
+  </div>
+
+
+
+  <script src="../../site.js"></script>
+  <script src="script-rest.js"></script>
+  <script src="../../shopify-integration.js"></script>
+
+  <!-- Interactive Materials Logic -->
+  <script>
+    const materialsData = {
+      wood: [
+        {
+          id: "teak",
+          name: "Teak",
+          subtitle: "Tectona grandis",
+          desc: "Renowned for its rich golden to medium brown hues that deepen with age, teak's straight grain and coarse texture exude timeless elegance. Naturally resistant to water, rot, and pests, its durability ensures lasting beauty with minimal upkeep.",
+          class: "swatch-wood-teak",
+          preview: "../../Resources/material images/Wood/Teak.png"
+        },
+        {
+          id: "honne",
+          name: "Honne",
+          subtitle: "Intsia bijuga",
+          desc: "It is characterized by rich, golden to reddish-brown color, which deepens over time, adding warmth and character to any furniture piece. Its straight grain and fine, even texture make it ideal for crafting high-quality furniture, flooring, and cabinetry. Notably resistant to decay, termites, and fungal attacks, ensuring longevity and minimal maintenance.",
+          class: "swatch-wood-honne",
+          preview: "../../Resources/material images/Wood/Honne.png"
+        },
+        {
+          id: "matti",
+          name: "Matti",
+          subtitle: "Terminalia elliptica",
+          desc: "Also known as Indian Laurel, this hardwood ranges in colour from deep brown to almost black, with a grain and texture reminiscent of walnut. Dense and heavy, it offers exceptional strength and durability.",
+          class: "swatch-wood-matti",
+          preview: "../../Resources/material images/Wood/Bhilwara.png"
+        },
+        {
+          id: "reclaimed-teak",
+          name: "Reclaimed Teak",
+          subtitle: "Tectona grandis (Reclaimed)",
+          desc: "Sourced from old structures, reclaimed teak showcases a beautiful seasoned character with unique nail holes and weathered grains. Offering the same exceptional durability and water resistance as fresh teak, it is a sustainable choice that tells a story of its own.",
+          class: "swatch-wood-reclaimed-teak",
+          preview: "../../Resources/material images/Wood/Reclaimed teak.jpg"
+        }
+      ],
+      leather: [
+        {
+          id: "glory-honey",
+          name: "Glory Honey",
+          subtitle: "Premium Hide",
+          desc: "Glory is a celebration of nature’s glorious irregularities and the stories that every hide has to say. This naked hide will remain your lifelong canvas meticulously absorbing every cosy encounter and unplanned accident. Glory is moulded by each touch of yours as you leave a distinct mark on the world.",
+          class: "swatch-leather-glory-honey",
+          preview: "../../Resources/material images/Leather/Glory Honey.jpeg"
+        },
+        {
+          id: "vagabond-cognac",
+          name: "Vagabond Cognac",
+          subtitle: "Full-Grain Leather",
+          desc: "Vagabond Cognac leather is a premium, full-grain leather known for its rich, deep brown color and luxurious feel. This leather is prized for its natural, uncorrected grain, which showcases the unique characteristics and textures of the hide. With a smooth, supple touch and a slight sheen, Vagabond Cognac leather exudes sophistication and timeless elegance.",
+          class: "swatch-leather-vagabond-cognac",
+          preview: "../../Resources/material images/Leather/Vagabond Cognac.jpeg"
+        },
+        {
+          id: "montana-chestnut",
+          name: "Montana Chestnut",
+          subtitle: "Aniline Leather",
+          desc: "Only the most premium of hides make for an aniline finish that retains the natural textures and unique grain patterns. This plush aniline leather is soaked in oils and well moisturized to give it a natural sheen and a strong pull-up effect. Montana has a cushiony appearance and a supple feel lending it a well-rounded appearance.",
+          class: "swatch-leather-montana-chestnut",
+          preview: "../../Resources/material images/Leather/Montana Chestnut.jpg"
+        },
+        {
+          id: "emperor-brick",
+          name: "Emperor Brick",
+          subtitle: "Natural Grain Hide",
+          desc: "The Emperor is a thick hide with good body in a completely natural grain. It is plush and pleasing to the touch. The high drama of the grains against the texture commands your attention immediately. It also has the forgiving properties of a benevolent emperor, pardoning small and big incidents magnanimously.",
+          class: "swatch-leather-emperor-brick",
+          preview: "../../Resources/material images/Leather/Emperor Brick.jpeg"
+        },
+        {
+          id: "eternity-olive",
+          name: "Eternity Olive",
+          subtitle: "Soft Pliable Hide",
+          desc: "Eternity’s soft and pliable hides, drape like a dream, making it a craftsman’s delight. This hide’s cloudy two tone effect and deep earthy tones combined with its natural sheen make for a spot of shine and sophistication in any sleek setting. Eternity is for those with a keen eye for timeless designs.",
+          class: "swatch-leather-eternity-olive",
+          preview: "../../Resources/material images/Leather/Eternity Olive.jpeg"
+        }
+      ],
+      fabric: [
+        {
+          id: "blush",
+          name: "Blush",
+          subtitle: "Herringbone Pattern",
+          desc: "Muted fabric with a subtle Herringbone pattern that adds visual texture to your cushions.",
+          class: "swatch-fabric-blush",
+          preview: "../../Resources/material images/Fabric/Blush.jpeg"
+        },
+        {
+          id: "rosebud",
+          name: "Rosebud",
+          subtitle: "Classic Indoor Fabric",
+          desc: "Casual yet classic, Rosebud is versatile as an indoor fabric, great for interiors with a muted colour palette.",
+          class: "swatch-fabric-rosebud",
+          preview: "../../Resources/material images/Fabric/Rosebud.png"
+        },
+        {
+          id: "rubik-linen",
+          name: "Rubik Linen",
+          subtitle: "Textured Linen",
+          desc: "Textured and soft fabric for bright interiors and contrasts well with our wood options.",
+          class: "swatch-fabric-rubik-linen",
+          preview: "../../Resources/material images/Fabric/Rubik Linen.jpg"
+        },
+        {
+          id: "silver",
+          name: "Silver",
+          subtitle: "Herringbone Velvet Finish",
+          desc: "Classy and understated fabric with a subtle Herringbone pattern and velvet-like finish.",
+          class: "swatch-fabric-silver",
+          preview: "../../Resources/material images/Fabric/Silver.jpeg"
+        },
+        {
+          id: "cloud",
+          name: "Cloud",
+          subtitle: "Reserved Grey Linen",
+          desc: "Linen option with a reserved grey finish to match any and every interiors palette.",
+          class: "swatch-fabric-cloud",
+          preview: "../../Resources/material images/Fabric/Cloud.jpg"
+        },
+        {
+          id: "opal",
+          name: "Opal",
+          subtitle: "Bold Hue Fabric",
+          desc: "Bright and bold hue perfect for adding invigorating pops of colour to the furniture and cushions.",
+          class: "swatch-fabric-opal",
+          preview: "../../Resources/material images/Fabric/Opal.png"
+        },
+        {
+          id: "vienna",
+          name: "Vienna",
+          subtitle: "Understated Opulence Velvet",
+          desc: "Ideal for upholstery with understated opulence, soft, velvety touch adding subtle luminosity to traditional and contemporary living spaces.",
+          class: "swatch-fabric-vienna",
+          preview: "../../Resources/material images/Fabric/Vienna Army.jpg"
+        },
+        {
+          id: "flute",
+          name: "Flute",
+          subtitle: "Deep Navy Striped Fabric",
+          desc: "Striking lines in deep navy to add a vibrant texture to the furniture and space.",
+          class: "swatch-fabric-flute",
+          preview: "../../Resources/material images/Fabric/Flute.jpeg"
+        },
+        {
+          id: "charcoal",
+          name: "Charcoal",
+          subtitle: "Plush Chenille Yarn",
+          desc: "Its chenille yarn offers a plush, multi-tonal finish which is perfect for all upholstery uses such as sofas or chairs.",
+          class: "swatch-fabric-charcoal",
+          preview: "../../Resources/material images/Fabric/Charcoal.png"
+        }
+      ],
+      cane: [
+        {
+          id: "woven-cane",
+          name: "Woven Cane",
+          subtitle: "Natural Rattan Vine",
+          desc: "Woven cane, a natural material crafted from rattan vine, brings light and airy beauty to furniture. Its warm tones, unique textures, and surprising durability make it a versatile choice for any style, from coastal chic to mid-century modern. It's lightweight, breathable for comfort, and requires minimal care - perfect for adding a touch of natural elegance to your home.",
+          class: "swatch-cane-woven-cane",
+          preview: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/68271f7b453b55e1b9a21c03_6684d13aa6725a68337cc74f_66784e83c198b5a75b916393_Cane%252520Weave.png"
+        }
+      ],
+      metals: [
+        {
+          id: "brass",
+          name: "Brass",
+          subtitle: "Copper-Zinc Alloy",
+          desc: "Brass is a versatile metal alloy primarily composed of copper and zinc, known for its golden-yellow color and attractive luster. It has a smooth texture and can develop a natural patina over time. With its moderate density, brass is both strong and malleable, making it ideal for intricate designs.",
+          class: "swatch-metals-brass",
+          preview: "../../Resources/material images/Metals/Brass.jpg"
+        }
+      ]
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const swatchesGrid = document.getElementById("materials-swatches-grid");
+      const detailTitle = document.getElementById("material-detail-title");
+      const detailSubtitle = document.getElementById("material-detail-subtitle");
+      const detailDesc = document.getElementById("material-detail-desc");
+      const previewImg = document.getElementById("material-detail-img");
+      const categoryPills = document.querySelectorAll(".materials-pill");
+
+      // The interactive materials swatch widget was replaced by the static
+      // moodboard collage on the homepage. Bail out cleanly if its markup
+      // isn't present so renderCategory() doesn't touch null elements.
+      if (!swatchesGrid) return;
+
+      function updatePreviewImage(item) {
+        if (!previewImg) return;
+        if (item.preview) {
+          previewImg.style.opacity = "0";
+          setTimeout(() => {
+            previewImg.src = item.preview;
+            previewImg.alt = item.name;
+            previewImg.style.opacity = "1";
+          }, 150);
+        } else {
+          previewImg.style.opacity = "0";
+        }
+      }
+
+      function renderCategory(categoryKey) {
+        const items = materialsData[categoryKey];
+        if (!items || items.length === 0) return;
+
+        swatchesGrid.innerHTML = "";
+
+        items.forEach((item, index) => {
+          const card = document.createElement("div");
+          card.className = `swatch-card${index === 0 ? " active" : ""}`;
+          card.setAttribute("data-material", item.id);
+
+          const bg = document.createElement("div");
+          bg.className = `swatch-bg ${item.class}`;
+
+          const label = document.createElement("div");
+          label.className = "swatch-label";
+          label.innerText = item.name;
+
+          card.appendChild(bg);
+          card.appendChild(label);
+
+          card.addEventListener("click", () => {
+            document.querySelectorAll(".swatch-card").forEach(c => c.classList.remove("active"));
+            card.classList.add("active");
+
+            detailTitle.innerText = item.name;
+            detailSubtitle.innerText = item.subtitle;
+            detailDesc.innerText = item.desc;
+            updatePreviewImage(item);
+          });
+
+          swatchesGrid.appendChild(card);
+        });
+
+        const firstItem = items[0];
+        detailTitle.innerText = firstItem.name;
+        detailSubtitle.innerText = firstItem.subtitle;
+        detailDesc.innerText = firstItem.desc;
+
+        // Initial load of the preview image
+        if (previewImg && firstItem.preview) {
+          previewImg.src = firstItem.preview;
+          previewImg.alt = firstItem.name;
+          previewImg.style.opacity = "1";
+        }
+      }
+
+      categoryPills.forEach(pill => {
+        pill.addEventListener("click", () => {
+          categoryPills.forEach(p => p.classList.remove("active"));
+          pill.classList.add("active");
+
+          const categoryKey = pill.getAttribute("data-category");
+          renderCategory(categoryKey);
+        });
+      });
+
+      renderCategory("wood");
+    });
+  </script>
+</body>
+
+</html>
