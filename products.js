@@ -659,15 +659,21 @@ function renderProductsGrid() {
     card.className = `gcard reveal-el is-revealed`; // reveal immediately
     card.style.animationDelay = `${(idx % 4) * 0.1}s`;
     
-    const firstVariant = p.variants?.edges?.[0]?.node;
-    const displayPrice = firstVariant ? parseFloat(firstVariant.price.amount) : SHOPIFY_CONFIG.defaultPrice;
-    const displayMaterial = firstVariant ? firstVariant.title : 'Solid Wood Finish';
-    // Eyebrow shows the materials only (wood / upholstery) — drop the colour suffix
-    // (e.g. "White Ash / Leather - Cognac" → "White Ash / Leather").
-    const eyebrowMaterial = displayMaterial.split(' - ')[0].trim();
-    const rawImage = p.featuredImage?.url || (firstVariant && firstVariant.image ? firstVariant.image.url : 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg');
+    // Drive the card off one coherent variant so the photo and the material label
+    // can't disagree. Prefer the first variant that carries its own Shopify image
+    // (that's the one whose photo matches its title); else fall back to the first.
+    const variantEdges = p.variants?.edges || [];
+    const cardVariant = (variantEdges.find(e => e.node.image && e.node.image.url) || variantEdges[0])?.node;
+    const displayPrice = cardVariant ? parseFloat(cardVariant.price.amount) : SHOPIFY_CONFIG.defaultPrice;
+    // Keep the full variant title (incl. the "- Colour" suffix) so the eyebrow names
+    // the exact fabric/leather shown, e.g. "White Ash / Leather - Cognac".
+    const displayMaterial = cardVariant ? cardVariant.title : 'Solid Wood Finish';
+    const eyebrowMaterial = displayMaterial;
+    // Show the variant's own image so it matches the material named below; only fall
+    // back to the product featured image when the variant carries no image.
+    const rawImage = (cardVariant && cardVariant.image && cardVariant.image.url) || p.featuredImage?.url || 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg';
     const defaultImage = sizedCardImage(rawImage);
-    const defaultVariantId = firstVariant ? firstVariant.id : `gid://shopify/ProductVariant/fallback-${p.handle}`;
+    const defaultVariantId = cardVariant ? cardVariant.id : `gid://shopify/ProductVariant/fallback-${p.handle}`;
 
     const isDisplay = isDisplayOnly(p.handle);
 
