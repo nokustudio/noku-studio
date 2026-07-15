@@ -69,9 +69,6 @@ function isDisplayItem(item) {
 let shopifyProductVariants = [];
 let isShopifyConnected = false;
 
-// Featured products data from Shopify Storefront API (Phase 2)
-let featuredProductsData = {};
-
 // Fallback registry for featured products (Phase 2)
 const FEATURED_PRODUCTS_FALLBACK = {
   'sofa-2': {
@@ -468,10 +465,13 @@ async function fetchFromShopify(query, variables = {}) {
   }
 }
 
-// Fetch variants data from Shopify on load
+// Fetch the barstool configurator's variants (wood/cushion swatch picker) on load.
+// This is unrelated to the featured-products carousel below — kept isolated so the
+// barstool hero card (synced from the configurator, see script.js syncFeaturedBarstoolCard)
+// never touches or is touched by the featured-products fetch.
 async function loadShopifyProductData() {
   const query = `
-    query getProductAndFeatured($handle: String!) {
+    query getProduct($handle: String!) {
       product(handle: $handle) {
         id
         title
@@ -495,259 +495,20 @@ async function loadShopifyProductData() {
           }
         }
       }
-      sofa: product(handle: "sofa-2") {
-        id
-        title
-        featuredImage {
-          url
-        }
-        variants(first: 10) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-                currencyCode
-              }
-              image {
-                url
-              }
-            }
-          }
-        }
-      }
-      loungeChair: product(handle: "lounge-chair") {
-        id
-        title
-        featuredImage {
-          url
-        }
-        variants(first: 10) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-                currencyCode
-              }
-              image {
-                url
-              }
-            }
-          }
-        }
-      }
-      diningChair: product(handle: "dining-chair") {
-        id
-        title
-        featuredImage {
-          url
-        }
-        variants(first: 10) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-                currencyCode
-              }
-              image {
-                url
-              }
-            }
-          }
-        }
-      }
-      studyTable: product(handle: "modern-study-table") {
-        id
-        title
-        featuredImage {
-          url
-        }
-        variants(first: 10) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-                currencyCode
-              }
-              image {
-                url
-              }
-            }
-          }
-        }
-      }
-      barstool: product(handle: "barstool") {
-        id
-        title
-        variants(first: 10) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-                currencyCode
-              }
-              image {
-                url
-              }
-            }
-          }
-        }
-      }
-      classicStudyTable: product(handle: "classic-study-table") {
-        id
-        title
-        variants(first: 10) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-                currencyCode
-              }
-              image {
-                url
-              }
-            }
-          }
-        }
-      }
-      sideTable: product(handle: "side-table") {
-        id
-        title
-        variants(first: 10) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-                currencyCode
-              }
-              image {
-                url
-              }
-            }
-          }
-        }
-      }
-      loungeSofa: product(handle: "lounge-sofa") {
-        id
-        title
-        variants(first: 10) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-                currencyCode
-              }
-              image {
-                url
-              }
-            }
-          }
-        }
-      }
-      upholsteredBench: product(handle: "upholstered-bench") {
-        id
-        title
-        variants(first: 10) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-                currencyCode
-              }
-              image {
-                url
-              }
-            }
-          }
-        }
-      }
-      rodBed: product(handle: "rod-bed-with-curved-headboard") {
-        id
-        title
-        variants(first: 10) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-                currencyCode
-              }
-              image {
-                url
-              }
-            }
-          }
-        }
-      }
-      posterBed: product(handle: "poster-bed") {
-        id
-        title
-        variants(first: 10) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-                currencyCode
-              }
-              image {
-                url
-              }
-            }
-          }
-        }
-      }
     }
   `;
-  
+
   const data = await fetchFromShopify(query, { handle: SHOPIFY_CONFIG.productHandle });
-  
+
   console.log('Shopify Storefront API Response:', data);
-  
+
   if (data && data.data && data.data.product) {
     shopifyProductVariants = data.data.product.variants.edges.map(edge => edge.node);
     isShopifyConnected = true;
     console.log('Successfully connected to Shopify Storefront API. Loaded product variants.');
-    
-    // Store featured products data
-    featuredProductsData = {
-      'sofa-2': data.data.sofa,
-      'lounge-chair': data.data.loungeChair,
-      'dining-chair': data.data.diningChair,
-      'modern-study-table': data.data.studyTable,
-      'barstool': data.data.barstool,
-      'classic-study-table': data.data.classicStudyTable,
-      'side-table': data.data.sideTable,
-      'lounge-sofa': data.data.loungeSofa,
-      'upholstered-bench': data.data.upholsteredBench,
-      'rod-bed-with-curved-headboard': data.data.rodBed,
-      'poster-bed': data.data.posterBed
-    };
-    
+
     // Sync local carousel images with live Shopify CDN URLs
     updateCarouselImagesToShopify();
-    
-    // Update featured products UI
-    updateFeaturedProductsUI();
   } else {
     if (!data) {
       console.warn('Shopify API connection failed. Check your shop domain, network, or access token.');
@@ -757,14 +518,122 @@ async function loadShopifyProductData() {
       console.warn(`Shopify connected, but product with handle "${SHOPIFY_CONFIG.productHandle}" was not found.`);
     }
     console.log('Using simulated local inventory.');
-    
-    // Ensure featured products UI runs in simulation/fallback mode
-    updateFeaturedProductsUI();
   }
   // Dispatch custom event to notify secondary landing page that product data is loaded
   window.dispatchEvent(new CustomEvent('shopifyloaded'));
 }
 
+// ─── FEATURED PRODUCTS CAROUSEL (Shopify-driven) ───
+// Which products appear: Shopify product metafield custom.featured (boolean toggle).
+// Which variant/photo each card shows: custom.featured_variant, a native Shopify
+// "Variant reference" metafield — the merchant picks the exact variant from a
+// dropdown on the product page in Shopify Admin, no code change needed to switch it.
+// The barstool hero card is excluded here entirely; it stays hardcoded in index.html
+// and is driven live by the wood/cushion configurator (script.js syncFeaturedBarstoolCard).
+async function loadFeaturedProducts() {
+  const query = `
+    query getFeaturedProducts {
+      products(first: 50) {
+        edges {
+          node {
+            handle
+            title
+            featuredImage { url }
+            featuredFlag: metafield(namespace: "custom", key: "featured") { value }
+            featuredVariant: metafield(namespace: "custom", key: "featured_variant") {
+              reference {
+                ... on ProductVariant {
+                  id
+                  title
+                  price { amount currencyCode }
+                  image { url }
+                }
+              }
+            }
+            variants(first: 10) {
+              edges {
+                node {
+                  id
+                  title
+                  price { amount currencyCode }
+                  image { url }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const data = await fetchFromShopify(query);
+  const products = data?.data?.products?.edges?.map(e => e.node) || [];
+  const featured = products.filter(p => p.handle !== 'barstool' && p.featuredFlag?.value === 'true');
+
+  let items;
+  if (featured.length > 0) {
+    items = featured.map(p => {
+      const variant = p.featuredVariant?.reference || p.variants?.edges?.[0]?.node;
+      return {
+        handle: p.handle,
+        title: p.title,
+        price: variant ? parseFloat(variant.price.amount) : SHOPIFY_CONFIG.defaultPrice,
+        image: (variant && variant.image?.url) || p.featuredImage?.url || '',
+        variantId: variant?.id || '',
+        variantTitle: variant?.title || ''
+      };
+    });
+  } else {
+    // Offline / unreachable — fall back to the local registry (barstool excluded, it's static).
+    items = Object.entries(FEATURED_PRODUCTS_FALLBACK)
+      .filter(([handle]) => handle !== 'barstool')
+      .map(([handle, p]) => ({ handle, title: p.title, price: p.price, image: '', variantId: p.variantId, variantTitle: p.variantTitle }));
+  }
+
+  renderFeaturedCarousel(items);
+}
+
+// Render the non-barstool featured cards into the track, after the static barstool card.
+function renderFeaturedCarousel(items) {
+  const track = document.querySelector('.featured-carousel-track');
+  if (!track) return;
+
+  // Clear out any previously-rendered dynamic cards (idempotent re-render), keep barstool.
+  track.querySelectorAll('.product-card:not([data-handle="barstool"])').forEach(el => el.remove());
+
+  items.forEach(item => {
+    const isDisplay = isDisplayOnly(item.handle);
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.setAttribute('data-handle', item.handle);
+    card.setAttribute('data-variant-id', item.variantId);
+    card.setAttribute('data-variant-price', String(item.price));
+    card.setAttribute('data-variant-title', item.variantTitle);
+    card.setAttribute('data-variant-image', item.image);
+
+    const buyRowHtml = isDisplay
+      ? `<a href="product.html?handle=${encodeURIComponent(item.handle)}&inquire=true" class="product-inquire-btn">Inquire</a>`
+      : `<button class="product-add-to-cart-btn" aria-label="Add ${escHtml(item.title)} to Cart">Add to Cart</button>`;
+
+    card.innerHTML = `
+      <div class="product-card-img-wrap">${item.image ? `<img src="${safeUrl(sizeShopifyImage(item.image, 800, 1000))}" alt="${escHtml(item.title)}" loading="lazy" decoding="async" width="800" height="1000">` : ''}</div>
+      <div class="product-card-body">
+        <div class="product-card-header-row">
+          <h3 class="product-name">${escHtml(item.title)}</h3>
+          <span class="product-price">From ${formatCurrency(item.price)}</span>
+        </div>
+        <div class="product-card-footer-row">
+          <span class="product-materials">${escHtml(item.variantTitle)}</span>
+          <div class="product-buy-row">${buyRowHtml}</div>
+        </div>
+      </div>
+    `;
+
+    track.appendChild(card);
+  });
+
+  window.dispatchEvent(new CustomEvent('featuredproductsloaded'));
+}
 
 // Sync local carousel variant images to active Shopify CDN URLs
 function updateCarouselImagesToShopify() {
@@ -839,251 +708,24 @@ function sizeShopifyImage(url, width, height) {
   return url;
 }
 
-// Inject (or update) the card image inside the placeholder wrap. The <img> is created
-// on demand so the markup ships as an empty placeholder and only renders an image once
-// Shopify data resolves.
-function setFeaturedCardImage(card, imageSrc, altText) {
-  const imgWrap = card.querySelector('.product-card-img-wrap');
-  if (!imgWrap) return;
-
-  if (!imageSrc) {
-    const existing = imgWrap.querySelector('img');
-    if (existing) existing.remove(); // keep clean placeholder when nothing resolves
-    return;
-  }
-
-  const sized = sizeShopifyImage(imageSrc, 800, 1000);
-  let img = imgWrap.querySelector('img');
-  if (!img) {
-    img = document.createElement('img');
-    img.loading = 'lazy';
-    img.decoding = 'async';
-    img.width = 800;
-    img.height = 1000;
-    imgWrap.appendChild(img);
-  }
-  if (img.getAttribute('src') !== sized) img.src = sized;
-  img.alt = altText || '';
-}
-
-// Helper to find the best matching variant from a list of Shopify variants based on text description
-function findBestMatchingVariant(variants, originalMaterials) {
-  if (!variants || variants.length === 0 || !originalMaterials) return null;
-
-  // Clean and split the query into lowercase alphanumeric words
-  const cleanQuery = originalMaterials.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
-  const queryTokens = cleanQuery.split(/\s+/).filter(t => t.length > 0);
-  
-  // Ignore common helper words
-  const stopWords = new Set(['and', 'or', 'with', 'a', 'of', 'solid', 'the', '/']);
-  const queryKeywords = queryTokens.filter(t => !stopWords.has(t));
-
-  if (queryKeywords.length === 0) return variants[0];
-
-  let bestVariant = null;
-  let maxMatchCount = -1;
-
-  for (const variant of variants) {
-    const variantTitleClean = variant.title.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
-    const variantTokens = variantTitleClean.split(/\s+/).filter(t => t.length > 0 && !stopWords.has(t));
-    
-    // Count matches
-    let matchCount = 0;
-    for (const kw of queryKeywords) {
-      if (variantTokens.includes(kw)) {
-        matchCount++;
-      }
-    }
-
-    if (matchCount > maxMatchCount) {
-      maxMatchCount = matchCount;
-      bestVariant = variant;
-    } else if (matchCount === maxMatchCount && bestVariant) {
-      // Tie breaker: prefer the one where variant title has shorter length (more concise match)
-      const currentTokens = bestVariant.title.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(t => t.length > 0 && !stopWords.has(t));
-      if (variantTokens.length < currentTokens.length) {
-        bestVariant = variant;
-      }
-    }
-  }
-
-  return maxMatchCount > 0 ? bestVariant : variants[0];
-}
-
-// Update Featured Product Cards pricing and images from Shopify Storefront API
-function updateFeaturedProductsUI() {
-  const cards = document.querySelectorAll('.product-card[data-handle]');
-  
-  cards.forEach(card => {
-    const handle = card.getAttribute('data-handle');
-    let title = '';
-    let price = 0;
-    let imageSrc = '';
-    let variantId = '';
-    let variantTitle = '';
-    
-    // Store original materials text to ensure we don't lose it upon repeated calls
-    const materialsEl = card.querySelector('.product-materials');
-    let originalMaterials = card.getAttribute('data-original-materials');
-    if (!originalMaterials && materialsEl) {
-      originalMaterials = materialsEl.textContent.trim();
-      card.setAttribute('data-original-materials', originalMaterials);
-    }
-    
-    const liveProduct = featuredProductsData[handle];
-    if (isShopifyConnected && liveProduct) {
-      title = liveProduct.title;
-      
-      const variants = liveProduct.variants?.edges.map(edge => edge.node) || [];
-      const bestVariant = findBestMatchingVariant(variants, originalMaterials);
-      
-      if (bestVariant) {
-        price = parseFloat(bestVariant.price.amount);
-        variantId = bestVariant.id;
-        variantTitle = bestVariant.title;
-        imageSrc = bestVariant.image ? bestVariant.image.url : (liveProduct.featuredImage?.url || '');
-      } else {
-        const firstVariant = liveProduct.variants?.edges[0]?.node;
-        if (firstVariant) {
-          price = parseFloat(firstVariant.price.amount);
-          variantId = firstVariant.id;
-          variantTitle = firstVariant.title;
-        }
-        imageSrc = liveProduct.featuredImage?.url
-          || (firstVariant && firstVariant.image ? firstVariant.image.url : '');
-      }
-      
-      // Save matched variant credentials to DOM
-      card.setAttribute('data-variant-id', variantId);
-      card.setAttribute('data-variant-price', price.toString());
-      card.setAttribute('data-variant-title', variantTitle);
-      card.setAttribute('data-variant-image', imageSrc);
-    } else {
-      const fallback = FEATURED_PRODUCTS_FALLBACK[handle];
-      if (fallback) {
-        title = fallback.title;
-        price = fallback.price;
-        variantId = fallback.variantId;
-        variantTitle = fallback.variantTitle;
-        // Intentionally NOT using fallback.image here: those are the multi-MP Webflow
-        // originals that caused the scroll re-decode flashing. The featured card image
-        // is sourced only from the live Shopify CDN; offline it stays a clean placeholder.
-        imageSrc = '';
-        
-        // Save fallback credentials to DOM
-        card.setAttribute('data-variant-id', variantId);
-        card.setAttribute('data-variant-price', price.toString());
-        card.setAttribute('data-variant-title', variantTitle);
-        card.setAttribute('data-variant-image', fallback.image || '');
-      }
-    }
-    
-    const nameEl = card.querySelector('.product-name');
-    if (nameEl && title) {
-      nameEl.textContent = title;
-    }
-
-    const priceEl = card.querySelector('.product-price');
-    if (priceEl) {
-      // Show the entry price ("From ₹X") using the lowest variant price, so the
-      // card advertises the cheapest way in rather than the matched variant's
-      // price. The matched `price`/data-variant-price still drives the cart.
-      let displayPrice = price;
-      if (isShopifyConnected && liveProduct) {
-        const allPrices = (liveProduct.variants?.edges || [])
-          .map(e => parseFloat(e.node.price.amount))
-          .filter(n => !isNaN(n) && n > 0);
-        if (allPrices.length) displayPrice = Math.min(...allPrices);
-      }
-      priceEl.textContent = `From ${formatCurrency(displayPrice)}`;
-    }
-
-    const materialsElAfter = card.querySelector('.product-materials');
-    if (materialsElAfter && variantTitle) {
-      materialsElAfter.textContent = variantTitle;
-    }
-
-    // Inject the Shopify image into the placeholder container (sized via CDN params)
-    setFeaturedCardImage(card, imageSrc, title);
-
-    // Replace Add to Cart button with Inquire link for display-only items
-    const buyRow = card.querySelector('.product-buy-row');
-    if (buyRow) {
-      const isDisplay = isDisplayOnly(handle);
-      const addBtn = buyRow.querySelector('.product-add-to-cart-btn');
-      const inquireBtn = buyRow.querySelector('.product-inquire-btn');
-      
-      if (isDisplay) {
-        if (addBtn) addBtn.remove();
-        const inquireHref = `product.html?handle=${handle}&inquire=true`;
-        if (inquireBtn) {
-          // The static markup ships these with href="#" — point them at the
-          // product page so the Get-in-touch modal opens from the button itself.
-          inquireBtn.setAttribute('href', inquireHref);
-        } else {
-          const newInquireBtn = document.createElement('a');
-          newInquireBtn.className = 'product-inquire-btn';
-          newInquireBtn.href = inquireHref;
-          newInquireBtn.textContent = 'Inquire';
-          buyRow.appendChild(newInquireBtn);
-        }
-      } else {
-        if (inquireBtn) inquireBtn.remove();
-        if (!addBtn) {
-          const newAddBtn = document.createElement('button');
-          newAddBtn.className = 'product-add-to-cart-btn';
-          newAddBtn.setAttribute('aria-label', `Add ${title || 'Item'} to Cart`);
-          newAddBtn.textContent = 'Add to Cart';
-          buyRow.appendChild(newAddBtn);
-        }
-      }
-    }
-  });
-  
-  // Dispatch a custom event so script.js can re-center the featured products carousel
-  window.dispatchEvent(new CustomEvent('featuredproductsloaded'));
-}
-
 // Add a featured product item to the cart
 function addFeaturedItemToCart(handle) {
   if (isDisplayOnly(handle)) {
     alert("This item is for display only and cannot be added to the cart.");
     return;
   }
-  
+
+  // Every rendered card (barstool or dynamic featured card) carries its own
+  // data-variant-* attributes from creation, so read straight off the card.
   const card = document.querySelector(`.product-card[data-handle="${handle}"]`);
-  let title = '';
-  let price = 0;
-  let variantId = '';
-  let variantTitle = '';
-  let imageSrc = '';
-  
-  const liveProduct = featuredProductsData[handle];
-  if (isShopifyConnected && liveProduct) {
-    title = liveProduct.title;
-    
-    // Attempt to read matched variant details from card's data attributes
-    if (card && card.getAttribute('data-variant-id')) {
-      variantId = card.getAttribute('data-variant-id');
-      price = parseFloat(card.getAttribute('data-variant-price') || '0');
-      variantTitle = card.getAttribute('data-variant-title') || '';
-      imageSrc = card.getAttribute('data-variant-image') || '';
-    } else {
-      // Fallback matching if data attributes aren't present yet
-      const materialsEl = card ? card.querySelector('.product-materials') : null;
-      const originalMaterials = card ? (card.getAttribute('data-original-materials') || (materialsEl ? materialsEl.textContent.trim() : '')) : '';
-      const variants = liveProduct.variants?.edges.map(e => e.node) || [];
-      const bestVariant = findBestMatchingVariant(variants, originalMaterials);
-      
-      if (bestVariant) {
-        price = parseFloat(bestVariant.price.amount);
-        variantId = bestVariant.id;
-        variantTitle = bestVariant.title;
-        imageSrc = bestVariant.image ? bestVariant.image.url : (liveProduct.featuredImage?.url || '');
-      }
-    }
-  } else {
-    // Offline simulation mode
+  let title = card?.querySelector('.product-name')?.textContent || '';
+  let price = card ? parseFloat(card.getAttribute('data-variant-price') || '0') : 0;
+  let variantId = card ? (card.getAttribute('data-variant-id') || '') : '';
+  let variantTitle = card ? (card.getAttribute('data-variant-title') || '') : '';
+  let imageSrc = card ? (card.getAttribute('data-variant-image') || '') : '';
+
+  if (!variantId) {
+    // Card not rendered yet (race with the async fetch) — fall back to the offline registry
     const fallback = FEATURED_PRODUCTS_FALLBACK[handle];
     if (fallback) {
       title = fallback.title;
@@ -1093,7 +735,7 @@ function addFeaturedItemToCart(handle) {
       imageSrc = fallback.image;
     }
   }
-  
+
   if (!variantId) return;
   
   const cartItemId = `featured-${handle}`;
@@ -1839,7 +1481,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Load Shopify storefront details
   loadShopifyProductData();
-  
+  loadFeaturedProducts();
+
   // Listen to storage sync from other pages
   window.addEventListener('storage', () => {
     cart = JSON.parse(localStorage.getItem('noku_cart')) || [];

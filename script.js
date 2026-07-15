@@ -1271,46 +1271,48 @@
     const track = document.querySelector('.featured-carousel-track');
     if (!track) return;
 
-    const cards = track.querySelectorAll('.product-card');
+    // Delegated click listener (not per-card) so cards rendered later by the
+    // Shopify featured-products fetch are handled without re-binding.
+    track.addEventListener('click', (e) => {
+      if (e.target.closest('.product-add-to-cart-btn') || e.target.closest('.product-inquire-btn') || e.target.closest('a')) {
+        return;
+      }
+      const card = e.target.closest('.product-card');
+      if (!card) return;
+      const cards = [...track.querySelectorAll('.product-card')];
+      const idx = cards.indexOf(card);
 
-    // Add click listeners to cards
-    cards.forEach((card, idx) => {
-      card.addEventListener('click', (e) => {
-        // If clicking buttons/links inside the card, don't trigger carousel shift or navigation
-        if (e.target.closest('.product-add-to-cart-btn') || e.target.closest('.product-inquire-btn') || e.target.closest('a')) {
-          return;
+      if (card.classList.contains('highlighted')) {
+        const handle = card.getAttribute('data-handle');
+        if (handle) {
+          // Open the product page only. The Get-in-touch modal must be opened
+          // explicitly via the Inquire button (an <a> excluded above), never by
+          // clicking the card itself — so no &inquire=true here.
+          window.location.href = `product.html?handle=${handle}`;
         }
+        return;
+      }
 
-        if (card.classList.contains('highlighted')) {
-          const handle = card.getAttribute('data-handle');
-          if (handle) {
-            // Open the product page only. The Get-in-touch modal must be opened
-            // explicitly via the Inquire button (an <a> excluded above), never by
-            // clicking the card itself — so no &inquire=true here.
-            window.location.href = `product.html?handle=${handle}`;
-          }
-          return;
-        }
-
-        activeProductIndex = idx;
-        centerActiveProduct(true);
-      });
+      activeProductIndex = idx;
+      centerActiveProduct(true);
     });
 
-    // Prev/Next buttons
+    // Prev/Next buttons — re-query card count live so newly-added cards count too
     const prevBtn = document.querySelector('.featured-carousel-outer-wrap .prev-btn');
     const nextBtn = document.querySelector('.featured-carousel-outer-wrap .next-btn');
 
     if (prevBtn) {
       prevBtn.addEventListener('click', () => {
-        activeProductIndex = (activeProductIndex - 1 + cards.length) % cards.length;
+        const count = track.querySelectorAll('.product-card').length;
+        activeProductIndex = (activeProductIndex - 1 + count) % count;
         centerActiveProduct(true);
       });
     }
 
     if (nextBtn) {
       nextBtn.addEventListener('click', () => {
-        activeProductIndex = (activeProductIndex + 1) % cards.length;
+        const count = track.querySelectorAll('.product-card').length;
+        activeProductIndex = (activeProductIndex + 1) % count;
         centerActiveProduct(true);
       });
     }
@@ -1477,7 +1479,11 @@
           if (isFullyVisible || isMostlyVisible) {
             featuredAnimTriggered = true;
             observer.unobserve(productsSec);
-            runFeaturedEntranceTimeline(track, container, cards, barstoolCard, moreText, prevBtn, nextBtn, header);
+            // Re-query cards live: the featured-products fetch attaches the
+            // non-barstool cards asynchronously, after this function's initial
+            // `cards` snapshot was taken, so that snapshot may be stale by now.
+            const liveCards = track.querySelectorAll('.product-card');
+            runFeaturedEntranceTimeline(track, container, liveCards, barstoolCard, moreText, prevBtn, nextBtn, header);
           }
         }
       });

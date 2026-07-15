@@ -395,6 +395,21 @@ const ALL_PRODUCTS_QUERY = `
             url
             altText
           }
+          featuredVariant: metafield(namespace: "custom", key: "featured_variant") {
+            reference {
+              ... on ProductVariant {
+                id
+                title
+                price {
+                  amount
+                  currencyCode
+                }
+                image {
+                  url
+                }
+              }
+            }
+          }
           variants(first: 50) {
             edges {
               node {
@@ -660,10 +675,12 @@ function renderProductsGrid() {
     card.style.animationDelay = `${(idx % 4) * 0.1}s`;
     
     // Drive the card off one coherent variant so the photo and the material label
-    // can't disagree. Prefer the first variant that carries its own Shopify image
-    // (that's the one whose photo matches its title); else fall back to the first.
+    // can't disagree. Priority: the merchant's custom.featured_variant pick, then the
+    // first variant that carries its own Shopify image (its photo matches its title),
+    // then the first variant.
     const variantEdges = p.variants?.edges || [];
-    const cardVariant = (variantEdges.find(e => e.node.image && e.node.image.url) || variantEdges[0])?.node;
+    const cardVariant = p.featuredVariant?.reference
+      || (variantEdges.find(e => e.node.image && e.node.image.url) || variantEdges[0])?.node;
     const displayPrice = cardVariant ? parseFloat(cardVariant.price.amount) : SHOPIFY_CONFIG.defaultPrice;
     // Keep the full variant title (incl. the "- Colour" suffix) so the eyebrow names
     // the exact fabric/leather shown, e.g. "White Ash / Leather - Cognac".
