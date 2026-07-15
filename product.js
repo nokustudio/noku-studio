@@ -913,7 +913,7 @@ function renderProductPage() {
           swatchHtml = `<button class="swatch-pill ${isActive ? 'active' : ''}" data-value="${escHtml(val)}" data-option="${escHtml(opt.name)}">${escHtml(val)}</button>`;
         }
         if (isPremium) {
-          optionsHtml += `<div class="swatch-premium-wrap">${swatchHtml}<span class="swatch-premium-label">Premium</span></div>`;
+          optionsHtml += `<div class="swatch-premium-wrap" tabindex="0">${swatchHtml}<span class="swatch-premium-badge"><span class="badge-icon">&#10022;</span><span class="badge-text">Premium</span></span></div>`;
         } else {
           optionsHtml += swatchHtml;
         }
