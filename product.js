@@ -533,6 +533,38 @@ function isUpholsteryOption(opt) {
   return false;
 }
 
+// ─── WOOD FINISH LABELING ───
+// Some products show White Ash in its natural clear finish; others show the
+// same White Ash stained to a teak tone. Noku sets this per product via the
+// Shopify metafield custom.wood_finish ("Natural" / "Teak-toned"). When unset,
+// no finish label renders (existing products are unchanged).
+function getWoodFinish() {
+  const raw = (currentProduct?.woodFinishMetafield?.value || currentProduct?.woodFinish || '')
+    .toLowerCase().trim();
+  if (!raw) return null;
+  return raw.includes('teak') ? 'teak-toned' : 'natural';
+}
+
+// The finish only qualifies White Ash — genuine/reclaimed teak needs no such note.
+function isWhiteAsh(val) {
+  return !!val && val.toLowerCase().includes('ash');
+}
+
+function finishLabelText(finish) {
+  return finish === 'teak-toned' ? 'Teak-toned finish' : 'Natural finish';
+}
+
+// Inner HTML for the "Wood: <value>" selected-value line, adding the finish
+// note only when the selected wood is White Ash and a finish is set.
+function selectedValInner(val) {
+  const finish = getWoodFinish();
+  if (finish && isWhiteAsh(val)) {
+    const cls = finish === 'teak-toned' ? 'finish-part teak' : 'finish-part';
+    return `${escHtml(val)} <span class="${cls}">— ${finishLabelText(finish)}</span>`;
+  }
+  return escHtml(val);
+}
+
 // ─── SHOPIFY GRAPHQL API QUERY client ───
 async function fetchFromShopify(query, variables = {}) {
   const url = `https://${SHOPIFY_CONFIG.shopDomain}/api/${SHOPIFY_CONFIG.apiVersion}/graphql.json`;
@@ -687,6 +719,9 @@ async function loadProduct(handle) {
           }
         }
         metafield(namespace: "custom", key: "dimension") {
+          value
+        }
+        woodFinishMetafield: metafield(namespace: "custom", key: "wood_finish") {
           value
         }
         dimensionImagesMetafield: metafield(namespace: "custom", key: "dimension_images") {
@@ -878,7 +913,7 @@ function renderProductPage() {
       <div class="option-group" data-option-name="${escHtml(opt.name)}">
         <div class="option-label-row">
           <span class="option-title">${escHtml(opt.name)}:</span>
-          <span class="option-selected-val" id="selected-val-${opt.name.replace(/\s+/g, '')}">${escHtml(selectedOptions[opt.name])}</span>
+          <span class="option-selected-val" id="selected-val-${opt.name.replace(/\s+/g, '')}">${selectedValInner(selectedOptions[opt.name])}</span>
         </div>
     `;
 
@@ -901,19 +936,27 @@ function renderProductPage() {
       }
     } else {
       optionsHtml += `<div class="swatches-row">`;
+      const woodFinish = getWoodFinish();
       opt.values.forEach(val => {
         const mat = findMaterialDetails(val);
         const isActive = selectedOptions[opt.name] === val;
         // Reclaimed teak is the premium wood tier — flag it in the selector.
         const isPremium = isWood && val.toLowerCase().includes('reclaimed');
+        // White Ash carries a finish note (natural vs teak-toned) when set.
+        const isAshFinish = isWood && woodFinish && isWhiteAsh(val);
+        const stainClass = isAshFinish && woodFinish === 'teak-toned' ? ' finish-teak' : '';
         let swatchHtml;
         if (isWood && mat && mat.preview) {
-          swatchHtml = `<div class="swatch-circle ${isActive ? 'active' : ''}" data-value="${escHtml(val)}" data-option="${escHtml(opt.name)}" title="${escHtml(val)}" style="background-image: url('${safeUrl(mat.preview)}');"></div>`;
+          swatchHtml = `<div class="swatch-circle${stainClass} ${isActive ? 'active' : ''}" data-value="${escHtml(val)}" data-option="${escHtml(opt.name)}" title="${escHtml(val)}" style="background-image: url('${safeUrl(mat.preview)}');"></div>`;
         } else {
           swatchHtml = `<button class="swatch-pill ${isActive ? 'active' : ''}" data-value="${escHtml(val)}" data-option="${escHtml(opt.name)}">${escHtml(val)}</button>`;
         }
         if (isPremium) {
           optionsHtml += `<div class="swatch-premium-wrap" tabindex="0">${swatchHtml}<span class="swatch-premium-badge"><span class="badge-icon">&#10022;</span><span class="badge-text">Premium</span></span></div>`;
+        } else if (isAshFinish) {
+          const dotCls = woodFinish === 'teak-toned' ? 'finish-dot teak' : 'finish-dot natural';
+          const dotGlyph = woodFinish === 'teak-toned' ? '&#128167;' : '&#10054;';
+          optionsHtml += `<div class="swatch-finish-wrap">${swatchHtml}<span class="${dotCls}" title="${finishLabelText(woodFinish)}">${dotGlyph}</span></div>`;
         } else {
           optionsHtml += swatchHtml;
         }
@@ -1128,7 +1171,7 @@ function renderProductPage() {
       swatch.classList.add('active');
       
       const valLabel = document.getElementById(`selected-val-${optName.replace(/\s+/g, '')}`);
-      if (valLabel) valLabel.textContent = optVal;
+      if (valLabel) valLabel.innerHTML = selectedValInner(optVal);
 
       // Update variant display values (price + image + materials info card)
       updateVariantDisplays();
@@ -1328,21 +1371,31 @@ function updateVariantDisplays(isInitial = false) {
     let foundAny = false;
     console.log('Generating material details for selected options:', JSON.stringify(selectedOptions));
 
+    const woodFinish = getWoodFinish();
     Object.values(selectedOptions).forEach(val => {
       const mat = findMaterialDetails(val);
       console.log('Resolving material details for:', val, '-> found:', mat ? mat.name : 'null');
       if (mat) {
         foundAny = true;
+        // Finish note rides on the White Ash card only, when a finish is set.
+        const showFinish = woodFinish && isWhiteAsh(mat.name);
+        const isTeakToned = showFinish && woodFinish === 'teak-toned';
+        const pillHtml = showFinish
+          ? `<span class="finish-pill ${isTeakToned ? 'teak' : 'natural'}">${isTeakToned ? 'Teak-toned stain' : 'Natural clear finish'}</span>`
+          : '';
+        const disclosureHtml = isTeakToned
+          ? `<span class="finish-disclosure">Still solid White Ash — stained to a teak tone.</span> `
+          : '';
         gridHtml += `
           <div class="material-detail-item">
             <div class="material-header">
-              <div class="material-swatch" style="background-image: url('${safeUrl(mat.preview)}');"></div>
+              <div class="material-swatch${isTeakToned ? ' finish-teak' : ''}" style="background-image: url('${safeUrl(mat.preview)}');"></div>
               <div>
                 <div class="material-name">${escHtml(mat.name)}</div>
-                <div class="material-sub">${escHtml(mat.subtitle || '')}</div>
+                <div class="material-sub">${escHtml(mat.subtitle || '')}${pillHtml}</div>
               </div>
             </div>
-            <p class="material-desc">${escHtml(mat.desc)}</p>
+            <p class="material-desc">${disclosureHtml}${escHtml(mat.desc)}</p>
           </div>
         `;
       }
