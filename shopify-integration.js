@@ -1118,6 +1118,7 @@ const cartOverlay = document.getElementById('cart-overlay');
 const cartToggleBtn = document.getElementById('cart-toggle');
 const cartCloseBtn = document.getElementById('cart-close');
 const cartCountBadge = document.getElementById('cart-count-badge');
+let cartBadgeRendered = false;
 const cartItemsContainer = document.getElementById('cart-items-container');
 const cartSubtotalEl = document.getElementById('cart-subtotal');
 const checkoutBtn = document.getElementById('checkout-btn');
@@ -1190,11 +1191,18 @@ function updateCartUI() {
   // Update badge count
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   if (cartCountBadge) {
+    // Pulse only when the count actually moved, and never on the first render.
+    // updateCartUI() also runs on every page load, where the badge was pulsing
+    // to announce nothing.
+    const changed = cartBadgeRendered && cartCountBadge.textContent !== String(totalItems);
+    cartBadgeRendered = true;
     cartCountBadge.textContent = totalItems;
-    cartCountBadge.style.transform = 'scale(1.2)';
-    setTimeout(() => {
-      cartCountBadge.style.transform = 'scale(1)';
-    }, 200);
+    if (changed) {
+      cartCountBadge.style.transform = 'scale(1.2)';
+      setTimeout(() => {
+        cartCountBadge.style.transform = 'scale(1)';
+      }, 200);
+    }
   }
   
   // Clear item list

@@ -38,6 +38,18 @@
     </div>
   </div>
 
+  <script>
+    // Gate the hero entrance on the loading screen finishing (script.js calls
+    // window.nokuHeroReady). Defined here, not in script.js, so a failed
+    // three.js CDN can't leave the hero copy stuck at opacity 0 — the timeout
+    // is a hard floor that reveals it regardless.
+    (function () {
+      var reveal = function () { document.documentElement.classList.add('hero-ready'); };
+      window.nokuHeroReady = reveal;
+      setTimeout(reveal, 3000);
+    })();
+  </script>
+
   <!-- Grain Layer overlay -->
   <div class="grain-overlay"></div>
 
@@ -240,7 +252,6 @@
 
         <!-- Horizontal Carousel for Featured Products -->
         <div class="featured-carousel-outer-wrap reveal-el">
-          <div class="there-is-more-text">There's more</div>
           <button class="featured-carousel-nav-btn prev-btn" aria-label="Previous Product">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="19" y1="12" x2="5" y2="12"></line>

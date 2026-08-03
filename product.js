@@ -32,6 +32,59 @@ function isDisplayOnly(handle) {
   return DISPLAY_ONLY_HANDLES.includes(handle.toLowerCase().trim());
 }
 
+/**
+ * Crossfade the main product image to a new source.
+ *
+ * The four inlined copies this replaces faded to 0.3, then swapped `src` on a
+ * 150ms timer while the CSS opacity transition ran for 300ms — so the swap
+ * landed mid-fade and the new photo popped in at whatever opacity it happened
+ * to reach, often still decoding. Decoding the next image before revealing it
+ * means the fade back up always shows the finished photo.
+ *
+ * Paired with `opacity 150ms ease` on `.main-image-viewport img`.
+ */
+const IMAGE_FADE_MS = 150;
+const IMAGE_DECODE_CAP_MS = 400;
+function swapMainImage(img, url) {
+  if (!img || !url) return;
+  if (img.getAttribute('src') === url) return;
+
+  const commit = () => {
+    img.src = url;
+    img.style.opacity = '1';
+  };
+
+  // Reduced motion: swap straight over, no fade.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    commit();
+    return;
+  }
+
+  img.style.opacity = '0.3';
+
+  const next = new Image();
+  next.src = url;
+  const decoded = next.decode
+    ? next.decode().catch(() => {})            // decode() rejects on some CORS/SVG cases
+    : new Promise(resolve => {
+        next.onload = next.onerror = resolve;
+      });
+
+  // Cap the wait on decoding. A slow or stalled decode must never strand the
+  // hero image at 30% opacity — showing it slightly early beats not at all.
+  const ready = Promise.race([
+    decoded,
+    new Promise(resolve => setTimeout(resolve, IMAGE_DECODE_CAP_MS))
+  ]);
+
+  // Whichever finishes last governs: never reveal before the fade-out has run,
+  // never reveal before the bitmap is ready (or the cap has expired).
+  Promise.all([
+    ready,
+    new Promise(resolve => setTimeout(resolve, IMAGE_FADE_MS))
+  ]).then(commit);
+}
+
 function isDisplayItem(item) {
   if (!item) return false;
   const handle = item.handle ? item.handle.toLowerCase().trim() : '';
@@ -1107,13 +1160,7 @@ function renderProductPage() {
       thumb.classList.add('active');
       const idx = parseInt(thumb.dataset.index);
       activeImageIndex = idx;
-      
-      // Animate transition smoothly
-      mainImage.style.opacity = '0.3';
-      setTimeout(() => {
-        mainImage.src = heroImageSrc(imageUrls[idx]);
-        mainImage.style.opacity = '1';
-      }, 150);
+      swapMainImage(mainImage, heroImageSrc(imageUrls[idx]));
     });
   });
 
@@ -1145,11 +1192,7 @@ function renderProductPage() {
   }
 
   function showImageAtIndex(idx) {
-    mainImage.style.opacity = '0.3';
-    setTimeout(() => {
-      mainImage.src = heroImageSrc(imageUrls[idx]);
-      mainImage.style.opacity = '1';
-    }, 150);
+    swapMainImage(mainImage, heroImageSrc(imageUrls[idx]));
   }
 
   // Bind option swatch selection events
@@ -1302,14 +1345,7 @@ function updateVariantDisplays(isInitial = false) {
   // Sync Featured image if variant has an image
   const mainImage = document.getElementById('main-product-image');
   if (mainImage && matched.image && matched.image.url) {
-    const matchedHeroSrc = heroImageSrc(matched.image.url);
-    if (mainImage.src !== matchedHeroSrc) {
-      mainImage.style.opacity = '0.3';
-      setTimeout(() => {
-        mainImage.src = matchedHeroSrc;
-        mainImage.style.opacity = '1';
-      }, 150);
-    }
+    swapMainImage(mainImage, heroImageSrc(matched.image.url));
   }
 
   // Update activeImageIndex
@@ -1337,14 +1373,7 @@ function updateVariantDisplays(isInitial = false) {
         thumb.classList.add('active');
         const idx = parseInt(thumb.dataset.index);
         activeImageIndex = idx;
-        
-        if (mainImage) {
-          mainImage.style.opacity = '0.3';
-          setTimeout(() => {
-            mainImage.src = heroImageSrc(imageUrls[idx]);
-            mainImage.style.opacity = '1';
-          }, 150);
-        }
+        swapMainImage(mainImage, heroImageSrc(imageUrls[idx]));
       });
     });
   }

@@ -664,6 +664,8 @@ function renderProductsGrid() {
         <button class="btn-reset-filters" onclick="resetAllFilters()">Reset Filters</button>
       </div>
     `;
+    // .catalog-empty-state carries the same entrance keyframe — an instant swap
+    // from a full grid to "no results" reads as the page breaking.
     return;
   }
 
@@ -671,9 +673,15 @@ function renderProductsGrid() {
   filtered.forEach((p, idx) => {
     const card = document.createElement('a');
     card.href = `product.html?handle=${encodeURIComponent(p.handle)}`;
-    card.className = `gcard reveal-el is-revealed`; // reveal immediately
-    card.style.animationDelay = `${(idx % 4) * 0.1}s`;
-    
+    // Cards are injected after site.js's IntersectionObserver has already run,
+    // so .reveal-el never fires for them — they used to ship pre-revealed with
+    // an animationDelay that pointed at no keyframes at all. .gcard--enter is
+    // that missing animation: a staggered fade so a filter change reads as the
+    // grid restocking rather than teleporting. Stagger caps at 6 so long lists
+    // don't drag.
+    card.className = 'gcard gcard--enter';
+    card.style.animationDelay = `${Math.min(idx, 6) * 0.03}s`;
+
     // Drive the card off one coherent variant so the photo and the material label
     // can't disagree. Priority: the merchant's custom.featured_variant pick, then the
     // first variant that carries its own Shopify image (its photo matches its title),

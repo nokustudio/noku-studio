@@ -17,6 +17,7 @@
           loaderScreen.classList.add('fade-out');
           document.body.style.backgroundColor = 'var(--dark-bg)';
         }
+        if (window.nokuHeroReady) window.nokuHeroReady();
         sessionStorage.setItem(LOADER_KEY, '1');
       }, 400);
     }
@@ -30,6 +31,7 @@
       // Skip loader instantly on repeat visits
       loaderScreen.style.display = 'none';
       document.body.style.backgroundColor = 'var(--dark-bg)';
+      if (window.nokuHeroReady) window.nokuHeroReady();
     } else {
       // First visit — run the full loader animation
       loaderInterval = setInterval(() => {
@@ -536,7 +538,21 @@
 
   }
 
-  window.addEventListener('scroll', evaluateScrollCalculations, { passive: true });
+  // Coalesce scroll work into one frame. evaluateScrollCalculations does a
+  // getBoundingClientRect() on .model-frame-rect plus a THREE unproject, and
+  // the browser fires scroll far more often than it paints — running it raw
+  // forced a synchronous layout on every event.
+  let scrollFrameQueued = false;
+  const onScrollFrame = () => {
+    scrollFrameQueued = false;
+    evaluateScrollCalculations();
+  };
+  window.addEventListener('scroll', () => {
+    if (scrollFrameQueued) return;
+    scrollFrameQueued = true;
+    requestAnimationFrame(onScrollFrame);
+  }, { passive: true });
+
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -909,9 +925,16 @@
       </div>
       <div class="carousel-card-info">
         <span class="cushion-name">${displayName.charAt(0).toUpperCase() + displayName.slice(1)}</span>
-        <svg class="add-to-cart-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M6 20h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"></path>
-          <path d="M8 6a4 4 0 0 1 8 0"></path>
+        <!-- Same bag as the navbar #cart-toggle icon (folded top, seam, handle
+             arc) rather than the rounded box this used to draw. Kept at 15px
+             for the card; stroke-width 1.6 renders exactly 1.00px at that size
+             (1.6 * 15/24), where the navbar's 1.5 at 20px renders 1.25px —
+             matching the weight optically instead of copying the number.
+             Stays currentColor so .add-to-cart-icon governs the colour. -->
+        <svg class="add-to-cart-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
         </svg>
       </div>
     `;
@@ -1227,6 +1250,45 @@
 
   // ─── FEATURED PRODUCTS CAROUSEL CODE ───
 
+  /**
+   * Clamp a featured-track translation to the row's real scroll range.
+   *
+   * Centering a card only means something when the row is wider than its
+   * container. The four featured cards total 1284px inside a 1350px container,
+   * so "centre card index 1" resolved to translateX(+197px) — and the entrance
+   * pose to +525px — which slid the whole strip right and opened dead space to
+   * the left of the first card. Clamping to [min(0, container - content), 0]
+   * pins a row that fits at 0 (flush left, slack falls on the right as peek
+   * room) and, when the row does overflow, stops it scrolling past either end.
+   */
+  function clampTrackTranslate(track, container, raw) {
+    const cards = track.querySelectorAll('.product-card');
+    if (!cards.length) return raw;
+    const last = cards[cards.length - 1];
+    const contentWidth = last.offsetLeft + last.offsetWidth;
+    const minTranslate = Math.min(0, container.offsetWidth - contentWidth);
+    return Math.min(0, Math.max(minTranslate, raw));
+  }
+
+  /**
+   * Show the prev/next arrows only when the row has somewhere to scroll.
+   *
+   * They used to have a second job — moving the selected card — so they still
+   * did something on desktop even with all four cards visible. With the
+   * selected state gone their only remaining effect is scrolling, and on
+   * desktop the row fits its container exactly, so they would sit there as
+   * controls that do nothing. On mobile the row genuinely overflows and they
+   * come back.
+   */
+  function syncCarouselArrows(track, container) {
+    const wrap = track.closest('.featured-carousel-outer-wrap');
+    const cards = track.querySelectorAll('.product-card');
+    if (!wrap || !cards.length) return;
+    const last = cards[cards.length - 1];
+    const contentWidth = last.offsetLeft + last.offsetWidth;
+    wrap.classList.toggle('has-scroll', contentWidth > container.offsetWidth + 1);
+  }
+
   function centerActiveProduct(animate = true) {
     const track = document.querySelector('.featured-carousel-track');
     const container = document.querySelector('.featured-carousel-track-container');
@@ -1256,7 +1318,10 @@
     const cardWidth = activeCard.offsetWidth || 320;
     const cardOffsetLeft = activeCard.offsetLeft;
 
-    const translateX = (containerWidth - cardWidth) / 2 - cardOffsetLeft;
+    const translateX = clampTrackTranslate(
+      track, container, (containerWidth - cardWidth) / 2 - cardOffsetLeft);
+
+    syncCarouselArrows(track, container);
 
     if (animate) {
       track.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
@@ -1279,22 +1344,18 @@
       }
       const card = e.target.closest('.product-card');
       if (!card) return;
-      const cards = [...track.querySelectorAll('.product-card')];
-      const idx = cards.indexOf(card);
 
-      if (card.classList.contains('highlighted')) {
-        const handle = card.getAttribute('data-handle');
-        if (handle) {
-          // Open the product page only. The Get-in-touch modal must be opened
-          // explicitly via the Inquire button (an <a> excluded above), never by
-          // clicking the card itself — so no &inquire=true here.
-          window.location.href = `product.html?handle=${handle}`;
-        }
-        return;
+      // Every card opens on the first click. This used to require the card to
+      // already carry .highlighted — a first click selected it, a second opened
+      // it. With the selected state gone that gate would have made the first
+      // click do nothing visible at all.
+      const handle = card.getAttribute('data-handle');
+      if (handle) {
+        // Open the product page only. The Get-in-touch modal must be opened
+        // explicitly via the Inquire button (an <a> excluded above), never by
+        // clicking the card itself — so no &inquire=true here.
+        window.location.href = `product.html?handle=${handle}`;
       }
-
-      activeProductIndex = idx;
-      centerActiveProduct(true);
     });
 
     // Prev/Next buttons — re-query card count live so newly-added cards count too
@@ -1411,20 +1472,16 @@
 
     const cards = track.querySelectorAll('.product-card');
     const barstoolCard = track.querySelector('.product-card[data-handle="barstool"]');
-    const moreText = document.querySelector('.there-is-more-text');
     const prevBtn = document.querySelector('.featured-carousel-outer-wrap .prev-btn');
     const nextBtn = document.querySelector('.featured-carousel-outer-wrap .next-btn');
     const header = document.querySelector('.products-header');
 
     if (!barstoolCard || cards.length === 0) return;
 
-    // Disable entrance animation and "There's more" text on mobile breakpoint (width <= 768px)
+    // Disable entrance animation on mobile breakpoint (width <= 768px)
     if (window.matchMedia('(max-width: 768px)').matches) {
       featuredAnimTriggered = true;
       isProductsAnimActive = false;
-      if (moreText) {
-        moreText.style.display = 'none';
-      }
       // Center the active card initially on mobile
       centerActiveProduct(false);
       return;
@@ -1434,13 +1491,12 @@
     // Hide all cards, buttons, header
     cards.forEach(card => {
       card.style.opacity = '0';
-      card.style.transform = 'scale(0.88)';
+      // 0.96, not the old 0.88: every card now rests at scale(1), so the
+      // entrance only needs a slight grow rather than a climb out of the
+      // former non-selected 0.92.
+      card.style.transform = 'scale(0.96)';
       card.style.transition = 'none';
     });
-    if (moreText) {
-      moreText.style.opacity = '0';
-      moreText.style.transition = 'none';
-    }
     if (prevBtn) {
       prevBtn.style.opacity = '0';
       prevBtn.style.pointerEvents = 'none';
@@ -1457,11 +1513,13 @@
       header.style.transition = 'none';
     }
 
-    // Center track on barstool card (index 0)
+    // Center track on barstool card (index 0), clamped so a row that already
+    // fits its container stays flush left instead of opening a gap beside it.
     const containerWidth = container.offsetWidth;
     const cardWidth = barstoolCard.offsetWidth || 320;
     const barstoolOffset = barstoolCard.offsetLeft;
-    const translateX_centered = (containerWidth - cardWidth) / 2 - barstoolOffset;
+    const translateX_centered = clampTrackTranslate(
+      track, container, (containerWidth - cardWidth) / 2 - barstoolOffset);
     track.style.transition = 'none';
     track.style.transform = `translateX(${translateX_centered}px)`;
 
@@ -1483,7 +1541,7 @@
             // non-barstool cards asynchronously, after this function's initial
             // `cards` snapshot was taken, so that snapshot may be stale by now.
             const liveCards = track.querySelectorAll('.product-card');
-            runFeaturedEntranceTimeline(track, container, liveCards, barstoolCard, moreText, prevBtn, nextBtn, header);
+            runFeaturedEntranceTimeline(track, container, liveCards, barstoolCard, prevBtn, nextBtn, header);
           }
         }
       });
@@ -1492,38 +1550,61 @@
     });
 
     observer.observe(productsSec);
+
+    // Safety net. The hidden state above is applied eagerly, so the header and
+    // the barstool card sit at opacity 0 until the timeline runs — and only the
+    // observer can undo that. If it never delivers, the section's centrepiece
+    // stays invisible.
+    //
+    // This reveals outright instead of replaying the timeline, because every
+    // phase of that timeline runs inside a requestAnimationFrame and rAF does
+    // not fire in a background tab — precisely the case this net exists for.
+    // Content visibility must not depend on a frame callback.
+    setTimeout(() => {
+      if (featuredAnimTriggered) return;
+      featuredAnimTriggered = true;
+      isProductsAnimActive = false;
+      observer.unobserve(productsSec);
+      revealFeaturedSection(track, header, prevBtn, nextBtn);
+    }, 4000);
   }
 
-  function runFeaturedEntranceTimeline(track, container, cards, barstoolCard, moreText, prevBtn, nextBtn, header) {
+  /** Drop the entrance's hidden state so nothing can be left stuck invisible. */
+  function revealFeaturedSection(track, header, prevBtn, nextBtn) {
+    track.querySelectorAll('.product-card').forEach(card => {
+      card.style.opacity = '';
+      card.style.transform = '';
+      card.style.transition = '';
+    });
+    [header, prevBtn, nextBtn].forEach(el => {
+      if (!el) return;
+      el.style.opacity = '';
+      el.style.transform = '';
+      el.style.transition = '';
+      el.style.pointerEvents = '';
+    });
+    track.style.transition = '';
+    centerActiveProduct(false);
+  }
+
+  function runFeaturedEntranceTimeline(track, container, cards, barstoolCard, prevBtn, nextBtn, header) {
     // Re-calculate translations in case layout shifted
     const containerWidth = container.offsetWidth;
     const cardWidth = barstoolCard.offsetWidth || 320;
     const barstoolOffset = barstoolCard.offsetLeft;
-    const translateX_centered = (containerWidth - cardWidth) / 2 - barstoolOffset;
+    const translateX_centered = clampTrackTranslate(
+      track, container, (containerWidth - cardWidth) / 2 - barstoolOffset);
 
     // Normal position: center on activeProductIndex (default 1, the second card)
     const activeCard = cards[activeProductIndex] || cards[1];
     const activeCardWidth = activeCard.offsetWidth || 320;
     const activeOffset = activeCard.offsetLeft;
-    const translateX_normal = (containerWidth - activeCardWidth) / 2 - activeOffset;
+    const translateX_normal = clampTrackTranslate(
+      track, container, (containerWidth - activeCardWidth) / 2 - activeOffset);
 
     // Ensure centered position is set
     track.style.transition = 'none';
     track.style.transform = `translateX(${translateX_centered}px)`;
-
-    // Position the "There's more" text to the left of the centered Barstool card
-    if (moreText) {
-      const outerWrap = document.querySelector('.featured-carousel-outer-wrap');
-      if (outerWrap) {
-        const outerRect = outerWrap.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        // Barstool card visual left edge = container left + card position in track + track translation
-        const barstoolVisualLeft = containerRect.left + barstoolOffset + translateX_centered;
-        // Position text to the left of the card, with a gap
-        const textRight = barstoolVisualLeft - outerRect.left - 60; // 60px gap from card edge
-        moreText.style.right = `calc(100% - ${textRight}px)`;
-      }
-    }
 
     // ── Phase 0: Fade in header (200ms) ──
     requestAnimationFrame(() => {
@@ -1537,39 +1618,27 @@
       setTimeout(() => {
         barstoolCard.style.transition = 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)';
         barstoolCard.style.opacity = '1';
-        barstoolCard.style.transform = 'scale(1.03)';
-
-        if (moreText) {
-          moreText.style.transition = 'opacity 0.7s ease 0.15s';
-          moreText.style.opacity = '1';
-        }
+        barstoolCard.style.transform = 'scale(1)';
 
         // ── Phase 2: Translate track left + reveal other cards (after 1.2s) ──
         setTimeout(() => {
-          // Fade out "There's more" text
-          if (moreText) {
-            moreText.style.transition = 'opacity 0.5s ease';
-            moreText.style.opacity = '0';
-          }
-
           // Slide track to normal position
           track.style.transition = 'transform 1.0s cubic-bezier(0.16, 1, 0.3, 1)';
           track.style.transform = `translateX(${translateX_normal}px)`;
 
-          // Fade in other cards with staggered delay
+          // Fade in other cards with staggered delay. Every card settles at
+          // scale(1) — there is no selected card to single out any more, and
+          // the CSS resting state is transform:none, so landing anywhere else
+          // would snap when Phase 3 clears these inline styles.
           cards.forEach((card, idx) => {
             if (card === barstoolCard) {
-              // Scale the barstool back to its resting scale
-              const isActiveCard = (idx === activeProductIndex);
-              const restScale = isActiveCard ? 1.03 : 0.92;
               card.style.transition = 'opacity 0.6s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
-              card.style.transform = `scale(${restScale})`;
+              card.style.transform = 'scale(1)';
             } else {
               const staggerDelay = 0.08 * Math.abs(idx - 0); // Stagger from barstool position
               card.style.transition = `opacity 0.6s ease ${staggerDelay}s, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${staggerDelay}s`;
               card.style.opacity = '1';
-              const isHighlighted = (idx === activeProductIndex);
-              card.style.transform = `scale(${isHighlighted ? 1.03 : 0.92})`;
+              card.style.transform = 'scale(1)';
             }
           });
 
@@ -1595,12 +1664,6 @@
               card.style.transform = '';
               card.style.transition = '';
             });
-            if (moreText) {
-              moreText.style.opacity = '0';
-              moreText.style.transform = '';
-              moreText.style.transition = '';
-              moreText.style.right = '';
-            }
             if (prevBtn) {
               prevBtn.style.opacity = '';
               prevBtn.style.pointerEvents = '';

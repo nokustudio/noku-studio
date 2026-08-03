@@ -38,6 +38,18 @@
   --lift-card: -6px;   /* default lift for content cards on hover */
   --lift-active: -4px; /* nudge for selected/active tiles */
 
+  /* Motion — shared curves and durations. --ease-out is the house expo-out
+     curve, previously hand-typed as cubic-bezier(0.16,1,0.3,1) in ~50 places;
+     kept as-is so adopting the token doesn't change how anything feels.
+     --ease-drawer is the iOS-style curve for panels that slide in from an edge. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --dur-press: 160ms;  /* :active press feedback */
+  --dur-pop: 200ms;    /* dropdowns, small popovers */
+  --dur-hover: 300ms;  /* hover states — anything slower drags */
+  --dur-panel: 400ms;  /* drawers, modals */
+
   /* Spacing & Padding Variables */
   --padding-vertical-none: 0px;
   --padding-vertical-small: 80px;
@@ -176,7 +188,8 @@ video {
   pointer-events: none;
   opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  will-change: transform;
+  /* ponytail: translate3d alone promotes the layer; will-change was pinning a
+     full-viewport composited layer for a transform that never runs. */
   transform: translate3d(0, 0, 0);
 }
 
@@ -431,7 +444,7 @@ nav.scrolled .logo-svg > :nth-child(n + 2) {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   list-style: none;
   z-index: 1001;
   text-align: center;
@@ -769,7 +782,6 @@ nav.light-nav .mobile-menu-toggle:hover {
   margin-bottom: clamp(12px, 2vh, 20px);
   opacity: 0;
   transform: translateY(20px);
-  animation: fadeUpIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
   text-shadow:
     0 0 20px rgba(12, 10, 8, 0.9),
     0 2px 12px rgba(12, 10, 8, 0.8),
@@ -787,7 +799,6 @@ nav.light-nav .mobile-menu-toggle:hover {
   margin-bottom: clamp(16px, 3vh, 28px);
   opacity: 0;
   transform: translateY(30px);
-  animation: fadeUpIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards;
   text-shadow:
     0 0 40px rgba(10, 8, 6, 0.95),
     0 2px 6px rgba(10, 8, 6, 0.9),
@@ -809,7 +820,6 @@ body:not(.secondary-landing-page) .hero-title {
   line-height: 1.7;
   opacity: 0;
   transform: translateY(20px);
-  animation: fadeUpIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
   text-shadow:
     0 0 20px rgba(10, 8, 6, 0.9),
     0 2px 12px rgba(10, 8, 6, 0.75),
@@ -823,7 +833,27 @@ body:not(.secondary-landing-page) .hero-title {
   align-items: center;
   gap: 12px;
   opacity: 0;
-  animation: fadeInOnly 1.5s ease-out 2s forwards;
+}
+
+/* Hero entrance fires off .hero-ready (set when the loading screen finishes, or
+   by a hard 3s fallback in index.html) rather than on a fixed delay from parse.
+   The old 0.8s/1s/1.2s/2s timings ran — and finished — behind the loader on a
+   first visit, so nobody ever saw the choreography. Delays are now relative to
+   the moment the hero is actually on screen, and the tail is 1.7s not 3.5s. */
+.hero-ready .hero-eyebrow {
+  animation: fadeUpIn 1s var(--ease-out) 0.1s forwards;
+}
+
+.hero-ready .hero-title {
+  animation: fadeUpIn 1s var(--ease-out) 0.25s forwards;
+}
+
+.hero-ready .hero-tagline {
+  animation: fadeUpIn 1s var(--ease-out) 0.4s forwards;
+}
+
+.hero-ready .scroll-indicator {
+  animation: fadeInOnly 0.8s ease-out 0.9s forwards;
 }
 
 .scroll-indicator span {
@@ -1013,7 +1043,7 @@ body:not(.secondary-landing-page) .hero-title {
   align-items: center;
   justify-content: center;
   margin-top: 32px;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .video-control-btn:hover {
@@ -1151,6 +1181,24 @@ body:not(.secondary-landing-page) .hero-title {
   display: block;
 }
 
+/* Entrance for JS-injected results (products.js filter grid). A keyframe with
+   `both` fill, not a transition + class removal: these are freshly-mounted
+   elements with nothing to interrupt, and the animation completes on its own.
+   A transition would need JS to strip a starting class, which makes the cards'
+   *visibility* depend on a rAF callback firing — if it's throttled the grid
+   stays blank. animation-delay per card supplies the stagger. */
+@keyframes cardEnterIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+.gcard--enter,
+.catalog-empty-state {
+  animation: cardEnterIn var(--dur-pop) var(--ease-out) both;
+}
+
 .gcard__media {
   position: relative;
   aspect-ratio: 4 / 5;
@@ -1164,14 +1212,17 @@ body:not(.secondary-landing-page) .hero-title {
 .gcard__media-inner {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  transition: transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  transition: transform var(--dur-hover) var(--ease-out);
 }
 .gcard__media-inner img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.gcard:hover .gcard__media-inner { transform: scale(1.05); }
+/* Hover motion is gated: on touch, :hover latches on tap and stays stuck. */
+@media (hover: hover) and (pointer: fine) {
+  .gcard:hover .gcard__media-inner { transform: scale(1.05); }
+}
 
 .gcard__add {
   position: absolute;
@@ -1189,11 +1240,18 @@ body:not(.secondary-landing-page) .hero-title {
   cursor: pointer;
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16,1,0.3,1),
+  transition: opacity 0.35s ease, transform var(--dur-press) var(--ease-out),
               background 0.25s, color 0.25s, border-color 0.25s;
 }
-.gcard:hover .gcard__add { opacity: 1; transform: translateY(0); }
-.gcard__add:hover { background: var(--chamoisee); color: var(--light); border-color: var(--chamoisee); }
+@media (hover: hover) and (pointer: fine) {
+  .gcard:hover .gcard__add { opacity: 1; transform: translateY(0); }
+  .gcard__add:hover { background: var(--chamoisee); color: var(--light); border-color: var(--chamoisee); }
+}
+/* Touch has no hover to reveal the add button — show it outright. */
+@media (hover: none) {
+  .gcard__add { opacity: 1; transform: translateY(0); }
+}
+.gcard__add:active { transform: scale(0.97); }
 .gcard__add:focus-visible { opacity: 1; transform: translateY(0); outline: 2px solid var(--chamoisee); outline-offset: 2px; }
 
 .gcard__cat {
@@ -1236,16 +1294,20 @@ body:not(.secondary-landing-page) .hero-title {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.35s var(--ease-out),
+              box-shadow 0.35s var(--ease-out),
+              border-color 0.35s var(--ease-out);
 }
 
-.product-card:hover {
-  transform: translateY(var(--lift-card));
-  box-shadow: 0 20px 40px rgba(44, 38, 34, 0.08);
-  border-color: rgba(162, 123, 92, 0.2);
+@media (hover: hover) and (pointer: fine) {
+  .product-card:hover {
+    transform: translateY(var(--lift-card));
+    box-shadow: 0 20px 40px rgba(44, 38, 34, 0.08);
+    border-color: rgba(162, 123, 92, 0.2);
+  }
 }
+
+.product-card:active { transform: scale(0.98); }
 
 .product-card-img-wrap {
   overflow: hidden;
@@ -1264,11 +1326,13 @@ body:not(.secondary-landing-page) .hero-title {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--dur-hover) var(--ease-out);
 }
 
-.product-card:hover .product-card-img-wrap img {
-  transform: scale(1.05);
+@media (hover: hover) and (pointer: fine) {
+  .product-card:hover .product-card-img-wrap img {
+    transform: scale(1.05);
+  }
 }
 
 .product-card-body {
@@ -1352,7 +1416,7 @@ body:not(.secondary-landing-page) .hero-title {
   border-radius: 6px;
   padding: 8px 16px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
   text-decoration: none;
   display: inline-block;
 }
@@ -1580,7 +1644,7 @@ body:not(.secondary-landing-page) .hero-title {
   gap: 8px;
   border-bottom: 1px solid var(--chamoisee);
   padding-bottom: 4px;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .materials-cta-btn .arrow {
@@ -1916,7 +1980,7 @@ body:not(.secondary-landing-page) .hero-title {
   border: 1px solid var(--chamoisee);
   padding: 10px 20px;
   cursor: pointer;
-  transition: all 0.4s ease;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, opacity 0.4s ease;
 }
 
 .materials-pill:hover,
@@ -2321,12 +2385,23 @@ footer {
     padding: 0 24px;
   }
 
+  /* Drawer stays in the layout (display:flex) and is hidden with
+     opacity/visibility so it can transition — display:none can't animate.
+     visibility flips instantly on open and is delayed on close so the fade-out
+     is visible. pointer-events carries the hit-testing on its own, untimed:
+     if a transition is ever interrupted or never completes, a stuck
+     `visibility: visible` would otherwise leave an invisible click-blocker
+     covering the page. */
   .nav-links {
-    display: none;
+    display: flex;
     position: fixed;
     top: 80px;
     left: 20px;
-    transform: none !important;
+    transform: translateY(-8px) !important;
+    transform-origin: top right;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
     width: calc(100% - 40px);
     background-color: var(--paper);
     border: 1px solid var(--line);
@@ -2336,10 +2411,17 @@ footer {
     padding: 30px;
     box-shadow: 0 10px 30px rgba(44, 38, 34, 0.08);
     z-index: 1000;
+    transition: opacity var(--dur-pop) var(--ease-out),
+                transform var(--dur-pop) var(--ease-out),
+                visibility 0s linear var(--dur-pop);
   }
 
   .nav-links.active {
-    display: flex;
+    transform: translateY(0) !important;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
   }
 
   .nav-links.active .nav-link {
@@ -2460,7 +2542,7 @@ footer {
   padding: 10px 20px;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.4s ease;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, opacity 0.4s ease;
 }
 
 .wood-swatch:hover,
@@ -2492,7 +2574,7 @@ footer {
   align-items: center;
   justify-content: center;
   z-index: 10;
-  transition: all 0.4s ease;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, opacity 0.4s ease;
   box-shadow: 0 4px 12px rgba(44, 38, 34, 0.05);
   position: absolute;
 }
@@ -2530,7 +2612,7 @@ footer {
   width: 320px;
   opacity: 0.4;
   transform: scale(0.92);
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   background-color: #ffffff;
   border: 1px solid transparent;
   border-radius: 12px;
@@ -2594,7 +2676,10 @@ footer {
 
 .add-to-cart-icon {
   color: var(--muted);
-  opacity: 0.6;
+  /* 0.75, not 0.6: --muted at 0.6 composites to #A6A19B on the card's white,
+     which is 2.56:1 — under the 3:1 WCAG 1.4.11 asks of an interactive
+     graphic. 0.75 gives #908982 at 3.45:1 and still reads as quiet. */
+  opacity: 0.75;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
               color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
               opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2735,7 +2820,7 @@ nav.light-nav .cart-btn:hover {
   z-index: 2000;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity var(--dur-panel) var(--ease-drawer);
 }
 
 .cart-overlay.active {
@@ -2760,7 +2845,7 @@ nav.light-nav .cart-btn:hover {
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--dur-panel) var(--ease-drawer);
 }
 
 .cart-drawer.active {
@@ -2987,7 +3072,7 @@ nav.light-nav .cart-btn:hover {
   padding: 18px 0;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 4px 15px rgba(162, 123, 92, 0.2);
 }
 
@@ -3048,7 +3133,7 @@ nav.light-nav .cart-btn:hover {
   padding: 16px 40px;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 4px 12px rgba(162, 123, 92, 0.2);
 }
 
@@ -3647,11 +3732,12 @@ nav.light-nav .cart-btn:hover {
   left: 0;
   width: 100vw;
   height: 100vh;
+  overflow: hidden; /* the zooming card overflows on one axis by design */
   background-color: var(--light);
   z-index: 9999;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.8s cubic-bezier(0.86, 0, 0.07, 1);
+  transition: opacity var(--dur-panel) var(--ease-out);
 }
 
 .page-transition-overlay.active {
@@ -3659,13 +3745,25 @@ nav.light-nav .cart-btn:hover {
   pointer-events: auto;
 }
 
+/* The card is laid out at the source thumbnail's rect and grown to cover the
+   viewport with transform only — animating top/left/width/height relayouts the
+   whole page every frame. The scale is uniform (a "cover" zoom) so the photo
+   never stretches; JS supplies --tc-scale and the centring --tc-dx/--tc-dy. */
 .transition-card {
   position: absolute;
   overflow: hidden;
-  transition: all 1s cubic-bezier(0.86, 0, 0.07, 1);
+  transform-origin: top left;
+  transition: transform 450ms var(--ease-out),
+              border-radius 450ms var(--ease-out);
   border-radius: var(--radius-sm);
   box-shadow: 0 20px 45px rgba(44, 38, 34, 0.08);
   z-index: 10000;
+  will-change: transform;
+}
+
+.transition-card.is-zooming {
+  transform: translate(var(--tc-dx), var(--tc-dy)) scale(var(--tc-scale));
+  border-radius: 0;
 }
 
 .transition-img {
@@ -3689,9 +3787,12 @@ nav.light-nav .cart-btn:hover {
   justify-content: center;
   position: relative;
   width: 100%;
-  /* 1600 − 160 padding = 1440px visible track → fits four 320px cards
-     (1376px) with comfortable peek room on either side. */
-  max-width: 1600px;
+  /* Content box must match .products-header's 1240px so the first card starts
+     exactly under the section title. box-sizing is border-box and the 80px
+     gutters hold the prev/next arrows clear of the cards, so the outer width is
+     1240 + 160 = 1400. (The previous 1600 gave a 1350px track that ran 55px
+     wider than the header on each side.) */
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 80px;
   box-sizing: border-box;
@@ -3709,7 +3810,7 @@ nav.light-nav .cart-btn:hover {
   align-items: center;
   justify-content: center;
   z-index: 10;
-  transition: all 0.4s ease;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, opacity 0.4s ease;
   box-shadow: 0 4px 12px rgba(44, 38, 34, 0.05);
   position: absolute;
 }
@@ -3719,6 +3820,18 @@ nav.light-nav .cart-btn:hover {
   color: var(--paper);
   border-color: var(--ink);
   transform: scale(1.05);
+}
+
+/* Arrows exist only to scroll the row; script.js sets .has-scroll when there is
+   actually a scroll range. Hidden rather than left as inert controls — the
+   80px gutters stay either way, since they are what aligns the track with the
+   section header. */
+.featured-carousel-outer-wrap .featured-carousel-nav-btn {
+  display: none;
+}
+
+.featured-carousel-outer-wrap.has-scroll .featured-carousel-nav-btn {
+  display: flex;
 }
 
 .featured-carousel-nav-btn.prev-btn {
@@ -3743,13 +3856,27 @@ nav.light-nav .cart-btn:hover {
 
 .featured-carousel-track .product-card {
   position: relative;
-  flex: 0 0 300px;
-  width: 300px;
-  opacity: 1.0;
-  transform: scale(0.92);
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  /* The four featured cards plus their three 28px gaps fill the 1240px track
+     exactly, so the row lines up with the section header on both edges instead
+     of running 44px long and clipping the last card. Card count is fixed at
+     four here, the same assumption the mobile rule below makes. */
+  flex: 0 0 calc((100% - 3 * 28px) / 4);
+  width: calc((100% - 3 * 28px) / 4);
+  /* No selected state — all four cards rest identically. The old scale(0.92)
+     was also half the reason the border read as faint: it shrank the 1px
+     hairline to 0.88px. */
+  opacity: 1;
+  transform: none;
+  transition: transform var(--dur-hover) var(--ease-out),
+              box-shadow var(--dur-hover) var(--ease-out),
+              border-color var(--dur-hover) var(--ease-out);
   background-color: transparent;
-  border: 1px solid rgba(44, 38, 34, 0.06);
+  /* --line is the site's hairline token. Against this section's --light
+     background it measures 1.37:1 where the old rgba(44,38,34,0.06) measured
+     1.11:1 — and 6% ink composited to #E8E9E5 at hue 75°, a cool line on a
+     palette that otherwise sits at 33–44°. --line lands at 37°, in register
+     with --border-soft, --bone and --chamoisee. */
+  border: 1px solid var(--line);
   border-radius: 12px;
   padding: 16px;
   cursor: pointer;
@@ -3759,17 +3886,18 @@ nav.light-nav .cart-btn:hover {
   box-sizing: border-box;
 }
 
-.featured-carousel-track .product-card.highlighted {
-  opacity: 1.0;
-  transform: scale(1.03);
-  border-color: rgba(44, 38, 34, 0.1);
-  box-shadow: 0 20px 40px rgba(44, 38, 34, 0.06);
+/* Hover is the only state now, and it applies to every card rather than only
+   the formerly-selected one. Gated so touch doesn't latch it on tap. */
+@media (hover: hover) and (pointer: fine) {
+  .featured-carousel-track .product-card:hover {
+    border-color: var(--chamoisee);
+    box-shadow: 0 18px 36px rgba(162, 123, 92, 0.12);
+    transform: translateY(var(--lift-card));
+  }
 }
 
-.featured-carousel-track .product-card.highlighted:hover {
-  border-color: var(--chamoisee);
-  box-shadow: 0 20px 40px rgba(162, 123, 92, 0.12);
-  transform: scale(1.05);
+.featured-carousel-track .product-card:active {
+  transform: scale(0.99);
 }
 
 .featured-carousel-track .product-card .product-card-img-wrap {
@@ -3793,19 +3921,85 @@ nav.light-nav .cart-btn:hover {
   transition: opacity 0.3s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ════════ FEATURED CARD TEXT BLOCK ════════
+   Was: name and price sharing one space-between row, material on a second row
+   below. At 235px of body width the slack between name and price measured
+   85 / 61 / 1 / 38px across the four cards — visibly ragged, and the third
+   card's price sat 1px from its name. Every material line overflowed its box.
+
+   Now a single left alignment axis in the order the gallery cards already use
+   (.gcard__cat / __name / __price): material eyebrow, name, price. The tracked
+   uppercase eyebrow is the same micro-type gesture as .carousel-card-info on
+   the barstool cards, so the two sections read as one family.
+
+   display:contents flattens the two wrapper rows so their children become
+   direct children of this stack, which lets both the static card in index.html
+   and the ones shopify-integration.js renders be restyled without touching
+   either template. */
 .featured-carousel-track .product-card .product-card-body {
   padding: 0;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   flex-grow: 1;
-  justify-content: space-between;
-  gap: 16px;
   box-sizing: border-box;
   text-align: left;
 }
 
-.featured-carousel-track .product-card.highlighted:hover .product-card-img-wrap img {
-  transform: scale(1.06);
+.featured-carousel-track .product-card .product-card-header-row,
+.featured-carousel-track .product-card .product-card-footer-row {
+  display: contents;
+}
+
+.featured-carousel-track .product-card .product-materials {
+  order: 1;
+  align-self: stretch;
+  /* Same treatment as .carousel-card-info on the barstool cards — body font,
+     weight 500, 2px tracking, uppercase — two steps down in size so it reads as
+     an eyebrow rather than a label. Chamoisee, not the barstool card's ink,
+     because here it sits above an ink-coloured name and needs to step back. */
+  font-family: var(--font-body);
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: var(--chamoisee);
+  margin: 0 0 10px;
+  /* Always one line. The longest variant string ("Reclaimed teak / Leather -
+     Cognac") overruns 235px, and a wrapped eyebrow would push the name and
+     price off the baseline they share with the neighbouring cards. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.featured-carousel-track .product-card .product-name {
+  order: 2;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.0625rem;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 0 0 10px;
+}
+
+.featured-carousel-track .product-card .product-price {
+  order: 3;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--muted);
+  /* Pinned to the bottom of the card. The track stretches all four cards to
+     equal height, so this lands every price on one line even if a name wraps. */
+  margin: auto 0 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .featured-carousel-track .product-card:hover .product-card-img-wrap img {
+    transform: scale(1.06);
+  }
 }
 
 @media (max-width: 768px) {
@@ -3851,22 +4045,6 @@ nav.light-nav .cart-btn:hover {
   padding-bottom: clamp(60px, 8vw, 100px);
 }
 
-.featured-carousel-outer-wrap .there-is-more-text {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: var(--font-display);
-  font-size: clamp(24px, 3vw, 42px);
-  font-weight: 300;
-  color: var(--chamoisee);
-  opacity: 0;
-  pointer-events: none;
-  white-space: nowrap;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  letter-spacing: -0.02em;
-  z-index: 15;
-}
-
 @media (min-width: 1025px) {
   .products-section {
     height: auto;
@@ -3900,7 +4078,7 @@ nav.light-nav .cart-btn:hover {
   text-decoration: none;
   border: none !important;
   border-bottom: none !important;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 4px 12px rgba(162, 123, 92, 0.15);
 }
 
@@ -3912,16 +4090,88 @@ nav.light-nav .cart-btn:hover {
 }
 
 @media (max-width: 768px) {
-  .featured-carousel-outer-wrap .there-is-more-text {
-    font-size: clamp(20px, 5vw, 26px);
-    top: -10px;
-    transform: none;
-  }
-
   .mobile-see-all-wrap {
     display: flex;
     justify-content: center;
     margin-top: 48px;
     margin-bottom: 48px;
   }
+}
+
+/* ════════ PRESS FEEDBACK ════════
+   Only four elements site-wide acknowledged a press (the cart/buy buttons), so
+   on touch there was no confirmation a tap had registered. Subtle and fast:
+   0.97 is felt, not seen. Page-specific pressables (swatches, thumbnails,
+   filter buttons) are listed here rather than in each page's inline style so
+   the press feel stays identical everywhere. */
+.featured-carousel-nav-btn:active,
+.qty-btn:active,
+.mobile-menu-toggle:active,
+.thumbnail-item:active,
+.swatch-circle:active,
+.swatch-pill:active,
+.btn-reset-filters:active,
+.filter-collection-btn:active {
+  transform: scale(0.97);
+  transition-duration: var(--dur-press);
+}
+
+/* ════════ REDUCED MOTION ════════
+   Gentler, not zero. Colour and opacity feedback survives; travel, parallax and
+   anything that loops forever does not. Entrance animations that start at
+   opacity:0 and rely on `forwards` still resolve — the 1ms duration below lands
+   them on their end state instead of leaving them invisible. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 150ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  /* Transition-driven reveals: keep the fade, drop the 30px travel. */
+  .reveal-el {
+    transform: none;
+  }
+
+  /* Perpetual motion — stopped outright rather than frozen mid-cycle. */
+  .ticker-track {
+    animation: none;
+    transform: none;
+  }
+
+  .scroll-indicator-line {
+    animation: none;
+    opacity: 0.6;
+  }
+
+  /* Hover feedback stays, but as colour/shadow only — no position change. */
+  .product-card:hover,
+  .featured-carousel-nav-btn:hover {
+    transform: none;
+  }
+
+  .gcard:hover .gcard__media-inner,
+  .product-card:hover .product-card-img-wrap img,
+  .main-image-viewport:hover img {
+    transform: none;
+  }
+
+  /* Full-page zoom on project navigation. projects.html also short-circuits
+     this in JS and navigates immediately. */
+  .page-transition-overlay,
+  .transition-card {
+    transition: none;
+  }
+
+  /* ponytail: the cart drawer keeps its 150ms slide — translateX(100%) is also
+     what hides it when closed, so removing the travel means rewriting the
+     hide mechanism. Short enough not to be the problem this media query is for. */
 }

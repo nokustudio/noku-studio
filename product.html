@@ -59,11 +59,14 @@
       height: 100%;
       object-fit: cover;
       padding: 0;
-      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+      /* opacity duration must match IMAGE_FADE_MS in product.js */
+      transition: transform var(--dur-hover) var(--ease-out), opacity 150ms ease;
     }
 
-    .main-image-viewport:hover img {
-      transform: scale(1.03);
+    @media (hover: hover) and (pointer: fine) {
+      .main-image-viewport:hover img {
+        transform: scale(1.03);
+      }
     }
 
     .thumbnail-list {
@@ -81,7 +84,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .thumbnail-item img {
@@ -332,7 +335,7 @@
       position: relative;
       background-size: cover;
       background-position: center;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .swatch-circle:hover {
@@ -356,7 +359,7 @@
       border: 1px solid transparent;
       cursor: pointer;
       color: var(--muted);
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
     }
 
     .swatch-pill:hover {
@@ -391,7 +394,7 @@
       text-transform: uppercase;
       letter-spacing: 1.5px;
       margin-top: 8px;
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
       align-self: flex-start;
       border-bottom: 1px dashed var(--chamoisee);
       padding-bottom: 2px;
@@ -430,7 +433,7 @@
       justify-content: center;
       cursor: pointer;
       z-index: 10;
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
       user-select: none;
       box-shadow: 0 4px 12px rgba(44, 38, 34, 0.08);
       outline: none;
@@ -627,7 +630,7 @@
       text-transform: uppercase;
       letter-spacing: 2px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
       text-align: center;
     }
 
@@ -649,7 +652,7 @@
       text-transform: uppercase;
       letter-spacing: 2px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
       text-align: center;
     }
 
@@ -1027,7 +1030,7 @@
       font-weight: 600;
       letter-spacing: 1.5px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
       box-shadow: 0 4px 12px rgba(162, 123, 92, 0.2);
       margin-top: 10px;
       width: auto;

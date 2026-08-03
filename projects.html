@@ -183,7 +183,7 @@
       height: 8px;
       border-radius: 50%;
       background-color: rgba(44, 38, 34, 0.15);
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .progress-dot.active {
@@ -676,6 +676,12 @@
             return;
           }
 
+          // Reduced motion: skip the zoom entirely, just go.
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            window.location.href = targetUrl;
+            return;
+          }
+
           const rect = card.getBoundingClientRect();
 
           // Zoom overlay animation
@@ -689,6 +695,16 @@
           transCard.style.width = rect.width + 'px';
           transCard.style.height = rect.height + 'px';
 
+          // Uniform "cover" scale from the card's rect to the viewport, plus the
+          // translation that centres the scaled card. Transform-only, so the
+          // browser composites it instead of relaying out the page each frame.
+          const vw = window.innerWidth;
+          const vh = window.innerHeight;
+          const scale = Math.max(vw / rect.width, vh / rect.height);
+          transCard.style.setProperty('--tc-scale', scale);
+          transCard.style.setProperty('--tc-dx', ((vw - rect.width * scale) / 2 - rect.left) + 'px');
+          transCard.style.setProperty('--tc-dy', ((vh - rect.height * scale) / 2 - rect.top) + 'px');
+
           const transImg = document.createElement('img');
           transImg.className = 'transition-img';
           transImg.src = img.src;
@@ -701,16 +717,20 @@
           overlay.offsetHeight;
 
           overlay.classList.add('active');
-          transCard.style.top = '0px';
-          transCard.style.left = '0px';
-          transCard.style.width = '100vw';
-          transCard.style.height = '100vh';
-          transCard.style.borderRadius = '0px';
+          transCard.classList.add('is-zooming');
 
-          // After zoom completes, navigate to the target page directly
-          setTimeout(() => {
+          // Navigate when the zoom actually finishes rather than on a fixed
+          // timer, with a timeout guard in case transitionend never fires.
+          let navigated = false;
+          const go = () => {
+            if (navigated) return;
+            navigated = true;
             window.location.href = targetUrl;
-          }, 1000);
+          };
+          transCard.addEventListener('transitionend', (ev) => {
+            if (ev.propertyName === 'transform') go();
+          });
+          setTimeout(go, 600);
         });
       });
 
