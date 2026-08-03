@@ -3942,6 +3942,10 @@ nav.light-nav .cart-btn:hover {
   flex-direction: column;
   align-items: flex-start;
   flex-grow: 1;
+  /* The generic .product-card-body sets gap:16px. That stacked on top of the
+     margins below, so the three lines sat 26px apart instead of the intended
+     10px. Spacing is controlled by the margins alone. */
+  gap: 0;
   box-sizing: border-box;
   text-align: left;
 }
@@ -3965,7 +3969,9 @@ nav.light-nav .cart-btn:hover {
   text-transform: uppercase;
   line-height: 1.4;
   color: var(--chamoisee);
-  margin: 0 0 10px;
+  /* The eyebrow labels the name, so they sit tight as one unit. The 16px below
+     the image is what separates the text block from the photo. */
+  margin: 0 0 6px;
   /* Always one line. The longest variant string ("Reclaimed teak / Leather -
      Cognac") overruns 235px, and a wrapped eyebrow would push the name and
      price off the baseline they share with the neighbouring cards. */
@@ -3982,7 +3988,7 @@ nav.light-nav .cart-btn:hover {
   letter-spacing: -0.01em;
   line-height: 1.25;
   color: var(--ink);
-  margin: 0 0 10px;
+  margin: 0 0 5px;
 }
 
 .featured-carousel-track .product-card .product-price {
@@ -3991,9 +3997,11 @@ nav.light-nav .cart-btn:hover {
   font-size: 0.8125rem;
   font-weight: 400;
   color: var(--muted);
-  /* Pinned to the bottom of the card. The track stretches all four cards to
-     equal height, so this lands every price on one line even if a name wraps. */
-  margin: auto 0 0;
+  /* Not bottom-pinned. The track stretches all four cards to equal height, so
+     a margin-top:auto here would drop the price to the card's foot the moment
+     any card had spare height — reopening the gap this block is meant to
+     close. The three lines stay a tight group under the image instead. */
+  margin: 0;
 }
 
 @media (hover: hover) and (pointer: fine) {
