@@ -1035,7 +1035,7 @@ function renderProductPage() {
     <div class="product-gallery">
       <div class="main-image-viewport" id="main-viewport">
         <button id="prev-image-btn" class="slider-arrow prev-arrow" aria-label="Previous Image">‹</button>
-        <img id="main-product-image" src="${safeUrl(heroImageSrc(defaultImageUrl))}" alt="${escHtml(currentProduct.title)}">
+        <img id="main-product-image" src="${safeUrl(heroImageSrc(defaultImageUrl))}" alt="${escHtml(currentProduct.title)}" fetchpriority="high">
         <button id="next-image-btn" class="slider-arrow next-arrow" aria-label="Next Image">›</button>
       </div>
       <div class="thumbnail-list" id="thumbnails-container">
