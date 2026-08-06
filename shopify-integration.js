@@ -22,9 +22,12 @@ const DISPLAY_ONLY_HANDLES = [
   'rod-bed-with-curved-headboard'
 ];
 
-function isDisplayOnly(handle) {
-  if (!handle) return false;
-  return DISPLAY_ONLY_HANDLES.includes(handle.toLowerCase().trim());
+// Buy-vs-Inquire is decided solely by the Shopify product metafield
+// custom.purchasemode (boolean). Only an explicit `true` is buyable; a false or
+// missing metafield — and every offline fallback product, which carries none —
+// is inquire-only. So if the Shopify connection fails, nothing is buyable.
+function isPurchasable(p) {
+  return p && p.purchaseMode && p.purchaseMode.value === 'true';
 }
 
 function isDisplayItem(item) {
@@ -539,6 +542,7 @@ async function loadFeaturedProducts() {
             handle
             title
             featuredImage { url }
+            purchaseMode: metafield(namespace: "custom", key: "purchasemode") { value }
             featuredFlag: metafield(namespace: "custom", key: "featured") { value }
             featuredVariant: metafield(namespace: "custom", key: "featured_variant") {
               reference {
@@ -580,7 +584,8 @@ async function loadFeaturedProducts() {
         price: variant ? parseFloat(variant.price.amount) : SHOPIFY_CONFIG.defaultPrice,
         image: (variant && variant.image?.url) || p.featuredImage?.url || '',
         variantId: variant?.id || '',
-        variantTitle: variant?.title || ''
+        variantTitle: variant?.title || '',
+        purchasable: isPurchasable(p)
       };
     });
   } else {
@@ -602,7 +607,7 @@ function renderFeaturedCarousel(items) {
   track.querySelectorAll('.product-card:not([data-handle="barstool"])').forEach(el => el.remove());
 
   items.forEach(item => {
-    const isDisplay = isDisplayOnly(item.handle);
+    const isDisplay = !item.purchasable;
     const card = document.createElement('div');
     card.className = 'product-card';
     card.setAttribute('data-handle', item.handle);
@@ -610,6 +615,7 @@ function renderFeaturedCarousel(items) {
     card.setAttribute('data-variant-price', String(item.price));
     card.setAttribute('data-variant-title', item.variantTitle);
     card.setAttribute('data-variant-image', item.image);
+    card.setAttribute('data-purchasable', item.purchasable ? 'true' : 'false');
 
     const buyRowHtml = isDisplay
       ? `<a href="product.html?handle=${encodeURIComponent(item.handle)}&inquire=true" class="product-inquire-btn">Inquire</a>`
@@ -710,14 +716,17 @@ function sizeShopifyImage(url, width, height) {
 
 // Add a featured product item to the cart
 function addFeaturedItemToCart(handle) {
-  if (isDisplayOnly(handle)) {
-    alert("This item is for display only and cannot be added to the cart.");
-    return;
-  }
-
   // Every rendered card (barstool or dynamic featured card) carries its own
   // data-variant-* attributes from creation, so read straight off the card.
   const card = document.querySelector(`.product-card[data-handle="${handle}"]`);
+
+  // Non-purchasable cards (custom.purchasemode !== true) are tagged data-purchasable="false"
+  // and never render an Add button; block defensively. The static barstool hero has no such
+  // attribute and is always purchasable, so only an explicit "false" blocks.
+  if (card && card.getAttribute('data-purchasable') === 'false') {
+    alert("This item is for display only and cannot be added to the cart.");
+    return;
+  }
   let title = card?.querySelector('.product-name')?.textContent || '';
   let price = card ? parseFloat(card.getAttribute('data-variant-price') || '0') : 0;
   let variantId = card ? (card.getAttribute('data-variant-id') || '') : '';
@@ -793,6 +802,7 @@ async function renderCollectionProducts(collectionHandle, gridId) {
               handle
               description
               productType
+              purchaseMode: metafield(namespace: "custom", key: "purchasemode") { value }
               tags
               collections(first: 5) {
                 edges {
@@ -901,7 +911,7 @@ async function renderCollectionProducts(collectionHandle, gridId) {
     const displayMaterial = firstVariant ? firstVariant.title : (p.tags ? p.tags.join(' / ') : 'Solid Hardwood');
     const imageUrl = p.featuredImage?.url || 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg';
 
-    const isDisplay = isDisplayOnly(p.handle);
+    const isDisplay = !isPurchasable(p);
 
     card.innerHTML = `
       <div class="gcard__media">

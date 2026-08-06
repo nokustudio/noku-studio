@@ -20,9 +20,12 @@ const DISPLAY_ONLY_HANDLES = [
   'rod-bed-with-curved-headboard'
 ];
 
-function isDisplayOnly(handle) {
-  if (!handle) return false;
-  return DISPLAY_ONLY_HANDLES.includes(handle.toLowerCase().trim());
+// Buy-vs-Inquire is decided solely by the Shopify product metafield
+// custom.purchasemode (boolean). Only an explicit `true` is buyable; a false or
+// missing metafield — and every offline fallback product, which carries none —
+// is inquire-only. So if the Shopify connection fails, nothing is buyable.
+function isPurchasable(p) {
+  return p && p.purchaseMode && p.purchaseMode.value === 'true';
 }
 
 function isDisplayItem(item) {
@@ -395,6 +398,7 @@ const ALL_PRODUCTS_QUERY = `
             url
             altText
           }
+          purchaseMode: metafield(namespace: "custom", key: "purchasemode") { value }
           featuredVariant: metafield(namespace: "custom", key: "featured_variant") {
             reference {
               ... on ProductVariant {
@@ -700,7 +704,7 @@ function renderProductsGrid() {
     const defaultImage = sizedCardImage(rawImage);
     const defaultVariantId = cardVariant ? cardVariant.id : `gid://shopify/ProductVariant/fallback-${p.handle}`;
 
-    const isDisplay = isDisplayOnly(p.handle);
+    const isDisplay = !isPurchasable(p);
 
     card.innerHTML = `
       <div class="gcard__media">

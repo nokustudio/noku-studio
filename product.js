@@ -27,9 +27,12 @@ const DISPLAY_ONLY_HANDLES = [
   'rod-bed-with-curved-headboard'
 ];
 
-function isDisplayOnly(handle) {
-  if (!handle) return false;
-  return DISPLAY_ONLY_HANDLES.includes(handle.toLowerCase().trim());
+// Buy-vs-Inquire is decided solely by the Shopify product metafield
+// custom.purchasemode (boolean). Only an explicit `true` is buyable; a false or
+// missing metafield — and every offline fallback product, which carries none —
+// is inquire-only. So if the Shopify connection fails, nothing is buyable.
+function isPurchasable(p) {
+  return p && p.purchaseMode && p.purchaseMode.value === 'true';
 }
 
 /**
@@ -774,6 +777,9 @@ async function loadProduct(handle) {
         metafield(namespace: "custom", key: "dimension") {
           value
         }
+        purchaseMode: metafield(namespace: "custom", key: "purchasemode") {
+          value
+        }
         woodFinishMetafield: metafield(namespace: "custom", key: "wood_finish") {
           value
         }
@@ -1083,7 +1089,7 @@ function renderProductPage() {
       </div>
 
       <!-- Purchase Controls -->
-      ${isDisplayOnly(currentProduct.handle) ? `
+      ${!isPurchasable(currentProduct) ? `
       <div class="purchase-controls">
         <div class="action-buttons-wrap" style="width: 100%;">
           <button id="btn-inquire" class="btn-primary-action" style="flex: 1;">Get in Touch</button>
@@ -1576,8 +1582,8 @@ function getGalleryImagesForVariant(variant) {
 function addCurrentItemToCart(variant, quantity = 1, triggerDrawer = true) {
   if (!currentProduct || !variant) return;
 
-  // Prevent display items from being added to cart
-  if (isDisplayOnly(currentProduct.handle)) {
+  // Prevent non-purchasable items from being added to cart
+  if (!isPurchasable(currentProduct)) {
     alert("This item is for display only and cannot be added to the cart.");
     return;
   }

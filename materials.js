@@ -100,6 +100,7 @@
               featuredImage {
                 url
               }
+              purchaseMode: metafield(namespace: "custom", key: "purchasemode") { value }
               priceRange {
                 minVariantPrice {
                   amount
@@ -604,7 +605,9 @@
         const priceVal = p.priceRange?.minVariantPrice?.amount ? parseFloat(p.priceRange.minVariantPrice.amount) : SHOPIFY_CONFIG.defaultPrice;
         const imgUrl = getVariantImage(p, category, item.id, item.name);
         
-        const isDisplay = ['dining-table', 'sofa-2', 'lounge-sofa', 'poster-bed', 'rod-bed-with-curved-headboard', 'round-dining-table'].includes(p.handle.toLowerCase().trim());
+        // Buy-vs-Inquire follows the Shopify custom.purchasemode metafield (isPurchasable
+        // is defined in shopify-integration.js, loaded before this file on materials.html).
+        const isDisplay = !isPurchasable(p);
         let productUrl = `product.html?handle=${p.handle}${isDisplay ? '&inquire=true' : ''}`;
         if (category === 'wood') {
           productUrl += `&wood=${encodeURIComponent(item.id)}`;
