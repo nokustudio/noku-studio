@@ -3971,7 +3971,7 @@ nav.light-nav .cart-btn:hover {
   color: var(--chamoisee);
   /* The eyebrow labels the name, so they sit tight as one unit. The 16px below
      the image is what separates the text block from the photo. */
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   /* Always one line. The longest variant string ("Reclaimed teak / Leather -
      Cognac") overruns 235px, and a wrapped eyebrow would push the name and
      price off the baseline they share with the neighbouring cards. */
@@ -3988,7 +3988,7 @@ nav.light-nav .cart-btn:hover {
   letter-spacing: -0.01em;
   line-height: 1.25;
   color: var(--ink);
-  margin: 0 0 5px;
+  margin: 0 0 8px;
 }
 
 .featured-carousel-track .product-card .product-price {
