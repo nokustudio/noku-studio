@@ -414,6 +414,34 @@ nav.scrolled .logo-svg > :nth-child(n + 2) {
   outline: none;
 }
 
+.dropdown-toggle:focus-visible {
+  outline: 2px solid var(--chamoisee);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Skip-to-content link: off-screen until keyboard-focused. */
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 20000;
+  padding: 10px 16px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus-visible {
+  top: 12px;
+  outline: 2px solid var(--chamoisee);
+  outline-offset: 2px;
+}
+
 .dropdown-chevron {
   display: inline-block;
   font-size: 0.4375rem;

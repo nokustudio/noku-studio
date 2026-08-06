@@ -445,6 +445,11 @@
       border-color: var(--chamoisee);
     }
 
+    .slider-arrow:focus-visible {
+      outline: 2px solid var(--chamoisee);
+      outline-offset: 2px;
+    }
+
     .prev-arrow {
       left: 16px;
     }
@@ -936,6 +941,12 @@
       color: var(--chamoisee);
     }
 
+    .modal-close-btn:focus-visible {
+      outline: 2px solid var(--chamoisee);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
     .modal-layout {
       display: grid;
       grid-template-columns: 1.1fr 1fr;
@@ -1133,6 +1144,8 @@
 
 <body>
 
+  <a href="#main" class="skip-link">Skip to content</a>
+
   <!-- Grain Layer overlay -->
   <div class="grain-overlay"></div>
 
@@ -1182,7 +1195,7 @@
   </nav>
 
   <!-- MAIN PRODUCT SECTION -->
-  <main class="container product-page-main">
+  <main id="main" class="container product-page-main">
     <div id="product-detail-container" class="product-detail-layout">
       <!-- LEFT COLUMN: SKELETON GALLERY -->
       <div class="product-gallery">
