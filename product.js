@@ -592,7 +592,7 @@ function isUpholsteryOption(opt) {
 // ─── WOOD FINISH LABELING ───
 // Some products show White Ash in its natural clear finish; others show the
 // same White Ash stained to a teak tone. Noku sets this per product via the
-// Shopify metafield custom.woodfinish ("Natural" / "Teak-toned"). When unset,
+// Shopify metafield custom.wood_finish ("Natural" / "Teak-toned"). When unset,
 // no finish label renders (existing products are unchanged).
 function getWoodFinish() {
   const raw = (currentProduct?.woodFinishMetafield?.value || currentProduct?.woodFinish || '')
@@ -780,7 +780,7 @@ async function loadProduct(handle) {
         purchaseMode: metafield(namespace: "custom", key: "purchasemode") {
           value
         }
-        woodFinishMetafield: metafield(namespace: "custom", key: "woodfinish") {
+        woodFinishMetafield: metafield(namespace: "custom", key: "wood_finish") {
           value
         }
         dimensionImagesMetafield: metafield(namespace: "custom", key: "dimension_images") {
