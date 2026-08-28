@@ -204,6 +204,9 @@
     .journal-gallery-staggered {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
+      /* Frames carry opposing margins to stagger, so stretch made the shorter
+         one grow to match its neighbour — 40px of dead space under its caption. */
+      align-items: start;
       gap: 40px;
       position: relative;
       padding: 24px 0;
@@ -212,7 +215,7 @@
 
     .journal-frame {
       background-color: #fff;
-      padding: 16px 16px 48px 16px;
+      padding: 16px 16px 20px 16px;
       box-shadow: 0 15px 35px rgba(44, 38, 34, 0.06);
       border: 1px solid rgba(44, 38, 34, 0.03);
       transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s;
@@ -238,13 +241,6 @@
       font-style: italic;
     }
 
-    /* Last frame standing: nothing to stagger against, so span the row
-       instead of leaving half the grid empty. */
-    .journal-frame:only-child {
-      grid-column: 1 / -1;
-      justify-self: stretch;
-    }
-
     .journal-frame.rotate-left {
       transform: rotate(-2.5deg);
       justify-self: start;
@@ -257,29 +253,13 @@
       margin-top: -20px;
     }
 
-    /* Staggered positioning overrides */
-    .journal-frame.frame-placeholder {
-      transform: rotate(1.5deg);
-      border: 1.5px dashed var(--light-muted);
-      background-color: rgba(237, 230, 218, 0.15);
-      box-shadow: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      aspect-ratio: 1.05;
-      height: auto;
-      max-width: 320px;
-    }
-
-    .journal-placeholder-content {
-      font-family: var(--font-body);
-      font-size: 0.75rem;
-      color: var(--muted);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-align: center;
-      padding: 40px 20px;
-      border-radius: 4px;
+    /* Last frame standing: nothing to stagger against, so span the row rather
+       than sit at half width — but capped, or one photo dwarfs the paired rows.
+       Must follow the rotate rules to win on source order. */
+    .journal-frame:only-child {
+      grid-column: 1 / -1;
+      justify-self: center;
+      max-width: 420px;
     }
 
     .journal-frame:hover {
@@ -720,10 +700,6 @@
                 We decided to work with carpenters who had been with us for decades to create pieces of furniture that blended traditional knowledge with modern design.
               </p>
             </div>
-            <div class="story-right-col">
-              <div class="journal-gallery-staggered">
-              </div>
-            </div>
           </div>
 
           <!-- Row 6: after years of learning -->
@@ -734,10 +710,6 @@
                 We’ve been steadily exploring, experimenting with design, materials, and form. Along the way, our work found its place in clients’ homes from the Goodearth projects.
               </p>
             </div>
-            <div class="story-right-col">
-              <div class="journal-gallery-staggered">
-              </div>
-            </div>
           </div>
 
           <!-- Row 7: Noku came to be -->
@@ -747,10 +719,6 @@
               <p class="story-text">
                 And in the beginning of 2024, the studio was officially formed. We immediately started working on our first collection and opened up for a larger audience!
               </p>
-            </div>
-            <div class="story-right-col">
-              <div class="journal-gallery-staggered">
-              </div>
             </div>
           </div>
 
