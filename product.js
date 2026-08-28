@@ -610,6 +610,17 @@ function finishLabelText(finish) {
   return finish === 'teak-toned' ? 'Teak-toned finish' : 'Natural finish';
 }
 
+// Lucide "paintbrush" (MIT) for teak-toned; inherits the dot's colour via currentColor.
+const FINISH_BRUSH_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m14.622 17.897-10.68-2.913"/><path d="M18.376 2.622a1 1 0 1 1 3.002 3.002L17.36 9.643a.5.5 0 0 0 0 .707l.944.944a2.41 2.41 0 0 1 0 3.408l-.944.944a.5.5 0 0 1-.707 0L8.354 7.348a.5.5 0 0 1 0-.707l.944-.944a2.41 2.41 0 0 1 3.408 0l.944.944a.5.5 0 0 0 .707 0z"/><path d="M9 8c-1.804 2.71-3.97 3.46-6.583 3.948a.507.507 0 0 0-.302.819l7.32 8.883a1 1 0 0 0 1.185.204C12.735 20.405 16 16.792 16 15"/></svg>`;
+
+// The finish marker that sits on a wood swatch. The swatch art is light ash grain
+// either way, so without this the teak-toned label contradicts the picture.
+function finishDotHtml(finish) {
+  const glyph = finish === 'teak-toned' ? FINISH_BRUSH_SVG : '&#10054;';
+  const cls = finish === 'teak-toned' ? 'finish-dot teak' : 'finish-dot natural';
+  return `<span class="${cls}" title="${finishLabelText(finish)}">${glyph}</span>`;
+}
+
 // Inner HTML for the "Wood: <value>" selected-value line, adding the finish
 // note only when the selected wood is White Ash and a finish is set.
 function selectedValInner(val) {
@@ -1003,19 +1014,16 @@ function renderProductPage() {
         const isPremium = isWood && val.toLowerCase().includes('reclaimed');
         // White Ash carries a finish note (natural vs teak-toned) when set.
         const isAshFinish = isWood && woodFinish && isWhiteAsh(val);
-        const stainClass = isAshFinish && woodFinish === 'teak-toned' ? ' finish-teak' : '';
         let swatchHtml;
         if (isWood && mat && mat.preview) {
-          swatchHtml = `<div class="swatch-circle${stainClass} ${isActive ? 'active' : ''}" data-value="${escHtml(val)}" data-option="${escHtml(opt.name)}" title="${escHtml(val)}" style="background-image: url('${safeUrl(mat.preview)}');"></div>`;
+          swatchHtml = `<div class="swatch-circle ${isActive ? 'active' : ''}" data-value="${escHtml(val)}" data-option="${escHtml(opt.name)}" title="${escHtml(val)}" style="background-image: url('${safeUrl(mat.preview)}');"></div>`;
         } else {
           swatchHtml = `<button class="swatch-pill ${isActive ? 'active' : ''}" data-value="${escHtml(val)}" data-option="${escHtml(opt.name)}">${escHtml(val)}</button>`;
         }
         if (isPremium) {
           optionsHtml += `<div class="swatch-premium-wrap" tabindex="0">${swatchHtml}<span class="swatch-premium-badge"><span class="badge-icon">&#10022;</span><span class="badge-text">Premium</span></span></div>`;
         } else if (isAshFinish) {
-          const dotCls = woodFinish === 'teak-toned' ? 'finish-dot teak' : 'finish-dot natural';
-          const dotGlyph = woodFinish === 'teak-toned' ? '&#128167;' : '&#10054;';
-          optionsHtml += `<div class="swatch-finish-wrap">${swatchHtml}<span class="${dotCls}" title="${finishLabelText(woodFinish)}">${dotGlyph}</span></div>`;
+          optionsHtml += `<div class="swatch-finish-wrap">${swatchHtml}${finishDotHtml(woodFinish)}</div>`;
         } else {
           optionsHtml += swatchHtml;
         }
@@ -1424,7 +1432,7 @@ function updateVariantDisplays(isInitial = false) {
         gridHtml += `
           <div class="material-detail-item">
             <div class="material-header">
-              <div class="material-swatch${isTeakToned ? ' finish-teak' : ''}" style="background-image: url('${safeUrl(mat.preview)}');"></div>
+              <div class="material-swatch" style="background-image: url('${safeUrl(mat.preview)}');">${isTeakToned ? finishDotHtml('teak-toned') : ''}</div>
               <div>
                 <div class="material-name">${escHtml(mat.name)}</div>
                 <div class="material-sub">${escHtml(mat.subtitle || '')}${pillHtml}</div>
