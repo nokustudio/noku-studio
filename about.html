@@ -238,6 +238,13 @@
       font-style: italic;
     }
 
+    /* Last frame standing: nothing to stagger against, so span the row
+       instead of leaving half the grid empty. */
+    .journal-frame:only-child {
+      grid-column: 1 / -1;
+      justify-self: stretch;
+    }
+
     .journal-frame.rotate-left {
       transform: rotate(-2.5deg);
       justify-self: start;
@@ -609,12 +616,7 @@
                   <img src="https://cdn.prod.website-files.com/667fb0113927090bb47059e6/66c03f7a87730a4738ac7a63_director-image%20101.png" alt="Good Earth Origins">
                   <div class="journal-caption">Good Earth, 1988</div>
                 </div>
-                <div class="journal-frame frame-placeholder rotate-right reveal-el delay-1">
-                  <div class="journal-placeholder-content">
-                    <span>+ Image to be added</span>
-                  </div>
-                </div>
-                <div class="journal-frame rotate-left reveal-el delay-2">
+                <div class="journal-frame rotate-right reveal-el delay-1">
                   <img src="https://cdn.prod.website-files.com/667fb0113927090bb47059e6/66c044e20ce17596b99903b1_story1.png" alt="Craftsmanship History">
                   <div class="journal-caption">Learning from Laurie Baker</div>
                 </div>
@@ -632,11 +634,6 @@
             </div>
             <div class="story-right-col">
               <div class="journal-gallery-staggered">
-                <div class="journal-frame frame-placeholder rotate-left reveal-el">
-                  <div class="journal-placeholder-content">
-                    <span>+ Image to be added</span>
-                  </div>
-                </div>
                 <div class="journal-frame rotate-right reveal-el delay-1">
                   <img src="https://cdn.prod.website-files.com/667fb0113927090bb47059e6/66c046477d7a6644f4affb81_hamlet4.jpg" alt="Good Earth Hamlet development">
                   <div class="journal-caption">Hamlet Development, Kochi</div>
@@ -725,11 +722,6 @@
             </div>
             <div class="story-right-col">
               <div class="journal-gallery-staggered">
-                <div class="journal-frame frame-placeholder rotate-left reveal-el">
-                  <div class="journal-placeholder-content">
-                    <span>+ Image to be added</span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -744,11 +736,6 @@
             </div>
             <div class="story-right-col">
               <div class="journal-gallery-staggered">
-                <div class="journal-frame frame-placeholder rotate-right reveal-el">
-                  <div class="journal-placeholder-content">
-                    <span>+ Image to be added</span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -763,11 +750,6 @@
             </div>
             <div class="story-right-col">
               <div class="journal-gallery-staggered">
-                <div class="journal-frame frame-placeholder rotate-left reveal-el">
-                  <div class="journal-placeholder-content">
-                    <span>+ Image to be added</span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
