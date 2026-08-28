@@ -544,6 +544,7 @@ async function loadFeaturedProducts() {
             featuredImage { url }
             purchaseMode: metafield(namespace: "custom", key: "purchasemode") { value }
             featuredFlag: metafield(namespace: "custom", key: "featured") { value }
+            priceRange { minVariantPrice { amount } }
             featuredVariant: metafield(namespace: "custom", key: "featured_variant") {
               reference {
                 ... on ProductVariant {
@@ -582,6 +583,11 @@ async function loadFeaturedProducts() {
         handle: p.handle,
         title: p.title,
         price: variant ? parseFloat(variant.price.amount) : SHOPIFY_CONFIG.defaultPrice,
+        // Card shows "From X" = the cheapest variant of the whole product, which is
+        // not the featured variant's price (custom.featured_variant picks the photo,
+        // often a top-end leather one). priceRange is Shopify-computed over every
+        // variant, so it stays right regardless of how many variants we fetch.
+        fromPrice: parseFloat(p.priceRange?.minVariantPrice?.amount) || (variant ? parseFloat(variant.price.amount) : SHOPIFY_CONFIG.defaultPrice),
         image: (variant && variant.image?.url) || p.featuredImage?.url || '',
         variantId: variant?.id || '',
         variantTitle: variant?.title || '',
@@ -592,7 +598,7 @@ async function loadFeaturedProducts() {
     // Offline / unreachable — fall back to the local registry (barstool excluded, it's static).
     items = Object.entries(FEATURED_PRODUCTS_FALLBACK)
       .filter(([handle]) => handle !== 'barstool')
-      .map(([handle, p]) => ({ handle, title: p.title, price: p.price, image: '', variantId: p.variantId, variantTitle: p.variantTitle }));
+      .map(([handle, p]) => ({ handle, title: p.title, price: p.price, fromPrice: p.price, image: '', variantId: p.variantId, variantTitle: p.variantTitle }));
   }
 
   renderFeaturedCarousel(items);
@@ -626,7 +632,7 @@ function renderFeaturedCarousel(items) {
       <div class="product-card-body">
         <div class="product-card-header-row">
           <h3 class="product-name">${escHtml(item.title)}</h3>
-          <span class="product-price">From ${formatCurrency(item.price)}</span>
+          <span class="product-price">From ${formatCurrency(item.fromPrice)}</span>
         </div>
         <div class="product-card-footer-row">
           <span class="product-materials">${escHtml(item.variantTitle)}</span>
