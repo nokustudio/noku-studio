@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noku Studio — Returns, Refunds & Cancellations</title>
+  <meta name="description"
+    content="How cancellations, returns, damage claims and refunds work at Noku Studio.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Quattrocento:wght@400;700&display=swap"
+    rel="stylesheet">
+  
+  <link rel="icon" type="image/svg+xml" href="Resources/Logo/noku-favicon.svg">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Vercel Speed Insights -->
+  <script>
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+</head>
+
+<body>
+
+
+
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <!-- Grain Layer overlay -->
+  <div class="grain-overlay"></div>
+
+  <!-- STICKY HEADER NAVIGATION -->
+  <nav id="navbar" class="light-nav">
+    <div class="nav-logo-wrap">
+      <a href="index.html" aria-label="Noku Home">
+        <svg class="logo-svg" width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09"/>
+          <path d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44"/>
+          <polygon points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28"/>
+          <path d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55"/>
+        </svg>
+      </a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="products.html" class="nav-link">Products</a></li>
+      <li><a href="index.html#collections" class="nav-link">Collections</a></li>
+      <li><a href="projects.html" class="nav-link">Work</a></li>
+      <li class="nav-dropdown-wrapper">
+        <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+          Menu <span class="dropdown-chevron">▼</span>
+        </button>
+        <ul class="nav-dropdown">
+          <li><a href="materials.html" class="nav-link-sub">Materials</a></li>
+          <li><a href="sustainability.html" class="nav-link-sub">Sustainability</a></li>
+          <li><a href="about.html" class="nav-link-sub">About</a></li>
+          <li><a href="contact.html" class="nav-link-sub">Contact</a></li>
+        </ul>
+      </li>
+    </ul>
+    <button id="cart-toggle" class="cart-btn" aria-label="Open Shopping Cart">
+      <svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span id="cart-count-badge" class="cart-count">0</span>
+    </button>
+    <button class="mobile-menu-toggle" aria-label="Toggle Mobile Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- MAIN CONTENT CONTAINER -->
+
+  <main id="main">
+    <article class="legal-page container">
+      <header class="legal-header">
+        <h1 class="legal-title">Returns, Refunds &amp; Cancellations</h1>
+        <p class="legal-updated">Last updated: 7 October 2026</p>
+      </header>
+      <div class="legal-body">
+        <p>Our furniture is made carefully and in small numbers, and many pieces are made after you order. This page explains what you can cancel or return, and what happens if something arrives damaged.</p>
+
+        <h2>Cancellations</h2>
+        <ul>
+          <li><strong>Ready-to-ship pieces:</strong> you can cancel for a full refund any time before the order is dispatched.</li>
+          <li><strong>Made-to-order pieces:</strong> you can cancel for a full refund within 48 hours of placing the order. After that, work on your piece has usually started, and we will refund the amount paid minus <mark class="legal-todo">[25%]</mark> of the order value to cover materials and labour already used.</li>
+          <li><strong>Bespoke pieces</strong> (custom size, wood, finish or design): you can cancel for a refund of your advance, less any design charges in your quote, until you approve the final drawing. After approval the advance is non-refundable. See <a href="terms.html#bespoke">Bespoke orders</a>.</li>
+        </ul>
+        <p>To cancel, email <a href="mailto:hello@nokustudio.in?subject=Cancellation">hello@nokustudio.in</a> with your order number.</p>
+
+        <h2>Returns</h2>
+        <p>You can return <strong>ready-to-ship pieces</strong> within 7 days of delivery if they are unused, undamaged and in their original packaging. Contact us first so we can arrange collection. Return shipping is charged at cost and deducted from your refund.</p>
+        <p>We can’t accept returns on made-to-order or bespoke pieces, because they are made specifically for you. We will still fix any defect or transit damage, as described below.</p>
+
+        <h2>Damaged or defective items</h2>
+        <ul>
+          <li>Please check your piece when it’s delivered. If you can see damage to the packaging or the furniture, note it on the delivery receipt.</li>
+          <li>Tell us within <strong>48 hours of delivery</strong>, and send photos of the damage and the packaging to <a href="mailto:hello@nokustudio.in?subject=Damaged%20delivery">hello@nokustudio.in</a>.</li>
+          <li>We’ll repair the piece, replace it, or refund you in full, whichever suits the damage best. You pay nothing for this.</li>
+        </ul>
+        <p>Natural variations in grain, colour or knots, and small changes from humidity, are not defects (see our <a href="terms.html">Terms &amp; Conditions</a>).</p>
+
+        <h2>Refunds</h2>
+        <ul>
+          <li>Approved refunds go back to your original payment method within 7–10 business days. Your bank may take a few more days to show the credit.</li>
+          <li>For returns, the refund is issued once the piece reaches our workshop and passes inspection.</li>
+          <li>We’ll email you when the refund has been issued.</li>
+        </ul>
+
+        <h2>Contact</h2>
+          <p>Noku Studio · GSTIN 29AAWFN4474B1ZT<br>
+          Cabin 7, Office 7, Tarana, Goodearth Malhar, Kambipura, Kengeri, Bangalore – 560074, Karnataka, India<br>
+          Email: <a href="mailto:hello@nokustudio.in">hello@nokustudio.in</a> · Phone: +91 9035736063</p>
+      </div>
+    </article>
+  </main>
+
+  <!-- ════════ FOOTER ════════ -->
+  <footer id="footer">
+    <div class="container">
+      <div class="footer-cta-line">
+        <p class="footer-cta-eyebrow">Ready to</p>
+        <a href="contact.html" class="btn-cta-arrow">Craft your furniture?<span class="arrow"><svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span></a>
+      </div>
+      <div class="footer-grid">
+        <div>
+          <p class="footer-wordmark">NOKU</p>
+        </div>
+        <div>
+          <p class="footer-col__heading">About</p>
+          <ul class="footer-col__links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col__heading">Work</p>
+          <ul class="footer-col__links">
+            <li><a href="products.html">Furniture Shop</a></li>
+            <li><a href="projects.html">Our Projects</a></li>
+            <li><a href="products.html">Collections</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col__heading">Knowledge</p>
+          <ul class="footer-col__links">
+            <li><a href="materials.html">Materials Guide</a></li>
+            <li><a href="sustainability.html">Sustainability</a></li>
+            <li><a href="mailto:hello@nokustudio.in">hello@nokustudio.in</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Noku Studio. All rights reserved.</span>
+        <span class="footer-legal__links"><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="returns.html">Returns &amp; Refunds</a> · <a href="shipping.html">Shipping</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ════════ SHOPPING CART SIDE-DRAWER ════════ -->
+  <div id="cart-overlay" class="cart-overlay"></div>
+  <div id="cart-drawer" class="cart-drawer">
+    <div class="cart-header">
+      <h3 class="cart-title">Your Cart</h3>
+      <button id="cart-close" class="cart-close-btn" aria-label="Close Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="cart-items-container" id="cart-items-container">
+      <div class="cart-empty-message">Your cart is currently empty.</div>
+    </div>
+    
+    <div class="cart-footer">
+      <div class="cart-subtotal-row">
+        <span class="subtotal-label">Subtotal</span>
+        <span class="subtotal-price" id="cart-subtotal">₹0.00</span>
+      </div>
+      <button id="checkout-btn" class="checkout-btn" disabled>Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <script src="shopify-integration.js"></script>
+
+  <!-- Shared navbar-scroll + reveal-on-scroll behaviour -->
+
+  <script defer src="/_vercel/insights/script.js"></script>
+</body>
+
+</html>
