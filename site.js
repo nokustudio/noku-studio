@@ -1,10 +1,12 @@
 /**
  * site.js — Shared site chrome for every Noku Studio page.
  *
- * Consolidates the two behaviours that were previously copy-pasted into every
+ * Consolidates the behaviours that were previously copy-pasted into every
  * page's inline <script> (and into script.js on the homepage):
  *   1. Navbar "scrolled" state toggle.
  *   2. Reveal-on-scroll for `.reveal-el` (single, unified trigger config).
+ *   3. Mobile navigation menu toggle.
+ *   4. Project image lightbox.
  *
  * Page-specific logic (3D hero, timelines, collection grids, etc.) stays inline
  * or in its own file. Mobile-menu and cart wiring live in shopify-integration.js.
@@ -101,6 +103,29 @@
     navLinks.querySelectorAll('a').forEach(function (link) {
       link.addEventListener('click', function () {
         navLinks.classList.remove('active');
+      });
+    });
+  }
+
+  // ─── 4. Project image lightbox (.project_zoom → one shared <dialog>) ───
+  // Native <dialog> handles Esc, focus trapping and focus return; a click
+  // anywhere closes it. Without dialog support the buttons simply do nothing.
+  var zooms = document.querySelectorAll('.project_zoom');
+  if (zooms.length && typeof HTMLDialogElement === 'function') {
+    var lightbox = document.createElement('dialog');
+    var lightboxImg = document.createElement('img');
+    lightbox.className = 'project_lightbox';
+    lightbox.setAttribute('aria-label', 'Enlarged image');
+    lightbox.appendChild(lightboxImg);
+    document.body.appendChild(lightbox);
+    lightbox.addEventListener('click', function () { lightbox.close(); });
+
+    zooms.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var img = btn.querySelector('img');
+        lightboxImg.src = img.currentSrc || img.src;
+        lightboxImg.alt = img.alt;
+        lightbox.showModal();
       });
     });
   }
