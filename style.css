@@ -3627,6 +3627,7 @@ nav.light-nav .cart-btn:hover {
 
 /* Lightbox <dialog> created by site.js */
 .project_lightbox {
+  margin: auto; /* the global reset zeroes the UA margin that centres <dialog> */
   padding: 0;
   border: 0;
   background: transparent;
