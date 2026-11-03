@@ -120,7 +120,8 @@
 
     /* ════════ DRAFT: "Our Pieces" — the rest of the catalogue, in the homepage's featured-card design ════════ */
     .op { background: var(--light); color: var(--ink); position: relative; z-index: 13; border-bottom: 1px solid var(--line); }
-    .op-head { margin-bottom: clamp(24px, 4vw, 48px); }
+    .op .container { max-width: 1320px; }   /* cards run 60px wider each side than the site's 1200px container on large screens… */
+    .op-head { margin-bottom: clamp(24px, 4vw, 48px); padding-inline: clamp(0px, (100vw - 1200px) / 2, 60px); }   /* …while the header keeps the shared left edge */
     .op-head .title-h2 { margin-bottom: 0; }
     .op-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; padding: 20px 0; }
     .op-grid .product-card { flex: none; width: auto; color: inherit; text-decoration: none; }   /* grid cells, not the carousel's fixed quarter-widths */
@@ -159,6 +160,7 @@
     .mat .fh-pill { color: var(--ink); text-decoration: none; }
     .mat .fh-pill span, .op .fh-pill span { transition: transform .5s var(--ease-out); margin-left: 12px; }
     .mat .fh-pill:hover span { transform: translateX(4px); }
+    .mat .fh-pill:hover, .op .fh-pill:not(.solid):hover { color: var(--light); }   /* the colour rules above out-rank .fh-pill:hover, so the text vanished into the fill */
 
     /* Editorial: the statement stays pinned while the materials scroll past */
     .mat-ed { display: grid; grid-template-columns: 4fr 7fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
@@ -197,6 +199,7 @@
 
     /* workshop video: the footage at full strength; a soft shadow keeps the copy legible without tinting it */
     .video-section .video-background { opacity: 1; }
+    .video-section::before { content: ''; position: absolute; inset: 0; z-index: 1; background: rgba(36,31,27,.1); pointer-events: none; }
     .video-content { text-shadow: 0 0 32px rgba(36,31,27,.7), 0 1px 3px rgba(36,31,27,.6); }
     .video-content .body-p { font-size: 1.0625rem !important; max-width: 44ch; margin-inline: auto; }
 
