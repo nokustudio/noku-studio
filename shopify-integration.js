@@ -79,7 +79,7 @@ const FEATURED_PRODUCTS_FALLBACK = {
     price: 81000,
     variantId: 'gid://shopify/ProductVariant/mock-sofa-default',
     image: 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg',
-    variantTitle: 'Solid Walnut / Belgian Linen'
+    variantTitle: 'Solid Wood / Belgian Linen'
   },
   'lounge-chair': {
     title: 'Bask Chair',
@@ -93,7 +93,7 @@ const FEATURED_PRODUCTS_FALLBACK = {
     price: 11500,
     variantId: 'gid://shopify/ProductVariant/mock-dining-default',
     image: 'https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be7113654a_Noku_ofStillness_Dining_chair_03.jpeg',
-    variantTitle: 'Solid Walnut / Natural Fabric'
+    variantTitle: 'Solid Wood / Natural Fabric'
   },
   'modern-study-table': {
     title: 'Stylus Table',
@@ -172,7 +172,7 @@ const FALLBACK_PRODUCTS = [
         {
           node: {
             id: "gid://shopify/ProductVariant/mock-sofa-default",
-            title: "Solid Walnut / Belgian Linen",
+            title: "Solid Wood / Belgian Linen",
             price: { amount: "81000.0", currencyCode: "INR" }
           }
         }
@@ -220,7 +220,7 @@ const FALLBACK_PRODUCTS = [
         {
           node: {
             id: "gid://shopify/ProductVariant/mock-dining-default",
-            title: "Solid Walnut / Natural Fabric",
+            title: "Solid Wood / Natural Fabric",
             price: { amount: "11500.0", currencyCode: "INR" }
           }
         }
