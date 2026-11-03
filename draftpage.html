@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noku Studio — Draft</title>
+  <meta name="description"
+    content="Contemporary Indian furniture studio based in Bengaluru. Celebrating mid-century restraint, material honesty, and fine craftsmanship.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Quattrocento:wght@400;700&display=swap"
+    rel="stylesheet">
+
+  <link rel="icon" type="image/svg+xml" href="Resources/Logo/noku-favicon.svg">
+  <link rel="stylesheet" href="style.css">
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    /* ════════ DRAFT: featured-products hero ("Statement"), scoped under .fh ════════ */
+    .fh { --gutter: clamp(16px, 4vw, 64px); --nav-h: 76px; --ease-wipe: cubic-bezier(0.77, 0, 0.18, 1);
+      position: relative; z-index: 12; height: 100svh; min-height: 640px; overflow: hidden; isolation: isolate;
+      display: grid; grid-template-rows: minmax(0, 1fr) auto;
+      padding: var(--nav-h) var(--gutter) clamp(20px, 4svh, 40px);   /* .fh-piece spans exactly nav → name */
+      background: var(--tint, var(--light)); color: var(--ink); transition: background-color 1.2s var(--ease-out); }
+    .fh a { color: inherit; text-decoration: none; }
+    .fh button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+    .fh img { display: block; }
+    .fh :focus-visible { outline: 1px solid var(--chamoisee); outline-offset: 4px; }
+
+    /* studio shot → floats on any tint: lift the #e8 backdrop to white, then multiply it away */
+    .fh .fh-blend { filter: brightness(var(--lift, 1.12)); mix-blend-mode: multiply;
+      -webkit-mask: linear-gradient(90deg, #0000, #000 9%, #000 91%, #0000), linear-gradient(#0000, #000 7%, #000 93%, #0000);
+      -webkit-mask-composite: source-in; mask-composite: intersect; }
+    /* ponytail: the Lunar (rdc-*) cutouts were shot on a darker, uneven backdrop — needs more lift. Re-shoot if more products drift. */
+    .fh .fh-blend[src*="rdc-t-"] { --lift: 1.16; }
+
+    .fh-piece { position: relative; min-height: 0; pointer-events: none; mix-blend-mode: multiply; /* transform isolates .fh-piece, so the multiply lives here */
+      transform: translate3d(calc(var(--mx, 0) * 14px), calc(var(--my, 0) * 7px), 0); }
+    .fh-piece img { position: absolute; left: 0; top: 0; width: auto; max-width: none; /* size + position set per piece by fitPieces() */
+      opacity: 0; transform: translateY(5%) scale(.97); transition: opacity .7s var(--ease-out), transform 1.3s var(--ease-out); }
+    .fh-piece img.was { transform: translateY(-3%) scale(1.01); }
+    .fh.fh-ready .fh-piece img.on { opacity: 1; transform: none; transition-delay: 120ms; }
+
+    .fh-band { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 24px; position: relative; z-index: 2; }
+    .fh-h1 { font: 300 clamp(20px, 1.7vw, 28px)/1.12 var(--font-display); letter-spacing: -.015em; margin: 0; }
+    .fh-mid { display: grid; justify-items: center; gap: clamp(12px, 2.2svh, 24px); }
+    .fh-words { display: grid; justify-items: center; pointer-events: none; font-size: min(5.4vw, 7.4svh, 96px); }
+    .fh-word { grid-area: 1 / 1; display: flex; overflow: hidden; padding: 0 .04em;
+      font: 300 1em/1 var(--font-display); letter-spacing: -.055em; color: var(--ink); white-space: nowrap; }
+    .fh-word span { display: block; transform: translateY(115%); transition: transform .7s var(--ease-wipe); transition-delay: calc(var(--i) * 35ms); }
+    .fh-word.was span { transform: translateY(-115%); }
+    .fh.fh-ready .fh-word.on span { transform: none; transition: transform 1.1s var(--ease-out) calc(150ms + var(--i) * 45ms); }
+
+    .fh-now { display: grid; text-align: center; }
+    .fh-now > div { grid-area: 1 / 1; display: grid; gap: clamp(12px, 2svh, 20px); justify-items: center; visibility: hidden; transition: visibility 0s .6s; }
+    .fh-now > div.on { visibility: visible; transition: none; }
+    .fh-m { display: block; overflow: hidden; padding-bottom: .12em; }
+    .fh-m > * { display: block; transform: translateY(110%); transition: transform .6s var(--ease-out); }
+    .fh-m > .fh-acts { display: flex; }
+    .fh-now > .was .fh-m > * { transform: translateY(-110%); }
+    .fh.fh-ready .fh-now > .on .fh-m > * { transform: none; transition-duration: 1s; transition-delay: calc(300ms + var(--i) * 70ms); }
+    .fh-sub { font: 400 11px/1 var(--font-display); letter-spacing: .26em; text-transform: uppercase; color: var(--chamoisee); }
+    .fh-sub b { font-weight: 400; color: var(--muted); letter-spacing: .12em; }
+    .fh-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .fh-acts { gap: 10px; justify-content: center; padding-top: 2px; }
+
+    .fh-pill { display: inline-flex; align-items: center; position: relative; overflow: hidden; isolation: isolate;
+      font: 400 13px/1 var(--font-display); letter-spacing: .16em; text-transform: uppercase;
+      padding: 12px 22px 10px; border: 1px solid currentColor; border-radius: 9999px; transition: color .5s var(--ease-out); }
+    .fh-pill::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--pill-fill, var(--ink));
+      transform: translateY(101%); border-radius: inherit; transition: transform .5s var(--ease-out); }
+    .fh-pill:hover { color: var(--pill-on, var(--light)); }
+    .fh-pill:hover::before { transform: none; }
+    .fh-pill.solid { background: var(--ink); color: var(--light); border-color: var(--ink); --pill-fill: var(--chamoisee); --pill-on: var(--light); }
+    .fh-pill.solid:hover { border-color: var(--chamoisee); }
+
+    .fh-thumbs { justify-self: end; display: flex; align-items: end; gap: 10px; }
+    .fh-tbtn { width: 56px; display: grid; gap: 8px; opacity: .5; transition: opacity .4s; }
+    .fh-tbtn:hover, .fh-tbtn[aria-current="true"] { opacity: 1; }
+    .fh-tb { aspect-ratio: 2 / 3; background: var(--tint); overflow: hidden; isolation: isolate; transition: background-color 1.2s; }
+    .fh-tb img { width: 100%; height: 100%; object-fit: cover; }
+    .fh-bar { height: 1px; background: rgba(44,38,34,.2); }
+    .fh-bar i { display: block; height: 100%; background: var(--ink); transform-origin: left; transform: scaleX(0); }
+    .fh-ap { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(44,38,34,.35) !important; margin: 0 0 21px 8px;
+      display: grid; place-items: center; transition: background-color .4s var(--ease-out), color .4s, border-color .3s; }
+    .fh-ap:hover { background: var(--ink) !important; border-color: var(--ink) !important; color: var(--light) !important; }
+    .fh-ap svg { width: 11px; height: 11px; fill: currentColor; }
+
+    /* intro: masked lines rise once the hero is ready */
+    .fh-rv { display: block; overflow: hidden; padding-bottom: .06em; }
+    .fh-rv > * { display: block; transform: translateY(110%); }
+    .fh.fh-ready .fh-rv > * { transform: none; transition: transform 1.1s var(--ease-out) calc(var(--d, 0) * 1ms); }
+    .fh-fade { opacity: 0; }
+    .fh.fh-ready .fh-fade { opacity: 1; transition: opacity 1.2s var(--ease-out) calc(var(--d, 0) * 1ms); }
+
+    @media (max-width: 899px) {
+      .fh { --nav-h: 64px; height: auto; min-height: 100svh; grid-template-rows: auto auto auto; padding-top: calc(var(--nav-h) + 12px); row-gap: 10px; }
+      .fh-words { font-size: 12.5vw; }
+      .fh-piece { height: 58svh; transform: none; }
+      .fh-band { grid-template-columns: 1fr; justify-items: center; gap: 18px; }
+      .fh-h1 { display: none; }
+      .fh-thumbs { justify-self: center; }
+      .fh-tbtn { width: 46px; }
+    }
+
+    /* the 3D barstool story is not on this draft; script.js still needs its container (see note at the canvas) */
+    #three-container { display: none !important; }
+
+    /* navbar: a transparent bar over the hero that settles into the live frosted pill once scrolled */
+    #navbar:not(.scrolled) { top: 0; width: 100%; max-width: 100%; height: 76px; padding: 0 clamp(16px, 4vw, 64px); border-radius: 0;
+      background-color: transparent; border-color: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+    #navbar { transition: background-color .5s ease, border-color .5s ease, box-shadow .7s ease, width .7s var(--ease-out), max-width .7s var(--ease-out),
+      top .7s var(--ease-out), height .7s var(--ease-out), padding .7s var(--ease-out), border-radius .7s var(--ease-out); }
+    @media (max-width: 899px) { #navbar:not(.scrolled) { height: 64px; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fh *, .fh *::before, .fh *::after, #navbar { transition-duration: 1ms !important; transition-delay: 0ms !important; }
+    }
+  </style>
+  <!-- Vercel Speed Insights -->
+  <script>
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+</head>
+
+<body style="background-color: var(--dark-bg);">
+
+  <a href="#featured-hero" class="skip-link">Skip to content</a>
+
+  <script>
+    // Gate the hero entrance on the loading screen finishing (script.js calls
+    // window.nokuHeroReady). Defined here, not in script.js, so a failed
+    // three.js CDN can't leave the hero copy stuck at opacity 0 — the timeout
+    // is a hard floor that reveals it regardless.
+    (function () {
+      var reveal = function () { document.documentElement.classList.add('hero-ready'); };
+      window.nokuHeroReady = reveal;
+      setTimeout(reveal, 3000);
+    })();
+  </script>
+
+  <!-- Grain Layer overlay -->
+  <div class="grain-overlay"></div>
+
+  <!-- STICKY HEADER NAVIGATION -->
+  <nav id="navbar">
+    <div class="nav-logo-wrap">
+      <a href="/" aria-label="Noku Home">
+        <svg class="logo-svg" width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg">
+          <polygon
+            points="67.75 2.09 67.75 81.28 54.37 81.28 54.37 53.95 13.38 26.49 13.38 81.28 0 81.28 0 0 54.37 37.78 54.37 2.09 67.75 2.09" />
+          <path
+            d="m164.64,41.54c0,22.31-18.12,40.43-40.43,40.43s-40.43-18.12-40.43-40.43S101.91,1.12,124.21,1.12s40.43,18.12,40.43,40.43m-13.38.42c0-15.89-11.29-28.58-27.18-28.58s-26.91,12.69-26.91,28.58,11.01,28.44,26.91,28.44,27.18-12.55,27.18-28.44" />
+          <polygon
+            points="235.04 81.28 210.23 40.29 194.06 57.86 194.06 81.28 180.67 81.28 180.67 2.09 194.06 2.09 194.06 38.48 227.09 2.09 245.36 2.09 219.43 30.25 250.79 81.28 235.04 81.28" />
+          <path
+            d="m262.5,46.42V2.09h13.38v44.33c0,16.03,5.3,23.98,19.8,23.98s19.8-7.95,19.8-23.98V2.09h13.38v44.33c0,21.89-11.15,35.55-33.04,35.55s-33.32-13.66-33.32-35.55" />
+        </svg>
+      </a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="products.html" class="nav-link">Products</a></li>
+      <li><a href="#collections" class="nav-link">Collections</a></li>
+      <li><a href="projects.html" class="nav-link">Work</a></li>
+      <li class="nav-dropdown-wrapper">
+        <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+          Menu <span class="dropdown-chevron">▼</span>
+        </button>
+        <ul class="nav-dropdown">
+          <li><a href="materials.html" class="nav-link-sub">Materials</a></li>
+          <li><a href="sustainability.html" class="nav-link-sub">Sustainability</a></li>
+          <li><a href="about.html" class="nav-link-sub">About</a></li>
+          <li><a href="contact.html" class="nav-link-sub">Contact</a></li>
+        </ul>
+      </li>
+    </ul>
+    <button id="cart-toggle" class="cart-btn" aria-label="Open Shopping Cart">
+      <svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--bone)"
+        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span id="cart-count-badge" class="cart-count">0</span>
+    </button>
+    <button class="mobile-menu-toggle" aria-label="Toggle Mobile Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- ponytail: script.js bundles the products/collections/video behaviour with the 3D barstool, so the
+       3D runtime still loads here, hidden. Split script.js before this draft replaces index.html. -->
+  <div id="three-container" tabindex="-1">
+    <canvas id="three-canvas"></canvas>
+  </div>
+
+  <!-- ════════ DRAFT HERO: featured products ════════ -->
+  <section class="fh" id="featured-hero" aria-label="Featured pieces" tabindex="-1">
+    <div class="fh-piece"></div>
+    <div class="fh-band">
+      <h1 class="fh-h1"><span class="fh-rv"><span style="--d:300">Designed with intent.</span></span><span class="fh-rv"><span style="--d:400">Crafted with care.</span></span></h1>
+      <div class="fh-mid">
+        <div class="fh-words" aria-hidden="true"></div>
+        <div class="fh-now" aria-live="polite"></div>
+      </div>
+      <div class="fh-thumbs fh-fade" style="--d:700"><button class="fh-ap" type="button"></button></div>
+    </div>
+  </section>
+
+  <!-- ════════ FEATURED PRODUCTS GRID ════════ -->
+  <section class="products-section section-pad">
+    <div class="products-sticky-wrapper">
+      <div class="container" id="products">
+        <div class="products-header">
+          <div class="products-header-left">
+            <span class="label">Portfolio</span>
+            <h2 class="title-h2">Featured Pieces</h2>
+          </div>
+          <a href="products.html" class="view-collection-link">View All
+            Products</a>
+        </div>
+
+        <!-- Horizontal Carousel for Featured Products -->
+        <div class="featured-carousel-outer-wrap reveal-el">
+          <button class="featured-carousel-nav-btn prev-btn" aria-label="Previous Product">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <div class="featured-carousel-track-container">
+            <div class="featured-carousel-track">
+              <!-- 1. Stilt Barstool -->
+              <div class="product-card" data-handle="barstool">
+
+                <div class="product-card-img-wrap"></div>
+                <div class="product-card-body">
+                  <div class="product-card-header-row">
+                    <h3 class="product-name">Stilt Barstool</h3>
+                    <span class="product-price">From ₹18,000</span>
+                  </div>
+                  <div class="product-card-footer-row">
+                    <span class="product-materials">Teak / Leather - Cognac</span>
+                    <div class="product-buy-row">
+                      <a href="product.html?handle=barstool&amp;inquire=true" class="product-inquire-btn">Inquire</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- The rest of the featured cards are rendered dynamically by
+                   shopify-integration.js (loadFeaturedProducts/renderFeaturedCarousel)
+                   from products with the Shopify metafield custom.featured = true,
+                   showing the variant picked in custom.featured_variant. -->
+            </div>
+          </div>
+          <button class="featured-carousel-nav-btn next-btn" aria-label="Next Product">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Mobile See All Products Link -->
+        <div class="mobile-see-all-wrap">
+          <a href="products.html" class="view-collection-link see-all-btn">See All Products</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════ COLLECTIONS CARDS ════════ -->
+  <section class="collections-section section-pad" id="collections">
+    <div class="container">
+      <div class="collections-header">
+        <span class="label">Themes</span>
+        <h2 class="title-h2" style="color: var(--ink);">Our Collections</h2>
+        <p class="collections-subtext">Collections is where you get to experience the studio's diversity. We explore
+          themes from across the country and from different eras to create furniture that fit into your home.</p>
+      </div>
+
+      <div class="collections-grid">
+        <!-- Card 1: Of Stillness -->
+        <a href="stillness.html" class="collection-card">
+          <div class="coll-card-img-wrap">
+            <img src="Resources/Collection/of_stillness.webp" alt="Of Stillness Collection" width="800" height="1200"
+              loading="lazy" decoding="async">
+          </div>
+          <div class="coll-card-content">
+            <span class="coll-card-eyebrow">Collection 01</span>
+            <h3 class="coll-card-title">Of Stillness</h3>
+            <p class="coll-card-desc">
+              Mid-Century Modern forms rooted in simplicity and material honesty
+            </p>
+          </div>
+        </a>
+
+        <!-- Card 2: Of Memories -->
+        <a href="#memories" class="collection-card">
+          <div class="coll-card-img-wrap">
+            <img src="Resources/Collection/of_memories.webp" alt="Of Memories Collection" width="800" height="1104"
+              loading="lazy" decoding="async">
+          </div>
+          <div class="coll-card-content">
+            <span class="coll-card-eyebrow">Collection 02</span>
+            <h3 class="coll-card-title">Of Memories</h3>
+            <p class="coll-card-desc">
+              The warmth of familiar spaces through timeless material and detail.
+            </p>
+            <div class="tag-wrap">
+              <span class="coll-card-tag">Arriving Soon!</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 3: Of Exploration -->
+        <a href="explorations.html" class="collection-card">
+          <div class="coll-card-img-wrap">
+            <img src="Resources/Collection/of_exploration.webp" alt="Of Exploration Collection" width="2048"
+              height="1365" loading="lazy" decoding="async">
+          </div>
+          <div class="coll-card-content">
+            <span class="coll-card-eyebrow">Collection 03</span>
+            <h3 class="coll-card-title">Of Exploration</h3>
+            <p class="coll-card-desc">
+              More diverse works from the studio that exist beyond a specific theme
+            </p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ MATERIALS STORYTELLING & MOODBOARD ════════ -->
+  <section class="materials-section section-pad">
+    <div class="container">
+      <div class="materials-story-grid">
+        <div class="materials-story-content reveal-el">
+          <span class="label">Materiality</span>
+          <h2 class="title-h2">The Soul of the Object</h2>
+          <div class="story-divider"></div>
+          <p class="story-intro">We believe a piece of furniture is only as honest as the materials from which it is
+            born. At Noku Studio, we do not mask the organic. We celebrate it.</p>
+          <p class="body-p">Our <strong>reclaimed teak</strong> is rescued from decades-old structures in Southern
+            India—seasoned naturally by sun and monsoon, carrying a warm history and unparalleled stability.</p>
+          <p class="body-p">Each strand of <strong>natural rattan cane</strong> is meticulously hand-woven by local
+            master artisans, marrying breathing mid-century forms with India's living heritage.</p>
+          <p class="body-p">Our <strong>certified hides</strong> are left aniline-finished, preserving the natural
+            grain, scars, and creases, designed to acquire a unique, rich patina with every touch.</p>
+          <div class="story-cta-wrap">
+            <a href="materials.html" class="materials-cta-btn">Explore Our Materials <span class="arrow">→</span></a>
+          </div>
+        </div>
+
+        <div class="materials-moodboard reveal-el delay-1">
+          <div class="moodboard-item item-large">
+            <img src="Resources/material%20images/Wood/Reclaimed%20teak.jpg" alt="Reclaimed Teak" loading="lazy" decoding="async">
+            <span class="moodboard-caption">Reclaimed Teak</span>
+          </div>
+          <div class="moodboard-item item-square-1">
+            <img src="https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Woven_cane.png?v=1782297952" alt="Woven Cane" loading="lazy" decoding="async">
+            <span class="moodboard-caption">Woven Cane</span>
+          </div>
+          <div class="moodboard-item item-square-2">
+            <img src="Resources/material%20images/Wood/Bhilwara.png" alt="Matti Wood" loading="lazy" decoding="async">
+            <span class="moodboard-caption">Matti Wood</span>
+          </div>
+          <div class="moodboard-item item-medium">
+            <img src="Resources/material%20images/Leather/Montana%20Chestnut.jpg" alt="Montana Chestnut Leather"
+              loading="lazy" decoding="async">
+            <span class="moodboard-caption">Montana Chestnut Leather</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ CINEMATIC WORKSHOP VIDEO SECTION ════════ -->
+  <section class="video-section">
+    <!-- Local high-quality workshop video looping silently -->
+    <video class="video-background" id="workshop-video" autoplay muted loop playsinline preload="none">
+      <source data-src="Resources/Video Project 2.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="video-overlay"></div>
+
+    <div class="video-content reveal-el">
+      <span class="label" style="color: var(--chamoisee);">The Workshop</span>
+      <h2 class="title-h2" style="font-weight: 300;">A document of patience, wood joints, and handcraft</h2>
+      <p class="body-p" style="color: var(--bone); opacity: 0.8; font-size: 1rem;">
+        Inside our Bengaluru atelier, we work with solid hardwoods—teak, reclaimed teak and white ash—shaping, sanding, and
+        assembling each furniture piece with absolute precision.
+      </p>
+      <button class="video-control-btn" id="video-toggle" aria-label="Pause Video">
+        <svg id="pause-icon" width="20" height="20" viewBox="0 0 24 24">
+          <rect x="4" y="4" width="4" height="16" fill="var(--paper)"></rect>
+          <rect x="16" y="4" width="4" height="16" fill="var(--paper)"></rect>
+        </svg>
+        <svg id="play-icon" width="20" height="20" viewBox="0 0 24 24" style="display: none;">
+          <path d="M8 5v14l11-7z" fill="var(--paper)"></path>
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ════════ COLLECTIONS CARDS ════════ -->
+
+
+
+
+
+  <!-- ════════ FOOTER ════════ -->
+  <footer id="footer">
+    <div class="container">
+      <div class="footer-cta-line">
+        <p class="footer-cta-eyebrow">Ready to</p>
+        <a href="contact.html" class="btn-cta-arrow">Craft your furniture?<span class="arrow"><svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span></a>
+      </div>
+      <div class="footer-grid">
+        <div>
+          <p class="footer-wordmark">NOKU</p>
+        </div>
+        <div>
+          <p class="footer-col__heading">About</p>
+          <ul class="footer-col__links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col__heading">Work</p>
+          <ul class="footer-col__links">
+            <li><a href="products.html">Furniture Shop</a></li>
+            <li><a href="projects.html">Our Projects</a></li>
+            <li><a href="products.html">Collections</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col__heading">Knowledge</p>
+          <ul class="footer-col__links">
+            <li><a href="materials.html">Materials Guide</a></li>
+            <li><a href="sustainability.html">Sustainability</a></li>
+            <li><a href="mailto:hello@nokustudio.in">hello@nokustudio.in</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Noku Studio. All rights reserved.</span>
+        <span class="footer-legal__links"><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="returns.html">Returns &amp; Refunds</a> · <a href="shipping.html">Shipping</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ════════ SHOPPING CART SIDE-DRAWER ════════ -->
+  <div id="cart-overlay" class="cart-overlay"></div>
+  <div id="cart-drawer" class="cart-drawer">
+    <div class="cart-header">
+      <h3 class="cart-title">Your Cart</h3>
+      <button id="cart-close" class="cart-close-btn" aria-label="Close Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="cart-items-container" id="cart-items-container">
+      <!-- Cart items will be dynamically injected here -->
+      <div class="cart-empty-message">Your cart is currently empty.</div>
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-subtotal-row">
+        <span class="subtotal-label">Subtotal</span>
+        <span class="subtotal-price" id="cart-subtotal">₹0.00</span>
+      </div>
+      <button id="checkout-btn" class="checkout-btn" disabled>Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <!-- ════════ THREE.JS WEBGL LIBRARIES ════════ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+
+  <script>
+  // ════════ DRAFT HERO: featured products ════════
+  (function () {
+    // ponytail: hardcoded from the live Storefront API (custom.featured = true, purchasemode checked 2026-11-03) — read from Shopify before this replaces index.
+    // box = where the furniture sits inside its cutout frame, as fractions [top, right, bottom, left]; measured from the pixels. Re-measure if a cutout is re-shot.
+    const LIST = [
+      { handle: 'lounge-chair', buyable: true, name: 'Bask Chair', coll: 'Of Stillness', from: 41000, tint: '#e3dcd3', box: [.253, .940, .825, .110], cut: 'Lounge_chair_-_teak_frame_-_cognac.png' },
+      { handle: 'sofa-2', buyable: false, name: 'Grooved Sofa', coll: 'Of Stillness', from: 65000, tint: '#e2dfd7', box: [.382, .904, .703, .133], cut: 'grsofa-t-linen.png' },
+      { handle: 'round-dining-chair', buyable: true, name: 'Lunar Chair', coll: 'Of Stillness', from: 14000, tint: '#ddddd4', box: [.132, .818, .835, .168], cut: 'rdc-t-olive.png' },
+      { handle: 'barstool', buyable: true, name: 'Stilt Barstool', coll: 'Of Stillness', from: 18000, tint: '#e1d9d2', box: [.181, .796, .779, .270], cut: 'barst-t-cognac.png' },
+    ];
+    const CDN = 'https://cdn.shopify.com/s/files/1/0565/9954/3866/files/';
+    const src = (f, w) => `${CDN}${f}?width=${w}`;
+    const pad = n => String(n).padStart(2, '0');
+    const inr = n => '₹' + n.toLocaleString('en-IN');
+    const url = p => `product.html?handle=${p.handle}`;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+    const hero = $('.fh'), words = $('.fh-words'), piece = $('.fh-piece'), now = $('.fh-now'), thumbs = $('.fh-thumbs'), apBtn = $('.fh-ap');
+    LIST.forEach((p, i) => {
+      // Buy-vs-Inquire mirrors the Shopify custom.purchasemode metafield, as on the live site
+      const second = p.buyable
+        ? `<a class="fh-pill solid" href="${url(p)}">Buy now</a>`   // ponytail: lands on the product page to pick a variant; one-tap checkout needs a default variant id
+        : `<a class="fh-pill solid" href="${url(p)}&inquire=true">Inquire</a>`;
+      words.insertAdjacentHTML('beforeend', `<div class="fh-word">${[...p.name].map((ch, k) => `<span style="--i:${k}">${ch === ' ' ? '&nbsp;' : ch}</span>`).join('')}</div>`);
+      piece.insertAdjacentHTML('beforeend', `<img class="fh-blend" src="${src(p.cut, 1200)}" alt="${p.name}" decoding="async">`);
+      now.insertAdjacentHTML('beforeend', `<div>
+        <span class="fh-m"><span class="fh-sub" style="--i:0"><span class="fh-sr">${p.name}, </span>${pad(i + 1)} — ${p.coll} · <b>From ${inr(p.from)}</b></span></span>
+        <span class="fh-m"><span class="fh-acts" style="--i:1"><a class="fh-pill" href="${url(p)}">View</a>${second}</span></span></div>`);
+      apBtn.insertAdjacentHTML('beforebegin', `<button class="fh-tbtn" type="button" aria-label="Show ${p.name}"><span class="fh-tb" style="--tint:${p.tint}"><img class="fh-blend" src="${src(p.cut, 160)}" alt=""></span><span class="fh-bar"><i></i></span></button>`);
+    });
+    const W = $$('.fh-word', words), I = $$('img', piece), N = $$(':scope > div', now), B = $$('.fh-tbtn', thumbs), bars = $$('.fh-bar i', thumbs);
+    let cur = -1;
+    function show(i) {
+      if (i === cur) return;
+      [W, I, N].forEach(set => set.forEach((el, j) => { el.classList.toggle('on', j === i); el.classList.toggle('was', j === cur); }));
+      N.forEach((el, j) => el.inert = j !== i);          // hidden slides' buttons stay out of the tab order
+      B.forEach((b, j) => b.setAttribute('aria-current', j === i));
+      bars.forEach(b => b.style.transform = 'scaleX(0)');
+      hero.style.setProperty('--tint', LIST[i].tint);
+      cur = i;
+    }
+    show(0);
+
+    // Autoplay with a visible timer. Pauses on hover/focus, when the tab is hidden,
+    // when the hero scrolls out of view, and via the pause button (WCAG 2.2.2).
+    let t = 0, last = 0, hovered = false, focused = false, visible = true, user = !reduce;
+    const DUR = 5500, running = () => user && !hovered && !focused && visible && !document.hidden;
+    const frame = ts => {
+      if (running()) { t += Math.min(250, ts - (last || ts)); if (t >= DUR) { t = 0; show((cur + 1) % LIST.length); } bars[cur].style.transform = `scaleX(${t / DUR})`; }
+      last = ts; requestAnimationFrame(frame);
+    };
+    [thumbs, now].forEach(el => {
+      el.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') hovered = true; });
+      el.addEventListener('pointerleave', () => hovered = false);
+    });
+    hero.addEventListener('focusin', e => focused = e.target.matches(':focus-visible'));
+    hero.addEventListener('focusout', () => focused = false);
+    new IntersectionObserver(([e]) => visible = e.isIntersecting, { threshold: .4 }).observe(hero);
+    const paint = () => {
+      apBtn.setAttribute('aria-label', user ? 'Pause slideshow' : 'Play slideshow');
+      apBtn.innerHTML = user ? '<svg viewBox="0 0 10 10"><rect x="1.5" y=".5" width="2.4" height="9" rx="1.2"/><rect x="6.1" y=".5" width="2.4" height="9" rx="1.2"/></svg>'
+                             : '<svg viewBox="0 0 10 10"><path d="M2.6 1.2a.9.9 0 0 1 1.35-.78l5.2 3.8a.9.9 0 0 1 0 1.56l-5.2 3.8A.9.9 0 0 1 2.6 8.8z"/></svg>';
+    };
+    apBtn.addEventListener('click', () => { user = !user; paint(); });
+    paint(); requestAnimationFrame(frame);
+    B.forEach((b, i) => b.addEventListener('click', () => { show(i); t = 0; bars[i].style.transform = 'scaleX(0)'; }));
+
+    // Every cutout has a different margin of backdrop, so fit each by its furniture box, not its frame:
+    // centred both ways in the space between nav and name, chairs sized by height, wide pieces capped by width.
+    const fitPieces = () => {
+      const Wd = piece.clientWidth, H = piece.clientHeight, maxW = Math.min(Wd * .9, H * 1.3);
+      I.forEach((img, i) => {
+        const [tp, r, b, l] = LIST[i].box, ar = img.naturalWidth / img.naturalHeight || 2 / 3;
+        const h = .72 * Math.min(H / (b - tp), maxW / ((r - l) * ar));    // rendered frame height, 28% under the full fit
+        Object.assign(img.style, { height: `${h}px`, left: `${Wd / 2 - (l + r) / 2 * ar * h}px`, top: `${(H - (b - tp) * h) / 2 - tp * h}px` });
+      });
+    };
+    new ResizeObserver(fitPieces).observe(piece);
+    I.forEach(img => img.decode().catch(() => {}).then(fitPieces));
+
+    // cursor parallax: the piece drifts with the cursor
+    if (matchMedia('(pointer: fine)').matches && !reduce) {
+      let tx = 0, ty = 0, x = 0, y = 0, raf = 0;
+      const tick = () => {
+        x += (tx - x) * .08; y += (ty - y) * .08;
+        hero.style.setProperty('--mx', x.toFixed(4)); hero.style.setProperty('--my', y.toFixed(4));
+        raf = Math.abs(tx - x) + Math.abs(ty - y) > .001 ? requestAnimationFrame(tick) : 0;
+      };
+      hero.addEventListener('pointermove', e => {
+        tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1;
+        if (!raf) raf = requestAnimationFrame(tick);
+      });
+    }
+
+    // reveal once fonts + the first piece are in (hard cap so it never hangs)
+    Promise.race([
+      Promise.all([document.fonts.ready, I[0].decode().catch(() => {})]),
+      new Promise(r => setTimeout(r, 1400)),
+    ]).then(() => hero.classList.add('fh-ready'));
+  })();
+  </script>
+  <script src="site.js"></script>
+  <script src="script.js"></script>
+  <script src="shopify-integration.js"></script>
+
+  <script defer src="/_vercel/insights/script.js"></script>
+</body>
+
+</html>
