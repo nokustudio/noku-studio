@@ -119,29 +119,22 @@
     }
 
     /* ════════ DRAFT: "Our Pieces" — the rest of the catalogue, in the homepage's featured-card design ════════ */
-    .op { background: var(--light); color: var(--ink); padding: clamp(80px, 12svh, 140px) clamp(16px, 4vw, 64px) clamp(72px, 10svh, 120px); }
-    .op-inner { max-width: 1240px; margin: 0 auto; }
-    .op-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: clamp(32px, 5svh, 56px); }
-    .op-eyebrow { display: block; font: 400 11px/1 var(--font-display); letter-spacing: .26em; text-transform: uppercase; color: var(--chamoisee); margin-bottom: 18px; }
-    .op-title { font: 300 clamp(44px, 6vw, 96px)/1 var(--font-display); letter-spacing: -.045em; color: var(--ink); margin: 0; }
-    .op-lede { font: 400 clamp(15px, 1.1vw, 17px)/1.5 var(--font-body); color: var(--muted); max-width: 30ch; margin: 0; text-align: right; }
+    .op { background: var(--light); color: var(--ink); position: relative; z-index: 13; border-bottom: 1px solid var(--line); }
+    .op-head { margin-bottom: clamp(24px, 4vw, 48px); }
+    .op-head .title-h2 { margin-bottom: 0; }
     .op-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; padding: 20px 0; }
     .op-grid .product-card { flex: none; width: auto; color: inherit; text-decoration: none; }   /* grid cells, not the carousel's fixed quarter-widths */
     .op-foot { display: flex; justify-content: center; margin-top: clamp(32px, 5svh, 56px); }
     .op .fh-pill { color: var(--ink); text-decoration: none; }
     .op .fh-pill.solid { color: var(--light); }
-    .op .fh-pill span { transition: transform .5s var(--ease-out); margin-left: 12px; }
     .op .fh-pill:hover span { transform: translateX(4px); }
-    .op.fh-ready .fh-rv > * { transform: none; transition: transform 1.1s var(--ease-out) calc(var(--d, 0) * 1ms); }
     .op-grid .product-card { opacity: 0; translate: 0 24px; transition: opacity .9s var(--ease-out), translate .9s var(--ease-out), transform var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out); transition-delay: calc(var(--i, 0) * 70ms), calc(var(--i, 0) * 70ms), 0s, 0s, 0s; }
     .op-grid .product-card.in { opacity: 1; translate: none; }
     @media (max-width: 1099px) { .op-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .op-grid .product-card:nth-child(n + 4) { display: none; } }
     @media (max-width: 767px) {
-      .op-head { flex-direction: column; align-items: start; }
-      .op-lede { text-align: left; }
       /* still one row on phones: the four pieces swipe sideways */
       .op-grid { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-        margin: 0 calc(-1 * clamp(16px, 4vw, 64px)); padding: 20px clamp(16px, 4vw, 64px); scroll-padding-inline: clamp(16px, 4vw, 64px); }
+        margin: 0 calc(-1 * clamp(20px, 5vw, 40px)); padding: 20px clamp(20px, 5vw, 40px); scroll-padding-inline: clamp(20px, 5vw, 40px); }
       .op-grid::-webkit-scrollbar { display: none; }
       .op-grid .product-card { flex: 0 0 68%; scroll-snap-align: start; }
       .op-grid .product-card:nth-child(n + 4) { display: flex; }
@@ -149,6 +142,64 @@
       .op-grid .product-card .product-card-img-wrap { margin-bottom: 12px; }
     }
     @media (prefers-reduced-motion: reduce) { .op-grid .product-card { opacity: 1; translate: none; transition: none; } }
+    .op.section-pad { padding: clamp(80px, 10vw, 120px) 0 clamp(48px, 6vw, 80px); }   /* top as the old products section, bottom as its neighbours */
+
+    /* ════════ DRAFT: Materiality — two layouts under review, switched by the floating toggle ════════ */
+    .mat { background: var(--light); position: relative; z-index: 13; border-top: 1px solid var(--line); }
+    .mat.section-pad { padding: clamp(64px, 9vw, 120px) 0; }
+    .mat [hidden] { display: none !important; }   /* .mat-ed's display: grid would otherwise beat [hidden] */
+    .mat .title-h2 { margin-bottom: 0; }
+    .mat-intro { font: 300 clamp(1.125rem, 1.6vw, 1.375rem)/1.55 var(--font-display); color: var(--ink); margin: 0; max-width: 36ch; }
+    .mat-num { font: 300 .6875rem/1 var(--font-body); letter-spacing: 3px; color: var(--chamoisee); }
+    .mat-nm { font: 400 clamp(1.125rem, 1.4vw, 1.3125rem)/1.25 var(--font-display); letter-spacing: -.01em; color: var(--ink); margin: 0; }
+    .mat-txt { font: 400 .9375rem/1.7 var(--font-body); color: var(--muted); margin: 0; max-width: 40ch; }
+    .mat-media { overflow: hidden; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); }
+    .mat-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .mat-foot { display: flex; justify-content: center; margin-top: clamp(40px, 6vw, 64px); }
+    .mat .fh-pill { color: var(--ink); text-decoration: none; }
+    .mat .fh-pill span, .op .fh-pill span { transition: transform .5s var(--ease-out); margin-left: 12px; }
+    .mat .fh-pill:hover span { transform: translateX(4px); }
+
+    /* Editorial: the statement stays pinned while the materials scroll past */
+    .mat-ed { display: grid; grid-template-columns: 4fr 7fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+    .mat-pin { position: sticky; top: 120px; display: grid; gap: 28px; justify-items: start; }
+    .mat-list { display: grid; gap: clamp(48px, 7vw, 96px); }
+    .mat-ed .mat-media { aspect-ratio: 16 / 10; margin-bottom: 20px; }
+    .mat-row { display: grid; grid-template-columns: 1fr 1.4fr; gap: 24px; align-items: start; }
+    .mat-ed .mat-nm { font-size: clamp(1.5rem, 2.4vw, 2rem); font-weight: 300; display: grid; gap: 10px; }
+
+    /* Panels: four full-height panels; the one you point at opens up */
+    .mat-pn-head { text-align: center; display: grid; justify-items: center; gap: 20px; margin-bottom: clamp(40px, 6vw, 64px); }
+    .mat-pn-head .mat-intro { max-width: 44ch; }
+    .mat-panels { display: flex; gap: 12px; height: clamp(420px, 62vh, 620px); }
+    .mat-panel { position: relative; flex: 1; min-width: 0; overflow: hidden; border-radius: 8px; transition: flex-grow .8s var(--ease-out); }
+    .mat-panel img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .mat-panel::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(36,31,27,.82) 0%, rgba(36,31,27,.2) 45%, rgba(36,31,27,0) 70%); }
+    .mat-cap { position: absolute; z-index: 1; left: 28px; right: 28px; bottom: 26px; display: grid; gap: 12px; }
+    .mat-panel .mat-nm { color: var(--light); font-size: clamp(1.25rem, 1.8vw, 1.625rem); font-weight: 300; }
+    .mat-panel .mat-num { color: var(--bone); }
+    .mat-panel .mat-txt { color: rgba(244,245,241,.82); max-height: 0; opacity: 0; overflow: hidden; transition: max-height .7s var(--ease-out), opacity .5s .1s; }
+    .mat-panels:hover .mat-panel:hover, .mat-panels:not(:hover) .mat-panel.on { flex-grow: 2.2; }
+    .mat-panels:hover .mat-panel:hover .mat-txt, .mat-panels:not(:hover) .mat-panel.on .mat-txt, .mat-panel:focus-within .mat-txt { max-height: 140px; opacity: 1; }
+    .mat-panel:focus-visible { outline: 1px solid var(--chamoisee); outline-offset: 3px; }
+
+    /* layout toggle: shown only while the section is on screen, tucked away while scrolling */
+    .mat-tog { position: fixed; z-index: 1100; left: 50%; bottom: 20px; display: flex; gap: 2px; padding: 4px; border-radius: 9999px;
+      background: rgba(36,31,27,.88); color: var(--bone); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      opacity: 0; visibility: hidden; transform: translate(-50%, 16px); transition: opacity .35s var(--ease-out), transform .45s var(--ease-out), visibility 0s .45s; }
+    .mat-tog.on, .mat-tog:focus-within { opacity: 1; visibility: visible; transform: translate(-50%, 0); transition-delay: 0s; }
+    .mat-tog button { padding: 10px 16px 9px; border-radius: 9999px; background: none; border: 0; cursor: pointer; color: inherit;
+      font: 400 11px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; transition: background-color .3s, color .3s; }
+    .mat-tog button[aria-pressed="true"] { background: var(--bone); color: var(--dark-bg); }
+
+    @media (max-width: 899px) {
+      .mat-ed { grid-template-columns: 1fr; }
+      .mat-pin { position: static; }
+      .mat-row { grid-template-columns: 1fr; gap: 12px; }
+      .mat-panels { flex-direction: column; height: auto; }
+      .mat-panel { flex: none; height: 300px; }
+      .mat-panel .mat-txt { max-height: none; opacity: 1; }
+    }
   </style>
   <!-- Vercel Speed Insights -->
   <script>
@@ -246,14 +297,11 @@
   </section>
 
   <!-- ════════ DRAFT: OUR PIECES ════════ -->
-  <section class="op" id="our-pieces" aria-labelledby="op-title">
-    <div class="op-inner">
-      <div class="op-head">
-        <div>
-          <span class="op-eyebrow">The collection</span>
-          <h2 class="op-title" id="op-title"><span class="fh-rv"><span>Our Pieces</span></span></h2>
-        </div>
-        <p class="op-lede">Handmade details, made to order at our workshop in Bengaluru, India.</p>
+  <section class="op section-pad" id="our-pieces" aria-labelledby="op-title">
+    <div class="container">
+      <div class="op-head reveal-el">
+        <span class="label">Portfolio</span>
+        <h2 class="title-h2" id="op-title">Our Pieces</h2>
       </div>
       <div class="op-grid" aria-live="polite"></div>
       <div class="op-foot"><a class="fh-pill solid" href="products.html">All products<span aria-hidden="true">→</span></a></div>
@@ -322,49 +370,81 @@
     </div>
   </section>
 
-  <!-- ════════ MATERIALS STORYTELLING & MOODBOARD ════════ -->
-  <section class="materials-section section-pad">
-    <div class="container">
-      <div class="materials-story-grid">
-        <div class="materials-story-content reveal-el">
-          <span class="label">Materiality</span>
-          <h2 class="title-h2">The Soul of the Object</h2>
-          <div class="story-divider"></div>
-          <p class="story-intro">We believe a piece of furniture is only as honest as the materials from which it is
-            born. At Noku Studio, we do not mask the organic. We celebrate it.</p>
-          <p class="body-p">Our <strong>reclaimed teak</strong> is rescued from decades-old structures in Southern
-            India—seasoned naturally by sun and monsoon, carrying a warm history and unparalleled stability.</p>
-          <p class="body-p">Each strand of <strong>natural rattan cane</strong> is meticulously hand-woven by local
-            master artisans, marrying breathing mid-century forms with India's living heritage.</p>
-          <p class="body-p">Our <strong>certified hides</strong> are left aniline-finished, preserving the natural
-            grain, scars, and creases, designed to acquire a unique, rich patina with every touch.</p>
-          <div class="story-cta-wrap">
-            <a href="materials.html" class="materials-cta-btn">Explore Our Materials <span class="arrow">→</span></a>
-          </div>
-        </div>
-
-        <div class="materials-moodboard reveal-el delay-1">
-          <div class="moodboard-item item-large">
-            <img src="Resources/material%20images/Wood/Reclaimed%20teak.jpg" alt="Reclaimed Teak" loading="lazy" decoding="async">
-            <span class="moodboard-caption">Reclaimed Teak</span>
-          </div>
-          <div class="moodboard-item item-square-1">
-            <img src="https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Woven_cane.png?v=1782297952" alt="Woven Cane" loading="lazy" decoding="async">
-            <span class="moodboard-caption">Woven Cane</span>
-          </div>
-          <div class="moodboard-item item-square-2">
-            <img src="Resources/material%20images/Wood/Bhilwara.png" alt="Matti Wood" loading="lazy" decoding="async">
-            <span class="moodboard-caption">Matti Wood</span>
-          </div>
-          <div class="moodboard-item item-medium">
-            <img src="Resources/material%20images/Leather/Montana%20Chestnut.jpg" alt="Montana Chestnut Leather"
-              loading="lazy" decoding="async">
-            <span class="moodboard-caption">Montana Chestnut Leather</span>
-          </div>
-        </div>
+  <!-- ════════ MATERIALITY (draft: two layouts under review; copy unchanged from index.html) ════════ -->
+  <section class="mat section-pad" id="materiality" aria-labelledby="mat-title-ed">
+    <div class="container mat-ed" data-layout="editorial">
+      <div class="mat-pin reveal-el">
+        <div><span class="label">Materiality</span><h2 class="title-h2" id="mat-title-ed">The Soul of the Object</h2></div>
+        <p class="mat-intro">We believe a piece of furniture is only as honest as the materials from which it is
+          born. At Noku Studio, we do not mask the organic. We celebrate it.</p>
+        <a class="fh-pill" href="materials.html">Explore our materials<span aria-hidden="true">→</span></a>
+      </div>
+      <div class="mat-list">
+          <article class="reveal-el">
+            <div class="mat-media"><img src="Resources/material%20images/Wood/Reclaimed%20teak.jpg" alt="Reclaimed teak grain" loading="lazy" decoding="async"></div>
+            <div class="mat-row"><h3 class="mat-nm"><span class="mat-num">01</span>Reclaimed Teak</h3><p class="mat-txt">Rescued from decades-old structures in Southern India—seasoned naturally by sun and monsoon, carrying a warm history and unparalleled stability.</p></div>
+          </article>
+          <article class="reveal-el">
+            <div class="mat-media"><img src="https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Woven_cane.png?v=1782297952&amp;width=1200" alt="Hand-woven natural cane" loading="lazy" decoding="async"></div>
+            <div class="mat-row"><h3 class="mat-nm"><span class="mat-num">02</span>Natural Rattan Cane</h3><p class="mat-txt">Each strand is meticulously hand-woven by local master artisans, marrying breathing mid-century forms with India's living heritage.</p></div>
+          </article>
+          <article class="reveal-el">
+            <div class="mat-media"><img src="Resources/material%20images/Leather/Montana%20Chestnut.jpg" alt="Montana Chestnut leather" loading="lazy" decoding="async"></div>
+            <div class="mat-row"><h3 class="mat-nm"><span class="mat-num">03</span>Certified Hides</h3><p class="mat-txt">Left aniline-finished, preserving the natural grain, scars, and creases, designed to acquire a unique, rich patina with every touch.</p></div>
+          </article>
+          <article class="reveal-el">
+            <div class="mat-media"><img src="Resources/material%20images/Fabric/Vienna%20Army.jpg" alt="Textured woven upholstery fabric" loading="lazy" decoding="async"></div>
+            <div class="mat-row"><h3 class="mat-nm"><span class="mat-num">04</span>Woven &amp; Printed Fabrics</h3><p class="mat-txt">Hard-wearing, easy-care upholstery weaves, cottons hand-woven on Kerala looms, and cloth hand-block-printed by artisans—no two prints quite alike.</p></div>
+          </article>
       </div>
     </div>
+
+    <div class="container" data-layout="panels" hidden>
+      <div class="mat-pn-head reveal-el">
+        <span class="label">Materiality</span><h2 class="title-h2" id="mat-title-pn">The Soul of the Object</h2>
+        <p class="mat-intro">We believe a piece of furniture is only as honest as the materials from which it is
+          born. At Noku Studio, we do not mask the organic. We celebrate it.</p>
+      </div>
+      <div class="mat-panels reveal-el">
+        <article class="mat-panel on" tabindex="0"><img src="Resources/material%20images/Wood/Reclaimed%20teak.jpg" alt="Reclaimed teak grain" loading="lazy" decoding="async">
+          <div class="mat-cap"><span class="mat-num">01</span><h3 class="mat-nm">Reclaimed Teak</h3><p class="mat-txt">Rescued from decades-old structures in Southern India—seasoned naturally by sun and monsoon, carrying a warm history and unparalleled stability.</p></div>
+        </article>
+        <article class="mat-panel" tabindex="0"><img src="https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Woven_cane.png?v=1782297952&amp;width=1200" alt="Hand-woven natural cane" loading="lazy" decoding="async">
+          <div class="mat-cap"><span class="mat-num">02</span><h3 class="mat-nm">Natural Rattan Cane</h3><p class="mat-txt">Each strand is meticulously hand-woven by local master artisans, marrying breathing mid-century forms with India's living heritage.</p></div>
+        </article>
+        <article class="mat-panel" tabindex="0"><img src="Resources/material%20images/Leather/Montana%20Chestnut.jpg" alt="Montana Chestnut leather" loading="lazy" decoding="async">
+          <div class="mat-cap"><span class="mat-num">03</span><h3 class="mat-nm">Certified Hides</h3><p class="mat-txt">Left aniline-finished, preserving the natural grain, scars, and creases, designed to acquire a unique, rich patina with every touch.</p></div>
+        </article>
+        <article class="mat-panel" tabindex="0"><img src="Resources/material%20images/Fabric/Vienna%20Army.jpg" alt="Textured woven upholstery fabric" loading="lazy" decoding="async">
+          <div class="mat-cap"><span class="mat-num">04</span><h3 class="mat-nm">Woven &amp; Printed Fabrics</h3><p class="mat-txt">Hard-wearing, easy-care upholstery weaves, cottons hand-woven on Kerala looms, and cloth hand-block-printed by artisans—no two prints quite alike.</p></div>
+        </article>
+      </div>
+      <div class="mat-foot"><a class="fh-pill" href="materials.html">Explore our materials<span aria-hidden="true">→</span></a></div>
+    </div>
+
   </section>
+  <!-- ponytail: review-only switch, outside .mat so the next section's stacking can't cover it; delete it and the unchosen layout once one is picked -->
+  <div class="mat-tog" role="group" aria-label="Materiality layout">
+    <button type="button" data-l="editorial" aria-pressed="true">Editorial</button>
+    <button type="button" data-l="panels" aria-pressed="false">Panels</button>
+  </div>
+  <script>
+  (function () {
+    const sec = document.getElementById('materiality'), tog = document.querySelector('.mat-tog');
+    const blocks = sec.querySelectorAll('[data-layout]'), btns = tog.querySelectorAll('button');
+    tog.addEventListener('click', e => {
+      const l = e.target.closest('button')?.dataset.l; if (!l) return;
+      blocks.forEach(b => b.hidden = b.dataset.layout !== l);
+      btns.forEach(b => b.setAttribute('aria-pressed', b.dataset.l === l));
+      sec.setAttribute('aria-labelledby', 'mat-title-' + (l === 'panels' ? 'pn' : 'ed'));
+    });
+    // visible while the section holds the middle of the screen, hidden while the page is moving
+    let inView = false, still = true, t = 0;
+    const paint = () => tog.classList.toggle('on', inView && still);
+    new IntersectionObserver(([e]) => { inView = e.isIntersecting; paint(); }, { rootMargin: '-30% 0px -30% 0px' }).observe(sec);
+    addEventListener('scroll', () => { still = false; paint(); clearTimeout(t); t = setTimeout(() => { still = true; paint(); }, 600); }, { passive: true });
+  })();
+  </script>
 
   <!-- ════════ CINEMATIC WORKSHOP VIDEO SECTION ════════ -->
   <section class="video-section">
@@ -393,12 +473,6 @@
       </button>
     </div>
   </section>
-
-  <!-- ════════ COLLECTIONS CARDS ════════ -->
-
-
-
-
 
   <!-- ════════ FOOTER ════════ -->
   <footer id="footer">
@@ -587,7 +661,11 @@
     const section = document.getElementById('our-pieces'), grid = section.querySelector('.op-grid');
     const inr = n => '₹' + Math.round(n).toLocaleString('en-IN');
     const query = `{ products(first: 50) { edges { node { handle title productType featuredImage { url }
-      priceRange { minVariantPrice { amount } } collections(first: 1) { edges { node { title } } } } } } }`;
+      priceRange { minVariantPrice { amount } }
+      featuredVariant: metafield(namespace: "custom", key: "featured_variant") { reference { ... on ProductVariant { title image { url } } } }
+      variants(first: 50) { edges { node { title image { url } } } } } } } }`;
+    // the card the products page draws: products.js renderProductsGrid() picks the variant the same way
+    const cardVariant = p => p.featuredVariant?.reference || (p.variants.edges.find(e => e.node.image?.url) || p.variants.edges[0])?.node;
 
     fetchFromShopify(query).then(data => {
       const all = (data?.data?.products?.edges || []).map(e => e.node);
@@ -602,17 +680,16 @@
       if (!items.length) { grid.hidden = true; return; }       // offline: the See all button still leads on
       grid.innerHTML = items.map((p, i) => `
         <a class="product-card" href="product.html?handle=${encodeURIComponent(p.handle)}" style="--i:${i % 4}">
-          <div class="product-card-img-wrap"><img src="${safeUrl(sizeShopifyImage(p.featuredImage.url, 800, 1000))}" alt="${escHtml(p.title)}" loading="lazy" decoding="async" width="800" height="1000"></div>
+          <div class="product-card-img-wrap"><img src="${safeUrl(sizeShopifyImage(cardVariant(p)?.image?.url || p.featuredImage.url, 800, 1000))}" alt="${escHtml(p.title)}" loading="lazy" decoding="async" width="800" height="1000"></div>
           <div class="product-card-body">
             <div class="product-card-header-row"><h3 class="product-name">${escHtml(p.title)}</h3><span class="product-price">From ${inr(p.priceRange.minVariantPrice.amount)}</span></div>
-            <div class="product-card-footer-row"><span class="product-materials">${escHtml(p.collections.edges[0]?.node.title || 'Noku Studio')}</span></div>
+            <div class="product-card-footer-row"><span class="product-materials">${escHtml(cardVariant(p)?.title || '')}</span></div>
           </div>
         </a>`).join('');
       // cards rise in as each row scrolls into view
       const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
       grid.querySelectorAll('.product-card').forEach(c => io.observe(c));
     });
-    new IntersectionObserver(([e], o) => { if (e.isIntersecting) { section.classList.add('fh-ready'); o.disconnect(); } }, { threshold: .2 }).observe(section);
   })();
   </script>
 
