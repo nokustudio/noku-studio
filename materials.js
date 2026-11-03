@@ -209,7 +209,8 @@
       if (result.errors || !result.data) return null;
 
       const byId = {};
-      const ingest = (edges) => {
+      const woodIds = []; // Shopify order of the "wood" metaobjects
+      const ingest = (edges, isWood) => {
         (edges || []).forEach((edge) => {
           const fields = edge.node.fields;
           const get = (k) => fields.find((f) => f.key === k);
@@ -218,14 +219,17 @@
           const id = getMatchedId(name);
           const imgUrl = get('image')?.reference?.image?.url;
           const entry = byId[id] || {};
-          if (imgUrl) entry.preview = imgUrl;
+          if (isWood) { entry.name = name; if (!woodIds.includes(id)) woodIds.push(id); }
+          // Same resized URL that sync_materials.py writes, so the swap reuses the cached image
+          if (imgUrl) entry.preview = `${imgUrl}${imgUrl.includes('?') ? '&' : '?'}width=800`;
           if (get('description')?.value) entry.desc = get('description').value;
           if (get('scientific_name')?.value) entry.subtitle = get('scientific_name').value;
           byId[id] = entry;
         });
       };
-      ingest(result.data.woods?.edges);
-      ingest(result.data.options?.edges);
+      ingest(result.data.woods?.edges, true);
+      ingest(result.data.options?.edges, false);
+      byId.woodIds = woodIds;
       return byId;
     } catch (err) {
       console.warn('Material metaobject fetch failed; using local registry.', err);
@@ -666,8 +670,25 @@
 
   // ─── BOOTSTRAP INITIALIZATION ───
 
+  const CATEGORIES = ['wood', 'leather', 'fabric', 'cane', 'metals'];
+
+  // Renders every category. Keeps the viewer's current selection when it still exists.
+  function renderAllCategories() {
+    CATEGORIES.forEach(category => {
+      const items = MATERIALS_REGISTRY[category];
+      const current = categoryStates[category].selected;
+      const item = (current && items.find(i => i.id === current.id)) || items[0];
+      categoryStates[category].selected = item;
+      renderSwatchesGrid(category);
+      renderMaterialDetails(category, item);
+    });
+  }
+
   async function init() {
-    // 1. Fetch live product data and material metaobjects from Shopify in parallel
+    // 1. Show the local copy (noku-materials.js) straight away
+    renderAllCategories();
+
+    // 2. Fetch live product data and material metaobjects from Shopify in parallel
     const [liveSuccess, materialOverlay] = await Promise.all([
       fetchProductsFromShopify(),
       fetchMaterialMetaobjects()
@@ -680,20 +701,16 @@
     if (materialOverlay) {
       applyMaterialOverlay(materialOverlay);
       
-      // Exclusively show wood, fabric, and leather categories from Shopify metaobjects
-      MATERIALS_REGISTRY.wood = MATERIALS_REGISTRY.wood.filter(item => materialOverlay[item.id]);
+      // Wood list, order and names come straight from Shopify, so a wood added
+      // there shows here with no code change. Local entries only fill gaps.
+      const localWood = Object.fromEntries(MATERIALS_REGISTRY.wood.map(item => [item.id, item]));
+      MATERIALS_REGISTRY.wood = materialOverlay.woodIds.map(id => ({ ...localWood[id], id, ...materialOverlay[id] }));
       MATERIALS_REGISTRY.leather = MATERIALS_REGISTRY.leather.filter(item => materialOverlay[item.id]);
       MATERIALS_REGISTRY.fabric = MATERIALS_REGISTRY.fabric.filter(item => materialOverlay[item.id]);
     }
 
-    // 2. Initialize and render each category section
-    const categories = ['wood', 'leather', 'fabric', 'cane', 'metals'];
-    categories.forEach(category => {
-      const defaultItem = MATERIALS_REGISTRY[category][0];
-      categoryStates[category].selected = defaultItem;
-      renderSwatchesGrid(category);
-      renderMaterialDetails(category, defaultItem);
-    });
+    // 3. Re-render with live Shopify data and the "Used In Pieces" products
+    renderAllCategories();
 
     // Sync Cart badge on load
     syncCartBadge();

@@ -47,6 +47,14 @@
       line-height: 1.6;
     }
 
+    .hero-body-main {
+      margin-top: 20px;
+      max-width: 650px;
+      font-size: 0.9375rem;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
     /* Materials Browser */
     .materials-browser-section {
       padding: 60px 0;
@@ -246,60 +254,13 @@
     }
 
     /* Philosophy / Sourcing Section */
-    .sourcing-section {
-      padding: 100px 0;
-      border-top: 1px solid var(--line);
-      background-color: var(--light);
-    }
 
-    .sourcing-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-    }
 
-    .sourcing-text-block {
-      max-width: 500px;
-    }
 
-    .sourcing-title {
-      font-family: var(--font-display);
-      font-weight: 300;
-      font-size: clamp(28px, 4vw, 38px);
-      line-height: 1.2;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--ink);
-      margin-bottom: 24px;
-    }
 
-    .sourcing-text {
-      font-size: 1rem;
-      line-height: 1.8;
-      color: var(--muted);
-      margin-bottom: 24px;
-    }
 
-    .sourcing-image-wrap {
-      width: 100%;
-      aspect-ratio: 1.3 / 1;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid var(--border-soft);
-      box-shadow: 0 10px 35px rgba(44, 38, 34, 0.05);
-    }
 
-    .sourcing-image-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
 
-    .sourcing-image-wrap:hover img {
-      transform: scale(1.04);
-    }
 
     /* Loader skeleton for detail cards */
     .detail-skeleton {
@@ -327,15 +288,6 @@
       .detail-card-col,
       .used-pieces-col {
         position: static;
-      }
-
-      .sourcing-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-
-      .sourcing-image-wrap {
-        order: -1;
       }
     }
 
@@ -411,6 +363,100 @@
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
       }
     }
+
+    /* ════════ CARE GUIDE ════════ */
+    .care-section {
+      padding: 100px 0 120px;
+      scroll-margin-top: 90px;
+    }
+
+    .care-intro {
+      max-width: 640px;
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--muted);
+      margin-bottom: 48px;
+    }
+
+    .care-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .care-card {
+      background-color: var(--light-secondary);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: 32px 28px;
+    }
+
+    .care-card h3 {
+      font-family: var(--font-display);
+      font-size: clamp(1.125rem, 2.2vw, 1.375rem);
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .care-card-sub {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--chamoisee);
+      margin-bottom: 20px;
+    }
+
+    .care-card h4 {
+      font-family: var(--font-body);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 20px 0 8px;
+    }
+
+    .care-card ul {
+      padding-left: 18px;
+      font-size: 0.875rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .care-card li {
+      margin-bottom: 6px;
+    }
+
+    .care-card-note {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-soft);
+      font-size: 0.8125rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .care-footnote {
+      max-width: 760px;
+      margin-top: 48px;
+      font-size: 0.875rem;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
+    .care-footnote a {
+      color: var(--chamoisee);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    @media (max-width: 1024px) {
+      .care-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
   <!-- Vercel Speed Insights -->
   <script>
@@ -480,6 +526,7 @@
       <div class="container">
         <h1 class="hero-title-main">Materials Guide</h1>
         <p class="hero-tagline-main">A dedication to material honesty, natural grains, full-grain hides, and textured fabrics. Crafted to live with you.</p>
+        <p class="hero-body-main">We don’t mask our materials. We work with teak from South Indian vendors, certified kiln-dried white ash imported from abroad, and, for some pieces, teak reclaimed from old buildings in South India. Some bespoke pieces, and the inner supports of our teak beds, are made from honne. Every board is selected by hand at our workshop, then sealed with a clear, water-based PU that protects it without yellowing, so the grain and true colour of the timber show through and mellow over time. The same thinking guides our leathers and fabrics: natural texture, left honest.</p>
       </div>
     </header>
 
@@ -708,21 +755,122 @@
       </div>
     </section>
 
-    <!-- Sourcing Philosophy / Info sections -->
-    <section class="sourcing-section">
-      <div class="container sourcing-grid">
-        <div class="sourcing-image-wrap reveal-el">
-          <img src="https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7d6f73c94da715b34a92_Noku_ofStillness_Study_table_03.jpeg" alt="Sourcing timber joinery detail">
+    <!-- Care Guide -->
+    <section class="care-section" id="care">
+      <div class="container">
+        <h2 class="materials-section-title reveal-el">Caring for Your Piece</h2>
+        <p class="care-intro reveal-el">Our furniture is made to be lived with for decades. A few simple habits keep it that way. If anything here doesn’t match the care card that came with your piece, follow the care card, since it covers your exact wood, leather or fabric.</p>
+
+        <div class="care-grid">
+          <article class="care-card reveal-el">
+            <h3>Wood</h3>
+            <span class="care-card-sub">Water-based PU finish</span>
+            <h4>Everyday</h4>
+            <ul>
+              <li>Dust with a soft, dry microfibre cloth.</li>
+              <li>For marks, wipe with a cloth dampened in water and wrung out well, then dry straight away.</li>
+              <li>For grease or sticky spots, add a drop of mild dish soap to the water, wipe, then wipe again with clean water and dry.</li>
+            </ul>
+            <h4>Spills and heat</h4>
+            <ul>
+              <li>Wipe spills at once. The finish resists water, but liquid left standing can leave a white haze, and liquid at edges and joints can seep into the wood.</li>
+              <li>Always use coasters, placemats and trivets. A water-based finish is sensitive to heat, so hot dishes, mugs and laptops can leave marks.</li>
+              <li>Wipe up alcohol, perfume, nail polish remover and hand sanitiser straight away. They can soften or dull the finish.</li>
+              <li>Put felt pads under lamps and décor, and lift objects instead of dragging them.</li>
+            </ul>
+            <h4>Avoid</h4>
+            <ul>
+              <li>Wax, silicone or spray polishes. A PU finish doesn’t need them, and they leave a cloudy build-up.</li>
+              <li>Ammonia, alcohol, acetone, bleach or abrasive scrubbers.</li>
+              <li>Direct sunlight, and placing pieces right next to AC vents, heaters or damp walls.</li>
+            </ul>
+          </article>
+
+          <article class="care-card reveal-el delay-1">
+            <h3>Leather</h3>
+            <span class="care-card-sub">Full and top grain</span>
+            <h4>Everyday</h4>
+            <ul>
+              <li>Dust and wipe weekly with a soft, dry cloth.</li>
+              <li>For a deeper clean, use a mild soap or a cleaner made for leather, on a lightly damp cloth. Avoid excess water. Never soak the leather.</li>
+              <li>Condition every 6–12 months with a leather conditioner or cream to keep it soft and supple. Test it on a hidden spot first.</li>
+            </ul>
+            <h4>Spills and marks</h4>
+            <ul>
+              <li>Blot spills straight away with a clean, dry cloth. Don’t rub.</li>
+              <li>For oil or grease, blot and leave it. Leather often absorbs it over time. Don’t add water.</li>
+              <li>Light scuffs often buff out with a fingertip or a soft cloth. For tears or deep scratches, contact us.</li>
+            </ul>
+            <h4>Avoid</h4>
+            <ul>
+              <li>Harsh chemicals: household cleaners, strong detergents, alcohol, baby wipes and solvents.</li>
+              <li>Direct sunlight and heat sources, which dry and fade leather.</li>
+              <li>Sharp objects, pet claws and dye transfer from new denim.</li>
+            </ul>
+          </article>
+
+          <article class="care-card reveal-el delay-2">
+            <h3>Fabric</h3>
+            <span class="care-card-sub">Upholstery</span>
+            <h4>Everyday</h4>
+            <ul>
+              <li>Vacuum weekly with a soft-brush upholstery attachment, so dust doesn’t settle into the weave.</li>
+              <li>Turn, rotate and plump loose cushions so they wear evenly.</li>
+              <li>Brush velvet gently in the direction of the pile.</li>
+            </ul>
+            <h4>Spills and stains</h4>
+            <ul>
+              <li>Lift off any solid residue with the edge of a spoon, then blot at once with a clean, dry cloth or white paper towel, working from the edge inward. Don’t rub.</li>
+              <li>Check the fabric’s care label before using any water or cleaner. Many upholstery fabrics are dry clean only, and water can leave a ring.</li>
+              <li>Test any cleaner on a hidden spot first.</li>
+              <li>Have the upholstery professionally cleaned every 12–18 months, or sooner for stubborn stains.</li>
+            </ul>
+            <h4>Easy-clean fabrics</h4>
+            <ul>
+              <li>Some of our fabrics are performance fabrics treated to resist stains. Your care card will say if yours is one. For these, spray water on the stain and blot with white paper towels until nothing more lifts.</li>
+              <li>Then spray more water and rub gently in circles with a microfibre cloth. For tougher stains, use a little bar soap, then rinse well with water so no soap remains.</li>
+              <li>Use this method only on easy-clean fabrics. On other fabrics, water can leave a ring.</li>
+            </ul>
+            <h4>Avoid</h4>
+            <ul>
+              <li>Machine-washing covers unless the label allows it.</li>
+              <li>Drying wet fabric with a hair dryer or heater. Always let it air dry.</li>
+              <li>Direct sunlight, which fades natural fibres.</li>
+              <li>Damp, closed rooms in the monsoon. Keep the room aired so fabric and foam don’t pick up a musty smell.</li>
+            </ul>
+          </article>
+
+          <article class="care-card reveal-el delay-1">
+            <h3>Cane</h3>
+            <span class="care-card-sub">Hand-woven and sheet</span>
+            <h4>Everyday</h4>
+            <ul>
+              <li>Dust with a soft, dry cloth or a soft brush.</li>
+              <li>Every few weeks, wipe the rough underside of the cane with a damp cloth. This keeps it supple, and matters most in air-conditioned or dry rooms, where cane turns brittle.</li>
+              <li>Use a seat cushion on cane seats you sit on daily. It spreads the weight across the weave and protects it from rivets, buckles and sharp objects.</li>
+            </ul>
+            <h4>Natural or finished cane</h4>
+            <ul>
+              <li><strong>Natural cane:</strong> every six months, brush a thin coat of linseed or teak oil onto both sides with a soft cloth or brush. Let it dry for 3–4 hours, add a second coat, then leave it for 24 hours before use.</li>
+              <li><strong>Finished cane:</strong> don’t oil it. Oil sits on top of the finish and turns sticky. A damp wipe of the underside is all it needs.</li>
+              <li>Your care card tells you which yours is.</li>
+            </ul>
+            <h4>Spills and mildew</h4>
+            <ul>
+              <li>Wipe spills promptly with a soft, damp cloth.</li>
+              <li>In the monsoon, mildew can appear on the surface. Clean it gently with diluted mild soap and a soft brush, then let the cane dry naturally for 48 hours before use.</li>
+            </ul>
+            <h4>Avoid</h4>
+            <ul>
+              <li>Standing, kneeling or putting a knee on a cane seat. Concentrated weight breaks strands.</li>
+              <li>Long periods of direct sunlight, and placing cane near heaters or AC vents.</li>
+              <li>Soaking the cane, or drying it with a hair dryer or heater.</li>
+            </ul>
+            <p class="care-card-note">Strands vary naturally in colour and shade. This isn’t a defect. If a strand comes loose or breaks, contact us. We can reweave hand-woven cane, or replace the panel on pieces made with cane sheet.</p>
+          </article>
         </div>
-        <div class="sourcing-text-block reveal-el delay-1">
-          <h2 class="sourcing-title">Material Honesty</h2>
-          <p class="sourcing-text">
-            At Noku Studio, we believe that materials should not be masked. Our finishes are designed to showcase, rather than hide, the organic beauty of the timber, the natural grain irregularities of the leather hides, and the detailed weave patterns of the linen fabrics.
-          </p>
-          <p class="sourcing-text">
-            Every log of teak, white ash, or honne wood is selected by hand at our workshop, seasoned patiently to survive generations of climates, and finished with natural oils that allow the wood to breathe and darken gracefully over time.
-          </p>
-        </div>
+
+        <p class="care-footnote reveal-el">Wood is a natural material and responds to the seasons. Small changes in colour or slight movement over time are normal and part of its character. For repairs, refinishing or any care question, email us at <a href="mailto:hello@nokustudio.in?subject=Care%20question">hello@nokustudio.in</a>. Following this guidance also keeps your <a href="terms.html">warranty</a> valid.</p>
       </div>
     </section>
 
