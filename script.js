@@ -754,7 +754,7 @@
     const videoObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          if (videoBtn && !videoBtn.classList.contains('manually-paused')) {
+          if (!videoBtn || !videoBtn.classList.contains('manually-paused')) {   // pages without the pause button just resume
             video.play().catch(err => console.log('Autoplay blocked', err));
           }
         } else {

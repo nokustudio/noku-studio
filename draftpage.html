@@ -163,10 +163,13 @@
     /* Editorial: the statement stays pinned while the materials scroll past */
     .mat-ed { display: grid; grid-template-columns: 4fr 7fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
     .mat-pin { position: sticky; top: 120px; display: grid; gap: 28px; justify-items: start; }
-    .mat-list { display: grid; gap: clamp(48px, 7vw, 96px); }
-    .mat-ed .mat-media { aspect-ratio: 16 / 10; margin-bottom: 20px; }
-    .mat-row { display: grid; grid-template-columns: 1fr 1.4fr; gap: 24px; align-items: start; }
-    .mat-ed .mat-nm { font-size: clamp(1.5rem, 2.4vw, 2rem); font-weight: 300; display: grid; gap: 10px; }
+    .mat-list { display: grid; gap: clamp(32px, 4vw, 48px); }
+    .mat-list > article { display: grid; grid-template-columns: clamp(120px, 14vw, 200px) minmax(0, 1fr); gap: clamp(20px, 3vw, 40px); align-items: center;
+      padding-bottom: clamp(32px, 4vw, 48px); border-bottom: 1px solid var(--line); }
+    .mat-list > article:last-child { padding-bottom: 0; border-bottom: 0; }
+    .mat-ed .mat-media { aspect-ratio: 1; }
+    .mat-row { display: grid; gap: 14px; align-content: center; }
+    .mat-ed .mat-nm { font-size: clamp(1.375rem, 2vw, 1.75rem); font-weight: 300; display: grid; gap: 10px; }
 
     /* Panels: four full-height panels; the one you point at opens up */
     .mat-pn-head { text-align: center; display: grid; justify-items: center; gap: 20px; margin-bottom: clamp(40px, 6vw, 64px); }
@@ -192,10 +195,15 @@
       font: 400 11px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; transition: background-color .3s, color .3s; }
     .mat-tog button[aria-pressed="true"] { background: var(--bone); color: var(--dark-bg); }
 
+    /* workshop video: the footage at full strength; a soft shadow keeps the copy legible without tinting it */
+    .video-section .video-background { opacity: 1; }
+    .video-content { text-shadow: 0 0 32px rgba(36,31,27,.7), 0 1px 3px rgba(36,31,27,.6); }
+    .video-content .body-p { font-size: 1.0625rem !important; max-width: 44ch; margin-inline: auto; }
+
     @media (max-width: 899px) {
       .mat-ed { grid-template-columns: 1fr; }
       .mat-pin { position: static; }
-      .mat-row { grid-template-columns: 1fr; gap: 12px; }
+      .mat-row { gap: 10px; }
       .mat-panels { flex-direction: column; height: auto; }
       .mat-panel { flex: none; height: 300px; }
       .mat-panel .mat-txt { max-height: none; opacity: 1; }
@@ -453,24 +461,14 @@
       <source data-src="Resources/Video Project 2.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <div class="video-overlay"></div>
 
     <div class="video-content reveal-el">
-      <span class="label" style="color: var(--chamoisee);">The Workshop</span>
-      <h2 class="title-h2" style="font-weight: 300;">A document of patience, wood joints, and handcraft</h2>
-      <p class="body-p" style="color: var(--bone); opacity: 0.8; font-size: 1rem;">
-        Inside our Bengaluru atelier, we work with solid hardwoods—teak, reclaimed teak and white ash—shaping, sanding, and
-        assembling each furniture piece with absolute precision.
+      <span class="label" style="color: var(--paper);">The Workshop</span>
+      <h2 class="title-h2" style="font-weight: 300;">Made slowly, by hand</h2>
+      <p class="body-p" style="color: var(--paper); font-size: 1rem;">
+        Every piece takes shape in our Bengaluru workshop: cut, joined, sanded and finished by hand, at the pace good
+        furniture asks for.
       </p>
-      <button class="video-control-btn" id="video-toggle" aria-label="Pause Video">
-        <svg id="pause-icon" width="20" height="20" viewBox="0 0 24 24">
-          <rect x="4" y="4" width="4" height="16" fill="var(--paper)"></rect>
-          <rect x="16" y="4" width="4" height="16" fill="var(--paper)"></rect>
-        </svg>
-        <svg id="play-icon" width="20" height="20" viewBox="0 0 24 24" style="display: none;">
-          <path d="M8 5v14l11-7z" fill="var(--paper)"></path>
-        </svg>
-      </button>
     </div>
   </section>
 
