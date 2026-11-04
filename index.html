@@ -105,8 +105,6 @@
       .fh-tbtn { width: 46px; }
     }
 
-    /* the 3D barstool story is not on this draft; script.js still needs its container (see note at the canvas) */
-    #three-container { display: none !important; }
 
     /* navbar: a transparent bar over the hero that settles into the live frosted pill once scrolled */
     #navbar:not(.scrolled) { top: 0; width: 100%; max-width: 100%; height: 76px; padding: 0 clamp(16px, 4vw, 64px); border-radius: 0;
@@ -243,23 +241,11 @@
 
   <a href="#featured-hero" class="skip-link">Skip to content</a>
 
-  <script>
-    // Gate the hero entrance on the loading screen finishing (script.js calls
-    // window.nokuHeroReady). Defined here, not in script.js, so a failed
-    // three.js CDN can't leave the hero copy stuck at opacity 0 — the timeout
-    // is a hard floor that reveals it regardless.
-    (function () {
-      var reveal = function () { document.documentElement.classList.add('hero-ready'); };
-      window.nokuHeroReady = reveal;
-      setTimeout(reveal, 3000);
-    })();
-  </script>
-
   <!-- Grain Layer overlay -->
   <div class="grain-overlay"></div>
 
   <!-- STICKY HEADER NAVIGATION -->
-  <nav id="navbar">
+  <nav id="navbar" class="light-nav">
     <div class="nav-logo-wrap">
       <a href="/" aria-label="Noku Home">
         <svg class="logo-svg" width="84" height="21" viewBox="0 0 328.86 81.97" xmlns="http://www.w3.org/2000/svg">
@@ -307,12 +293,6 @@
       </svg>
     </button>
   </nav>
-
-  <!-- ponytail: script.js bundles the products/collections/video behaviour with the 3D barstool, so the
-       3D runtime still loads here, hidden. Split script.js before this draft replaces index.html. -->
-  <div id="three-container" tabindex="-1">
-    <canvas id="three-canvas"></canvas>
-  </div>
 
   <!-- ════════ DRAFT HERO: featured products ════════ -->
   <section class="fh" id="featured-hero" aria-label="Featured pieces" tabindex="-1">
@@ -566,11 +546,6 @@
     </div>
   </div>
 
-  <!-- ════════ THREE.JS WEBGL LIBRARIES ════════ -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
-
   <script>
   // ════════ DRAFT HERO: featured products ════════
   (function () {
@@ -587,7 +562,7 @@
     const src = (f, w) => `${CDN}${f}${f.includes('?') ? '&' : '?'}width=${w}`;
     // the widest frame fitPieces() draws (the sofa) in device pixels, up to the 1684px originals: the full file on 4K, about 1200 on 1080p, 1000 on phones.
     // Read from the screen, not the window, so maximising never leaves a blurry image. The CDN sends these as WebP.
-    const PIECE_W = Math.min(1684, Math.ceil(Math.min(screen.height * 1.04, screen.width * .84) * devicePixelRatio / 100) * 100);
+    const PIECE_W = Math.min(1684, Math.ceil(Math.min(screen.height * 1.04, screen.width * .84) * devicePixelRatio / 100) * 100) || 1684;   // screen reads 0 while a page loads hidden
     const pad = n => String(n).padStart(2, '0');
     const inr = n => '₹' + n.toLocaleString('en-IN');
     const url = p => `product.html?handle=${p.handle}`;
@@ -665,7 +640,26 @@
   })();
   </script>
   <script src="site.js"></script>
-  <script src="script.js"></script>
+  <script>
+  // What this page used to take from script.js, which now belongs to the 3D barstool page only (/draftpage)
+  (function () {
+    // Collections links jump straight there
+    const collections = document.getElementById('collections');
+    document.querySelectorAll('a[href*="#collections"]').forEach(a => a.addEventListener('click', e => {
+      e.preventDefault();
+      collections.scrollIntoView({ behavior: 'instant' });
+      history.pushState(null, '', '#collections');
+    }));
+    // workshop film: loads when near, plays only while on screen
+    const v = document.getElementById('workshop-video');
+    new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return v.pause();
+      const s = v.querySelector('source');
+      if (s.dataset.src) { s.src = s.dataset.src; delete s.dataset.src; v.load(); }
+      v.play().catch(() => {});
+    }, { rootMargin: '200px' }).observe(v);
+  })();
+  </script>
   <script src="shopify-integration.js"></script>
   <script>
   // ════════ DRAFT: Our Pieces — every product except the four in the hero, live from Shopify ════════
