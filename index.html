@@ -15,6 +15,223 @@
 
   <link rel="icon" type="image/svg+xml" href="Resources/Logo/noku-favicon.svg">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* ════════ DRAFT: featured-products hero ("Statement"), scoped under .fh ════════ */
+    .fh { --gutter: clamp(16px, 4vw, 64px); --nav-h: 76px; --ease-wipe: cubic-bezier(0.77, 0, 0.18, 1);
+      position: relative; z-index: 12; height: 100svh; min-height: 640px; overflow: hidden; isolation: isolate;
+      display: grid; grid-template-rows: minmax(0, 1fr) auto;
+      padding: var(--nav-h) var(--gutter) clamp(20px, 4svh, 40px);   /* .fh-piece spans exactly nav → name */
+      background: var(--tint, var(--light)); color: var(--ink); transition: background-color 1.2s var(--ease-out); }
+    .fh a { color: inherit; text-decoration: none; }
+    .fh button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+    .fh img { display: block; }
+    .fh :focus-visible { outline: 1px solid var(--chamoisee); outline-offset: 4px; }
+
+    /* studio shot → floats on any tint: lift the #e8 backdrop to white, then multiply it away */
+    .fh .fh-blend { filter: brightness(var(--lift, 1.12)); mix-blend-mode: multiply;
+      -webkit-mask: linear-gradient(90deg, #0000, #000 9%, #000 91%, #0000), linear-gradient(#0000, #000 7%, #000 93%, #0000);
+      -webkit-mask-composite: source-in; mask-composite: intersect; }
+    /* ponytail: the Lunar (rdc-*) cutouts were shot on a darker, uneven backdrop — needs more lift. Re-shoot if more products drift. */
+    .fh .fh-blend[src*="rdc-t-"] { --lift: 1.16; }
+
+    .fh-piece { position: relative; min-height: 0; pointer-events: none; mix-blend-mode: multiply; }
+    .fh-piece img { position: absolute; left: 0; top: 0; width: auto; max-width: none; /* size + position set per piece by fitPieces() */
+      opacity: 0; transform: translateY(5%) scale(.97); transition: opacity .7s var(--ease-out), transform 1.3s var(--ease-out); }
+    .fh-piece img.was { transform: translateY(-3%) scale(1.01); }
+    .fh.fh-ready .fh-piece img.on { opacity: 1; transform: none; transition-delay: 120ms; }
+
+    .fh-band { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 24px; position: relative; z-index: 2; }
+    .fh-h1 { margin: 0; }
+    .fh-mid { display: grid; justify-items: center; gap: clamp(12px, 2.2svh, 24px); }
+    .fh-words { display: grid; justify-items: center; pointer-events: none; font-size: min(5.4vw, 7.4svh, 96px); }
+    /* the product name moves as one piece: the old name fades out quickly, then the new one fades in with a small lift */
+    .fh-word { grid-area: 1 / 1; opacity: 0; transform: translateY(.12em); font: 300 1em/1 var(--font-display); letter-spacing: -.055em; color: var(--ink); white-space: nowrap;
+      transition: opacity .8s var(--ease-out) .15s, transform .9s var(--ease-out) .15s; }
+    .fh-word.was { transform: none; transition: opacity .3s var(--ease-out), transform .3s var(--ease-out); }
+    .fh.fh-ready .fh-word.on { opacity: 1; transform: none; }
+
+    .fh-now { display: grid; text-align: center; }
+    .fh-now > div { grid-area: 1 / 1; display: grid; gap: clamp(12px, 2svh, 20px); justify-items: center; visibility: hidden; transition: visibility 0s .6s; }
+    .fh-now > div.on { visibility: visible; transition: none; }
+    .fh-m { display: block; overflow: hidden; padding-bottom: .12em; }
+    .fh-m > * { display: block; transform: translateY(110%); transition: transform .6s var(--ease-out); }
+    .fh-m > .fh-acts { display: flex; }
+    .fh-now > .was .fh-m > * { transform: translateY(-110%); }
+    .fh.fh-ready .fh-now > .on .fh-m > * { transform: none; transition-duration: 1s; transition-delay: calc(300ms + var(--i) * 70ms); }
+    .fh-sub b { font-weight: 400; color: var(--muted); }
+    .fh-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .fh-acts { gap: 10px; justify-content: center; padding-top: 2px; }
+
+    /* the page's one button: a fill rises from below; outline → ink, solid → chamoisee. Every pill shares this timing. */
+    .fh-pill { --pill-dur: .28s; display: inline-flex; align-items: center; position: relative; overflow: hidden; isolation: isolate;
+      text-decoration: none; padding: 12px 22px 10px; border: 1px solid currentColor; border-radius: 9999px;
+      transition: color var(--pill-dur) var(--ease-out), border-color var(--pill-dur) var(--ease-out); }
+    .fh-pill::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--pill-fill, var(--ink));
+      transform: translateY(101%); border-radius: inherit; transition: transform var(--pill-dur) var(--ease-out); }
+    .fh-pill > span { margin-left: 12px; transition: transform var(--pill-dur) var(--ease-out); }
+    .fh-pill:hover::before { transform: none; }
+    .fh-pill:hover > span { transform: translateX(4px); }
+    :is(.fh, .op, .mat) .fh-pill { color: var(--ink); }
+    :is(.fh, .op, .mat) .fh-pill:hover { color: var(--light); }
+    :is(.fh, .op, .mat) .fh-pill.solid { background: var(--ink); color: var(--light); border-color: var(--ink); --pill-fill: var(--chamoisee); }
+    :is(.fh, .op, .mat) .fh-pill.solid:hover { border-color: var(--chamoisee); }
+
+    .fh-thumbs { justify-self: end; display: flex; align-items: end; gap: 10px; }
+    .fh-tbtn { width: 56px; display: grid; gap: 8px; opacity: .5; transition: opacity .4s; }
+    .fh-tbtn:hover, .fh-tbtn[aria-current="true"] { opacity: 1; }
+    .fh-tb { aspect-ratio: 2 / 3; background: var(--tint); overflow: hidden; isolation: isolate; transition: background-color 1.2s; }
+    .fh-tb img { width: 100%; height: 100%; object-fit: cover; }
+    .fh-bar { height: 1px; background: rgba(44,38,34,.2); }
+    .fh-bar i { display: block; height: 100%; background: var(--ink); transform-origin: left; transform: scaleX(0); }
+    .fh-ap { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(44,38,34,.35) !important; margin: 0 0 21px 8px;
+      display: grid; place-items: center; transition: background-color .4s var(--ease-out), color .4s, border-color .3s; }
+    .fh-ap:hover { background: var(--ink) !important; border-color: var(--ink) !important; color: var(--light) !important; }
+    .fh-ap svg { width: 11px; height: 11px; fill: currentColor; }
+
+    /* intro: masked lines rise once the hero is ready */
+    .fh-rv { display: block; overflow: hidden; padding-bottom: .06em; }
+    .fh-rv > * { display: block; transform: translateY(110%); }
+    .fh.fh-ready .fh-rv > * { transform: none; transition: transform 1.1s var(--ease-out) calc(var(--d, 0) * 1ms); }
+    .fh-fade { opacity: 0; }
+    .fh.fh-ready .fh-fade { opacity: 1; transition: opacity 1.2s var(--ease-out) calc(var(--d, 0) * 1ms); }
+
+    @media (max-width: 899px) {
+      .fh { --nav-h: 64px; height: auto; min-height: 100svh; grid-template-rows: auto auto auto; padding-top: calc(var(--nav-h) + 12px); row-gap: 10px; }
+      .fh-words { font-size: 12.5vw; }
+      .fh-piece { height: 58svh; }
+      .fh-band { grid-template-columns: 1fr; justify-items: center; gap: 18px; }
+      .fh-h1 { display: none; }
+      .fh-thumbs { justify-self: center; }
+      .fh-tbtn { width: 46px; }
+    }
+
+    /* the 3D barstool story is not on this draft; script.js still needs its container (see note at the canvas) */
+    #three-container { display: none !important; }
+
+    /* navbar: a transparent bar over the hero that settles into the live frosted pill once scrolled */
+    #navbar:not(.scrolled) { top: 0; width: 100%; max-width: 100%; height: 76px; padding: 0 clamp(16px, 4vw, 64px); border-radius: 0;
+      background-color: transparent; border-color: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+    #navbar { transition: background-color .5s ease, border-color .5s ease, box-shadow .7s ease, width .7s var(--ease-out), max-width .7s var(--ease-out),
+      top .7s var(--ease-out), height .7s var(--ease-out), padding .7s var(--ease-out), border-radius .7s var(--ease-out); }
+    @media (max-width: 899px) { #navbar:not(.scrolled) { height: 64px; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fh *, .fh *::before, .fh *::after, #navbar { transition-duration: 1ms !important; transition-delay: 0ms !important; }
+    }
+
+    /* ════════ DRAFT: "Our Pieces" — the rest of the catalogue, in the homepage's featured-card design ════════ */
+    .op { background: var(--light); color: var(--ink); position: relative; z-index: 13; border-bottom: 1px solid var(--line); }
+    .op-head { margin-bottom: clamp(24px, 4vw, 48px); }
+    .op-head .title-h2 { margin-bottom: 0; }
+    .op-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; padding: 20px 0; }
+    .op-grid .product-card { flex: none; width: auto; color: inherit; text-decoration: none; }   /* grid cells, not the carousel's fixed quarter-widths */
+    .op-foot { display: flex; justify-content: center; margin-top: clamp(32px, 5svh, 56px); }
+    .op-grid .product-card { opacity: 0; translate: 0 24px; transition: opacity .9s var(--ease-out), translate .9s var(--ease-out), transform var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out); transition-delay: calc(var(--i, 0) * 70ms), calc(var(--i, 0) * 70ms), 0s, 0s, 0s; }
+    .op-grid .product-card.in { opacity: 1; translate: none; }
+    @media (max-width: 1099px) { .op-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .op-grid .product-card:nth-child(n + 4) { display: none; } }
+    @media (max-width: 767px) {
+      /* still one row on phones: the four pieces swipe sideways */
+      .op-grid { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+        margin: 0 calc(-1 * clamp(20px, 5vw, 40px)); padding: 20px clamp(20px, 5vw, 40px); scroll-padding-inline: clamp(20px, 5vw, 40px); }
+      .op-grid::-webkit-scrollbar { display: none; }
+      .op-grid .product-card { flex: 0 0 68%; scroll-snap-align: start; }
+      .op-grid .product-card:nth-child(n + 4) { display: flex; }
+      .op-grid .product-card { padding: 10px; }
+      .op-grid .product-card .product-card-img-wrap { margin-bottom: 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) { .op-grid .product-card { opacity: 1; translate: none; transition: none; } }
+    .op.section-pad { padding: clamp(80px, 10vw, 120px) 0 clamp(48px, 6vw, 80px); }   /* top as the old products section, bottom as its neighbours */
+
+    /* ════════ DRAFT: Materiality — the statement stays pinned while the materials scroll past ════════ */
+    .mat { background: var(--light); position: relative; z-index: 13; border-top: 1px solid var(--line); }
+    .mat.section-pad { padding: clamp(64px, 9vw, 120px) 0; }
+    .mat .title-h2 { margin-bottom: 0; }
+    .mat-intro { color: var(--ink); margin: 0; max-width: 36ch; }
+    .mat-nm { color: var(--ink); margin: 0; }
+    .mat-txt { color: var(--muted); margin: 0; max-width: 40ch; }
+    .mat-media { overflow: hidden; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); }
+    .mat-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .mat-ed { display: grid; grid-template-columns: 4fr 7fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+    .mat-pin { position: sticky; top: 120px; display: grid; gap: 28px; justify-items: start; }
+    .mat-list { display: grid; gap: clamp(32px, 4vw, 48px); }
+    .mat-list > article { display: grid; grid-template-columns: clamp(120px, 14vw, 200px) minmax(0, 1fr); gap: clamp(20px, 3vw, 40px); align-items: center;
+      padding-bottom: clamp(32px, 4vw, 48px); border-bottom: 1px solid var(--line); }
+    .mat-list > article:last-child { padding-bottom: 0; border-bottom: 0; }
+    .mat-ed .mat-media { aspect-ratio: 1; }
+    .mat-row { display: grid; gap: 14px; align-content: center; }
+    .mat-ed .mat-nm { display: grid; gap: 10px; }
+
+    /* ════════ DRAFT: closing — the framed film opens to the whole screen while its text fades in, then the light footer rises over the pinned film.
+       JS below drives --p (film opening, 0 → 1), --q (sheet arriving, 0 → 1) and --rise; the defaults are the finished state, so nothing hides without it. */
+    .cl { --ix: 22vw; --iy: 15svh; position: relative; overflow: clip; }   /* clip, not hidden: sticky still works, and the waiting sheet can't lengthen the page */
+    .video-section { position: sticky; top: 0; height: 100svh; min-height: 0; background-color: var(--light); }
+    .cl-frame { position: absolute; inset: 0; background: var(--dark-bg);
+      clip-path: inset(calc((1 - var(--p, 1)) * var(--iy)) calc((1 - var(--p, 1)) * var(--ix)) round calc((1 - var(--p, 1)) * 8px)); }
+    .cl-frame::after { content: ''; position: absolute; inset: 0; background: rgba(36,31,27,.1); pointer-events: none; }
+    .video-section .video-background { opacity: 1; transform: scale(calc(1.14 - var(--p, 1) * .14)); }
+    /* the copy fades in over the middle of the opening and clears out of the way as the sheet arrives */
+    .video-content { --t: clamp(0, calc((var(--p, 1) - .35) / .45), 1); opacity: calc(var(--t) * (1 - clamp(0, calc(var(--q, 0) * 2.5), 1))); transform: translateY(calc((1 - var(--t)) * 16px));
+      text-shadow: 0 0 32px rgba(36,31,27,.7), 0 1px 3px rgba(36,31,27,.6); }
+    .video-content .body-p { max-width: 44ch; margin-inline: auto; }
+    /* the scroll distance: tune this one value to change the pace of the whole closing */
+    .cl-on .cl-run { height: 230svh; }
+    .cl-on #footer { position: sticky; bottom: 0; margin-top: calc(var(--ft-h, 0px) * -1); transform: translateY(var(--rise, 0%)); will-change: transform; }
+    @media (max-width: 899px) { .cl { --ix: 7vw; --iy: 18svh; } .cl-on .cl-run { height: 260svh; } }   /* the sheet is taller on phones, so it needs the longer run to rise as gently */
+
+    @media (max-width: 899px) {
+      .mat-ed { grid-template-columns: 1fr; }
+      .mat-pin { position: static; }
+      .mat-row { gap: 10px; }
+    }
+    /* ════════ DRAFT LAYOUT — content sections share one edge and left-aligned headers; hero and video are the full-width, centred moments ════════ */
+    .container { max-width: 1320px; }
+    #collections .collections-header { text-align: left; }
+    #collections .collections-subtext { margin-inline: 0; }
+    @media (min-width: 769px) { #collections .coll-card-img-wrap { height: auto; aspect-ratio: 336 / 350; } }   /* the index page's card image ratio; its fixed 350px height would stretch wide in this container */
+
+    /* ════════ DRAFT TYPE SYSTEM — 10 styles, 2 weights; every text element on this page maps to one ════════
+       Scoped to this page with #ids so the shared style.css (homepage, other pages) is untouched.
+       Display (hero product name, clamp ≤96px / 300 / −.055em) stays on .fh-words above. */
+    :root { --chamoisee-text: #8a6547; }   /* chamoisee for small text: same 27° hue, 4.75:1 on --light (#a27b5c is 3.47:1, fails AA under 18px) */
+
+    /* h2 — section titles, video title, footer CTA */
+    .title-h2, #footer .btn-cta-arrow { font: 300 clamp(32px, 5vw, 56px)/1.15 var(--font-display); letter-spacing: -.018em; }
+    /* h3 — material names, collection titles */
+    #materiality .mat-nm, #collections .coll-card-title { font: 300 clamp(20px, 2vw, 28px)/1.25 var(--font-display); letter-spacing: -.01em; }
+    /* lede — hero tagline, materiality intro */
+    .fh .fh-h1, #materiality .mat-intro { font: 300 clamp(18px, 1.6vw, 22px)/1.45 var(--font-display); letter-spacing: 0; }
+    /* card — product names */
+    #our-pieces .product-name { font: 400 17px/1.25 var(--font-display); letter-spacing: -.01em; }
+    /* body */
+    .video-content .body-p, #collections .collections-subtext, #materiality .mat-txt { font: 400 16px/1.65 var(--font-body); letter-spacing: 0; }
+    /* small — descriptions, footer links, prices */
+    #collections .coll-card-desc, #footer .footer-col__links a, #our-pieces .product-price { font: 400 14px/1.6 var(--font-body); letter-spacing: 0; }
+    /* button — pills (the navbar keeps the site-wide style from style.css, as on the homepage) */
+    .fh-pill { font: 400 13px/1 var(--font-display); letter-spacing: .16em; text-transform: uppercase; }
+    /* label — section eyebrows, footer eyebrow + column headings */
+    .label, #footer .footer-cta-eyebrow, #footer .footer-col__heading { font: 400 11px/1 var(--font-body); letter-spacing: .4em; text-transform: uppercase; color: var(--chamoisee-text); }
+    .video-content .label { color: var(--paper); }
+    /* meta — hero line, collection eyebrow, product material, status tag, material numbers */
+    .fh .fh-sub, #collections .coll-card-eyebrow, #our-pieces .product-materials, #collections .coll-card-tag, #materiality .mat-num {
+      font: 400 11px/1.2 var(--font-display); letter-spacing: .2em; text-transform: uppercase; color: var(--chamoisee-text); }
+    #collections .coll-card-tag { color: var(--muted); }
+    /* ════════ DRAFT: light footer sheet — on --light: links 13.6:1, --chamoisee-text 4.76:1, legal 5.46:1 ════════ */
+    #footer { z-index: 14; border-radius: 20px 20px 0 0; padding: clamp(48px, 5vw, 72px) 0 24px; }
+    .footer-top { display: grid; grid-template-columns: 6fr 6fr; gap: clamp(32px, 6vw, 96px); align-items: start; padding-bottom: clamp(40px, 5vw, 64px); }
+    #footer .footer-cta-line { margin: 0; }
+    #footer .btn-cta-arrow, #footer .footer-wordmark { color: var(--chamoisee-text); }
+    #footer .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; padding: 0; margin: 0; border: 0; }
+    #footer .footer-col__links a { color: var(--ink); }
+    #footer .footer-col__links a:hover, #footer .footer-legal a:hover { color: var(--chamoisee-text); }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px 32px; padding-top: 20px; border-top: 1px solid var(--line); }
+    #footer .footer-legal { flex: 1; justify-content: flex-end; margin: 0; padding: 0; border: 0; color: var(--muted); opacity: 1; }
+    @media (max-width: 899px) {
+      .footer-top { grid-template-columns: 1fr; gap: 40px; }
+      #footer .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 36px; }
+      #footer .footer-legal { justify-content: flex-start; }
+    }
+  </style>
   <!-- Vercel Speed Insights -->
   <script>
     window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
@@ -24,21 +241,7 @@
 
 <body style="background-color: var(--dark-bg);">
 
-  <a href="#three-container" class="skip-link">Skip to content</a>
-
-  <!-- Loading Screen Overlay -->
-  <div id="loading-screen">
-    <div class="loader-logo">
-      <svg width="40" height="48" viewBox="0 0 181.76 218.04" xmlns="http://www.w3.org/2000/svg"
-        style="fill: currentColor;">
-        <polygon
-          points="181.76 5.61 181.76 218.04 145.86 218.04 145.86 144.74 35.91 71.06 35.91 218.04 0 218.04 0 0 145.86 101.35 145.86 5.61 181.76 5.61" />
-      </svg>
-    </div>
-    <div class="loader-bar-wrap">
-      <div class="loader-bar" id="loader-progress"></div>
-    </div>
-  </div>
+  <a href="#featured-hero" class="skip-link">Skip to content</a>
 
   <script>
     // Gate the hero entrance on the loading screen finishing (script.js calls
@@ -105,202 +308,36 @@
     </button>
   </nav>
 
-  <!-- THREE.JS 3D CANVAS WRAPPER -->
+  <!-- ponytail: script.js bundles the products/collections/video behaviour with the 3D barstool, so the
+       3D runtime still loads here, hidden. Split script.js before this draft replaces index.html. -->
   <div id="three-container" tabindex="-1">
     <canvas id="three-canvas"></canvas>
   </div>
 
-  <!-- SCROLL NARRATIVE SECTIONS OVERLAYING 3D HERO CANVAS -->
-  <div class="scroll-narrative">
-
-    <!-- Hero Segment (Visible at Start) -->
-    <section class="narrative-panel narrative-hero" id="hero-panel">
-      <div class="hero-content-wrap">
-        <div class="hero-eyebrow" style="margin-bottom: clamp(24px, 4vh, 36px);">
-          <span class="hero-eyebrow-row">Collection 01</span>
-          <span class="hero-eyebrow-row">Of Stillness</span>
-        </div>
-        <h1 class="hero-title">Stilt</h1>
-        <h1 class="hero-title">barstool</h1>
-        <p class="hero-tagline">A design statement of quiet elegance, wood, and upholstery. Handmade in India.</p>
+  <!-- ════════ DRAFT HERO: featured products ════════ -->
+  <section class="fh" id="featured-hero" aria-label="Featured pieces" tabindex="-1">
+    <div class="fh-piece"></div>
+    <div class="fh-band">
+      <h1 class="fh-h1"><span class="fh-rv"><span style="--d:300">Designed with intent.</span></span><span class="fh-rv"><span style="--d:400">Crafted with care.</span></span></h1>
+      <div class="fh-mid">
+        <div class="fh-words" aria-hidden="true"></div>
+        <div class="fh-now" aria-live="polite"></div>
       </div>
-      <div class="scroll-indicator">
-        <span>Scroll</span>
-        <div class="scroll-indicator-line"></div>
-      </div>
-    </section>
-
-    <!-- Narrative Section 1: Story (Fades in model shifts to right) -->
-    <section class="narrative-panel" id="story-panel">
-      <div class="narrative-grid">
-        <div class="narrative-col">
-          <div class="panel-number">01</div>
-          <span class="label">Philosophy</span>
-          <h2 class="title-h2">Where form meets quiet</h2>
-          <p class="body-p">
-            Mid-Century architecture and furniture was characterised by clean, flowing lines that serve a specific
-            purpose.
-            We have distilled this design logic into the Stilt Barstool—a quiet assertion of form, pair of solid wood
-            joints,
-            and linen textures that sits naturally in any home context.
-          </p>
-        </div>
-        <!-- Right side empty for the 3D model on desktop -->
-        <div class="narrative-col empty-col"></div>
-      </div>
-    </section>
-
-    <!-- Narrative Section 2: Specs (Fades in model shifts to left) -->
-    <section class="narrative-panel" id="specs-panel">
-      <div class="narrative-grid">
-        <!-- Left side empty for the 3D model on desktop -->
-        <div class="narrative-col empty-col"></div>
-        <div class="narrative-col">
-          <div class="panel-number">02</div>
-          <span class="label">Specifications</span>
-          <h2 class="title-h2">Every line, considered</h2>
-          <p class="body-p">Handmade details crafted in solid wood joinery. Made to order at our workshop in Bengaluru,
-            India.</p>
-
-          <div class="spec-grid">
-            <div class="spec-row">
-              <span class="spec-label">Joinery</span>
-              <span class="spec-val">Mortise &amp; Tenon</span>
-            </div>
-            <div class="spec-row">
-              <span class="spec-label">Dimensions</span>
-              <span class="spec-val">51.5 × 49.5 × 93 cm</span>
-            </div>
-            <div class="spec-row">
-              <span class="spec-label">Seat Height</span>
-              <span class="spec-val">76 cm</span>
-            </div>
-            <div class="spec-row">
-              <span class="spec-label">Lead Time</span>
-              <span class="spec-val">3–4 Weeks</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Narrative Section 3: Customize (Fades in model in center for carousel merge) -->
-    <section class="narrative-panel" id="config-panel">
-      <div class="narrative-grid">
-        <div class="narrative-col">
-          <div class="panel-number">03</div>
-          <span class="label">Tailored Design</span>
-          <h2 class="title-h2">Configure your custom piece</h2>
-
-          <!-- Wood Finish Swatch Selector in Narrative Grid -->
-          <div class="wood-selector narrative-wood-selector reveal-el is-revealed">
-            <span class="selector-label">
-              <span class="selected-wood-label">Teak</span>
-              <span class="label-separator"> + </span>
-              <span class="selected-cushion-label">Linen Cushion</span>
-            </span>
-            <div class="wood-swatches narrative-wood-swatches">
-              <button class="wood-swatch active" data-wood="teak" data-prefix="t" data-folder="Teak">Teak</button>
-              <button class="wood-swatch" data-wood="reclaimed-teak" data-prefix="rt" data-folder="Reclaimed teak">Reclaimed Teak</button>
-              <button class="wood-swatch" data-wood="white-ash" data-prefix="wha" data-folder="White ash">White Ash</button>
-            </div>
-          </div>
-
-          <div class="buy-now-wrapper">
-            <button id="buy-now-btn" class="buy-now-btn">Buy Now</button>
-          </div>
-        </div>
-        <!-- Right side holds carousel for slide/fade merge -->
-        <div class="narrative-col empty-col">
-          <div class="model-frame-rect"></div>
-          <div class="default-variant-card-wrap" id="narrative-default-card-wrap">
-            <div class="carousel-outer-wrap narrative-carousel-wrap">
-              <button class="carousel-nav-btn prev-btn narrative-prev-btn" aria-label="Previous Cushion">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="19" y1="12" x2="5" y2="12"></line>
-                  <polyline points="12 19 5 12 12 5"></polyline>
-                </svg>
-              </button>
-              <div class="carousel-track-container narrative-carousel-track-container">
-                <div class="carousel-track narrative-carousel-track">
-                  <!-- Dynamically populated carousel cards -->
-                </div>
-              </div>
-              <button class="carousel-nav-btn next-btn narrative-next-btn" aria-label="Next Cushion">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- ════════ FEATURED PRODUCTS GRID ════════ -->
-  <section class="products-section section-pad">
-    <div class="products-sticky-wrapper">
-      <div class="container" id="products">
-        <div class="products-header">
-          <div class="products-header-left">
-            <span class="label">Portfolio</span>
-            <h2 class="title-h2">Featured Pieces</h2>
-          </div>
-          <a href="products.html" class="view-collection-link">View All
-            Products</a>
-        </div>
-
-        <!-- Horizontal Carousel for Featured Products -->
-        <div class="featured-carousel-outer-wrap reveal-el">
-          <button class="featured-carousel-nav-btn prev-btn" aria-label="Previous Product">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="19" y1="12" x2="5" y2="12"></line>
-              <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-          </button>
-          <div class="featured-carousel-track-container">
-            <div class="featured-carousel-track">
-              <!-- 1. Stilt Barstool -->
-              <div class="product-card" data-handle="barstool">
-
-                <div class="product-card-img-wrap"></div>
-                <div class="product-card-body">
-                  <div class="product-card-header-row">
-                    <h3 class="product-name">Stilt Barstool</h3>
-                    <span class="product-price">From ₹18,000</span>
-                  </div>
-                  <div class="product-card-footer-row">
-                    <span class="product-materials">Teak / Leather - Cognac</span>
-                    <div class="product-buy-row">
-                      <a href="product.html?handle=barstool&amp;inquire=true" class="product-inquire-btn">Inquire</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- The rest of the featured cards are rendered dynamically by
-                   shopify-integration.js (loadFeaturedProducts/renderFeaturedCarousel)
-                   from products with the Shopify metafield custom.featured = true,
-                   showing the variant picked in custom.featured_variant. -->
-            </div>
-          </div>
-          <button class="featured-carousel-nav-btn next-btn" aria-label="Next Product">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
-        </div>
-
-        <!-- Mobile See All Products Link -->
-        <div class="mobile-see-all-wrap">
-          <a href="products.html" class="view-collection-link see-all-btn">See All Products</a>
-        </div>
-      </div>
+      <div class="fh-thumbs fh-fade" style="--d:700"><button class="fh-ap" type="button"></button></div>
     </div>
   </section>
 
+  <!-- ════════ DRAFT: OUR PIECES ════════ -->
+  <section class="op section-pad" id="our-pieces" aria-labelledby="op-title">
+    <div class="container">
+      <div class="op-head reveal-el">
+        <span class="label">Portfolio</span>
+        <h2 class="title-h2" id="op-title">Our Pieces</h2>
+      </div>
+      <div class="op-grid" aria-live="polite"></div>
+      <div class="op-foot"><a class="fh-pill solid" href="products.html">All products<span aria-hidden="true">→</span></a></div>
+    </div>
+  </section>
 
   <!-- ════════ COLLECTIONS CARDS ════════ -->
   <section class="collections-section section-pad" id="collections">
@@ -349,8 +386,8 @@
         <!-- Card 3: Of Exploration -->
         <a href="explorations.html" class="collection-card">
           <div class="coll-card-img-wrap">
-            <img src="Resources/Collection/of_exploration.webp" alt="Of Exploration Collection" width="2048"
-              height="1365" loading="lazy" decoding="async">
+            <img src="https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Noku_ofExplorations_MahjongBench_03.webp?v=1793445618&amp;width=1000" alt="Of Exploration Collection" width="1536"
+              height="2048" loading="lazy" decoding="async">
           </div>
           <div class="coll-card-content">
             <span class="coll-card-eyebrow">Collection 03</span>
@@ -364,95 +401,69 @@
     </div>
   </section>
 
-  <!-- ════════ MATERIALS STORYTELLING & MOODBOARD ════════ -->
-  <section class="materials-section section-pad">
-    <div class="container">
-      <div class="materials-story-grid">
-        <div class="materials-story-content reveal-el">
-          <span class="label">Materiality</span>
-          <h2 class="title-h2">The Soul of the Object</h2>
-          <div class="story-divider"></div>
-          <p class="story-intro">We believe a piece of furniture is only as honest as the materials from which it is
-            born. At Noku Studio, we do not mask the organic. We celebrate it.</p>
-          <p class="body-p">Our <strong>reclaimed teak</strong> is rescued from decades-old structures in Southern
-            India—seasoned naturally by sun and monsoon, carrying a warm history and unparalleled stability.</p>
-          <p class="body-p">Each strand of <strong>natural rattan cane</strong> is meticulously hand-woven by local
-            master artisans, marrying breathing mid-century forms with India's living heritage.</p>
-          <p class="body-p">Our <strong>certified hides</strong> are left aniline-finished, preserving the natural
-            grain, scars, and creases, designed to acquire a unique, rich patina with every touch.</p>
-          <div class="story-cta-wrap">
-            <a href="materials.html" class="materials-cta-btn">Explore Our Materials <span class="arrow">→</span></a>
-          </div>
-        </div>
-
-        <div class="materials-moodboard reveal-el delay-1">
-          <div class="moodboard-item item-large">
-            <img src="Resources/material%20images/Wood/Reclaimed%20teak.jpg" alt="Reclaimed Teak" loading="lazy" decoding="async">
-            <span class="moodboard-caption">Reclaimed Teak</span>
-          </div>
-          <div class="moodboard-item item-square-1">
-            <img src="https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Woven_cane.png?v=1782297952" alt="Woven Cane" loading="lazy" decoding="async">
-            <span class="moodboard-caption">Woven Cane</span>
-          </div>
-          <div class="moodboard-item item-square-2">
-            <img src="Resources/material%20images/Wood/Bhilwara.png" alt="Matti Wood" loading="lazy" decoding="async">
-            <span class="moodboard-caption">Matti Wood</span>
-          </div>
-          <div class="moodboard-item item-medium">
-            <img src="Resources/material%20images/Leather/Montana%20Chestnut.jpg" alt="Montana Chestnut Leather"
-              loading="lazy" decoding="async">
-            <span class="moodboard-caption">Montana Chestnut Leather</span>
-          </div>
-        </div>
+  <!-- ════════ MATERIALITY (draft layout; copy unchanged from index.html) ════════ -->
+  <section class="mat section-pad" id="materiality" aria-labelledby="mat-title">
+    <div class="container mat-ed">
+      <div class="mat-pin reveal-el">
+        <div><span class="label">Materiality</span><h2 class="title-h2" id="mat-title">The Soul of the Object</h2></div>
+        <p class="mat-intro">We believe a piece of furniture is only as honest as the materials from which it is
+          born. At Noku Studio, we do not mask the organic. We celebrate it.</p>
+        <a class="fh-pill" href="materials.html">Explore our materials<span aria-hidden="true">→</span></a>
+      </div>
+      <div class="mat-list">
+          <article class="reveal-el">
+            <div class="mat-media"><img src="Resources/material%20images/Wood/Reclaimed%20teak.jpg" alt="Reclaimed teak grain" loading="lazy" decoding="async"></div>
+            <div class="mat-row"><h3 class="mat-nm"><span class="mat-num">01</span>Reclaimed Teak</h3><p class="mat-txt">Rescued from decades-old structures in Southern India—seasoned naturally by sun and monsoon, carrying a warm history and unparalleled stability.</p></div>
+          </article>
+          <article class="reveal-el">
+            <div class="mat-media"><img src="https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Woven_cane.png?v=1782297952&amp;width=1200" alt="Hand-woven natural cane" loading="lazy" decoding="async"></div>
+            <div class="mat-row"><h3 class="mat-nm"><span class="mat-num">02</span>Natural Rattan Cane</h3><p class="mat-txt">Each strand is meticulously hand-woven by local master artisans, marrying breathing mid-century forms with India's living heritage.</p></div>
+          </article>
+          <article class="reveal-el">
+            <div class="mat-media"><img src="Resources/material%20images/Leather/Montana%20Chestnut.jpg" alt="Montana Chestnut leather" loading="lazy" decoding="async"></div>
+            <div class="mat-row"><h3 class="mat-nm"><span class="mat-num">03</span>Certified Hides</h3><p class="mat-txt">Left aniline-finished, preserving the natural grain, scars, and creases, designed to acquire a unique, rich patina with every touch.</p></div>
+          </article>
+          <article class="reveal-el">
+            <div class="mat-media"><img src="Resources/material%20images/Fabric/Vienna%20Army.jpg" alt="Textured woven upholstery fabric" loading="lazy" decoding="async"></div>
+            <div class="mat-row"><h3 class="mat-nm"><span class="mat-num">04</span>Woven &amp; Printed Fabrics</h3><p class="mat-txt">Hard-wearing, easy-care upholstery weaves, cottons hand-woven on Kerala looms, and cloth hand-block-printed by artisans—no two prints quite alike.</p></div>
+          </article>
       </div>
     </div>
+
   </section>
 
   <!-- ════════ CINEMATIC WORKSHOP VIDEO SECTION ════════ -->
+  <div class="cl">
   <section class="video-section">
-    <!-- Local high-quality workshop video looping silently -->
-    <video class="video-background" id="workshop-video" autoplay muted loop playsinline preload="none">
-      <source data-src="Resources/Video Project 2.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <div class="video-overlay"></div>
+    <div class="cl-frame">
+      <!-- Local high-quality workshop video looping silently -->
+      <video class="video-background" id="workshop-video" autoplay muted loop playsinline preload="none">
+        <source data-src="Resources/Video Project 2.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
 
-    <div class="video-content reveal-el">
-      <span class="label" style="color: var(--chamoisee);">The Workshop</span>
-      <h2 class="title-h2" style="font-weight: 300;">A document of patience, wood joints, and handcraft</h2>
-      <p class="body-p" style="color: var(--bone); opacity: 0.8; font-size: 1rem;">
-        Inside our Bengaluru atelier, we work with solid hardwoods—teak, reclaimed teak and white ash—shaping, sanding, and
-        assembling each furniture piece with absolute precision.
+    <div class="video-content">
+      <span class="label" style="color: var(--paper);">The Workshop</span>
+      <h2 class="title-h2" style="font-weight: 300;">Made slowly, by hand</h2>
+      <p class="body-p" style="color: var(--paper);">
+        Every piece takes shape in our Bengaluru workshop: cut, joined, sanded and finished by hand, at the pace good
+        furniture asks for.
       </p>
-      <button class="video-control-btn" id="video-toggle" aria-label="Pause Video">
-        <svg id="pause-icon" width="20" height="20" viewBox="0 0 24 24">
-          <rect x="4" y="4" width="4" height="16" fill="var(--paper)"></rect>
-          <rect x="16" y="4" width="4" height="16" fill="var(--paper)"></rect>
-        </svg>
-        <svg id="play-icon" width="20" height="20" viewBox="0 0 24 24" style="display: none;">
-          <path d="M8 5v14l11-7z" fill="var(--paper)"></path>
-        </svg>
-      </button>
     </div>
   </section>
 
-  <!-- ════════ COLLECTIONS CARDS ════════ -->
-
-
-
-
+  <div class="cl-run"></div>
 
   <!-- ════════ FOOTER ════════ -->
   <footer id="footer">
     <div class="container">
+      <div class="footer-top">
       <div class="footer-cta-line">
         <p class="footer-cta-eyebrow">Ready to</p>
         <a href="contact.html" class="btn-cta-arrow">Craft your furniture?<span class="arrow"><svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span></a>
       </div>
       <div class="footer-grid">
-        <div>
-          <p class="footer-wordmark">NOKU</p>
-        </div>
         <div>
           <p class="footer-col__heading">About</p>
           <ul class="footer-col__links">
@@ -477,12 +488,56 @@
           </ul>
         </div>
       </div>
+      </div>
+      <div class="footer-bottom">
+      <p class="footer-wordmark">NOKU</p>
       <div class="footer-legal">
         <span>© 2026 Noku Studio. All rights reserved.</span>
         <span class="footer-legal__links"><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="returns.html">Returns &amp; Refunds</a> · <a href="shipping.html">Shipping</a></span>
       </div>
+      </div>
     </div>
   </footer>
+  </div>
+  <script>
+  // Closing: scroll drives the film opening and the footer sheet. The film itself just loops.
+  (function () {
+    const sec = document.querySelector('.cl'), run = sec.querySelector('.cl-run'), ft = document.getElementById('footer');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const clamp01 = n => Math.min(Math.max(n, 0), 1);
+    const ease = q => (1 - Math.cos(Math.PI * q)) / 2;   // starts and settles gently, at most ~.65px of travel per px scrolled on desktop
+    let h = 0, y = 0, frame = 0, last = 0;
+
+    const paint = () => {
+      const q = ease(clamp01((y - h * .61) / (h * .39)));   // 0–48% opens the film, 48–61% holds it full screen, 61–100% raises the sheet
+      sec.style.setProperty('--p', clamp01(y / (h * .48)).toFixed(4));
+      sec.style.setProperty('--q', q.toFixed(4));
+      sec.style.setProperty('--rise', ((1 - q) * 100).toFixed(2) + '%');
+    };
+    // eases toward the scroll position, so a wheel's stepped jumps reach the page as one smooth move
+    const tick = t => {
+      const to = -sec.getBoundingClientRect().top, k = 1 - Math.exp(-Math.max(t - last, 0) / 120);
+      last = t;
+      y += (to - y) * k;
+      if (Math.abs(to - y) < .5) { y = to; frame = 0; } else frame = requestAnimationFrame(tick);
+      paint();
+    };
+    const onScroll = () => { if (h && !frame) { last = performance.now(); frame = requestAnimationFrame(tick); } };
+    const measure = () => {
+      // a sheet taller than the screen (or reduced motion) stays in normal flow: sticky would hide its top for good
+      sec.classList.toggle('cl-on', !reduce && ft.offsetHeight < innerHeight);
+      sec.style.setProperty('--ft-h', ft.offsetHeight + 'px');
+      h = sec.classList.contains('cl-on') ? run.offsetHeight : 0;
+      ['--p', '--q', '--rise'].forEach(v => sec.style.removeProperty(v));
+      if (h) { y = -sec.getBoundingClientRect().top; paint(); }
+    };
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', measure);
+    // keyboard users: tabbing into the footer brings it up (after the browser's own scroll to the focused link, which would otherwise undo this)
+    ft.addEventListener('focusin', () => setTimeout(() => { if (h) scrollTo({ top: scrollY + sec.getBoundingClientRect().bottom - innerHeight, behavior: 'instant' }); }, 50));
+    measure();
+  })();
+  </script>
 
   <!-- ════════ SHOPPING CART SIDE-DRAWER ════════ -->
   <div id="cart-overlay" class="cart-overlay"></div>
@@ -516,9 +571,140 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
 
+  <script>
+  // ════════ DRAFT HERO: featured products ════════
+  (function () {
+    // ponytail: hardcoded from the live Storefront API (custom.featured = true, purchasemode checked 2026-11-03) — read from Shopify before this replaces index.
+    // box = where the furniture sits inside its cutout frame, as fractions [top, right, bottom, left]; measured from the pixels. Re-measure if a cutout is re-shot.
+    const LIST = [
+      { handle: 'lounge-chair', buyable: true, name: 'Bask Chair', coll: 'Of Stillness', from: 41000, tint: '#e3dcd3', box: [.253, .940, .825, .110], cut: 'Lounge_chair_-_teak_frame_-_cognac.png' },
+      { handle: 'sofa-2', buyable: false, name: 'Grooved Sofa', coll: 'Of Stillness', from: 65000, tint: '#e2dfd7', box: [.382, .904, .703, .133], cut: 'grsofa-t-linen.png?v=1793784133' },
+      { handle: 'round-dining-chair', buyable: true, name: 'Lunar Chair', coll: 'Of Stillness', from: 14000, tint: '#ddddd4', box: [.132, .818, .835, .168], cut: 'rdc-t-olive.png' },
+      { handle: 'barstool', buyable: true, name: 'Stilt Barstool', coll: 'Of Stillness', from: 18000, tint: '#e1d9d2', box: [.181, .796, .779, .270], cut: 'barst-t-cognac.png' },
+    ];
+    const CDN = 'https://cdn.shopify.com/s/files/1/0565/9954/3866/files/';
+    // the CDN caches for a year: when a file is replaced in Shopify, add its new ?v= to `cut` above or browsers keep the old image
+    const src = (f, w) => `${CDN}${f}${f.includes('?') ? '&' : '?'}width=${w}`;
+    // the widest frame fitPieces() draws (the sofa) in device pixels, up to the 1684px originals: the full file on 4K, about 1200 on 1080p, 1000 on phones.
+    // Read from the screen, not the window, so maximising never leaves a blurry image. The CDN sends these as WebP.
+    const PIECE_W = Math.min(1684, Math.ceil(Math.min(screen.height * 1.04, screen.width * .84) * devicePixelRatio / 100) * 100);
+    const pad = n => String(n).padStart(2, '0');
+    const inr = n => '₹' + n.toLocaleString('en-IN');
+    const url = p => `product.html?handle=${p.handle}`;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+    const hero = $('.fh'), words = $('.fh-words'), piece = $('.fh-piece'), now = $('.fh-now'), thumbs = $('.fh-thumbs'), apBtn = $('.fh-ap');
+    LIST.forEach((p, i) => {
+      // Buy-vs-Inquire mirrors the Shopify custom.purchasemode metafield, as on the live site
+      const second = p.buyable
+        ? `<a class="fh-pill solid" href="${url(p)}">Buy now</a>`   // ponytail: lands on the product page to pick a variant; one-tap checkout needs a default variant id
+        : `<a class="fh-pill solid" href="${url(p)}&inquire=true">Inquire</a>`;
+      words.insertAdjacentHTML('beforeend', `<div class="fh-word">${p.name}</div>`);
+      piece.insertAdjacentHTML('beforeend', `<img class="fh-blend" src="${src(p.cut, PIECE_W)}" alt="${p.name}" decoding="async">`);
+      now.insertAdjacentHTML('beforeend', `<div>
+        <span class="fh-m"><span class="fh-sub" style="--i:0"><span class="fh-sr">${p.name}, </span>${pad(i + 1)} — ${p.coll} · <b>From ${inr(p.from)}</b></span></span>
+        <span class="fh-m"><span class="fh-acts" style="--i:1"><a class="fh-pill" href="${url(p)}">View</a>${second}</span></span></div>`);
+      apBtn.insertAdjacentHTML('beforebegin', `<button class="fh-tbtn" type="button" aria-label="Show ${p.name}"><span class="fh-tb" style="--tint:${p.tint}"><img class="fh-blend" src="${src(p.cut, 160)}" alt=""></span><span class="fh-bar"><i></i></span></button>`);
+    });
+    const W = $$('.fh-word', words), I = $$('img', piece), N = $$(':scope > div', now), B = $$('.fh-tbtn', thumbs), bars = $$('.fh-bar i', thumbs);
+    let cur = -1;
+    function show(i) {
+      if (i === cur) return;
+      [W, I, N].forEach(set => set.forEach((el, j) => { el.classList.toggle('on', j === i); el.classList.toggle('was', j === cur); }));
+      N.forEach((el, j) => el.inert = j !== i);          // hidden slides' buttons stay out of the tab order
+      B.forEach((b, j) => b.setAttribute('aria-current', j === i));
+      bars.forEach(b => b.style.transform = 'scaleX(0)');
+      hero.style.setProperty('--tint', LIST[i].tint);
+      cur = i;
+    }
+    show(0);
+
+    // Autoplay with a visible timer. Pauses on hover/focus, when the tab is hidden,
+    // when the hero scrolls out of view, and via the pause button (WCAG 2.2.2).
+    let t = 0, last = 0, hovered = false, focused = false, visible = true, user = !reduce;
+    const DUR = 5500, running = () => user && !hovered && !focused && visible && !document.hidden;
+    const frame = ts => {
+      if (running()) { t += Math.min(250, ts - (last || ts)); if (t >= DUR) { t = 0; show((cur + 1) % LIST.length); } bars[cur].style.transform = `scaleX(${t / DUR})`; }
+      last = ts; requestAnimationFrame(frame);
+    };
+    [thumbs, now].forEach(el => {
+      el.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') hovered = true; });
+      el.addEventListener('pointerleave', () => hovered = false);
+    });
+    hero.addEventListener('focusin', e => focused = e.target.matches(':focus-visible'));
+    hero.addEventListener('focusout', () => focused = false);
+    new IntersectionObserver(([e]) => visible = e.isIntersecting, { threshold: .4 }).observe(hero);
+    const paint = () => {
+      apBtn.setAttribute('aria-label', user ? 'Pause slideshow' : 'Play slideshow');
+      apBtn.innerHTML = user ? '<svg viewBox="0 0 10 10"><rect x="1.5" y=".5" width="2.4" height="9" rx="1.2"/><rect x="6.1" y=".5" width="2.4" height="9" rx="1.2"/></svg>'
+                             : '<svg viewBox="0 0 10 10"><path d="M2.6 1.2a.9.9 0 0 1 1.35-.78l5.2 3.8a.9.9 0 0 1 0 1.56l-5.2 3.8A.9.9 0 0 1 2.6 8.8z"/></svg>';
+    };
+    apBtn.addEventListener('click', () => { user = !user; paint(); });
+    paint(); requestAnimationFrame(frame);
+    B.forEach((b, i) => b.addEventListener('click', () => { show(i); t = 0; bars[i].style.transform = 'scaleX(0)'; }));
+
+    // Every cutout has a different margin of backdrop, so fit each by its furniture box, not its frame:
+    // centred both ways in the space between nav and name, chairs sized by height, wide pieces capped by width.
+    const fitPieces = () => {
+      const Wd = piece.clientWidth, H = piece.clientHeight, maxW = Math.min(Wd * .9, H * 1.3);
+      I.forEach((img, i) => {
+        const [tp, r, b, l] = LIST[i].box, ar = img.naturalWidth / img.naturalHeight || 2 / 3;
+        const h = .72 * Math.min(H / (b - tp), maxW / ((r - l) * ar));    // rendered frame height, 28% under the full fit
+        Object.assign(img.style, { height: `${h}px`, left: `${Wd / 2 - (l + r) / 2 * ar * h}px`, top: `${(H - (b - tp) * h) / 2 - tp * h}px` });
+      });
+    };
+    new ResizeObserver(fitPieces).observe(piece);
+    I.forEach(img => img.decode().catch(() => {}).then(fitPieces));
+
+    // reveal once fonts + the first piece are in (hard cap so it never hangs)
+    Promise.race([
+      Promise.all([document.fonts.ready, I[0].decode().catch(() => {})]),
+      new Promise(r => setTimeout(r, 1400)),
+    ]).then(() => hero.classList.add('fh-ready'));
+  })();
+  </script>
   <script src="site.js"></script>
   <script src="script.js"></script>
   <script src="shopify-integration.js"></script>
+  <script>
+  // ════════ DRAFT: Our Pieces — every product except the four in the hero, live from Shopify ════════
+  (function () {
+    const HERO = ['lounge-chair', 'sofa-2', 'round-dining-chair', 'barstool'];
+    const section = document.getElementById('our-pieces'), grid = section.querySelector('.op-grid');
+    const inr = n => '₹' + Math.round(n).toLocaleString('en-IN');
+    const query = `{ products(first: 50) { edges { node { handle title productType featuredImage { url }
+      priceRange { minVariantPrice { amount } }
+      featuredVariant: metafield(namespace: "custom", key: "featured_variant") { reference { ... on ProductVariant { title image { url } } } }
+      variants(first: 50) { edges { node { title image { url } } } } } } } }`;
+    // the card the products page draws: products.js renderProductsGrid() picks the variant the same way
+    const cardVariant = p => p.featuredVariant?.reference || (p.variants.edges.find(e => e.node.image?.url) || p.variants.edges[0])?.node;
+
+    fetchFromShopify(query).then(data => {
+      const all = (data?.data?.products?.edges || []).map(e => e.node);
+      // one piece per category, categories the hero doesn't already show first; one row of four
+      const type = p => (p.productType || p.handle).toLowerCase().trim();
+      const heroTypes = all.filter(p => HERO.includes(p.handle)).map(type), seen = new Set();
+      const items = all
+        .filter(p => !HERO.includes(p.handle) && p.featuredImage && +p.priceRange.minVariantPrice.amount > 0)   // skips unpriced placeholders
+        .filter(p => !seen.has(type(p)) && seen.add(type(p)))
+        .sort((a, b) => heroTypes.includes(type(a)) - heroTypes.includes(type(b)))
+        .slice(0, 4);
+      if (!items.length) { grid.hidden = true; return; }       // offline: the See all button still leads on
+      grid.innerHTML = items.map((p, i) => `
+        <a class="product-card" href="product.html?handle=${encodeURIComponent(p.handle)}" style="--i:${i % 4}">
+          <div class="product-card-img-wrap"><img src="${safeUrl(sizeShopifyImage(cardVariant(p)?.image?.url || p.featuredImage.url, 800, 1000))}" alt="${escHtml(p.title)}" loading="lazy" decoding="async" width="800" height="1000"></div>
+          <div class="product-card-body">
+            <div class="product-card-header-row"><h3 class="product-name">${escHtml(p.title)}</h3><span class="product-price">From ${inr(p.priceRange.minVariantPrice.amount)}</span></div>
+            <div class="product-card-footer-row"><span class="product-materials">${escHtml(cardVariant(p)?.title || '')}</span></div>
+          </div>
+        </a>`).join('');
+      // cards rise in as each row scrolls into view
+      const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+      grid.querySelectorAll('.product-card').forEach(c => io.observe(c));
+    });
+  })();
+  </script>
 
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
