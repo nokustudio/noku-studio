@@ -26,3 +26,4 @@ noku_products.xlsx
 
 # Local test configurations and sandbox pages
 tests/
+nokustudio-crawl/

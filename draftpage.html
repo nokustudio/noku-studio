@@ -579,12 +579,13 @@
     // box = where the furniture sits inside its cutout frame, as fractions [top, right, bottom, left]; measured from the pixels. Re-measure if a cutout is re-shot.
     const LIST = [
       { handle: 'lounge-chair', buyable: true, name: 'Bask Chair', coll: 'Of Stillness', from: 41000, tint: '#e3dcd3', box: [.253, .940, .825, .110], cut: 'Lounge_chair_-_teak_frame_-_cognac.png' },
-      { handle: 'sofa-2', buyable: false, name: 'Grooved Sofa', coll: 'Of Stillness', from: 65000, tint: '#e2dfd7', box: [.382, .904, .703, .133], cut: 'grsofa-t-linen.png' },
+      { handle: 'sofa-2', buyable: false, name: 'Grooved Sofa', coll: 'Of Stillness', from: 65000, tint: '#e2dfd7', box: [.382, .904, .703, .133], cut: 'grsofa-t-linen.png?v=1793784133' },
       { handle: 'round-dining-chair', buyable: true, name: 'Lunar Chair', coll: 'Of Stillness', from: 14000, tint: '#ddddd4', box: [.132, .818, .835, .168], cut: 'rdc-t-olive.png' },
       { handle: 'barstool', buyable: true, name: 'Stilt Barstool', coll: 'Of Stillness', from: 18000, tint: '#e1d9d2', box: [.181, .796, .779, .270], cut: 'barst-t-cognac.png' },
     ];
     const CDN = 'https://cdn.shopify.com/s/files/1/0565/9954/3866/files/';
-    const src = (f, w) => `${CDN}${f}?width=${w}`;
+    // the CDN caches for a year: when a file is replaced in Shopify, add its new ?v= to `cut` above or browsers keep the old image
+    const src = (f, w) => `${CDN}${f}${f.includes('?') ? '&' : '?'}width=${w}`;
     const pad = n => String(n).padStart(2, '0');
     const inr = n => '₹' + n.toLocaleString('en-IN');
     const url = p => `product.html?handle=${p.handle}`;
