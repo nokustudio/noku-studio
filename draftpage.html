@@ -45,7 +45,7 @@
     .fh-h1 { margin: 0; }
     .fh-mid { display: grid; justify-items: center; gap: clamp(12px, 2.2svh, 24px); }
     .fh-words { display: grid; justify-items: center; pointer-events: none; font-size: min(5.4vw, 7.4svh, 96px); }
-    .fh-word { grid-area: 1 / 1; display: flex; overflow: hidden; padding: 0 .04em;
+    .fh-word { grid-area: 1 / 1; display: flex; overflow: hidden; padding: .08em; margin: -.08em -.04em;   /* room for ascenders and tight tracking inside the clip; the margin keeps the layout where it was */
       font: 300 1em/1 var(--font-display); letter-spacing: -.055em; color: var(--ink); white-space: nowrap; }
     .fh-word span { display: block; transform: translateY(115%); transition: transform .7s var(--ease-wipe); transition-delay: calc(var(--i) * 35ms); }
     .fh-word.was span { transform: translateY(-115%); }
@@ -145,8 +145,7 @@
 
     /* ════════ DRAFT: "Our Pieces" — the rest of the catalogue, in the homepage's featured-card design ════════ */
     .op { background: var(--light); color: var(--ink); position: relative; z-index: 13; border-bottom: 1px solid var(--line); }
-    .op .container { max-width: 1320px; }   /* cards run 60px wider each side than the site's 1200px container on large screens… */
-    .op-head { margin-bottom: clamp(24px, 4vw, 48px); padding-inline: clamp(0px, (100vw - 1200px) / 2, 60px); }   /* …while the header keeps the shared left edge */
+    .op-head { margin-bottom: clamp(24px, 4vw, 48px); }
     .op-head .title-h2 { margin-bottom: 0; }
     .op-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; padding: 20px 0; }
     .op-grid .product-card { flex: none; width: auto; color: inherit; text-decoration: none; }   /* grid cells, not the carousel's fixed quarter-widths */
@@ -198,6 +197,11 @@
       .mat-pin { position: static; }
       .mat-row { gap: 10px; }
     }
+    /* ════════ DRAFT LAYOUT — content sections share one edge and left-aligned headers; hero and video are the full-width, centred moments ════════ */
+    .container { max-width: 1320px; }
+    #collections .collections-header { text-align: left; }
+    #collections .collections-subtext { margin-inline: 0; }
+
     /* ════════ DRAFT TYPE SYSTEM — 10 styles, 2 weights; every text element on this page maps to one ════════
        Scoped to this page with #ids so the shared style.css (homepage, other pages) is untouched.
        Display (hero product name, clamp ≤96px / 300 / −.055em) stays on .fh-words above. */
