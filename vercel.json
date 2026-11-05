@@ -1,6 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
+  "redirects": [
+    { "source": "/projects/cedar-house", "destination": "/projects/yucca-house", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",
