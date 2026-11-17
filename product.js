@@ -1923,6 +1923,9 @@ async function loadRelatedProducts() {
                     node {
                       id
                       title
+                      image {
+                        url
+                      }
                       price {
                         amount
                         currencyCode
@@ -1982,7 +1985,8 @@ async function loadRelatedProducts() {
 
   displayProducts.forEach(p => {
     const priceVal = p.variants.edges[0]?.node.price.amount || SHOPIFY_CONFIG.defaultPrice;
-    const imgUrl = sizedCardImage((p.featuredImage && p.featuredImage.url) || p.images?.edges[0]?.node.url || '');
+    // Use the first variant's image so the photo matches the materials label below it
+    const imgUrl = sizedCardImage(p.variants.edges[0]?.node.image?.url || (p.featuredImage && p.featuredImage.url) || p.images?.edges[0]?.node.url || '');
     
     // Extract variant materials string
     let materialsStr = 'Solid Hardwood';
