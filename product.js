@@ -1232,6 +1232,7 @@ function renderProductPage() {
 
       // Update variant display values (price + image + materials info card)
       updateVariantDisplays();
+      renderRelatedProducts();
     });
   });
 
@@ -1981,19 +1982,48 @@ async function loadRelatedProducts() {
     displayProducts.push(...Object.values(FALLBACK_PRODUCTS_DB).filter(p => p.handle !== currentHandle).slice(0, 4));
   }
 
+  relatedProducts = displayProducts;
+  relatedWood = null;
+  renderRelatedProducts();
+}
+
+let relatedProducts = [];
+let relatedWood = null;
+
+// Wood currently selected on this product page ('' if the product has no wood option)
+function selectedWood() {
+  const woodOpt = (currentProduct.options || []).find(isWoodOption);
+  return woodOpt ? (selectedOptions[woodOpt.name] || '').toLowerCase() : '';
+}
+
+// Re-renders the cards only when the selected wood changes, so picking upholstery doesn't reshuffle them
+function renderRelatedProducts() {
+  const grid = document.getElementById('related-products-grid');
+  const wood = selectedWood();
+  if (!grid || !relatedProducts.length || wood === relatedWood) return;
+  relatedWood = wood;
+
   grid.innerHTML = '';
 
-  displayProducts.forEach(p => {
-    const priceVal = p.variants.edges[0]?.node.price.amount || SHOPIFY_CONFIG.defaultPrice;
-    // Use the first variant's image so the photo matches the materials label below it
-    const imgUrl = sizedCardImage(p.variants.edges[0]?.node.image?.url || (p.featuredImage && p.featuredImage.url) || p.images?.edges[0]?.node.url || '');
-    
+  relatedProducts.forEach(p => {
+    // Random variant per load, preferring ones in the selected wood with their own photo;
+    // image, label and price all come from it so they match
+    const variants = p.variants.edges.map(e => e.node);
+    const withImage = variants.filter(v => v.image?.url);
+    let pool = withImage.length ? withImage : variants;
+    const sameWood = pool.filter(v => v.selectedOptions?.some(o => o.value.toLowerCase() === wood));
+    if (sameWood.length) pool = sameWood;
+    const v = pool[Math.floor(Math.random() * pool.length)];
+
+    const priceVal = v?.price.amount || SHOPIFY_CONFIG.defaultPrice;
+    const imgUrl = sizedCardImage(v?.image?.url || (p.featuredImage && p.featuredImage.url) || p.images?.edges[0]?.node.url || '');
+
     // Extract variant materials string
     let materialsStr = 'Solid Hardwood';
-    if (p.variants.edges[0]?.node.selectedOptions) {
-      materialsStr = p.variants.edges[0].node.selectedOptions.map(o => o.value).join(' / ');
-    } else if (p.variants.edges[0]?.node.title !== 'Default Title') {
-      materialsStr = p.variants.edges[0]?.node.title || '';
+    if (v?.selectedOptions) {
+      materialsStr = v.selectedOptions.map(o => o.value).join(' / ');
+    } else if (v && v.title !== 'Default Title') {
+      materialsStr = v.title || '';
     }
 
     const card = document.createElement('a');
