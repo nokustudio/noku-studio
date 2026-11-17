@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /draftpage
+Disallow: /scratch/
+Disallow: /backup/
+Disallow: /tests/
+
+Sitemap: https://www.nokustudio.in/sitemap.xml

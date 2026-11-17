@@ -886,7 +886,8 @@ async function loadProduct(handle) {
   }
 
   currentProduct = productData;
-  
+  setProductMeta(productData);
+
   // Set initial selected options, with query parameter overrides if present
   const urlParams = new URLSearchParams(window.location.search);
   const qWood = urlParams.get('wood');
@@ -928,6 +929,52 @@ async function loadProduct(handle) {
 
   renderProductPage();
   loadRelatedProducts();
+}
+
+// Give each product its own title, description and canonical URL so search engines
+// don't see every product.html?handle=… page as the same "Design Details" page.
+function setProductMeta(p) {
+  document.title = `${p.title} — Handcrafted Furniture | Noku Studio`;
+
+  const desc = (p.description || '').replace(/\s+/g, ' ').trim();
+  if (desc) {
+    document.querySelector('meta[name="description"]')
+      ?.setAttribute('content', desc.length > 155 ? desc.slice(0, 152).replace(/\s+\S*$/, '') + '…' : desc);
+  }
+
+  // Canonical uses the handle actually shown, so unknown handles that fall back to another product point at it
+  let canonical = document.querySelector('link[rel="canonical"]');
+  if (!canonical) {
+    canonical = document.createElement('link');
+    canonical.rel = 'canonical';
+    document.head.appendChild(canonical);
+  }
+  canonical.href = `https://www.nokustudio.in/product?handle=${encodeURIComponent(p.handle)}`;
+
+  // Product structured data so Google can show price and photo in results
+  const prices = (p.variants?.edges || []).map(e => parseFloat(e.node.price?.amount)).filter(n => n > 0);
+  const images = [...new Set([p.featuredImage?.url, ...(p.images?.edges || []).map(e => e.node.url)].filter(Boolean))].slice(0, 5);
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: p.title,
+    description: desc || undefined,
+    image: images,
+    url: canonical.href,
+    brand: { '@type': 'Brand', name: 'Noku Studio' },
+    offers: prices.length ? {
+      '@type': 'AggregateOffer',
+      priceCurrency: 'INR',
+      lowPrice: Math.min(...prices),
+      highPrice: Math.max(...prices),
+      offerCount: prices.length,
+      seller: { '@id': 'https://www.nokustudio.in/#business' }
+    } : undefined
+  };
+  const ld = document.createElement('script');
+  ld.type = 'application/ld+json';
+  ld.textContent = JSON.stringify(data);
+  document.head.appendChild(ld);
 }
 
 // ─── RENDER DETAILED INTERFACE ───

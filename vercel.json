@@ -1,9 +1,26 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
+  "rewrites": [
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" }
+  ],
   "redirects": [
     { "source": "/projects/cedar-house", "destination": "/projects/parijata-house", "permanent": true },
-    { "source": "/projects/yucca-house", "destination": "/projects/parijata-house", "permanent": true }
+    { "source": "/projects/yucca-house", "destination": "/projects/parijata-house", "permanent": true },
+    { "source": "/products/barstool", "destination": "/product?handle=barstool", "permanent": true },
+    { "source": "/products/barstool-01", "destination": "/product?handle=barstool", "permanent": true },
+    { "source": "/products/lounge-chair", "destination": "/product?handle=lounge-chair", "permanent": true },
+    { "source": "/products/classic-study-table", "destination": "/product?handle=classic-study-table", "permanent": true },
+    { "source": "/products/side-table", "destination": "/product?handle=side-table", "permanent": true },
+    { "source": "/products/study-chair", "destination": "/product?handle=study-chair", "permanent": true },
+    { "source": "/products/:slug", "destination": "/products", "permanent": true },
+    { "source": "/collections/ofstillness", "destination": "/stillness", "permanent": true },
+    { "source": "/collections", "destination": "/products", "permanent": true },
+    { "source": "/cart", "destination": "/products", "permanent": true },
+    { "source": "/collections/:slug", "destination": "/products", "permanent": true },
+    { "source": "/catalog-copy", "destination": "/products", "permanent": true },
+    { "source": "/home-copy", "destination": "/", "permanent": true },
+    { "source": "/bespoke", "destination": "/contact", "permanent": true }
   ],
   "headers": [
     {
