@@ -4328,3 +4328,37 @@ nav.light-nav .cart-btn:hover {
      what hides it when closed, so removing the travel means rewriting the
      hide mechanism. Short enough not to be the problem this media query is for. */
 }
+
+/* Social icons under the footer wordmark — add one <li> per network.
+   Page footers render it in ink on Light (13.6:1); hover is chamoisee text (4.76:1). */
+.footer-socials {
+  list-style: none;
+  display: flex;
+  gap: 4px;
+  margin: 16px 0 0 -6px;
+  padding: 0;
+}
+
+.footer-socials a {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+
+.footer-socials a:hover,
+.footer-socials a:focus-visible {
+  color: var(--chamoisee-text, #8a6547);
+}
+
+.footer-socials svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Home page: the wordmark sits in the bottom row, so the icons sit beside it */
+.footer-bottom .footer-socials {
+  margin: 0;
+}
