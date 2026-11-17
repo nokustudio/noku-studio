@@ -4329,7 +4329,7 @@ nav.light-nav .cart-btn:hover {
      hide mechanism. Short enough not to be the problem this media query is for. */
 }
 
-/* Social icons under the footer wordmark — add one <li> per network.
+/* Social icons under the footer's Knowledge links — add one <li> per network.
    Page footers render it in ink on Light (13.6:1); hover is chamoisee text (4.76:1). */
 .footer-socials {
   list-style: none;
@@ -4356,9 +4356,4 @@ nav.light-nav .cart-btn:hover {
 .footer-socials svg {
   width: 20px;
   height: 20px;
-}
-
-/* Home page: the wordmark sits in the bottom row, so the icons sit beside it */
-.footer-bottom .footer-socials {
-  margin: 0;
 }
