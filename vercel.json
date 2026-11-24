@@ -5,8 +5,7 @@
     "api/product.js": { "includeFiles": "product.html" }
   },
   "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
-    { "source": "/product", "destination": "/api/product" }
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" }
   ],
   "redirects": [
     { "source": "/projects/cedar-house", "destination": "/projects/parijata-house", "permanent": true },
