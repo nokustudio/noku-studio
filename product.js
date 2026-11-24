@@ -886,7 +886,10 @@ async function loadProduct(handle) {
   }
 
   currentProduct = productData;
-  setProductMeta(productData);
+  // Only claim this page for the product that was asked for. If Shopify failed and we're
+  // showing the lounge-chair stand-in, a canonical/structured data for it would tell Google
+  // this URL is a copy of the lounge chair (seen in Search Console for mahjong-table).
+  if (productData.handle === handle) setProductMeta(productData);
 
   // Set initial selected options, with query parameter overrides if present
   const urlParams = new URLSearchParams(window.location.search);
@@ -942,7 +945,6 @@ function setProductMeta(p) {
       ?.setAttribute('content', desc.length > 155 ? desc.slice(0, 152).replace(/\s+\S*$/, '') + '…' : desc);
   }
 
-  // Canonical uses the handle actually shown, so unknown handles that fall back to another product point at it
   let canonical = document.querySelector('link[rel="canonical"]');
   if (!canonical) {
     canonical = document.createElement('link');
