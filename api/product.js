@@ -11,11 +11,8 @@ const TOKEN = '7b62ad5d7d665bebe383ff2d3c36c0b0'; // public Storefront token, sa
 
 const TEMPLATE = fs.readFileSync(path.join(process.cwd(), 'product.html'), 'utf8');
 
-const QUERY = `query ($handle: String!) { product(handle: $handle) {
-  handle title description
-  images(first: 5) { edges { node { url } } }
-  variants(first: 100) { edges { node { price { amount } } } }
-} }`;
+// Same query the page itself uses, so the embedded product is exactly what product.js expects
+const QUERY = require('../product-query.js');
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -33,7 +30,7 @@ function render(p) {
     '@type': 'Product',
     name: p.title,
     description: (p.description || '').replace(/\s+/g, ' ').trim() || undefined,
-    image: p.images.edges.map(e => e.node.url),
+    image: p.images.edges.slice(0, 5).map(e => e.node.url),
     url,
     brand: { '@type': 'Brand', name: 'Noku Studio' },
     offers: prices.length ? {
@@ -48,9 +45,12 @@ function render(p) {
 
   let html = TEMPLATE.replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(p.title)} — Handcrafted Furniture | Noku Studio</title>`);
   if (desc) html = html.replace(/<meta\s+name="description"[\s\S]*?>/, `<meta name="description" content="${esc(desc)}">`);
-  // "<" escaped so a description can never close the script tag
+  // "<" escaped so Shopify text can never close a script tag.
+  // __NOKU_PRODUCT__ is the full product; product.js uses it instead of calling Shopify.
+  const json = v => JSON.stringify(v).replace(/</g, '\\u003c');
   const head = `  <link rel="canonical" href="${esc(url)}">\n`
-    + `  <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>\n`;
+    + `  <script type="application/ld+json">${json(ld)}</script>\n`
+    + `  <script>window.__NOKU_PRODUCT__ = ${json(p)};</script>\n`;
   return html.replace('</head>', head + '</head>');
 }
 

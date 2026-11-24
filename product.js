@@ -29,8 +29,7 @@ const DISPLAY_ONLY_HANDLES = [
 
 // Buy-vs-Inquire is decided solely by the Shopify product metafield
 // custom.purchasemode (boolean). Only an explicit `true` is buyable; a false or
-// missing metafield — and every offline fallback product, which carries none —
-// is inquire-only. So if the Shopify connection fails, nothing is buyable.
+// missing metafield is inquire-only.
 function isPurchasable(p) {
   return p && p.purchaseMode && p.purchaseMode.value === 'true';
 }
@@ -131,377 +130,6 @@ function enforceCartDisplayPolicy() {
     }
   }
 }
-
-// Fallback Product Database (Matches catalog products.js)
-const FALLBACK_PRODUCTS_DB = {
-  "sofa-2": {
-    id: "gid://shopify/Product/7325874651194",
-    title: "Grooved Sofa",
-    handle: "sofa-2",
-    description: "A meditation on silence. Mid-Century proportions paired with honest joinery. Rooted in our Chandigarh lineage, reimagined for contemporary living.",
-    productType: "sofa",
-    tags: ["sofa", "fabric", "leather"],
-    dimension: "167.5cm x 78.5cm x 84.5cm",
-    collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
-    images: {
-      edges: [
-        { node: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg", altText: "Grooved Sofa Main" } },
-        { node: { url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg", altText: "Grooved Sofa Side" } }
-      ]
-    },
-    variants: {
-      edges: [
-        {
-          node: {
-            id: "gid://shopify/ProductVariant/40593555587130",
-            title: "Teak / Fabric - Charcoal",
-            price: { amount: "81000.0", currencyCode: "INR" },
-            image: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be71136547_Noku_ofStillness_Sofa_grooved_02.jpeg" },
-            selectedOptions: [
-              { name: "Wood", value: "Teak" },
-              { name: "Upholstery", value: "Fabric - Charcoal" }
-            ]
-          }
-        }
-      ]
-    },
-    options: [
-      { name: "Wood", values: ["Teak"] },
-      { name: "Upholstery", values: ["Fabric - Charcoal"] }
-    ]
-  },
-  "lounge-chair": {
-    id: "gid://shopify/Product/7319571562554",
-    title: "Bask Chair",
-    handle: "lounge-chair",
-    description: "Celebrating mid-century restraint and fine craftsmanship. An elegant visual weight with refined lines. Structured for ultimate ergonomic support.",
-    productType: "chair",
-    tags: ["chair", "lounge", "fabric", "leather"],
-    dimension: "64.5cm x 83cm x 91.5cm",
-    collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
-    images: {
-      edges: [
-        { node: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7724c1a8d27260d62288_Noku_ofStillness_Lounge_chair_02.jpeg", altText: "Bask Chair Angle" } },
-        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Lounge_chair_-_teak_frame_-_linen.png?v=1774675403", altText: "Bask Chair Teak Linen" } },
-        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Lounge_chair_-_whiteash_-_linen.png?v=1774676886", altText: "Bask Chair Ash Linen" } }
-      ]
-    },
-    variants: {
-      edges: [
-        {
-          node: {
-            id: "gid://shopify/ProductVariant/40593534910522",
-            title: "Teak / Fabric - Cloud",
-            price: { amount: "49500.0", currencyCode: "INR" },
-            image: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Lounge_chair_-_teak_frame_-_cloud.png?v=1774675403" },
-            selectedOptions: [
-              { name: "Wood", value: "Teak" },
-              { name: "Upholstery", value: "Fabric - Cloud" }
-            ]
-          }
-        },
-        {
-          node: {
-            id: "gid://shopify/ProductVariant/40593534910523",
-            title: "Teak / Fabric - Rubik Linen",
-            price: { amount: "52000.0", currencyCode: "INR" },
-            image: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Lounge_chair_-_teak_frame_-_linen.png?v=1774675403" },
-            selectedOptions: [
-              { name: "Wood", value: "Teak" },
-              { name: "Upholstery", value: "Fabric - Rubik Linen" }
-            ]
-          }
-        },
-        {
-          node: {
-            id: "gid://shopify/ProductVariant/40593534910524",
-            title: "White Ash / Fabric - Rubik Linen",
-            price: { amount: "48000.0", currencyCode: "INR" },
-            image: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Lounge_chair_-_whiteash_-_linen.png?v=1774676886" },
-            selectedOptions: [
-              { name: "Wood", value: "White Ash" },
-              { name: "Upholstery", value: "Fabric - Rubik Linen" }
-            ]
-          }
-        }
-      ]
-    },
-    options: [
-      { name: "Wood", values: ["Teak", "White Ash"] },
-      { name: "Upholstery", values: ["Fabric - Cloud", "Fabric - Rubik Linen"] }
-    ]
-  },
-  "dining-chair": {
-    id: "gid://shopify/Product/7365013274682",
-    title: "Ripple Chair",
-    handle: "dining-chair",
-    description: "Lightweight dining joinery in warm hardwood finishes. Perfect blend of comfort and structural honesty. Reinterpreted Chandigarh style.",
-    productType: "chair",
-    tags: ["chair", "dining"],
-    dimension: "45cm x 51.5cm x 83.5cm",
-    collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
-    images: {
-      edges: [
-        { node: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be7113654a_Noku_ofStillness_Dining_chair_03.jpeg", altText: "Ripple Chair Front" } }
-      ]
-    },
-    variants: {
-      edges: [
-        {
-          node: {
-            id: "gid://shopify/ProductVariant/41218821881914",
-            title: "Teak",
-            price: { amount: "11500.0", currencyCode: "INR" },
-            image: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c99b2583745be7113654a_Noku_ofStillness_Dining_chair_03.jpeg" },
-            selectedOptions: [
-              { name: "Wood", value: "Teak" }
-            ]
-          }
-        }
-      ]
-    },
-    options: [
-      { name: "Wood", values: ["Teak"] }
-    ]
-  },
-  "modern-study-table": {
-    id: "gid://shopify/Product/7320294064186",
-    title: "Stylus Table",
-    handle: "modern-study-table",
-    description: "Premium solid teak workstation with elegant brass detailing. Built to inspire intent and focus.",
-    productType: "table",
-    tags: ["table", "study", "brass"],
-    dimension: "143.5cm x 55cm x 76.5cm",
-    collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
-    images: {
-      edges: [
-        { node: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7d6f73c94da715b34a92_Noku_ofStillness_Study_table_03.jpeg", altText: "Stylus Table ISO" } }
-      ]
-    },
-    variants: {
-      edges: [
-        {
-          node: {
-            id: "gid://shopify/ProductVariant/40573725409338",
-            title: "Teak",
-            price: { amount: "35000.0", currencyCode: "INR" },
-            image: { url: "https://cdn.prod.website-files.com/668005cedc17dd78060b98a8/697c7d6f73c94da715b34a92_Noku_ofStillness_Study_table_03.jpeg" },
-            selectedOptions: [
-              { name: "Wood", value: "Teak" }
-            ]
-          }
-        }
-      ]
-    },
-    options: [
-      { name: "Wood", values: ["Teak"] }
-    ]
-  },
-  "barstool": {
-    id: "gid://shopify/Product/7320281120826",
-    title: "Stilt Barstool",
-    handle: "barstool",
-    description: "A design statement of quiet elegance, wood, and upholstery. Handmade in India. Ergonomically shaped for dining counters.",
-    productType: "barstool",
-    tags: ["barstool", "leather", "fabric"],
-    dimension: "51.5cm x 49.5cm x 93cm",
-    collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
-    images: {
-      edges: [
-        { node: { url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/67cfdbb331dba957c997c00e_5d1622c83584a245197f9005889b2b06_Noku_ofStillness_Barstool_03%20copy.webp", altText: "Stilt Barstool Front" } }
-      ]
-    },
-    variants: {
-      edges: [
-        {
-          node: {
-            id: "gid://shopify/ProductVariant/40585660366906",
-            title: "Teak / Leather - Cognac",
-            price: { amount: "21000.0", currencyCode: "INR" },
-            image: { url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/67cfdbb331dba957c997c00e_5d1622c83584a245197f9005889b2b06_Noku_ofStillness_Barstool_03%20copy.webp" },
-            selectedOptions: [
-              { name: "Wood", value: "Teak" },
-              { name: "Upholstery", value: "Leather - Cognac" }
-            ]
-          }
-        }
-      ]
-    },
-    options: [
-      { name: "Wood", values: ["Teak"] },
-      { name: "Upholstery", values: ["Leather - Cognac"] }
-    ]
-  },
-  "classic-study-table": {
-    id: "gid://shopify/Product/7320292196410",
-    title: "Quill Study Table",
-    handle: "classic-study-table",
-    description: "Vernacular lines combined with modern ergonomics. Features solid joinery and drawer space.",
-    productType: "table",
-    tags: ["table", "study"],
-    dimension: "130cm x 60cm x 76cm",
-    collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
-    images: {
-      edges: [
-        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/T1_DSC09354.jpg?v=1769765035", altText: "Quill Study Table" } }
-      ]
-    },
-    variants: {
-      edges: [
-        {
-          node: {
-            id: "gid://shopify/ProductVariant/40573722853434",
-            title: "Teak",
-            price: { amount: "41500.0", currencyCode: "INR" },
-            image: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/T1_DSC09354.jpg?v=1769765035" },
-            selectedOptions: [
-              { name: "Wood", value: "Teak" }
-            ]
-          }
-        }
-      ]
-    },
-    options: [
-      { name: "Wood", values: ["Teak"] }
-    ]
-  },
-  "side-table": {
-    id: "gid://shopify/Product/7323011874874",
-    title: "Nook Side Table",
-    handle: "side-table",
-    description: "Compact design block with elegant, clean lines, ideal as a bedside companion or sofa accompaniment.",
-    productType: "side table",
-    tags: ["side table", "table"],
-    dimension: "48cm x 48cm x 48.5cm",
-    collections: { edges: [{ node: { title: "Of Stillness", handle: "of-stillness" } }] },
-    images: {
-      edges: [
-        { node: { url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d403fa184eebc59c05c_Side%20Table%2042%20B.png", altText: "Nook Side Table" } }
-      ]
-    },
-    variants: {
-      edges: [
-        {
-          node: {
-            id: "gid://shopify/ProductVariant/40583459569722",
-            title: "Teak",
-            price: { amount: "21000.0", currencyCode: "INR" },
-            image: { url: "https://cdn.prod.website-files.com/667fb0113927090bb47059e6/69c00d403fa184eebc59c05c_Side%20Table%2042%20B.png" },
-            selectedOptions: [
-              { name: "Wood", value: "Teak" }
-            ]
-          }
-        }
-      ]
-    },
-    options: [
-      { name: "Wood", values: ["Teak"] }
-    ]
-  },
-  "lounge-sofa": {
-    id: "gid://shopify/Product/7325875505978",
-    title: "Dune Sofa",
-    handle: "lounge-sofa",
-    description: "Deep, comfortable, and beautifully finished sofa. A warm center point for your living room conversations.",
-    productType: "sofa",
-    tags: ["sofa", "lounge", "fabric", "leather"],
-    dimension: "164cm x 78.5cm x 81.5cm",
-    collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
-    images: {
-      edges: [
-        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Noku_ofStillness_Sofa_04.webp?v=1769765673", altText: "Dune Sofa" } }
-      ]
-    },
-    variants: {
-      edges: [
-        {
-          node: {
-            id: "gid://shopify/ProductVariant/40573731110970",
-            title: "Teak / Leather - Cognac",
-            price: { amount: "119500.0", currencyCode: "INR" },
-            image: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Noku_ofStillness_Sofa_04.webp?v=1769765673" },
-            selectedOptions: [
-              { name: "Wood", value: "Teak" },
-              { name: "Upholstery", value: "Leather - Cognac" }
-            ]
-          }
-        }
-      ]
-    },
-    options: [
-      { name: "Wood", values: ["Teak"] },
-      { name: "Upholstery", values: ["Leather - Cognac"] }
-    ]
-  },
-  "upholstered-bench": {
-    id: "gid://shopify/Product/7323012792378",
-    title: "Float Bench",
-    handle: "upholstered-bench",
-    description: "Elegant seating block with options for premium fabrics or leather, detailed with fine line stitch work.",
-    productType: "bench",
-    tags: ["bench", "fabric", "leather"],
-    dimension: "143cm x 38cm x 46cm",
-    collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
-    images: {
-      edges: [
-        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/DSC09382.webp?v=1769766216", altText: "Float Bench" } }
-      ]
-    },
-    variants: {
-      edges: [
-        {
-          node: {
-            id: "gid://shopify/ProductVariant/40583462649914",
-            title: "Teak / Leather - Cognac",
-            price: { amount: "25500.0", currencyCode: "INR" },
-            image: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/DSC09382.webp?v=1769766216" },
-            selectedOptions: [
-              { name: "Wood", value: "Teak" },
-              { name: "Upholstery", value: "Leather - Cognac" }
-            ]
-          }
-        }
-      ]
-    },
-    options: [
-      { name: "Wood", values: ["Teak"] },
-      { name: "Upholstery", values: ["Leather - Cognac"] }
-    ]
-  },
-  "rod-bed-with-curved-headboard": {
-    id: "gid://shopify/Product/7323013152826",
-    title: "Rod Bed",
-    handle: "rod-bed-with-curved-headboard",
-    description: "Curved headboard bed with subtle spindle rod structures. Celebrating Chandigarh-heritage craft.",
-    productType: "bed",
-    tags: ["bed"],
-    dimension: "194cm x 206.5cm x 91.5cm",
-    collections: { edges: [{ node: { title: "Of Memories", handle: "of-memories" } }] },
-    images: {
-      edges: [
-        { node: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Rodbed3.png?v=1774860971", altText: "Rod Bed" } }
-      ]
-    },
-    variants: {
-      edges: [
-        {
-          node: {
-            id: "gid://shopify/ProductVariant/40583464583290",
-            title: "Teak",
-            price: { amount: "89500.0", currencyCode: "INR" },
-            image: { url: "https://cdn.shopify.com/s/files/1/0565/9954/3866/files/Rodbed3.png?v=1774860971" },
-            selectedOptions: [
-              { name: "Wood", value: "Teak" }
-            ]
-          }
-        }
-      ]
-    },
-    options: [
-      { name: "Wood", values: ["Teak"] }
-    ]
-  }
-};
 
 // ─── MATERIALS LOOKUP REGISTER (From noku-materials.js context) ───
 // Fallback local registry if window.NokuMaterials or global is not active
@@ -768,128 +396,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ─── LOAD PRODUCT DATA ───
 async function loadProduct(handle) {
-  const query = `
-    query getProductByHandle($handle: String!) {
-      product(handle: $handle) {
-        id
-        title
-        description
-        handle
-        productType
-        tags
-        collections(first: 3) {
-          edges {
-            node {
-              title
-              handle
-            }
-          }
-        }
-        metafield(namespace: "custom", key: "dimension") {
-          value
-        }
-        purchaseMode: metafield(namespace: "custom", key: "purchasemode") {
-          value
-        }
-        woodFinishMetafield: metafield(namespace: "custom", key: "wood_finish") {
-          value
-        }
-        dimensionImagesMetafield: metafield(namespace: "custom", key: "dimension_images") {
-          references(first: 10) {
-            edges {
-              node {
-                ... on MediaImage {
-                  image {
-                    url
-                  }
-                }
-              }
-            }
-          }
-        }
-        media(first: 10) {
-          edges {
-            node {
-              mediaContentType
-              ... on Model3d {
-                id
-                alt
-                sources {
-                  url
-                  format
-                  mimeType
-                }
-              }
-            }
-          }
-        }
-        images(first: 30) {
-          edges {
-            node {
-              url
-              altText
-            }
-          }
-        }
-        variants(first: 100) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-                currencyCode
-              }
-              image {
-                url
-              }
-              selectedOptions {
-                name
-                value
-              }
-            }
-          }
-        }
-        options {
-          name
-          values
-        }
-      }
-    }
-  `;
+  const query = window.NOKU_PRODUCT_QUERY;
 
   let productData = null;
 
+  // On the live site api/product.js already fetched this product on the server and put it
+  // in the page, so the browser doesn't depend on reaching Shopify (nor does Google).
+  const preloaded = window.__NOKU_PRODUCT__;
+  const productRequest = preloaded && preloaded.handle === handle
+    ? Promise.resolve({ data: { product: preloaded } })
+    : fetchFromShopify(query, { handle }); // local dev, or the server couldn't reach Shopify
+
   try {
-    const [res] = await Promise.all([
-      fetchFromShopify(query, { handle }),
-      fetchMaterialMetaobjects()
-    ]);
-    if (res && res.data && res.data.product) {
-      productData = res.data.product;
-      console.log('Successfully fetched live Shopify product:', productData.title);
-    }
+    const [res] = await Promise.all([productRequest, fetchMaterialMetaobjects()]);
+    productData = res?.data?.product || null;
   } catch (err) {
-    console.warn('GraphQL product fetch failed. Using local database.', err);
+    console.warn('Product fetch failed.', err);
   }
 
-  // Fallback if storefront API returns nothing
   if (!productData) {
-    productData = FALLBACK_PRODUCTS_DB[handle];
-    if (!productData) {
-      // Final fallback if the requested handle doesn't exist
-      productData = FALLBACK_PRODUCTS_DB['lounge-chair'];
-      console.warn(`Handle "${handle}" not found. Falling back to lounge-chair.`);
-    } else {
-      console.log('Loaded product from offline fallback DB:', productData.title);
-    }
+    showProductUnavailable();
+    return;
   }
 
   currentProduct = productData;
-  // Only claim this page for the product that was asked for. If Shopify failed and we're
-  // showing the lounge-chair stand-in, a canonical/structured data for it would tell Google
-  // this URL is a copy of the lounge chair (seen in Search Console for mahjong-table).
-  if (productData.handle === handle) setProductMeta(productData);
+  setProductMeta(productData);
 
   // Set initial selected options, with query parameter overrides if present
   const urlParams = new URLSearchParams(window.location.search);
@@ -932,6 +463,21 @@ async function loadProduct(handle) {
 
   renderProductPage();
   loadRelatedProducts();
+}
+
+// Unknown handle, or Shopify unreachable from both server and browser. Says so plainly
+// rather than showing a different piece under this address.
+function showProductUnavailable() {
+  const container = document.getElementById('product-detail-container');
+  if (container) {
+    container.innerHTML = `
+      <div class="product-header-block" style="grid-column: 1 / -1; text-align: center; border: 0;">
+        <h1 class="product-title-text">This piece couldn't be loaded</h1>
+        <p class="product-desc-text">It may no longer be available, or the connection dropped. Please try again in a moment.</p>
+        <p><a href="products.html" class="discover-more-link" style="align-self: center;">Browse all pieces <span>→</span></a></p>
+      </div>`;
+  }
+  document.querySelectorAll('.related-section, #product-dimensions-section').forEach(el => { el.style.display = 'none'; });
 }
 
 // Give each product its own title, description and canonical URL so search engines
@@ -2016,21 +1562,13 @@ async function loadRelatedProducts() {
     }
   }
 
-  // Fallback to offline products list in same collection
-  if (productsList.length === 0) {
-    const collTitle = (currentProduct.collections && currentProduct.collections.edges[0]?.node.title) || '';
-    productsList = Object.values(FALLBACK_PRODUCTS_DB).filter(p => {
-      const isSameCollection = p.collections.edges.some(c => c.node.title === collTitle);
-      return isSameCollection && p.handle !== currentHandle;
-    });
-  }
-
-  // Display top 4 products
+  // Display top 4 products; nothing to show (Shopify failed, or the piece is alone in
+  // its collection) hides the section rather than showing stale offline data
   const displayProducts = productsList.slice(0, 4);
-
   if (displayProducts.length === 0) {
-    // fallback to any 4 products in database if no collection match
-    displayProducts.push(...Object.values(FALLBACK_PRODUCTS_DB).filter(p => p.handle !== currentHandle).slice(0, 4));
+    const section = grid.closest('.related-section');
+    if (section) section.style.display = 'none';
+    return;
   }
 
   relatedProducts = displayProducts;
