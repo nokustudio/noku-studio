@@ -1,0 +1,14 @@
+# Files in the repo that are tools or internal docs, not part of the website.
+# Without this, Vercel publishes them (e.g. nokustudio.in/git_push.py was public).
+*.py
+__pycache__/
+brand-system/
+scripts/
+product-checker.js
+.claude/
+scratch/
+backup/
+tests/
+nokustudio-crawl/
+product_cache.json
+noku_products.xlsx

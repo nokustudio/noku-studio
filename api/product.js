@@ -46,11 +46,13 @@ function render(p) {
   let html = TEMPLATE.replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(p.title)} — Handcrafted Furniture | Noku Studio</title>`);
   if (desc) html = html.replace(/<meta\s+name="description"[\s\S]*?>/, `<meta name="description" content="${esc(desc)}">`);
   // "<" escaped so Shopify text can never close a script tag.
-  // __NOKU_PRODUCT__ is the full product; product.js uses it instead of calling Shopify.
+  // #noku-product-data is the full product; product.js reads it instead of calling Shopify.
+  // It's a data block (type application/json), never executed, so the CSP needs no
+  // 'unsafe-inline' for it.
   const json = v => JSON.stringify(v).replace(/</g, '\\u003c');
   const head = `  <link rel="canonical" href="${esc(url)}">\n`
     + `  <script type="application/ld+json">${json(ld)}</script>\n`
-    + `  <script>window.__NOKU_PRODUCT__ = ${json(p)};</script>\n`;
+    + `  <script type="application/json" id="noku-product-data">${json(p)}</script>\n`;
   return html.replace('</head>', head + '</head>');
 }
 
@@ -59,7 +61,12 @@ module.exports = async function handler(req, res) {
   let status = 200;
   let html = TEMPLATE;
 
-  if (handle) {
+  // Shopify handles are lowercase letters, digits and hyphens. Anything else can't be a
+  // product, so answer 404 without spending a Shopify call on it (stops junk/flood URLs
+  // from turning into API traffic).
+  if (handle && !/^[a-z0-9][a-z0-9-]{0,99}$/.test(handle)) {
+    status = 404;
+  } else if (handle) {
     try {
       const r = await fetch(SHOP, {
         method: 'POST',

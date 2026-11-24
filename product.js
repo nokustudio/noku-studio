@@ -402,7 +402,8 @@ async function loadProduct(handle) {
 
   // On the live site api/product.js already fetched this product on the server and put it
   // in the page, so the browser doesn't depend on reaching Shopify (nor does Google).
-  const preloaded = window.__NOKU_PRODUCT__;
+  let preloaded = null;
+  try { preloaded = JSON.parse(document.getElementById('noku-product-data')?.textContent || 'null'); } catch (e) { /* bad data: fetch instead */ }
   const productRequest = preloaded && preloaded.handle === handle
     ? Promise.resolve({ data: { product: preloaded } })
     : fetchFromShopify(query, { handle }); // local dev, or the server couldn't reach Shopify
@@ -580,7 +581,7 @@ function renderProductPage() {
       <div class="option-group" data-option-name="${escHtml(opt.name)}">
         <div class="option-label-row">
           <span class="option-title">${escHtml(opt.name)}:</span>
-          <span class="option-selected-val" id="selected-val-${opt.name.replace(/\s+/g, '')}">${selectedValInner(selectedOptions[opt.name])}</span>
+          <span class="option-selected-val" id="selected-val-${escHtml(opt.name.replace(/\s+/g, ''))}">${selectedValInner(selectedOptions[opt.name])}</span>
         </div>
     `;
 
@@ -971,7 +972,7 @@ function updateVariantDisplays(isInitial = false) {
     imageUrls.forEach((url, idx) => {
       thumbnailsHtml += `
         <div class="thumbnail-item ${idx === activeImageIndex ? 'active' : ''}" data-index="${idx}">
-          <img src="${thumbImageSrc(url)}" alt="Thumbnail ${idx + 1}">
+          <img src="${safeUrl(thumbImageSrc(url))}" alt="Thumbnail ${idx + 1}">
         </div>
       `;
     });

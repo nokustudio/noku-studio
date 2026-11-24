@@ -484,9 +484,7 @@
     }
   </style>
   <!-- Vercel Speed Insights -->
-  <script>
-    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
-  </script>
+  <script src="/js/speed-insights-init.js"></script>
   <script defer src="/_vercel/speed-insights/script.js"></script>
 </head>
 
@@ -616,7 +614,7 @@
               </select>
             </div>
 
-            <button class="btn-reset-sidebar" onclick="resetAllFilters()">Clear All Filters</button>
+            <button class="btn-reset-sidebar" data-action="reset-filters">Clear All Filters</button>
           </div>
         </div>
       </aside>

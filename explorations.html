@@ -326,9 +326,7 @@
     }
   </style>
   <!-- Vercel Speed Insights -->
-  <script>
-    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
-  </script>
+  <script src="/js/speed-insights-init.js"></script>
   <script defer src="/_vercel/speed-insights/script.js"></script>
 </head>
 
@@ -559,12 +557,7 @@
 
   <!-- Shared navbar-scroll + reveal-on-scroll behaviour -->
   <script src="site.js"></script>
-  <script>
-    // Dynamic rendering of Of Exploration products from Shopify/fallback
-    document.addEventListener('DOMContentLoaded', () => {
-      renderCollectionProducts('of-exploration', 'exploration-products-grid');
-    });
-  </script>
+  <script src="/js/explorations-1.js"></script>
 
   <script defer src="/_vercel/insights/script.js"></script>
 </body>

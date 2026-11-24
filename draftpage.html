@@ -17,9 +17,7 @@
   <link rel="stylesheet" href="style.css">
   <meta name="robots" content="noindex, nofollow">
   <!-- Vercel Speed Insights -->
-  <script>
-    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
-  </script>
+  <script src="/js/speed-insights-init.js"></script>
   <script defer src="/_vercel/speed-insights/script.js"></script>
 </head>
 
@@ -41,17 +39,7 @@
     </div>
   </div>
 
-  <script>
-    // Gate the hero entrance on the loading screen finishing (script.js calls
-    // window.nokuHeroReady). Defined here, not in script.js, so a failed
-    // three.js CDN can't leave the hero copy stuck at opacity 0 — the timeout
-    // is a hard floor that reveals it regardless.
-    (function () {
-      var reveal = function () { document.documentElement.classList.add('hero-ready'); };
-      window.nokuHeroReady = reveal;
-      setTimeout(reveal, 3000);
-    })();
-  </script>
+  <script src="/js/draftpage-1.js"></script>
 
   <!-- Grain Layer overlay -->
   <div class="grain-overlay"></div>
@@ -514,9 +502,9 @@
   </div>
 
   <!-- ════════ THREE.JS WEBGL LIBRARIES ════════ -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" integrity="sha384-CI3ELBVUz9XQO+97x6nwMDPosPR5XvsxW2ua7N1Xeygeh1IxtgqtCkGfQY9WWdHu" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js" integrity="sha384-fljlqkjWlmSFjkESkQvm77heIZpoWmXEOzlCA7kOpGUH+95Zk0yGfQieWM2q136E" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js" integrity="sha384-TNRcLasZnnfIJJskDY5XlrfmsKTjBSy98MtyLuX+3rQWRbpSQvtFIdikNpcOh3SN" crossorigin="anonymous"></script>
 
   <script src="site.js"></script>
   <script src="script.js"></script>

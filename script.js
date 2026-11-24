@@ -913,11 +913,14 @@
     const imgPath = (rawImgPath && typeof sizeShopifyImage === 'function')
       ? sizeShopifyImage(rawImgPath, Math.round(340 * Math.min(window.devicePixelRatio || 1, 3)))
       : rawImgPath;
-    const imgHTML = imgPath
-      ? `<img src="${imgPath}" alt="Stilt Barstool ${selectedWood} ${cushionObj.normalizedName}">`
+    // Shopify text goes into HTML here, so escape it (this file can't rely on the escHtml
+    // helpers, which live in page-specific scripts)
+    const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const imgHTML = imgPath && !/^\s*(javascript|data|vbscript):/i.test(imgPath)
+      ? `<img src="${esc(imgPath)}" alt="Stilt Barstool ${esc(selectedWood)} ${esc(cushionObj.normalizedName)}">`
       : '';
 
-    const displayName = cleanCushionDisplayName(cushionObj.name);
+    const displayName = esc(cleanCushionDisplayName(cushionObj.name));
 
     card.innerHTML = `
       <div class="carousel-card-img-wrap">
@@ -1243,8 +1246,10 @@
         <strong>Security Notice:</strong> Browsers block local 3D assets when using the <code>file://</code> protocol. 
         Please visit <a href="http://localhost:8000/index.html" target="_blank">http://localhost:8000/index.html</a> in your browser to view the interactive 3D scene.
       </span>
-      <button class="close-banner-btn" onclick="this.parentElement.remove()">&times;</button>
+      <button class="close-banner-btn">&times;</button>
     `;
+    // Listener rather than onclick="": the CSP blocks inline handlers
+    banner.querySelector('.close-banner-btn').addEventListener('click', () => banner.remove());
     document.body.appendChild(banner);
   }
 

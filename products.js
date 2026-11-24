@@ -665,7 +665,7 @@ function renderProductsGrid() {
       <div class="catalog-empty-state">
         <h3>No matching pieces found</h3>
         <p>Try resetting filters or expanding your search query.</p>
-        <button class="btn-reset-filters" onclick="resetAllFilters()">Reset Filters</button>
+        <button class="btn-reset-filters" data-action="reset-filters">Reset Filters</button>
       </div>
     `;
     // .catalog-empty-state carries the same entrance keyframe — an instant swap
@@ -863,6 +863,12 @@ function resetAllFilters() {
 
 // Make resetAllFilters globally accessible
 window.resetAllFilters = resetAllFilters;
+
+// Reset buttons use data-action instead of onclick="" (the CSP blocks inline handlers).
+// Delegated so it also covers the button re-rendered into the empty-results grid.
+document.addEventListener('click', (e) => {
+  if (e.target.closest('[data-action="reset-filters"]')) resetAllFilters();
+});
 
 // ─── CART DRAWER ACTION CONTROLLERS ───
 

@@ -612,7 +612,7 @@
         // Buy-vs-Inquire follows the Shopify custom.purchasemode metafield (isPurchasable
         // is defined in shopify-integration.js, loaded before this file on materials.html).
         const isDisplay = !isPurchasable(p);
-        let productUrl = `product.html?handle=${p.handle}${isDisplay ? '&inquire=true' : ''}`;
+        let productUrl = `product.html?handle=${encodeURIComponent(p.handle)}${isDisplay ? '&inquire=true' : ''}`;
         if (category === 'wood') {
           productUrl += `&wood=${encodeURIComponent(item.id)}`;
         } else if (category === 'leather' || category === 'fabric') {
@@ -625,12 +625,12 @@
         pCard.innerHTML = `
           <div class="gcard__media">
             <div class="gcard__media-inner">
-              <img src="${imgUrl}" alt="${p.title}" loading="lazy">
+              <img src="${safeUrl(imgUrl)}" alt="${escHtml(p.title)}" loading="lazy">
             </div>
-            <button class="gcard__add" data-handle="${p.handle}">Details <svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></button>
+            <button class="gcard__add" data-handle="${escHtml(p.handle)}">Details <svg class="ico-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></button>
           </div>
           <p class="gcard__cat">Piece</p>
-          <h3 class="gcard__name">${p.title}</h3>
+          <h3 class="gcard__name">${escHtml(p.title)}</h3>
         `;
         pCard.querySelector('.gcard__add').addEventListener('click', (e) => {
           e.preventDefault();
