@@ -1,8 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
+  "functions": {
+    "api/product.js": { "includeFiles": "product.html" }
+  },
   "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/api/sitemap" }
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
+    { "source": "/product", "destination": "/api/product" }
   ],
   "redirects": [
     { "source": "/projects/cedar-house", "destination": "/projects/parijata-house", "permanent": true },

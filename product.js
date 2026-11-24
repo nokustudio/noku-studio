@@ -973,6 +973,8 @@ function setProductMeta(p) {
       seller: { '@id': 'https://www.nokustudio.in/#business' }
     } : undefined
   };
+  // On the live site api/product.js already put this in the HTML; don't add a second copy
+  if (document.querySelector('script[type="application/ld+json"]')) return;
   const ld = document.createElement('script');
   ld.type = 'application/ld+json';
   ld.textContent = JSON.stringify(data);
