@@ -16,56 +16,12 @@ const SHOPIFY_CONFIG = {
 window.SHOPIFY_CONFIG = SHOPIFY_CONFIG;
 
 
-// Display-only products list (from noku_products.xlsx)
-const DISPLAY_ONLY_HANDLES = [
-  'sofa-2',
-  'rod-bed-with-curved-headboard'
-];
-
 // Buy-vs-Inquire is decided solely by the Shopify product metafield
 // custom.purchasemode (boolean). Only an explicit `true` is buyable; a false or
 // missing metafield — and every offline fallback product, which carries none —
 // is inquire-only. So if the Shopify connection fails, nothing is buyable.
 function isPurchasable(p) {
   return p && p.purchaseMode && p.purchaseMode.value === 'true';
-}
-
-function isDisplayItem(item) {
-  if (!item) return false;
-  const handle = item.handle ? item.handle.toLowerCase().trim() : '';
-  const title = item.title ? item.title.toLowerCase().trim() : '';
-  
-  const displayTitles = [
-    "grooved sofa",
-    "grooved-sofa",
-    "rod bed",
-    "rod-bed"
-  ];
-  
-  if (handle && DISPLAY_ONLY_HANDLES.includes(handle)) return true;
-  if (title && displayTitles.includes(title)) return true;
-  
-  if (item.id) {
-    const itemIdLower = item.id.toLowerCase();
-    for (const h of DISPLAY_ONLY_HANDLES) {
-      if (itemIdLower.includes(h)) return true;
-    }
-  }
-  
-  const displayVariantIds = [
-    "41221043814458", "41221043847226", "41221043945530", "41221043912762", "41221044961338", "41221043879994", "41221043716154", "41221043748922", "41221044928570", "40593555587130",
-    "40593555619898", "41221041684538", "40593555718202", "41221044699194", "40593555685434", "40589542981690", "40593555521594", "41221044666426", "41221043552314", "41221043585082",
-    "41221043683386", "41221043650618", "41221044895802", "41221043617850", "41221043454010", "41221043486778", "41221044863034", "41241712951354", "40589542391866", "41241712918586"
-  ];
-  
-  if (item.variantId) {
-    const vIdString = String(item.variantId);
-    for (const id of displayVariantIds) {
-      if (vIdString.includes(id)) return true;
-    }
-  }
-  
-  return false;
 }
 
 // State of variants fetched from Shopify Storefront API
@@ -1157,50 +1113,7 @@ function closeCartDrawer() {
 
 // Update entire cart UI elements
 function updateCartUI() {
-  // Enforce cart display policy proactively
-  let localCart = JSON.parse(localStorage.getItem('noku_cart')) || [];
-  const displayHandles = [
-    'sofa-2',
-    'rod-bed-with-curved-headboard'
-];
-  const displayTitles = [
-    "grooved sofa",
-    "grooved-sofa",
-    "rod bed",
-    "rod-bed"
-  ];
-  const filteredCart = localCart.filter(item => {
-    if (!item) return false;
-    const handle = item.handle ? item.handle.toLowerCase().trim() : '';
-    const title = item.title ? item.title.toLowerCase().trim() : '';
-    if (handle && displayHandles.includes(handle)) return false;
-    if (title && displayTitles.includes(title)) return false;
-    if (item.id) {
-      const itemIdLower = item.id.toLowerCase();
-      for (const h of displayHandles) {
-        if (itemIdLower.includes(h)) return false;
-      }
-    }
-    if (item.variantId) {
-      const vIdString = String(item.variantId);
-      const displayVariantIds = [
-    "41221043814458", "41221043847226", "41221043945530", "41221043912762", "41221044961338", "41221043879994", "41221043716154", "41221043748922", "41221044928570", "40593555587130",
-    "40593555619898", "41221041684538", "40593555718202", "41221044699194", "40593555685434", "40589542981690", "40593555521594", "41221044666426", "41221043552314", "41221043585082",
-    "41221043683386", "41221043650618", "41221044895802", "41221043617850", "41221043454010", "41221043486778", "41221044863034", "41241712951354", "40589542391866", "41241712918586"
-  ];
-      for (const id of displayVariantIds) {
-        if (vIdString.includes(id)) return false;
-      }
-    }
-    return true;
-  });
-
-  if (filteredCart.length !== localCart.length) {
-    localStorage.setItem('noku_cart', JSON.stringify(filteredCart));
-    cart = filteredCart;
-  } else {
-    cart = localCart;
-  }
+  cart = (JSON.parse(localStorage.getItem('noku_cart')) || []).filter(Boolean);
 
   if (!cartItemsContainer) return;
   
@@ -1503,9 +1416,12 @@ document.addEventListener('DOMContentLoaded', () => {
     narrativeObserver.observe(narrativeCarouselTrack, { childList: true });
   }
   
-  // Load Shopify storefront details
-  loadShopifyProductData();
-  loadFeaturedProducts();
+  // Barstool variants and the featured carousel only feed the draft landing page's
+  // configurator and carousel; other pages skip both Shopify calls.
+  if (document.querySelector('.featured-carousel-track, .carousel-track, #buy-now-btn')) {
+    loadShopifyProductData();
+    loadFeaturedProducts();
+  }
 
   // Listen to storage sync from other pages
   window.addEventListener('storage', () => {
@@ -1517,66 +1433,3 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial UI Render
   updateCartUI();
 });
-
-// ─── FLOATING DEV-CONSOLE UTILITY FOR REMOTE DEBUGGING ───
-if (
-  window.location.hostname === 'localhost' ||
-  window.location.hostname === '127.0.0.1' ||
-  window.location.protocol === 'file:'
-) {
-  (function() {
-    const consoleDiv = document.createElement('div');
-    consoleDiv.id = 'floating-debug-console';
-    consoleDiv.style.position = 'fixed';
-    consoleDiv.style.bottom = '10px';
-    consoleDiv.style.left = '10px';
-    consoleDiv.style.width = '380px';
-    consoleDiv.style.maxHeight = '220px';
-    consoleDiv.style.overflowY = 'auto';
-    consoleDiv.style.backgroundColor = 'rgba(24, 20, 18, 0.95)';
-    consoleDiv.style.color = '#EDE6DA';
-    consoleDiv.style.fontFamily = 'monospace';
-    consoleDiv.style.fontSize = '10px';
-    consoleDiv.style.padding = '12px';
-    consoleDiv.style.borderRadius = '8px';
-    consoleDiv.style.zIndex = '999999';
-    consoleDiv.style.border = '1px solid rgba(162, 123, 92, 0.4)';
-    consoleDiv.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
-    consoleDiv.style.pointerEvents = 'none'; // Click through
-    document.body.appendChild(consoleDiv);
-    
-    function addLog(msg, type = 'log') {
-      const p = document.createElement('p');
-      p.style.margin = '3px 0';
-      if (type === 'error') p.style.color = '#ff6b6b';
-      if (type === 'warn') p.style.color = '#fcd34d';
-      p.textContent = `[${type.toUpperCase()}] ${msg}`;
-      consoleDiv.appendChild(p);
-      consoleDiv.scrollTop = consoleDiv.scrollHeight;
-    }
-    
-    // Intercept console
-    const origLog = console.log;
-    console.log = function(...args) {
-      origLog.apply(console, args);
-      addLog(args.join(' '));
-    };
-    
-    const origWarn = console.warn;
-    console.warn = function(...args) {
-      origWarn.apply(console, args);
-      addLog(args.join(' '), 'warn');
-    };
-    
-    const origError = console.error;
-    console.error = function(...args) {
-      origError.apply(console, args);
-      addLog(args.join(' '), 'error');
-    };
-    
-    // Catch unhandled errors
-    window.addEventListener('error', (e) => {
-      addLog(`${e.message} at ${e.filename.split('/').pop()}:${e.lineno}`, 'error');
-    });
-  })();
-}

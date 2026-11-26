@@ -564,7 +564,6 @@ nav.light-nav .nav-dropdown {
   }
 }
 
-
 .mobile-menu-toggle {
   display: none;
   background: none;
@@ -975,46 +974,6 @@ body:not(.secondary-landing-page) .hero-title {
   color: var(--paper);
 }
 
-/* ════════ MARQUEE / TICKER ════════ */
-.ticker-container {
-  background-color: var(--dark-bg);
-  border-top: 1px solid rgba(244, 241, 236, 0.06);
-  border-bottom: 1px solid rgba(244, 241, 236, 0.06);
-  overflow: hidden;
-  padding: 20px 0;
-  position: relative;
-  z-index: 13;
-}
-
-.ticker-track {
-  display: flex;
-  width: max-content;
-  animation: tickerLoop 24s linear infinite;
-}
-
-.ticker-item {
-  font-family: var(--font-body);
-  font-size: 0.6875rem;
-  font-weight: 400;
-  letter-spacing: 5px;
-  text-transform: uppercase;
-  color: var(--paper);
-  white-space: nowrap;
-  padding: 0 40px;
-  display: flex;
-  align-items: center;
-  opacity: 0.9;
-}
-
-.ticker-dot {
-  width: 5px;
-  height: 5px;
-  background-color: var(--chamoisee);
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 40px;
-}
-
 /* ════════ CINEMATIC VIDEO SECTION ════════ */
 .video-section {
   position: relative;
@@ -1087,20 +1046,6 @@ body:not(.secondary-landing-page) .hero-title {
 
 .video-control-btn:hover svg {
   transform: scale(1.1);
-}
-
-/* ════════ STUDIO INTRODUCTION ════════ */
-.studio-intro {
-  background-color: var(--paper);
-  z-index: 13;
-  position: relative;
-}
-
-.split-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 100px;
-  align-items: center;
 }
 
 .intro-img-wrap {
@@ -1797,13 +1742,6 @@ body:not(.secondary-landing-page) .hero-title {
   }
 }
 
-.materials-grid-layout {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 100px;
-  align-items: center;
-}
-
 .swatches-block {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -1956,48 +1894,6 @@ body:not(.secondary-landing-page) .hero-title {
   transform: translateY(0);
 }
 
-.materials-description .title-h2 {
-  margin-bottom: 8px;
-}
-
-.material-subtitle {
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  font-style: italic;
-  color: var(--chamoisee);
-  margin-bottom: 24px;
-  display: block;
-}
-
-.category-header {
-  margin-bottom: 16px;
-}
-
-.category-selector-wrap {
-  margin-top: 48px;
-  border-top: 1px solid var(--line);
-  padding-top: 32px;
-}
-
-.selector-label-small {
-  font-family: var(--font-body);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 16px;
-  display: block;
-}
-
-.materials-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  list-style: none;
-  margin-top: 16px;
-}
-
 .materials-pill {
   font-family: var(--font-body);
   font-size: 0.6875rem;
@@ -2016,25 +1912,7 @@ body:not(.secondary-landing-page) .hero-title {
   background-color: var(--chamoisee);
   color: var(--paper);
 }
-.material-preview-wrap {
-  width: 100%;
-  height: clamp(180px, 30vh, 280px);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 24px;
-  border: 1px solid rgba(44, 38, 34, 0.08);
-  box-shadow: 0 8px 24px rgba(44, 38, 34, 0.05);
-  background-color: var(--paper);
-  position: relative;
-}
 
-.material-preview-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
 /* ════════ FOOTER ════════ */
 footer {
   background-color: var(--light);
@@ -2244,14 +2122,6 @@ footer {
   text-underline-offset: 3px;
 }
 
-/* ponytail: highlights unfilled values; delete with the last placeholder */
-.legal-todo {
-  background: #ffe58a;
-  color: #3a2a00;
-  padding: 0 4px;
-  border-radius: 3px;
-}
-
 /* ════════ REVEAL ON SCROLL INTERACTIVE EFFECTS ════════ */
 .reveal-el {
   opacity: 0;
@@ -2359,20 +2229,6 @@ footer {
   .collections-grid {
     grid-template-columns: 1fr;
     gap: 24px;
-  }
-
-  .process-timeline {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-
-  .process-step::after {
-    display: none;
-  }
-
-  .scatter-img {
-    display: none;
-    /* Simplify on tablets */
   }
 
   /* ── Config panel (mobile): surface the cushion carousel ABOVE the wood
@@ -2601,16 +2457,6 @@ footer {
   z-index: 2; /* Low z-index context to ensure quote_wrap (z-index 12) overlays it on scroll */
 }
 
-.variants-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--light);
-  z-index: 1;
-}
-
 .variants-section .container {
   position: relative;
   z-index: 3;
@@ -2620,11 +2466,6 @@ footer {
 
 .variants-section .carousel-outer-wrap {
   max-width: 100%;
-}
-
-.variants-header {
-  text-align: center;
-  margin-bottom: 40px;
 }
 
 .wood-selector {
@@ -2814,15 +2655,6 @@ footer {
 .add-to-cart-icon:hover {
   color: var(--ink) !important;
   transform: translateY(-2px) scale(1.15) !important;
-}
-
-.selected-details {
-  text-align: center;
-  margin-top: 40px;
-  font-family: var(--font-display);
-  font-size: 1.125rem;
-  font-style: italic;
-  color: var(--chamoisee);
 }
 
 .selected-wood-label,
@@ -3267,23 +3099,6 @@ nav.light-nav .cart-btn:hover {
   transform: translateY(0);
 }
 
-.buy-now-helper {
-  font-family: var(--font-body);
-  font-size: 0.6875rem;
-  color: var(--bone);
-  opacity: 0.6;
-  letter-spacing: 1px;
-}
-
-.buy-now-scroll-indicator {
-  font-family: var(--font-body);
-  font-size: 0.6875rem;
-  color: var(--bone);
-  opacity: 0.45;
-  letter-spacing: 1px;
-  margin-top: -4px; /* bring it closer to the text above it */
-}
-
 /* Responsive adjustment */
 @media (max-width: 480px) {
   .cart-drawer {
@@ -3372,13 +3187,6 @@ nav.light-nav .cart-btn:hover {
 }
 
 /* Flex layouts */
-.u-hflex-left-stretch {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: stretch;
-}
-
 .u-vflex-left-center {
   display: flex;
   flex-direction: column;
@@ -3386,20 +3194,9 @@ nav.light-nav .cart-btn:hover {
   align-items: flex-start;
 }
 
-.u-vflex-stretch-center {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: stretch;
-}
-
 /* Gap classes */
 .u-gap-xsmall {
   gap: 8px;
-}
-
-.u-gap-medium {
-  gap: 24px;
 }
 
 /* Visual wrapper styles */
@@ -3694,7 +3491,6 @@ nav.light-nav .cart-btn:hover {
   }
 }
 
-
 /* Prev/Next nav wrap */
 /* ════════ PREV / NEXT NAVIGATION — EDITORIAL ════════ */
 .prevnext_wrap {
@@ -3861,11 +3657,6 @@ nav.light-nav .cart-btn:hover {
   .next_wrap {
     padding: 40px 24px;
   }
-}
-
-/* Hide fallback collection items unless needed */
-.is-hidden {
-  display: none !important;
 }
 
 /* ════════ PAGE TRANSITIONS ════════ */
@@ -4290,12 +4081,6 @@ nav.light-nav .cart-btn:hover {
 
   /* Transition-driven reveals: keep the fade, drop the 30px travel. */
   .reveal-el {
-    transform: none;
-  }
-
-  /* Perpetual motion — stopped outright rather than frozen mid-cycle. */
-  .ticker-track {
-    animation: none;
     transform: none;
   }
 

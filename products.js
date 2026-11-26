@@ -14,56 +14,12 @@ const SHOPIFY_CONFIG = window.SHOPIFY_CONFIG || {
 };
 
 
-// Display-only products list (from noku_products.xlsx)
-const DISPLAY_ONLY_HANDLES = [
-  'sofa-2',
-  'rod-bed-with-curved-headboard'
-];
-
 // Buy-vs-Inquire is decided solely by the Shopify product metafield
 // custom.purchasemode (boolean). Only an explicit `true` is buyable; a false or
 // missing metafield — and every offline fallback product, which carries none —
 // is inquire-only. So if the Shopify connection fails, nothing is buyable.
 function isPurchasable(p) {
   return p && p.purchaseMode && p.purchaseMode.value === 'true';
-}
-
-function isDisplayItem(item) {
-  if (!item) return false;
-  const handle = item.handle ? item.handle.toLowerCase().trim() : '';
-  const title = item.title ? item.title.toLowerCase().trim() : '';
-  
-  const displayTitles = [
-    "grooved sofa",
-    "grooved-sofa",
-    "rod bed",
-    "rod-bed"
-  ];
-  
-  if (handle && DISPLAY_ONLY_HANDLES.includes(handle)) return true;
-  if (title && displayTitles.includes(title)) return true;
-  
-  if (item.id) {
-    const itemIdLower = item.id.toLowerCase();
-    for (const h of DISPLAY_ONLY_HANDLES) {
-      if (itemIdLower.includes(h)) return true;
-    }
-  }
-  
-  const displayVariantIds = [
-    "41221043814458", "41221043847226", "41221043945530", "41221043912762", "41221044961338", "41221043879994", "41221043716154", "41221043748922", "41221044928570", "40593555587130",
-    "40593555619898", "41221041684538", "40593555718202", "41221044699194", "40593555685434", "40589542981690", "40593555521594", "41221044666426", "41221043552314", "41221043585082",
-    "41221043683386", "41221043650618", "41221044895802", "41221043617850", "41221043454010", "41221043486778", "41221044863034", "41241712951354", "40589542391866", "41241712918586"
-  ];
-  
-  if (item.variantId) {
-    const vIdString = String(item.variantId);
-    for (const id of displayVariantIds) {
-      if (vIdString.includes(id)) return true;
-    }
-  }
-  
-  return false;
 }
 
 // ─── FALLBACK PRODUCT CATALOG DATA ───
@@ -813,10 +769,6 @@ function saveCart() {
 }
 
 function addItemToCart(productId, title, price, image, variantId, materials) {
-  if (isDisplayItem({ id: productId, title: title, variantId: variantId })) {
-    alert("This item is for display only and cannot be added to the cart.");
-    return;
-  }
   const cartItemId = `prod-${productId}-${variantId}`.replace(/[^a-zA-Z0-9-]/g, '');
   const existingIndex = cart.findIndex(item => item.id === cartItemId || item.variantId === variantId);
 
@@ -917,50 +869,7 @@ function updateCartUI() {
 
   if (!cartItemsContainer) return;
 
-  // Enforce cart display policy proactively
-  let localCart = JSON.parse(localStorage.getItem('noku_cart')) || [];
-  const displayHandles = [
-    'sofa-2',
-    'rod-bed-with-curved-headboard'
-];
-  const displayTitles = [
-    "grooved sofa",
-    "grooved-sofa",
-    "rod bed",
-    "rod-bed"
-  ];
-  const filteredCart = localCart.filter(item => {
-    if (!item) return false;
-    const handle = item.handle ? item.handle.toLowerCase().trim() : '';
-    const title = item.title ? item.title.toLowerCase().trim() : '';
-    if (handle && displayHandles.includes(handle)) return false;
-    if (title && displayTitles.includes(title)) return false;
-    if (item.id) {
-      const itemIdLower = item.id.toLowerCase();
-      for (const h of displayHandles) {
-        if (itemIdLower.includes(h)) return false;
-      }
-    }
-    if (item.variantId) {
-      const vIdString = String(item.variantId);
-      const displayVariantIds = [
-    "41221043814458", "41221043847226", "41221043945530", "41221043912762", "41221044961338", "41221043879994", "41221043716154", "41221043748922", "41221044928570", "40593555587130",
-    "40593555619898", "41221041684538", "40593555718202", "41221044699194", "40593555685434", "40589542981690", "40593555521594", "41221044666426", "41221043552314", "41221043585082",
-    "41221043683386", "41221043650618", "41221044895802", "41221043617850", "41221043454010", "41221043486778", "41221044863034", "41241712951354", "40589542391866", "41241712918586"
-  ];
-      for (const id of displayVariantIds) {
-        if (vIdString.includes(id)) return false;
-      }
-    }
-    return true;
-  });
-
-  if (filteredCart.length !== localCart.length) {
-    localStorage.setItem('noku_cart', JSON.stringify(filteredCart));
-    cart = filteredCart;
-  } else {
-    cart = localCart;
-  }
+  cart = (JSON.parse(localStorage.getItem('noku_cart')) || []).filter(Boolean);
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   if (cartCountBadge) {
