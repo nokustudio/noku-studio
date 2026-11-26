@@ -624,7 +624,7 @@ function renderFeaturedCarousel(items) {
     card.setAttribute('data-purchasable', item.purchasable ? 'true' : 'false');
 
     const buyRowHtml = isDisplay
-      ? `<a href="product.html?handle=${encodeURIComponent(item.handle)}&inquire=true" class="product-inquire-btn">Inquire</a>`
+      ? `<a href="product?handle=${encodeURIComponent(item.handle)}&inquire=true" class="product-inquire-btn">Inquire</a>`
       : `<button class="product-add-to-cart-btn" aria-label="Add ${escHtml(item.title)} to Cart">Add to Cart</button>`;
 
     card.innerHTML = `
@@ -898,7 +898,7 @@ async function renderCollectionProducts(collectionHandle, gridId) {
 
   products.forEach((p, idx) => {
     const card = document.createElement('a');
-    card.href = `product.html?handle=${encodeURIComponent(p.handle)}`;
+    card.href = `product?handle=${encodeURIComponent(p.handle)}`;
     card.className = `gcard reveal-el is-revealed`;
     card.style.animationDelay = `${(idx % 4) * 0.1}s`;
     card.setAttribute('data-handle', p.handle);
@@ -955,7 +955,7 @@ async function renderCollectionProducts(collectionHandle, gridId) {
       e.preventDefault();
       
       if (isDisplay) {
-        window.location.href = `product.html?handle=${p.handle}&inquire=true`;
+        window.location.href = `product?handle=${p.handle}&inquire=true`;
         return;
       }
       

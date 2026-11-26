@@ -23,7 +23,7 @@
       .slice(0, 4);
     if (!items.length) { grid.hidden = true; return; }       // offline: the See all button still leads on
     grid.innerHTML = items.map((p, i) => `
-      <a class="product-card" href="product.html?handle=${encodeURIComponent(p.handle)}" style="--i:${i % 4}">
+      <a class="product-card" href="product?handle=${encodeURIComponent(p.handle)}" style="--i:${i % 4}">
         <div class="product-card-img-wrap"><img src="${safeUrl(sizeShopifyImage(cardVariant(p)?.image?.url || p.featuredImage.url, 800, 1000))}" alt="${escHtml(p.title)}" loading="lazy" decoding="async" width="800" height="1000"></div>
         <div class="product-card-body">
           <div class="product-card-header-row"><h3 class="product-name">${escHtml(p.title)}</h3><span class="product-price">From ${inr(p.priceRange.minVariantPrice.amount)}</span></div>

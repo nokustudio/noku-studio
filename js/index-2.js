@@ -17,7 +17,7 @@
   const PIECE_W = Math.min(1684, Math.ceil(Math.min(screen.height * 1.04, screen.width * .84) * devicePixelRatio / 100) * 100) || 1684;   // screen reads 0 while a page loads hidden
   const pad = n => String(n).padStart(2, '0');
   const inr = n => '₹' + n.toLocaleString('en-IN');
-  const url = p => `product.html?handle=${p.handle}`;
+  const url = p => `product?handle=${p.handle}`;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 

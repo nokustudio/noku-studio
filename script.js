@@ -703,8 +703,8 @@
   // ─── INSTANT SCROLL TO COLLECTIONS SECTION ───
   const handleCollectionsScroll = (e) => {
     const href = e.currentTarget.getAttribute('href');
-    const isHomepage = window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname === '';
-    const isCollectionsAnchor = href === '#collections' || href.endsWith('/#collections') || href.endsWith('/index.html#collections');
+    const isHomepage = window.location.pathname === '/' || window.location.pathname === '/index' || window.location.pathname === '';
+    const isCollectionsAnchor = href === '#collections' || href.endsWith('/#collections') || href.endsWith('/index#collections');
     const isCurrentPageAnchor = (isHomepage && isCollectionsAnchor) || href === '#collections';
     
     if (isCurrentPageAnchor) {
@@ -964,7 +964,7 @@
       
 
       if (card.classList.contains('highlighted')) {
-        const destUrl = `product.html?handle=barstool&wood=${selectedWood}&upholstery=${cushionObj.normalizedName}`;
+        const destUrl = `product?handle=barstool&wood=${selectedWood}&upholstery=${cushionObj.normalizedName}`;
         console.log('Redirecting in highlighted mode to:', destUrl);
         window.location.href = destUrl;
         return;
@@ -1244,7 +1244,7 @@
     banner.innerHTML = `
       <span>
         <strong>Security Notice:</strong> Browsers block local 3D assets when using the <code>file://</code> protocol. 
-        Please visit <a href="http://localhost:8000/index.html" target="_blank">http://localhost:8000/index.html</a> in your browser to view the interactive 3D scene.
+        Please visit <a href="http://localhost:8000/index" target="_blank">http://localhost:8000/index.html</a> in your browser to view the interactive 3D scene.
       </span>
       <button class="close-banner-btn">&times;</button>
     `;
@@ -1359,7 +1359,7 @@
         // Open the product page only. The Get-in-touch modal must be opened
         // explicitly via the Inquire button (an <a> excluded above), never by
         // clicking the card itself — so no &inquire=true here.
-        window.location.href = `product.html?handle=${handle}`;
+        window.location.href = `product?handle=${handle}`;
       }
     });
 

@@ -275,7 +275,7 @@
 
 
   function getFilterUrl(category, item) {
-    const baseUrl = 'products.html';
+    const baseUrl = 'products';
     const cleanId = item.id.toLowerCase();
     if (category === 'wood') {
       if (cleanId === 'white-ash') return `${baseUrl}?material=white%20ash`;
@@ -612,7 +612,7 @@
         // Buy-vs-Inquire follows the Shopify custom.purchasemode metafield (isPurchasable
         // is defined in shopify-integration.js, loaded before this file on materials.html).
         const isDisplay = !isPurchasable(p);
-        let productUrl = `product.html?handle=${encodeURIComponent(p.handle)}${isDisplay ? '&inquire=true' : ''}`;
+        let productUrl = `product?handle=${encodeURIComponent(p.handle)}${isDisplay ? '&inquire=true' : ''}`;
         if (category === 'wood') {
           productUrl += `&wood=${encodeURIComponent(item.id)}`;
         } else if (category === 'leather' || category === 'fabric') {

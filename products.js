@@ -676,7 +676,7 @@ function renderProductsGrid() {
   // Render cards
   filtered.forEach((p, idx) => {
     const card = document.createElement('a');
-    card.href = `product.html?handle=${encodeURIComponent(p.handle)}`;
+    card.href = `product?handle=${encodeURIComponent(p.handle)}`;
     // Cards are injected after site.js's IntersectionObserver has already run,
     // so .reveal-el never fires for them — they used to ship pre-revealed with
     // an animationDelay that pointed at no keyframes at all. .gcard--enter is
@@ -742,7 +742,7 @@ function renderProductsGrid() {
       e.preventDefault(); // Prevent navigating to product.html when clicking Add to Cart
       
       if (isDisplay) {
-        window.location.href = `product.html?handle=${encodeURIComponent(p.handle)}&inquire=true`;
+        window.location.href = `product?handle=${encodeURIComponent(p.handle)}&inquire=true`;
         return;
       }
       

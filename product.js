@@ -475,7 +475,7 @@ function showProductUnavailable() {
       <div class="product-header-block" style="grid-column: 1 / -1; text-align: center; border: 0;">
         <h1 class="product-title-text">This piece couldn't be loaded</h1>
         <p class="product-desc-text">It may no longer be available, or the connection dropped. Please try again in a moment.</p>
-        <p><a href="products.html" class="discover-more-link" style="align-self: center;">Browse all pieces <span>→</span></a></p>
+        <p><a href="products" class="discover-more-link" style="align-self: center;">Browse all pieces <span>→</span></a></p>
       </div>`;
   }
   document.querySelectorAll('.related-section, #product-dimensions-section').forEach(el => { el.style.display = 'none'; });
@@ -1047,7 +1047,7 @@ function updateVariantDisplays(isInitial = false) {
       // Append a "Learn More" link pointing to materials.html
       gridHtml += `
         <div style="border-top: 1px solid var(--border-soft); padding-top: 16px; margin-top: 8px;">
-          <a href="materials.html" class="discover-more-link" style="margin: 0; display: inline-flex;">Learn More About Our Materials <span>→</span></a>
+          <a href="materials" class="discover-more-link" style="margin: 0; display: inline-flex;">Learn More About Our Materials <span>→</span></a>
         </div>
       `;
       materialsGrid.innerHTML = gridHtml;
@@ -1617,7 +1617,7 @@ function renderRelatedProducts() {
     }
 
     const card = document.createElement('a');
-    card.href = `product.html?handle=${encodeURIComponent(p.handle)}`;
+    card.href = `product?handle=${encodeURIComponent(p.handle)}`;
     card.className = 'gcard';
     card.innerHTML = `
       <div class="gcard__media">
@@ -1634,7 +1634,7 @@ function renderRelatedProducts() {
     card.querySelector('.gcard__add').addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      window.location.href = `product.html?handle=${encodeURIComponent(p.handle)}`;
+      window.location.href = `product?handle=${encodeURIComponent(p.handle)}`;
     });
 
     grid.appendChild(card);
