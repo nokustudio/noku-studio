@@ -2,7 +2,8 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "functions": {
-    "api/product.js": { "includeFiles": "{product.html,product-query.js}" }
+    "api/product.js": { "includeFiles": "{product.html,product-query.js}" },
+    "api/products.js": { "includeFiles": "{products.html,products-query.js}" }
   },
   "rewrites": [
     { "source": "/sitemap.xml", "destination": "/api/sitemap" }

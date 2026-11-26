@@ -374,70 +374,7 @@ let activeFilters = {
 let cart = JSON.parse(localStorage.getItem('noku_cart')) || [];
 
 // ─── API FETCH LOGIC ───
-const ALL_PRODUCTS_QUERY = `
-  query getAllProductsWithMetadata {
-    products(first: 100) {
-      edges {
-        node {
-          id
-          title
-          handle
-          description
-          productType
-          tags
-          collections(first: 5) {
-            edges {
-              node {
-                id
-                title
-                handle
-              }
-            }
-          }
-          featuredImage {
-            url
-            altText
-          }
-          purchaseMode: metafield(namespace: "custom", key: "purchasemode") { value }
-          featuredVariant: metafield(namespace: "custom", key: "featured_variant") {
-            reference {
-              ... on ProductVariant {
-                id
-                title
-                price {
-                  amount
-                  currencyCode
-                }
-                image {
-                  url
-                }
-              }
-            }
-          }
-          variants(first: 50) {
-            edges {
-              node {
-                id
-                title
-                price {
-                  amount
-                  currencyCode
-                }
-                image {
-                  url
-                }
-                selectedOptions {
-                  name
-                  value
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
+const ALL_PRODUCTS_QUERY = window.NOKU_PRODUCTS.QUERY; // products-query.js
 
 async function fetchProductsFromShopify() {
   const { storefrontAccessToken, shopDomain, apiVersion } = SHOPIFY_CONFIG;
@@ -465,14 +402,7 @@ async function fetchProductsFromShopify() {
     }
 
     const fetched = (result.data?.products?.edges?.map(edge => edge.node) || [])
-      .filter(p => {
-        // Exclude draft/test products (no image, zero-priced variants, or "draft"/"test" in title)
-        const hasNoImage = !p.featuredImage || !p.featuredImage.url;
-        const allVariantsZeroPrice = p.variants?.edges?.length > 0 && 
-          p.variants.edges.every(vEdge => parseFloat(vEdge.node.price?.amount || '0') === 0);
-        const hasDraftTitle = p.title && (p.title.toLowerCase().includes('draft') || p.title.toLowerCase().includes('test'));
-        return !(hasNoImage || allVariantsZeroPrice || hasDraftTitle);
-      });
+      .filter(window.NOKU_PRODUCTS.isListed);
     if (fetched.length > 0) {
       console.log(`Loaded ${fetched.length} live products from Shopify.`);
       // Override fallback with live products
@@ -585,7 +515,7 @@ function sizedCardImage(url, targetCssW = 480, targetCssH = 600) {
 
 // ─── DOM INJECTION & GRID CONTROLLER ───
 
-function renderProductsGrid() {
+function renderProductsGrid(animate = true) {
   const grid = document.getElementById('products-catalog-grid');
   const countEl = document.getElementById('catalog-results-count');
   if (!grid) return;
@@ -683,8 +613,10 @@ function renderProductsGrid() {
     // that missing animation: a staggered fade so a filter change reads as the
     // grid restocking rather than teleporting. Stagger caps at 6 so long lists
     // don't drag.
-    card.className = 'gcard gcard--enter';
-    card.style.animationDelay = `${Math.min(idx, 6) * 0.03}s`;
+    // No entrance on the first render of server-sent cards: they are already on
+    // screen, so fading them in again would read as a flicker.
+    card.className = animate ? 'gcard gcard--enter' : 'gcard';
+    if (animate) card.style.animationDelay = `${Math.min(idx, 6) * 0.03}s`;
 
     // Drive the card off one coherent variant so the photo and the material label
     // can't disagree. Priority: the merchant's custom.featured_variant pick, then the
@@ -1284,9 +1216,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (searchInput) searchInput.value = searchParam;
   }
 
+  // On the live site api/products.js already fetched the catalogue on the server, drew the
+  // grid and put the data in the page, so there's no second Shopify call here. Local dev
+  // (or the server failing to reach Shopify) has no embedded data and fetches as before.
+  let preloaded = null;
+  try { preloaded = JSON.parse(document.getElementById('noku-products-data')?.textContent || 'null'); } catch (e) { /* bad data: fetch instead */ }
+  const listed = (preloaded?.edges || []).map(edge => edge.node).filter(window.NOKU_PRODUCTS.isListed);
+  if (listed.length) productsList = listed;
+
   // Load and render
   updateCartUI();
-  renderProductsGrid();
+  renderProductsGrid(!listed.length);
   bindFilterEvents();
 
   // Highlight correct material pill in sidebar
@@ -1297,5 +1237,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  fetchProductsFromShopify();
+  if (!listed.length) fetchProductsFromShopify();
 });
