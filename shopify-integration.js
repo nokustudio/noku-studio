@@ -677,6 +677,29 @@ function sizeShopifyImage(url, width, height) {
 }
 
 // Add a featured product item to the cart
+// Collection-page cards (Stillness, Memories, Explorations) carry their live Shopify variant
+// on the Add button's data-* attributes. Add exactly that, with the same cart line id as
+// products.js, so the same piece added from either page stacks into one line.
+function addCardItemToCart(productId, d) {
+  const cartItemId = `prod-${productId}-${d.variantId}`.replace(/[^a-zA-Z0-9-]/g, '');
+  const existing = cart.find(item => item.id === cartItemId || item.variantId === d.variantId);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({
+      id: cartItemId,
+      title: d.title,
+      price: parseFloat(d.price),
+      image: sizeShopifyImage(d.image, 200, 250),
+      variantId: d.variantId,
+      quantity: 1,
+      options: { variantTitle: d.materials || 'Solid Wood Finish' }
+    });
+  }
+  saveCart();
+  openCartDrawer();
+}
+
 function addFeaturedItemToCart(handle) {
   // Every rendered card (barstool or dynamic featured card) carries its own
   // data-variant-* attributes from creation, so read straight off the card.
@@ -915,7 +938,7 @@ async function renderCollectionProducts(collectionHandle, gridId) {
         return;
       }
       
-      addFeaturedItemToCart(p.handle);
+      addCardItemToCart(p.id, btn.dataset);
     });
 
     grid.appendChild(card);
